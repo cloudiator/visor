@@ -1,4 +1,4 @@
-package de.uniulm.omi.monitoring;
+package de.uniulm.omi.monitoring.reporting.impl;
 
 import java.util.concurrent.BlockingQueue;
 

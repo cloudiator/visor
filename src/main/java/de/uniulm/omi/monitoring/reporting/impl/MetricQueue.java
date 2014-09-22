@@ -1,4 +1,7 @@
-package de.uniulm.omi.monitoring;
+package de.uniulm.omi.monitoring.reporting.impl;
+
+import de.uniulm.omi.monitoring.metric.Metric;
+import de.uniulm.omi.monitoring.reporting.api.MetricReportingInterface;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
@@ -9,18 +12,18 @@ public class MetricQueue implements MetricReportingInterface {
 
 	private final BlockingQueue<Metric> metricQueue;
     private final ExecutorService service;
-    private final ReportingInterface kairoInterface;
+    private final MetricReportingInterface metricReportingInterface;
 
-    public MetricQueue(int numWorkers, ReportingInterface kairoInterface) {
+    public MetricQueue(int numWorkers, MetricReportingInterface metricReportingInterface) {
         //set the kairo interface
-        this.kairoInterface = kairoInterface;
+        this.metricReportingInterface = metricReportingInterface;
         //initialize metric queue
         this.metricQueue = new LinkedBlockingQueue<Metric>();
         //initialize thread pool
         this.service = Executors.newFixedThreadPool(numWorkers);
         // create workers
         for(int i = 0; i<numWorkers; i++) {
-            service.submit(new MetricReportingWorker(this.metricQueue, this.kairoInterface));
+            service.submit(new MetricReportingWorker(this.metricQueue, this.metricReportingInterface));
         }
 
     }
