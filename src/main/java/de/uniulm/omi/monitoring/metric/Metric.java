@@ -4,35 +4,29 @@ import java.util.List;
 
 public class Metric {
 
-
 	protected String name;
 	
 	protected String value;
 	
 	protected long timestamp;
 
-    protected String applicationName;
+    protected String ip;
 
-    protected String Ip;
-
-
-
-    public Metric(String name, String value, long timestamp, String applicationName, String Ip) {
+    public Metric(String name, String value, long timestamp, String ip) {
         this.name = name;
         this.value = value;
         this.timestamp = timestamp;
+        this.ip = ip;
     }
 
     public String getName() {
         return name;
     }
 
-    public String getApplicationName() {
-        return applicationName;
-    }
+
 
     public String getIp() {
-        return Ip;
+        return ip;
     }
 
     public String getValue() {

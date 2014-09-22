@@ -1,5 +1,6 @@
 package de.uniulm.omi.monitoring.reporting.impl;
 
+import de.uniulm.omi.monitoring.metric.ApplicationMetric;
 import de.uniulm.omi.monitoring.metric.Metric;
 import de.uniulm.omi.monitoring.reporting.api.MetricReportingInterface;
 import org.apache.logging.log4j.LogManager;
@@ -26,10 +27,13 @@ public class KairosDb implements MetricReportingInterface {
 
     @Override
     public void report(Metric metric) {
-        logger.debug(String.format("Reporting new metric. Name: %s, Value: %s, Time: %s, Application: %s, IP: %s", metric.getName(), metric.getValue(), metric.getTimestamp(), metric.getApplicationName(), metric.getIp()));
+        logger.debug(String.format("Reporting new metric. Name: %s, Value: %s, Time: %s, IP: %s", metric.getName(), metric.getValue(), metric.getTimestamp(), metric.getIp()));
         MetricBuilder builder = MetricBuilder.getInstance();
-        builder.addMetric(metric.getName()).addDataPoint(metric.getTimestamp(), metric.getValue()).addTag("server", metric.getIp()).addTag("application", metric.getApplicationName());
-
+        org.kairosdb.client.builder.Metric kairosMetric = builder.addMetric(metric.getName()).addDataPoint(metric.getTimestamp(), metric.getValue()).addTag("server", metric.getIp());
+        if(metric instanceof ApplicationMetric) {
+            ApplicationMetric applicationMetric = (ApplicationMetric) metric;
+            kairosMetric.addTag("application",applicationMetric.getApplicationName());
+        }
         try {
             HttpClient client = new HttpClient("http://" + this.server + ":" + this.port);
             Response response = client.pushMetrics(builder);

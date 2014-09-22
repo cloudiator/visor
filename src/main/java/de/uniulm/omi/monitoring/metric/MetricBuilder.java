@@ -34,6 +34,10 @@ public class MetricBuilder {
         return this.fromRequest(request);
     }
 
+    public Metric newMetric(String name, String value) {
+        return new Metric(name, value, System.currentTimeMillis(), MonitoringAgent.localIp);
+    }
+
     protected Metric fromRequest(String request) throws IllegalRequestException {
         // split the request at blanks
         String[] parts = request.split(" ");
@@ -47,7 +51,7 @@ public class MetricBuilder {
         String value = parts[2];
         long timestamp = Long.valueOf(parts[3]);
 
-        return new Metric(metricName, value, timestamp, applicationName, MonitoringAgent.localIp);
+        return new ApplicationMetric(metricName, value, timestamp, applicationName, MonitoringAgent.localIp);
 
     }
 
