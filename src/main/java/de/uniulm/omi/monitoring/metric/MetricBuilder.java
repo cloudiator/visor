@@ -1,6 +1,7 @@
 package de.uniulm.omi.monitoring.metric;
 
 import de.uniulm.omi.monitoring.MonitoringAgent;
+import de.uniulm.omi.monitoring.cli.CliOptions;
 import de.uniulm.omi.monitoring.server.IllegalRequestException;
 
 /**
@@ -35,7 +36,7 @@ public class MetricBuilder {
     }
 
     public Metric newMetric(String name, Object value) {
-        return new Metric(name, value, System.currentTimeMillis(), MonitoringAgent.localIp);
+        return new Metric(name, value, System.currentTimeMillis(), CliOptions.getLocalIp());
     }
 
     protected Metric fromRequest(String request) throws IllegalRequestException {
@@ -51,7 +52,7 @@ public class MetricBuilder {
         String value = parts[2];
         long timestamp = Long.valueOf(parts[3]);
 
-        return new ApplicationMetric(metricName, value, timestamp, applicationName, MonitoringAgent.localIp);
+        return new ApplicationMetric(metricName, value, timestamp, applicationName, CliOptions.getLocalIp());
 
     }
 

@@ -1,5 +1,6 @@
 package de.uniulm.omi.monitoring;
 
+import de.uniulm.omi.monitoring.cli.CliOptions;
 import de.uniulm.omi.monitoring.probes.impl.CpuUsageProbe;
 import de.uniulm.omi.monitoring.probes.impl.MemoryUsageProbe;
 import de.uniulm.omi.monitoring.reporting.api.MetricReportingInterface;
@@ -7,40 +8,26 @@ import de.uniulm.omi.monitoring.reporting.impl.KairosDb;
 import de.uniulm.omi.monitoring.reporting.impl.MetricQueue;
 import de.uniulm.omi.monitoring.scheduler.Scheduler;
 import de.uniulm.omi.monitoring.server.Server;
+import org.apache.commons.cli.*;
 
-public class MonitoringAgent
-{
+public class MonitoringAgent {
 
-    public static String localIp;
+    public static void main(String[] args) throws ParseException {
 
-    public static void main( String[] args )
-    {
-
-        //handle the arguments
-        // 1. LocalServer IP
-        // 2. KairosServer IP
-        // 3. KairosServer Port
-
-        if(args.length != 3) {
-            System.exit(1);
-        }
-
-        localIp = args[0];
-        String kairosServer = args[1];
-        String kairosServerPort = args[2];
+        CliOptions.setArguments(args);
 
         //metric queue
-        MetricReportingInterface metricQueue = new MetricQueue(2, new KairosDb(kairosServer, kairosServerPort));
+        MetricReportingInterface metricQueue = new MetricQueue(2, new KairosDb(CliOptions.getKairosServer(), CliOptions.getKairosPort()));
 
         //create a new server
-        Server server = new Server(9000,metricQueue);
+        Server server = new Server(9000, metricQueue);
 
         //run the server
         Thread thread = new Thread(server);
         thread.start();
 
         //create a scheduler
-        Scheduler scheduler = new Scheduler(1,metricQueue);
+        Scheduler scheduler = new Scheduler(1, metricQueue);
         scheduler.registerProbe(new CpuUsageProbe());
         scheduler.registerProbe(new MemoryUsageProbe());
     }
