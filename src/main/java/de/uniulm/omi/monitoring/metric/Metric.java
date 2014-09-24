@@ -6,13 +6,13 @@ public class Metric {
 
 	protected String name;
 	
-	protected String value;
+	protected Object value;
 	
 	protected long timestamp;
 
     protected String ip;
 
-    public Metric(String name, String value, long timestamp, String ip) {
+    public Metric(String name, Object value, long timestamp, String ip) {
         this.name = name;
         this.value = value;
         this.timestamp = timestamp;
@@ -29,7 +29,7 @@ public class Metric {
         return ip;
     }
 
-    public String getValue() {
+    public Object getValue() {
         return value;
     }
 

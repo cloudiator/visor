@@ -5,7 +5,7 @@ package de.uniulm.omi.monitoring.metric;
  */
 public class ApplicationMetric extends Metric {
 
-    public ApplicationMetric(String name, String value, long timestamp, String applicationName, String Ip) {
+    public ApplicationMetric(String name, Object value, long timestamp, String applicationName, String Ip) {
         super(name, value, timestamp, Ip);
         this.applicationName = applicationName;
     }

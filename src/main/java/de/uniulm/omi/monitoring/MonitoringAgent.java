@@ -1,6 +1,7 @@
 package de.uniulm.omi.monitoring;
 
-import de.uniulm.omi.monitoring.probes.RandomProbe;
+import de.uniulm.omi.monitoring.probes.impl.CpuUsageProbe;
+import de.uniulm.omi.monitoring.probes.impl.MemoryUsageProbe;
 import de.uniulm.omi.monitoring.reporting.api.MetricReportingInterface;
 import de.uniulm.omi.monitoring.reporting.impl.KairosDb;
 import de.uniulm.omi.monitoring.reporting.impl.MetricQueue;
@@ -40,8 +41,7 @@ public class MonitoringAgent
 
         //create a scheduler
         Scheduler scheduler = new Scheduler(1,metricQueue);
-        scheduler.registerProbe(new RandomProbe("random1"));
-        scheduler.registerProbe(new RandomProbe("random2"));
-        scheduler.registerProbe(new RandomProbe("random3"));
+        scheduler.registerProbe(new CpuUsageProbe());
+        scheduler.registerProbe(new MemoryUsageProbe());
     }
 }

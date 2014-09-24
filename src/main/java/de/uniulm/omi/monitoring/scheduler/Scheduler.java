@@ -1,6 +1,6 @@
 package de.uniulm.omi.monitoring.scheduler;
 
-import de.uniulm.omi.monitoring.probes.Probe;
+import de.uniulm.omi.monitoring.probes.api.Probe;
 import de.uniulm.omi.monitoring.reporting.api.MetricReportingInterface;
 
 import java.util.concurrent.Executors;
