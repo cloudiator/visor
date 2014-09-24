@@ -1,0 +1,14 @@
+Monitoring Agent
+
+Copyright 2014 University of Ulm
+
+This product includes software developed by the following copyright owners:
+
+This project uses Apache Commons CLI (Apache License 2.0):
+Copyright 2002-2014 The Apache Software Foundation.
+
+This project uses Apache Log4j 2 (Apache License 2.0):
+Copyright 1999-2014 The Apache Software Foundation.
+
+This project uses the KairoDB Client (Apache License 2.0):
+Copyright 2013 Proofpoint Inc.
