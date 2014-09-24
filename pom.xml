@@ -64,11 +64,30 @@
             <version>2.0.2</version>
         </dependency>
     </dependencies>
+
+    <distributionManagement>
+        <repository>
+            <id>eladron</id>
+            <name>eladron</name>
+            <url>http://eladron.e-technik.uni-ulm.de:8081/nexus/content/repositories/snapshots</url>
+        </repository>
+    </distributionManagement>
+
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
+                <version>2.2</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>
