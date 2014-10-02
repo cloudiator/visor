@@ -57,6 +57,12 @@ public class CliOptions {
                         .hasArg()
                         .create("ip")
         );
+        options.addOption(OptionBuilder
+                        .withLongOpt("port")
+                        .withDescription("Port on which the telnet server should start")
+                        .hasArg()
+                        .create("p")
+        );
     }
 
     public static void setArguments(String[] args) throws ParseException {
@@ -76,6 +82,9 @@ public class CliOptions {
         if (commandLine == null) {
             throw new IllegalStateException("Command Line Arguments not yet parsed");
         }
+        if (!commandLine.hasOption(name)) {
+            return null;
+        }
         return commandLine.getOptionValue(name);
     }
 
@@ -89,5 +98,12 @@ public class CliOptions {
 
     public static String getKairosPort() {
         return getCommandLineOption("kp");
+    }
+
+    public static Integer getPort() {
+        if(getCommandLineOption("p") == null) {
+            return null;
+        }
+        return Integer.valueOf(getCommandLineOption("p"));
     }
 }

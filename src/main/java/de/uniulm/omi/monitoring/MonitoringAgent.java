@@ -40,7 +40,7 @@ public class MonitoringAgent {
         MetricReportingInterface metricQueue = new MetricQueue(1, new KairosDb(CliOptions.getKairosServer(), CliOptions.getKairosPort()));
 
         //create a new server
-        Server server = new Server(9000, metricQueue);
+        Server server = new Server(metricQueue);
 
         //run the server
         Thread thread = new Thread(server);

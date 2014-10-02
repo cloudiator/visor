@@ -1,8 +1,7 @@
-This software is currently under development.
-
 ```
 usage: de.uniulm.omi.monitoring.MonitoringAgent
  -ip,--localIp <arg>      IP of the local machine
- -kip,--kairosUrl         Url of the kairosDB
+  -kip,--kairosUrl         Url of the kairosDB
  -kp,--kairosPort <arg>   Port of the kairosDB
+ -p, --port <arg>         Port of the telnet server
 ```

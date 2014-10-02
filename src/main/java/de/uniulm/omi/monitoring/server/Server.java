@@ -20,6 +20,7 @@
 
 package de.uniulm.omi.monitoring.server;
 
+import de.uniulm.omi.monitoring.cli.CliOptions;
 import de.uniulm.omi.monitoring.reporting.api.MetricReportingInterface;
 
 import java.io.IOException;
@@ -35,6 +36,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class Server implements Runnable {
 
+    protected final static int DEFAULT_PORT = 9000;
     protected final int port;
     protected final MetricReportingInterface metricReportingInterface;
     private ServerSocket serverSocket;
@@ -42,12 +44,17 @@ public class Server implements Runnable {
 
     private static final Logger logger = LogManager.getLogger(Server.class);
 
-    public Server(int port, MetricReportingInterface metricReportingInterface) {
-        this(port, metricReportingInterface, 1);
+    public Server(MetricReportingInterface metricReportingInterface) {
+        this(metricReportingInterface, 1);
     }
+    public Server(MetricReportingInterface metricReportingInterface, int numOfWorkers) {
 
-    public Server(int port, MetricReportingInterface metricReportingInterface, int numOfWorkers) {
-        this.port = port;
+        if(CliOptions.getPort() == null) {
+            this.port = DEFAULT_PORT;
+        } else {
+            this.port = CliOptions.getPort();
+        }
+
         this.metricReportingInterface = metricReportingInterface;
 
         //create executor service
