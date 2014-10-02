@@ -1,3 +1,5 @@
+Building: the agent is build with maven.
+
 ```
 usage: de.uniulm.omi.monitoring.MonitoringAgent
  -ip,--localIp <arg>      IP of the local machine
@@ -5,3 +7,13 @@ usage: de.uniulm.omi.monitoring.MonitoringAgent
  -kp,--kairosPort <arg>   Port of the kairosDB
  -p, --port <arg>         Port of the telnet server
 ```
+
+The monitoring agent starts a small telnet server on either the default port 9002 or the port specified via the -p option.
+Communication with the port is line based:
+applicationName metricName value timestamp\n
+
+applicationName: the name of the application reporting the metric
+metricName: the name of the metric you want to report
+value: the value of the metric
+timestamp: unix timestamp of the measurement
+
