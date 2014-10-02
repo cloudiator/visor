@@ -44,6 +44,7 @@ public class ProbeWorker implements Runnable {
 
     @Override
     public void run() {
+        logger.debug(String.format("Measuring probe %s at %s",this.probe.getMetricName(),System.currentTimeMillis()));
         try {
             this.metricReportingInterface.report(MetricBuilder.getInstance().newMetric(probe.getMetricName(), probe.getMetricValue()));
         } catch (MetricNotAvailableException e) {

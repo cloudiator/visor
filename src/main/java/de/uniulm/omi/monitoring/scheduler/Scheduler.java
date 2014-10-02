@@ -22,6 +22,8 @@ package de.uniulm.omi.monitoring.scheduler;
 
 import de.uniulm.omi.monitoring.probes.api.Probe;
 import de.uniulm.omi.monitoring.reporting.api.MetricReportingInterface;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -31,15 +33,19 @@ import java.util.concurrent.ScheduledExecutorService;
  */
 public class Scheduler {
 
+    private static final Logger logger = LogManager.getLogger(Scheduler.class);
+
     private final ScheduledExecutorService scheduledExecutorService;
     protected MetricReportingInterface metricReportingInterface;
 
     public Scheduler(int numOfWorkers, MetricReportingInterface metricReportingInterface) {
-        this.scheduledExecutorService = Executors.newScheduledThreadPool(5);
+        logger.info(String.format("Initializing scheduler with %s workers.",numOfWorkers));
+        this.scheduledExecutorService = Executors.newScheduledThreadPool(numOfWorkers);
         this.metricReportingInterface = metricReportingInterface;
     }
 
     public void registerProbe(Probe probe) {
+        logger.info(String.format("New probe for metric %s registered with interval %s - %s at scheduler. ",probe.getMetricName(),probe.getInterval().getPeriod(),probe.getInterval().getTimeUnit()));
         this.scheduledExecutorService.scheduleAtFixedRate(new ProbeWorker(probe, metricReportingInterface), 0, probe.getInterval().getPeriod(), probe.getInterval().getTimeUnit());
     }
 

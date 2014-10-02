@@ -57,8 +57,8 @@ public class KairosDb implements MetricReportingInterface {
         try {
             HttpClient client = new HttpClient("http://" + this.server + ":" + this.port);
             Response response = client.pushMetrics(builder);
-            System.out.println(response.getStatusCode());
-            System.out.println(response.getErrors());
+            logger.debug("Kairos reported status code "+response.getStatusCode());
+            logger.error(response.getErrors());
             client.shutdown();
         } catch (MalformedURLException e) {
             logger.error("KairosDB URL is invalid.", e);
