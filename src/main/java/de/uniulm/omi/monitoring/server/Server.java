@@ -36,7 +36,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class Server implements Runnable {
 
-    protected final static int DEFAULT_PORT = 9000;
+    protected final static int DEFAULT_PORT = 9002;
     protected final int port;
     protected final MetricReportingInterface metricReportingInterface;
     private ServerSocket serverSocket;
