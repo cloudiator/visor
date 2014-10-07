@@ -18,48 +18,47 @@
  *
  */
 
-package de.uniulm.omi.monitoring.metric;
+package de.uniulm.omi.monitoring.metric.impl;
 
-import de.uniulm.omi.monitoring.MonitoringAgent;
 import de.uniulm.omi.monitoring.cli.CliOptions;
 import de.uniulm.omi.monitoring.server.IllegalRequestException;
 
 /**
  * Created by daniel on 22.09.14.
  */
-public class MetricBuilder {
+public class MetricFactory {
 
     /**
      * Singleton instance.
      */
-    private static MetricBuilder instance = new MetricBuilder();
+    private static MetricFactory instance = new MetricFactory();
 
     /**
      * Private constructor for singleton pattern.
      */
-    private MetricBuilder() {
+    private MetricFactory() {
 
     }
 
     /**
-     * Returns instance of the metric builder.
+     * Returns instance of the metric factory.
      * Implementation of the singleton pattern.
      *
-     * @return unique instance of metric builder.
+     * @return unique instance of metric factory.
      */
-    public static MetricBuilder getInstance() {
+    public static MetricFactory getInstance() {
         return instance;
     }
 
-    public Metric newMetric(String request) throws IllegalRequestException {
-        return this.fromRequest(request);
+    public ApplicationMetric fromRequest(String request) throws IllegalRequestException {
+        return this.parseRequest(request);
     }
 
-    public Metric newMetric(String name, Object value) {
-        return new Metric(name, value, System.currentTimeMillis(), CliOptions.getLocalIp());
+    public ServerMetric fromNameAndValue(String name, Object value) {
+        return new ServerMetric(name, value, System.currentTimeMillis(), CliOptions.getLocalIp());
     }
 
-    protected Metric fromRequest(String request) throws IllegalRequestException {
+    protected ApplicationMetric parseRequest(String request) throws IllegalRequestException {
         // split the request at blanks
         String[] parts = request.split(" ");
 

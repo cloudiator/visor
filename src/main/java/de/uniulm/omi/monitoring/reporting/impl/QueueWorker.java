@@ -20,28 +20,35 @@
 
 package de.uniulm.omi.monitoring.reporting.impl;
 
+import de.uniulm.omi.monitoring.reporting.api.ReportingInterface;
+
 import java.util.concurrent.BlockingQueue;
 
-public abstract class QueueWorker<T> implements Runnable {
+public class QueueWorker<T> implements Runnable {
 
-	private BlockingQueue<T> queue;
+    private BlockingQueue<T> queue;
+    private ReportingInterface<T> reportingInterface;
 
-	public QueueWorker(BlockingQueue<T> queue) {
-		this.queue = queue;
-	}
+    public QueueWorker(BlockingQueue<T> queue, ReportingInterface<T> reportingInterface) {
+        this.queue = queue;
+        this.reportingInterface = reportingInterface;
+    }
 
-	public void run() {
-        while(!Thread.currentThread().isInterrupted()) {
+    public void run() {
+        while (!Thread.currentThread().isInterrupted()) {
             try {
                 T item = this.queue.take();
-                this.consume(item);
+                try {
+                    this.reportingInterface.report(item);
+                } catch (MetricReportingException e) {
+                    this.queue.put(item);
+                }
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 break;
             }
         }
-	}
+    }
 
-	abstract protected void consume(T item);
 
 }

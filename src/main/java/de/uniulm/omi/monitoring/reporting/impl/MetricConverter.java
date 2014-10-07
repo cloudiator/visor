@@ -20,8 +20,57 @@
 
 package de.uniulm.omi.monitoring.reporting.impl;
 
+import de.uniulm.omi.monitoring.metric.api.Tag;
+import org.kairosdb.client.builder.Metric;
+import org.kairosdb.client.builder.MetricBuilder;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 /**
  * Created by daniel on 23.09.14.
  */
 public class MetricConverter {
+
+    private MetricBuilder metricBuilder;
+
+    public MetricConverter() {
+        this.metricBuilder = MetricBuilder.getInstance();
+    }
+
+    public MetricConverter add(de.uniulm.omi.monitoring.metric.impl.Metric metric) throws MetricConversionException {
+        Metric kairosMetric = metricBuilder.addMetric(metric.getName()).addDataPoint(metric.getTimestamp(), metric.getValue());
+
+        //we need to add the tags
+        //fields
+        for (Field field : metric.getClass().getFields()) {
+            if (field.isAnnotationPresent(Tag.class)) {
+                try {
+                    kairosMetric.addTag(field.getAnnotation(Tag.class).name(), (String) field.get(metric));
+                } catch (IllegalAccessException e) {
+                    throw new MetricConversionException(String.format("Could not access field %s annotated with Tag", field.getName()),e);
+                }
+            }
+        }
+
+        //methods
+        for (Method method : metric.getClass().getMethods()) {
+            if (method.isAnnotationPresent(Tag.class)) {
+                try {
+                    kairosMetric.addTag(method.getAnnotation(Tag.class).name(), (String) method.invoke(metric));
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    throw new MetricConversionException(String.format("Could not access method %s annotated with Tag", method.getName()),e);
+                }
+            }
+        }
+        return this;
+    }
+
+
+    public MetricBuilder convert() {
+        return metricBuilder;
+    }
+
+
 }

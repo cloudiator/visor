@@ -18,10 +18,10 @@
  *
  */
 
-package de.uniulm.omi.monitoring.scheduler;
+package de.uniulm.omi.monitoring.probes.impl.scheduler;
 
 import de.uniulm.omi.monitoring.probes.api.Probe;
-import de.uniulm.omi.monitoring.reporting.api.MetricReportingInterface;
+import de.uniulm.omi.monitoring.reporting.api.ReportingInterface;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -36,9 +36,9 @@ public class Scheduler {
     private static final Logger logger = LogManager.getLogger(Scheduler.class);
 
     private final ScheduledExecutorService scheduledExecutorService;
-    protected MetricReportingInterface metricReportingInterface;
+    protected ReportingInterface metricReportingInterface;
 
-    public Scheduler(int numOfWorkers, MetricReportingInterface metricReportingInterface) {
+    public Scheduler(int numOfWorkers, ReportingInterface metricReportingInterface) {
         logger.info(String.format("Initializing scheduler with %s workers.",numOfWorkers));
         this.scheduledExecutorService = Executors.newScheduledThreadPool(numOfWorkers);
         this.metricReportingInterface = metricReportingInterface;

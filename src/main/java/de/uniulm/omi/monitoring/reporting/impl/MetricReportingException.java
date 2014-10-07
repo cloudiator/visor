@@ -20,17 +20,27 @@
 
 package de.uniulm.omi.monitoring.reporting.impl;
 
-import de.uniulm.omi.monitoring.metric.Metric;
-import de.uniulm.omi.monitoring.reporting.api.MetricReportingInterface;
-
 /**
- * Created by daniel on 22.09.14.
+ * Created by daniel on 07.10.14.
  */
-public class CommandLine implements MetricReportingInterface {
+public class MetricReportingException extends Exception {
 
-    @Override
-    public void report(Metric metric) {
-        System.out.println(String.format("put %s %s %s", metric.getName(),
-                metric.getValue(), metric.getTimestamp()));
+    public MetricReportingException() {
+    }
+
+    public MetricReportingException(String message) {
+        super(message);
+    }
+
+    public MetricReportingException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public MetricReportingException(Throwable cause) {
+        super(cause);
+    }
+
+    public MetricReportingException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
     }
 }

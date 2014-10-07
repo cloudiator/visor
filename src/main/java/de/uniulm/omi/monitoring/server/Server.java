@@ -21,13 +21,14 @@
 package de.uniulm.omi.monitoring.server;
 
 import de.uniulm.omi.monitoring.cli.CliOptions;
-import de.uniulm.omi.monitoring.reporting.api.MetricReportingInterface;
+import de.uniulm.omi.monitoring.reporting.api.ReportingInterface;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -38,16 +39,16 @@ public class Server implements Runnable {
 
     protected final static int DEFAULT_PORT = 9002;
     protected final int port;
-    protected final MetricReportingInterface metricReportingInterface;
+    protected final ReportingInterface metricReportingInterface;
     private ServerSocket serverSocket;
     private final ExecutorService executorService;
 
     private static final Logger logger = LogManager.getLogger(Server.class);
 
-    public Server(MetricReportingInterface metricReportingInterface) {
+    public Server(ReportingInterface metricReportingInterface) {
         this(metricReportingInterface, 1);
     }
-    public Server(MetricReportingInterface metricReportingInterface, int numOfWorkers) {
+    public Server(ReportingInterface metricReportingInterface, int numOfWorkers) {
 
         if(CliOptions.getPort() == null) {
             this.port = DEFAULT_PORT;
@@ -69,7 +70,8 @@ public class Server implements Runnable {
             this.serverSocket = new ServerSocket(this.port);
             logger.info("Server started and is listening on port "+this.port);
         } catch (IOException e) {
-            throw new RuntimeException("Could not open socket on port " + port, e);
+            logger.fatal("Could not start server",e);
+            System.exit(1);
         }
 
 

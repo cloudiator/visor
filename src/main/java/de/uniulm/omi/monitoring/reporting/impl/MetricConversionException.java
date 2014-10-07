@@ -18,12 +18,29 @@
  *
  */
 
-package de.uniulm.omi.monitoring.reporting.api;
+package de.uniulm.omi.monitoring.reporting.impl;
 
-import de.uniulm.omi.monitoring.metric.Metric;
+/**
+ * Created by daniel on 07.10.14.
+ */
+public class MetricConversionException extends Exception {
 
-public interface MetricReportingInterface {
+    public MetricConversionException() {
+    }
 
-	public void report(Metric metric);
-	
+    public MetricConversionException(String message) {
+        super(message);
+    }
+
+    public MetricConversionException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public MetricConversionException(Throwable cause) {
+        super(cause);
+    }
+
+    public MetricConversionException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
+    }
 }

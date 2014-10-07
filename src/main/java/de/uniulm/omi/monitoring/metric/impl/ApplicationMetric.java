@@ -18,45 +18,25 @@
  *
  */
 
-package de.uniulm.omi.monitoring.metric;
+package de.uniulm.omi.monitoring.metric.impl;
 
-import java.util.List;
+import de.uniulm.omi.monitoring.metric.api.Tag;
 
-public class Metric {
+/**
+ * Created by daniel on 22.09.14.
+ */
+public class ApplicationMetric extends ServerMetric {
 
-	protected String name;
-	
-	protected Object value;
-	
-	protected long timestamp;
-
-    protected String ip;
-
-    public Metric(String name, Object value, long timestamp, String ip) {
-        this.name = name;
-        this.value = value;
-        this.timestamp = timestamp;
-        this.ip = ip;
+    public ApplicationMetric(String name, Object value, long timestamp, String applicationName, String Ip) {
+        super(name, value, timestamp, Ip);
+        this.applicationName = applicationName;
     }
 
-    public String getName() {
-        return name;
-    }
+    protected String applicationName;
 
-
-
-    public String getIp() {
-        return ip;
-    }
-
-    public Object getValue() {
-        return value;
-    }
-
-
-
-    public long getTimestamp() {
-        return timestamp;
+    @Tag(name = "application")
+    public String getApplicationName() {
+        return applicationName;
     }
 
 }

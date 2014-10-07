@@ -23,10 +23,10 @@ package de.uniulm.omi.monitoring;
 import de.uniulm.omi.monitoring.cli.CliOptions;
 import de.uniulm.omi.monitoring.probes.impl.CpuUsageProbe;
 import de.uniulm.omi.monitoring.probes.impl.MemoryUsageProbe;
-import de.uniulm.omi.monitoring.reporting.api.MetricReportingInterface;
+import de.uniulm.omi.monitoring.reporting.api.ReportingInterface;
 import de.uniulm.omi.monitoring.reporting.impl.KairosDb;
 import de.uniulm.omi.monitoring.reporting.impl.MetricQueue;
-import de.uniulm.omi.monitoring.scheduler.Scheduler;
+import de.uniulm.omi.monitoring.probes.impl.scheduler.Scheduler;
 import de.uniulm.omi.monitoring.server.Server;
 import org.apache.commons.cli.*;
 
@@ -37,7 +37,7 @@ public class MonitoringAgent {
         CliOptions.setArguments(args);
 
         //metric queue
-        MetricReportingInterface metricQueue = new MetricQueue(1, new KairosDb(CliOptions.getKairosServer(), CliOptions.getKairosPort()));
+        ReportingInterface metricQueue = new MetricQueue(1, new KairosDb(CliOptions.getKairosServer(), CliOptions.getKairosPort()));
 
         //create a new server
         Server server = new Server(metricQueue);

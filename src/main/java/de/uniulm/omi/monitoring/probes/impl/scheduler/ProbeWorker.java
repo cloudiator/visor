@@ -18,12 +18,14 @@
  *
  */
 
-package de.uniulm.omi.monitoring.scheduler;
+package de.uniulm.omi.monitoring.probes.impl.scheduler;
 
-import de.uniulm.omi.monitoring.metric.MetricBuilder;
+import de.uniulm.omi.monitoring.metric.impl.Metric;
+import de.uniulm.omi.monitoring.metric.impl.MetricFactory;
 import de.uniulm.omi.monitoring.probes.api.Probe;
 import de.uniulm.omi.monitoring.probes.impl.MetricNotAvailableException;
-import de.uniulm.omi.monitoring.reporting.api.MetricReportingInterface;
+import de.uniulm.omi.monitoring.reporting.api.ReportingInterface;
+import de.uniulm.omi.monitoring.reporting.impl.MetricReportingException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -33,11 +35,11 @@ import org.apache.logging.log4j.Logger;
 public class ProbeWorker implements Runnable {
 
     protected Probe probe;
-    protected MetricReportingInterface metricReportingInterface;
+    protected ReportingInterface<Metric> metricReportingInterface;
 
     private static final Logger logger = LogManager.getLogger(ProbeWorker.class);
 
-    public ProbeWorker(Probe probe, MetricReportingInterface metricReportingInterface) {
+    public ProbeWorker(Probe probe, ReportingInterface metricReportingInterface) {
         this.probe = probe;
         this.metricReportingInterface = metricReportingInterface;
     }
@@ -46,9 +48,11 @@ public class ProbeWorker implements Runnable {
     public void run() {
         logger.debug(String.format("Measuring probe %s at %s",this.probe.getMetricName(),System.currentTimeMillis()));
         try {
-            this.metricReportingInterface.report(MetricBuilder.getInstance().newMetric(probe.getMetricName(), probe.getMetricValue()));
+            this.metricReportingInterface.report(MetricFactory.getInstance().fromNameAndValue(probe.getMetricName(), probe.getMetricValue()));
         } catch (MetricNotAvailableException e) {
             logger.error(String.format("Could not retrieve metric %s", probe.getMetricName()));
+        } catch (MetricReportingException e) {
+            logger.error("Could not report metric",e);
         }
     }
 }

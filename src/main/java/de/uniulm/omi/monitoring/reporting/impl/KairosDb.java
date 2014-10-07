@@ -20,9 +20,8 @@
 
 package de.uniulm.omi.monitoring.reporting.impl;
 
-import de.uniulm.omi.monitoring.metric.ApplicationMetric;
-import de.uniulm.omi.monitoring.metric.Metric;
-import de.uniulm.omi.monitoring.reporting.api.MetricReportingInterface;
+import de.uniulm.omi.monitoring.metric.impl.Metric;
+import de.uniulm.omi.monitoring.reporting.api.ReportingInterface;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.kairosdb.client.HttpClient;
@@ -32,8 +31,9 @@ import org.kairosdb.client.response.Response;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
+import java.util.Collection;
 
-public class KairosDb implements MetricReportingInterface {
+public class KairosDb implements ReportingInterface<Metric> {
 
     protected String server;
     protected String port;
@@ -45,27 +45,54 @@ public class KairosDb implements MetricReportingInterface {
         this.port = port;
     }
 
-    @Override
-    public void report(Metric metric) {
-        logger.debug(String.format("Reporting new metric. Name: %s, Value: %s, Time: %s, IP: %s", metric.getName(), metric.getValue(), metric.getTimestamp(), metric.getIp()));
-        MetricBuilder builder = MetricBuilder.getInstance();
-        org.kairosdb.client.builder.Metric kairosMetric = builder.addMetric(metric.getName()).addDataPoint(metric.getTimestamp(), metric.getValue()).addTag("server", metric.getIp());
-        if(metric instanceof ApplicationMetric) {
-            ApplicationMetric applicationMetric = (ApplicationMetric) metric;
-            kairosMetric.addTag("application",applicationMetric.getApplicationName());
-        }
+    protected void sendMetric(MetricBuilder metricBuilder) throws MetricReportingException {
         try {
             HttpClient client = new HttpClient("http://" + this.server + ":" + this.port);
-            Response response = client.pushMetrics(builder);
-            logger.debug("Kairos reported status code "+response.getStatusCode());
-            logger.error(response.getErrors());
+            Response response = client.pushMetrics(metricBuilder);
+
+            //check if response is ok
+            if (response.getStatusCode() / 100 != 2) {
+                logger.error("Kairos DB reported error. Status code: " + response.getStatusCode());
+                logger.error("Error message: " + response.getErrors());
+                throw new MetricReportingException();
+            } else {
+                logger.debug("Kairos DB returned OK. Status code: " + response.getStatusCode());
+            }
             client.shutdown();
-        } catch (MalformedURLException e) {
-            logger.error("KairosDB URL is invalid.", e);
+        } catch (MalformedURLException | URISyntaxException e) {
+            logger.fatal("KairosDB URL is invalid.", e);
+            System.exit(1);
         } catch (IOException e) {
             logger.error("Could not request KairosDB.", e);
-        } catch (URISyntaxException e) {
-            logger.error("KairosDB URL is invalid.", e);
+            throw new MetricReportingException(e);
+        } catch (RuntimeException e) {
+            logger.fatal(e);
         }
+    }
+
+    @Override
+    public void report(Metric metric) throws MetricReportingException {
+        logger.debug(String.format("Reporting new metric: %s", metric));
+        MetricConverter metricConverter = new MetricConverter();
+        try {
+            metricConverter.add(metric);
+        } catch (MetricConversionException e) {
+            throw new MetricReportingException(e);
+        }
+        this.sendMetric(metricConverter.convert());
+    }
+
+    @Override
+    public void report(Collection<Metric> metrics) throws MetricReportingException {
+        MetricConverter metricConverter = new MetricConverter();
+        for (Metric metric : metrics) {
+            logger.debug(String.format("Reporting new metric: %s", metric));
+            try {
+                metricConverter.add(metric);
+            } catch (MetricConversionException e) {
+                throw new MetricReportingException(e);
+            }
+        }
+        this.sendMetric(metricConverter.convert());
     }
 }

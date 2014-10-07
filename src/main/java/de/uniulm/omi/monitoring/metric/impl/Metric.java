@@ -18,26 +18,36 @@
  *
  */
 
-package de.uniulm.omi.monitoring.reporting.impl;
+package de.uniulm.omi.monitoring.metric.impl;
 
-import de.uniulm.omi.monitoring.metric.Metric;
-import de.uniulm.omi.monitoring.reporting.api.MetricReportingInterface;
+public abstract class Metric {
 
-import java.util.concurrent.BlockingQueue;
+    protected String name;
 
-public class MetricReportingWorker extends QueueWorker<Metric> {
+    protected Object value;
 
-    public MetricReportingWorker(BlockingQueue<Metric> queue,
-                                 MetricReportingInterface metricReportingInterface) {
-        super(queue);
-        this.metricReportingInterface = metricReportingInterface;
+    protected long timestamp;
+
+    public Metric(String name, Object value, long timestamp) {
+        this.name = name;
+        this.value = value;
+        this.timestamp = timestamp;
     }
 
-    private MetricReportingInterface metricReportingInterface;
+    public String getName() {
+        return name;
+    }
 
-    @Override
-    protected void consume(Metric item) {
-        this.metricReportingInterface.report(item);
+    public Object getValue() {
+        return value;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public String toString() {
+        return String.format("Name: %s, Value: %s, Time: %s",this.getName(),this.getValue(),this.getTimestamp());
     }
 
 }
