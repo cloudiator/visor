@@ -18,28 +18,15 @@
  *
  */
 
-package de.uniulm.omi.monitoring.server;
+package de.uniulm.omi.monitoring.server.api;
+
+import de.uniulm.omi.monitoring.server.impl.ParsingException;
 
 /**
- * The IllegalRequestException.
- *
- * This exception is thrown if the request to the metric interface could not be
- * understood.
+ * Created by daniel on 08.10.14.
  */
-public class IllegalRequestException extends Exception {
+public interface RequestParser<T> {
 
-    /**
-     * @see java.lang.Exception
-     */
-    public IllegalRequestException(String message) {
-        super(message);
-    }
-
-    /**
-     * @see java.lang.Exception
-     */
-    public IllegalRequestException(String message, Throwable e) {
-        super(message,e);
-    }
+    public T parseRequest(String line) throws ParsingException;
 
 }

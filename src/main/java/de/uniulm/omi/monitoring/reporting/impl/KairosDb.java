@@ -134,4 +134,5 @@ public class KairosDb implements ReportingInterface<Metric> {
         }
         this.sendMetric(metricConverter.convert());
     }
+
 }

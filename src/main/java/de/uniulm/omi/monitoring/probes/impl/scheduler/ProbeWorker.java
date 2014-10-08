@@ -25,7 +25,6 @@ import de.uniulm.omi.monitoring.metric.impl.MetricFactory;
 import de.uniulm.omi.monitoring.probes.api.Probe;
 import de.uniulm.omi.monitoring.probes.impl.MetricNotAvailableException;
 import de.uniulm.omi.monitoring.reporting.api.ReportingInterface;
-import de.uniulm.omi.monitoring.reporting.impl.MetricReportingException;
 import de.uniulm.omi.monitoring.reporting.impl.ReportingException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -75,7 +74,7 @@ public class ProbeWorker implements Runnable {
     public void run() {
         logger.debug(String.format("Measuring probe %s at %s", this.probe.getMetricName(), System.currentTimeMillis()));
         try {
-            this.metricReportingInterface.report(MetricFactory.getInstance().fromNameAndValue(probe.getMetricName(), probe.getMetricValue()));
+            this.metricReportingInterface.report(MetricFactory.getInstance().fromNameAndValue(this.probe.getMetricName(), this.probe.getMetricValue()));
         } catch (MetricNotAvailableException e) {
             logger.error(String.format("Could not retrieve metric %s", probe.getMetricName()));
         } catch (ReportingException e) {

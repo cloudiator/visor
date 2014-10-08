@@ -18,10 +18,13 @@
  *
  */
 
-package de.uniulm.omi.monitoring.server;
+package de.uniulm.omi.monitoring.server.impl;
 
 import de.uniulm.omi.monitoring.cli.CliOptions;
 import de.uniulm.omi.monitoring.reporting.api.ReportingInterface;
+import de.uniulm.omi.monitoring.server.api.RequestParser;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -29,37 +32,30 @@ import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 /**
  * A small server.
+ * <p/>
+ * Receives requests on the defined port, parses them with
+ * the defined request parses, and then reports the result
+ * to the given reporting interface.
  */
-public class Server implements Runnable {
+public class Server<T> implements Runnable {
 
-    protected final static int DEFAULT_PORT = 9002;
+
+
     protected final int port;
-    protected final ReportingInterface metricReportingInterface;
+    protected final ReportingInterface<T> reportingInterface;
+    protected final RequestParser<T> requestParser;
     private ServerSocket serverSocket;
     private final ExecutorService executorService;
 
     private static final Logger logger = LogManager.getLogger(Server.class);
 
-    public Server(ReportingInterface metricReportingInterface) {
-        this(metricReportingInterface, 1);
-    }
-    public Server(ReportingInterface metricReportingInterface, int numOfWorkers) {
-
-        if(CliOptions.getPort() == null) {
-            this.port = DEFAULT_PORT;
-        } else {
-            this.port = CliOptions.getPort();
-        }
-
-        this.metricReportingInterface = metricReportingInterface;
-
-        //create executor service
-        this.executorService = Executors.newFixedThreadPool(numOfWorkers);
+    public Server(int port, ReportingInterface<T> reportingInterface, RequestParser<T> requestParser, int numberOfWorkers) {
+        this.port = port;
+        this.reportingInterface = reportingInterface;
+        this.requestParser = requestParser;
+        this.executorService = Executors.newFixedThreadPool(numberOfWorkers);
     }
 
     @Override
@@ -68,19 +64,18 @@ public class Server implements Runnable {
         //open the server socket
         try {
             this.serverSocket = new ServerSocket(this.port);
-            logger.info("Server started and is listening on port "+this.port);
+            logger.info("Server started and is listening on port " + this.port);
         } catch (IOException e) {
-            logger.fatal("Could not start server",e);
+            logger.fatal("Could not start server", e);
             System.exit(1);
         }
 
 
         while (true) {
-
-            Socket clientSocket = null;
+            Socket clientSocket;
             try {
                 clientSocket = this.serverSocket.accept();
-                this.executorService.execute(new ServerWorker(clientSocket.getInputStream(), this.metricReportingInterface));
+                this.executorService.execute(new ServerWorker<>(clientSocket.getInputStream(), this.requestParser, this.reportingInterface));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

@@ -21,7 +21,6 @@
 package de.uniulm.omi.monitoring.metric.impl;
 
 import de.uniulm.omi.monitoring.cli.CliOptions;
-import de.uniulm.omi.monitoring.server.IllegalRequestException;
 
 /**
  * A helper class for creating metrics.
@@ -53,17 +52,6 @@ public class MetricFactory {
     }
 
     /**
-     * Creates a metric from a request via the telnet server.
-     *
-     * @param request the request received from the server.
-     * @return the correct representation as metric.
-     * @throws IllegalRequestException If the server request could not be parsed.
-     */
-    public ApplicationMetric fromRequest(String request) throws IllegalRequestException {
-        return this.parseRequest(request);
-    }
-
-    /**
      * Creates a metric from the given name and the value.
      * Automatically adds the local ip address and the timestamp.
      *
@@ -74,30 +62,4 @@ public class MetricFactory {
     public ServerMetric fromNameAndValue(String name, Object value) {
         return new ServerMetric(name, value, System.currentTimeMillis(), CliOptions.getLocalIp());
     }
-
-    /**
-     * Parses the given request, and creates an application metric from the request.
-     *
-     * @param request the request received from the server
-     * @return an application specific metric representing the request.
-     * @throws IllegalRequestException if the request was invalid and could not be parsed.
-     * @todo: Refactor. Needs to place nearer to the server, multiple request parsers?
-     */
-    protected ApplicationMetric parseRequest(String request) throws IllegalRequestException {
-        // split the request at blanks
-        String[] parts = request.split(" ");
-
-        if (parts.length != 4) {
-            throw new IllegalRequestException("Illegal request.");
-        }
-
-        String applicationName = parts[0];
-        String metricName = parts[1];
-        String value = parts[2];
-        long timestamp = Long.valueOf(parts[3]);
-
-        return new ApplicationMetric(metricName, value, timestamp, applicationName, CliOptions.getLocalIp());
-
-    }
-
 }

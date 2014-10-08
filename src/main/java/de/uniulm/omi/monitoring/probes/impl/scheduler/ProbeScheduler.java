@@ -26,8 +26,11 @@ import de.uniulm.omi.monitoring.reporting.api.ReportingInterface;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 
 /**
  * The scheduler for probes.
@@ -52,6 +55,8 @@ public class ProbeScheduler {
      */
     protected ReportingInterface<Metric> metricReportingInterface;
 
+    private Map<Probe, ScheduledFuture> registeredProbes;
+
     /**
      * Constructor for the probe scheduler.
      *
@@ -62,6 +67,7 @@ public class ProbeScheduler {
         logger.info(String.format("Initializing scheduler with %s workers.", numOfWorkers));
         this.scheduledExecutorService = Executors.newScheduledThreadPool(numOfWorkers);
         this.metricReportingInterface = metricReportingInterface;
+        this.registeredProbes = new HashMap<>();
     }
 
     /**
@@ -72,12 +78,25 @@ public class ProbeScheduler {
      */
     public void registerProbe(Probe probe) {
         logger.info(String.format("New probe for metric %s registered with interval %s - %s at scheduler. ", probe.getMetricName(), probe.getInterval().getPeriod(), probe.getInterval().getTimeUnit()));
-        this.scheduledExecutorService.scheduleAtFixedRate(new ProbeWorker(probe, metricReportingInterface), 0, probe.getInterval().getPeriod(), probe.getInterval().getTimeUnit());
+        ScheduledFuture scheduledFuture = this.scheduledExecutorService.scheduleAtFixedRate(new ProbeWorker(probe, metricReportingInterface), 0, probe.getInterval().getPeriod(), probe.getInterval().getTimeUnit());
+        this.registeredProbes.put(probe, scheduledFuture);
     }
 
-
+    /**
+     * Unregister a probe from the scheduler. A currently running task is not interrupted,
+     * but future tasks are canceled.
+     *
+     * @param probe the probe to unregister.
+     */
     public void unregisterProbe(Probe probe) {
-        //@todo: implement
+        ScheduledFuture scheduledFuture = this.registeredProbes.get(probe);
+        if (scheduledFuture == null) {
+            logger.error("Probe " + probe.getMetricName() + " could not be unregistered.");
+            return;
+        }
+        scheduledFuture.cancel(false);
+        this.registeredProbes.remove(probe);
+        logger.info(String.format("Probe for metric %s was unregistered from scheduler.",probe.getMetricName()));
     }
 
 }

@@ -18,13 +18,11 @@
  *
  */
 
-package de.uniulm.omi.monitoring.server;
+package de.uniulm.omi.monitoring.server.impl;
 
-import de.uniulm.omi.monitoring.metric.impl.Metric;
-import de.uniulm.omi.monitoring.metric.impl.MetricFactory;
 import de.uniulm.omi.monitoring.reporting.api.ReportingInterface;
-import de.uniulm.omi.monitoring.reporting.impl.MetricReportingException;
 import de.uniulm.omi.monitoring.reporting.impl.ReportingException;
+import de.uniulm.omi.monitoring.server.api.RequestParser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -34,16 +32,18 @@ import java.util.Scanner;
 /**
  * Created by daniel on 22.09.14.
  */
-public class ServerWorker implements Runnable {
+public class ServerWorker<T> implements Runnable {
 
     private InputStream inputStream;
-    private ReportingInterface<Metric> metricReportingInterface;
+    private ReportingInterface<T> reportingInterface;
+    private RequestParser<T> requestParser;
 
     private static final Logger logger = LogManager.getLogger(ServerWorker.class);
 
-    public ServerWorker(InputStream inputStream, ReportingInterface metricReportingInterface) {
+    public ServerWorker(InputStream inputStream, RequestParser<T> requestParser, ReportingInterface<T> reportingInterface) {
         this.inputStream = inputStream;
-        this.metricReportingInterface = metricReportingInterface;
+        this.requestParser = requestParser;
+        this.reportingInterface = reportingInterface;
     }
 
     @Override
@@ -51,12 +51,15 @@ public class ServerWorker implements Runnable {
         while (!Thread.currentThread().isInterrupted()) {
             Scanner in = new Scanner(this.inputStream);
             while (in.hasNextLine()) {
+                String line = in.nextLine();
                 try {
-                    this.metricReportingInterface.report(MetricFactory.getInstance().fromRequest(in.nextLine()));
-                } catch (IllegalRequestException e) {
-                    logger.error("Illegal request",e);
+                    this.reportingInterface.report(this.requestParser.parseRequest(line));
                 } catch (ReportingException e) {
-                    logger.error("Could not report metric.",e);
+                    logger.error("Could not report metric.", e);
+                } catch (ParsingException e) {
+                    logger.error("Could not parse line: " + line, e);
+                } catch (RuntimeException e) {
+                    logger.error(e);
                 }
             }
         }

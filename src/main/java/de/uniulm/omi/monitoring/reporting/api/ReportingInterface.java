@@ -28,7 +28,6 @@ import java.util.Collection;
  * Interface for reporting generic items.
  *
  * @param <T> the class of the reported item.
- *
  * @todo: split in single and multiple...
  */
 public interface ReportingInterface<T> {

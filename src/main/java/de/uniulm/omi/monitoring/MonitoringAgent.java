@@ -21,6 +21,7 @@
 package de.uniulm.omi.monitoring;
 
 import de.uniulm.omi.monitoring.cli.CliOptions;
+import de.uniulm.omi.monitoring.metric.impl.ApplicationMetric;
 import de.uniulm.omi.monitoring.metric.impl.Metric;
 import de.uniulm.omi.monitoring.probes.impl.CpuUsageProbe;
 import de.uniulm.omi.monitoring.probes.impl.MemoryUsageProbe;
@@ -28,7 +29,8 @@ import de.uniulm.omi.monitoring.probes.impl.scheduler.ProbeScheduler;
 import de.uniulm.omi.monitoring.reporting.api.ReportingInterface;
 import de.uniulm.omi.monitoring.reporting.impl.KairosDb;
 import de.uniulm.omi.monitoring.reporting.impl.Queue;
-import de.uniulm.omi.monitoring.server.Server;
+import de.uniulm.omi.monitoring.server.impl.MetricRequestParser;
+import de.uniulm.omi.monitoring.server.impl.Server;
 import org.apache.commons.cli.ParseException;
 
 public class MonitoringAgent {
@@ -41,7 +43,7 @@ public class MonitoringAgent {
         ReportingInterface<Metric> metricQueue = new Queue<>(1, new KairosDb(CliOptions.getKairosServer(), CliOptions.getKairosPort()));
 
         //create a new server
-        Server server = new Server(metricQueue);
+        Server<? extends Metric> server = new Server<>(9002, metricQueue, new MetricRequestParser(), 1);
 
         //run the server
         Thread thread = new Thread(server);
