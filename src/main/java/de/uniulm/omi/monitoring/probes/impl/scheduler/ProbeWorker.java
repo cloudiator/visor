@@ -26,33 +26,62 @@ import de.uniulm.omi.monitoring.probes.api.Probe;
 import de.uniulm.omi.monitoring.probes.impl.MetricNotAvailableException;
 import de.uniulm.omi.monitoring.reporting.api.ReportingInterface;
 import de.uniulm.omi.monitoring.reporting.impl.MetricReportingException;
+import de.uniulm.omi.monitoring.reporting.impl.ReportingException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Created by daniel on 22.09.14.
+ * The ProbeWorker class.
+ * <p/>
+ * The worker responsible for doing the probe measurements.
+ * <p/>
+ * It takes the measurements defined in the probe, and reports them
+ * to the given metric reporting interface.
  */
 public class ProbeWorker implements Runnable {
 
+    /**
+     * The probe this worker measures.
+     */
     protected Probe probe;
+    /**
+     * The reporting interface this worker uses to report the metrics.
+     *
+     * @todo: dependency injection?
+     */
     protected ReportingInterface<Metric> metricReportingInterface;
 
+    /**
+     * A logger.
+     */
     private static final Logger logger = LogManager.getLogger(ProbeWorker.class);
 
-    public ProbeWorker(Probe probe, ReportingInterface metricReportingInterface) {
+    /**
+     * Constructor for the probe worker.
+     *
+     * @param probe                    the probe it measures.
+     * @param metricReportingInterface The reporting interface it uses to report the collected metrics.
+     */
+    public ProbeWorker(Probe probe, ReportingInterface<Metric> metricReportingInterface) {
         this.probe = probe;
         this.metricReportingInterface = metricReportingInterface;
     }
 
+    /**
+     * The run method.
+     * Takes the probe measurement and reports it to the reporting interface.
+     */
     @Override
     public void run() {
-        logger.debug(String.format("Measuring probe %s at %s",this.probe.getMetricName(),System.currentTimeMillis()));
+        logger.debug(String.format("Measuring probe %s at %s", this.probe.getMetricName(), System.currentTimeMillis()));
         try {
             this.metricReportingInterface.report(MetricFactory.getInstance().fromNameAndValue(probe.getMetricName(), probe.getMetricValue()));
         } catch (MetricNotAvailableException e) {
             logger.error(String.format("Could not retrieve metric %s", probe.getMetricName()));
-        } catch (MetricReportingException e) {
-            logger.error("Could not report metric",e);
+        } catch (ReportingException e) {
+            logger.error("Could not report metric", e);
+        } catch (RuntimeException e) {
+            logger.error(e);
         }
     }
 }

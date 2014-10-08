@@ -26,10 +26,21 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Created by daniel on 07.10.14.
+ * The KairosTag annotation.
+ * <p/>
+ * This annotation can be used to mark public fields or methods of a metric as tag.
+ * Fields or Methods annotated with a Tag, will be published to the kairos database using
+ * a Tag with the provided name in the name attribute.
+ *
+ * @todo: not optimal, as it places kairos specific code inside the metric....
  */
 @Target(value = {ElementType.FIELD, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Tag {
+public @interface KairosTag {
+    /**
+     * Defines the name of the tag.
+     *
+     * @return the name that will be used for the tag.
+     */
     String name();
 }

@@ -20,38 +20,52 @@
 
 package de.uniulm.omi.monitoring.probes.impl;
 
+import com.sun.management.OperatingSystemMXBean;
 import de.uniulm.omi.monitoring.probes.Interval;
 import de.uniulm.omi.monitoring.probes.api.Probe;
-
-import com.sun.management.OperatingSystemMXBean;
 
 import java.lang.management.ManagementFactory;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Created by daniel on 22.09.14.
+ * A probe for measuring the CPU usage in % on the given machine.
  */
 public class CpuUsageProbe implements Probe {
+
 
     @Override
     public Interval getInterval() {
         return new Interval(20, TimeUnit.SECONDS);
     }
 
+    /**
+     * The name of this metric.
+     *
+     * @return the metric name.
+     */
     @Override
     public String getMetricName() {
         return "cpu_usage_percentage";
     }
 
+    /**
+     * Returns the value of this metric.
+     * <p/>
+     * Uses com.sun.management.OperatingSystemMXBean to measure
+     * the cpu load of the system.
+     *
+     * @return the current cpu usage in percentage retrieved.
+     * @throws MetricNotAvailableException if the measurement could not be executed and the bean return a negative value.
+     */
     @Override
     public Double getMetricValue() throws MetricNotAvailableException {
         OperatingSystemMXBean osBean = ManagementFactory.getPlatformMXBean(
                 OperatingSystemMXBean.class);
 
         double systemCpuLoad = osBean.getSystemCpuLoad();
-        double systemCpuLoadPercentage = systemCpuLoad*100;
+        double systemCpuLoadPercentage = systemCpuLoad * 100;
 
-        if(systemCpuLoad < 0) {
+        if (systemCpuLoad < 0) {
             throw new MetricNotAvailableException("Received negative value");
         }
 

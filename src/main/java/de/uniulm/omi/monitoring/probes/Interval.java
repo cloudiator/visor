@@ -23,23 +23,54 @@ package de.uniulm.omi.monitoring.probes;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Created by daniel on 22.09.14.
+ * The interval class.
+ * <p/>
+ * Represents an interval consisting of a timeunit and a period.
  */
 public class Interval {
 
+    /**
+     * The period of the interval.
+     */
     protected long period;
 
+    /**
+     * The timeunit of the interval.
+     */
     protected TimeUnit timeUnit;
 
+    /**
+     * Constructor for the interval
+     *
+     * @param period   the period of the interval, must be larger then 0.
+     * @param timeUnit the time unit of the interval.
+     */
     public Interval(long period, TimeUnit timeUnit) {
+
+        if (period <= 0) {
+            throw new IllegalArgumentException("The period must be larger then 0");
+        }
+        if (timeUnit == null) {
+            throw new IllegalArgumentException("The time unit must not be null.");
+        }
         this.period = period;
         this.timeUnit = timeUnit;
     }
 
+    /**
+     * Getter for the period.
+     *
+     * @return the period of the interval.
+     */
     public long getPeriod() {
         return period;
     }
 
+    /**
+     * Getter for the timeunit.
+     *
+     * @return the timeunit of the interval.
+     */
     public TimeUnit getTimeUnit() {
         return timeUnit;
     }

@@ -21,25 +21,40 @@
 package de.uniulm.omi.monitoring.reporting.impl;
 
 /**
- * Created by daniel on 07.10.14.
+ * This exception is thrown if a metric could not be converted.
  */
 public class MetricConversionException extends Exception {
 
+    /**
+     * @see java.lang.Exception
+     */
     public MetricConversionException() {
     }
 
+    /**
+     * @see java.lang.Exception
+     */
     public MetricConversionException(String message) {
         super(message);
     }
 
+    /**
+     * @see java.lang.Exception
+     */
     public MetricConversionException(String message, Throwable cause) {
         super(message, cause);
     }
 
+    /**
+     * @see java.lang.Exception
+     */
     public MetricConversionException(Throwable cause) {
         super(cause);
     }
 
+    /**
+     * @see java.lang.Exception
+     */
     public MetricConversionException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }

@@ -20,6 +20,7 @@
 
 package de.uniulm.omi.monitoring.probes.impl.scheduler;
 
+import de.uniulm.omi.monitoring.metric.impl.Metric;
 import de.uniulm.omi.monitoring.probes.api.Probe;
 import de.uniulm.omi.monitoring.reporting.api.ReportingInterface;
 import org.apache.logging.log4j.LogManager;
@@ -29,28 +30,54 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
 /**
- * Created by daniel on 22.09.14.
+ * The scheduler for probes.
+ * <p/>
+ * Schedules the registered probes with their interval.
  */
-public class Scheduler {
+public class ProbeScheduler {
 
-    private static final Logger logger = LogManager.getLogger(Scheduler.class);
+    /**
+     * A logger class.
+     */
+    private static final Logger logger = LogManager.getLogger(ProbeScheduler.class);
 
+    /**
+     * The executor service used for scheduling the probe runs.
+     */
     private final ScheduledExecutorService scheduledExecutorService;
-    protected ReportingInterface metricReportingInterface;
+    /**
+     * The reporting interface where the measured metrics are reported.
+     *
+     * @todo: dependency injection.
+     */
+    protected ReportingInterface<Metric> metricReportingInterface;
 
-    public Scheduler(int numOfWorkers, ReportingInterface metricReportingInterface) {
-        logger.info(String.format("Initializing scheduler with %s workers.",numOfWorkers));
+    /**
+     * Constructor for the probe scheduler.
+     *
+     * @param numOfWorkers             the number of workers to use.
+     * @param metricReportingInterface the reporting interface where the scheduler should report the metrics.
+     */
+    public ProbeScheduler(int numOfWorkers, ReportingInterface<Metric> metricReportingInterface) {
+        logger.info(String.format("Initializing scheduler with %s workers.", numOfWorkers));
         this.scheduledExecutorService = Executors.newScheduledThreadPool(numOfWorkers);
         this.metricReportingInterface = metricReportingInterface;
     }
 
+    /**
+     * Registers a probe with the scheduler. The scheduler will then
+     * execute the registered probe with its interval.
+     *
+     * @param probe The probe which should be executed.
+     */
     public void registerProbe(Probe probe) {
-        logger.info(String.format("New probe for metric %s registered with interval %s - %s at scheduler. ",probe.getMetricName(),probe.getInterval().getPeriod(),probe.getInterval().getTimeUnit()));
+        logger.info(String.format("New probe for metric %s registered with interval %s - %s at scheduler. ", probe.getMetricName(), probe.getInterval().getPeriod(), probe.getInterval().getTimeUnit()));
         this.scheduledExecutorService.scheduleAtFixedRate(new ProbeWorker(probe, metricReportingInterface), 0, probe.getInterval().getPeriod(), probe.getInterval().getTimeUnit());
     }
 
-    public void unregisterProbe(Probe probe) {
 
+    public void unregisterProbe(Probe probe) {
+        //@todo: implement
     }
 
 }

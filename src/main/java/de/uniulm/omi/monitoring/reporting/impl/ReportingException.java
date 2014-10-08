@@ -18,47 +18,29 @@
  *
  */
 
-package de.uniulm.omi.monitoring.probes.impl;
+package de.uniulm.omi.monitoring.reporting.impl;
 
 /**
- * The MetricNotAvailableException.
- *
- * This exception is thrown if a probe could not measure the metric, and
- * the metric is therefore not available.
+ * Created by daniel on 08.10.14.
  */
-public class MetricNotAvailableException extends Exception {
+public class ReportingException extends Exception{
 
-    /**
-     * @see java.lang.Exception
-     */
-    public MetricNotAvailableException(String message) {
+    public ReportingException() {
+    }
+
+    public ReportingException(String message) {
         super(message);
     }
 
-    /**
-     * @see java.lang.Exception
-     */
-    public MetricNotAvailableException(String message, Throwable cause) {
+    public ReportingException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    /**
-     * @see java.lang.Exception
-     */
-    public MetricNotAvailableException(Throwable cause) {
+    public ReportingException(Throwable cause) {
         super(cause);
     }
 
-    /**
-     * @see java.lang.Exception
-     */
-    public MetricNotAvailableException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    public ReportingException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
-    }
-
-    /**
-     * @see java.lang.Exception
-     */
-    public MetricNotAvailableException() {
     }
 }

@@ -20,9 +20,11 @@
 
 package de.uniulm.omi.monitoring.server;
 
+import de.uniulm.omi.monitoring.metric.impl.Metric;
 import de.uniulm.omi.monitoring.metric.impl.MetricFactory;
 import de.uniulm.omi.monitoring.reporting.api.ReportingInterface;
 import de.uniulm.omi.monitoring.reporting.impl.MetricReportingException;
+import de.uniulm.omi.monitoring.reporting.impl.ReportingException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -35,7 +37,7 @@ import java.util.Scanner;
 public class ServerWorker implements Runnable {
 
     private InputStream inputStream;
-    private ReportingInterface metricReportingInterface;
+    private ReportingInterface<Metric> metricReportingInterface;
 
     private static final Logger logger = LogManager.getLogger(ServerWorker.class);
 
@@ -53,7 +55,7 @@ public class ServerWorker implements Runnable {
                     this.metricReportingInterface.report(MetricFactory.getInstance().fromRequest(in.nextLine()));
                 } catch (IllegalRequestException e) {
                     logger.error("Illegal request",e);
-                } catch (MetricReportingException e) {
+                } catch (ReportingException e) {
                     logger.error("Could not report metric.",e);
                 }
             }

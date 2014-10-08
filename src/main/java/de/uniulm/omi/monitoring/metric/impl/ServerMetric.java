@@ -20,21 +20,40 @@
 
 package de.uniulm.omi.monitoring.metric.impl;
 
-import de.uniulm.omi.monitoring.metric.api.Tag;
+import de.uniulm.omi.monitoring.metric.api.KairosTag;
 
 /**
- * Created by daniel on 06.10.14.
+ * The class ServerMetric.
+ * <p/>
+ * Represents a metric measured on a specific server. It extends the basic
+ * metric by the ip address where the metric was taken.
  */
 public class ServerMetric extends Metric {
 
+    /**
+     * The ip address of the server where the metric was measured.
+     */
     protected String ip;
 
+    /**
+     * Constructor for the server metric.
+     *
+     * @param name      the name of the metric.
+     * @param value     the value of the metric.
+     * @param timestamp the time where when the metric was measured (unix format)
+     * @param ip        the ip of the server where the metric was measured.
+     */
     public ServerMetric(String name, Object value, long timestamp, String ip) {
         super(name, value, timestamp);
         this.ip = ip;
     }
 
-    @Tag(name = "server")
+    /**
+     * Getter for the ip.
+     *
+     * @return the ip of the server where the metric was measured.
+     */
+    @KairosTag(name = "server")
     public String getIp() {
         return this.ip;
     }

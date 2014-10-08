@@ -33,7 +33,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Created by daniel on 21.09.14.
+ * A small server.
  */
 public class Server implements Runnable {
 

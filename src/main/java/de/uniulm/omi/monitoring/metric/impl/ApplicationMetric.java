@@ -20,23 +20,44 @@
 
 package de.uniulm.omi.monitoring.metric.impl;
 
-import de.uniulm.omi.monitoring.metric.api.Tag;
+import de.uniulm.omi.monitoring.metric.api.KairosTag;
 
 /**
- * Created by daniel on 22.09.14.
+ * The application metric class.
+ * <p/>
+ * Adds an application name to a server metric, defining the application
+ * that reported the metric, meaning that this metric is application specific.
  */
 public class ApplicationMetric extends ServerMetric {
 
+    /**
+     * Constructor of the application metric.
+     *
+     * @param name            the name of the metric.
+     * @param value           the value of the metric.
+     * @param timestamp       the timestamp when the metric was taken (unix format)
+     * @param applicationName the name of the application reporting the metric.
+     * @param Ip              the IP of the server, where the metric was measured.
+     */
     public ApplicationMetric(String name, Object value, long timestamp, String applicationName, String Ip) {
         super(name, value, timestamp, Ip);
         this.applicationName = applicationName;
     }
 
+    /**
+     * The name of the application reporting the metric.
+     */
     protected String applicationName;
 
-    @Tag(name = "application")
+    /**
+     * Getter for the application name.
+     *
+     * @return the name of the application reporting the metric.
+     */
+    @KairosTag(name = "application")
     public String getApplicationName() {
         return applicationName;
     }
+
 
 }

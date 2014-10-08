@@ -21,14 +21,23 @@
 package de.uniulm.omi.monitoring.server;
 
 /**
- * Created by daniel on 22.09.14.
+ * The IllegalRequestException.
+ *
+ * This exception is thrown if the request to the metric interface could not be
+ * understood.
  */
 public class IllegalRequestException extends Exception {
 
+    /**
+     * @see java.lang.Exception
+     */
     public IllegalRequestException(String message) {
         super(message);
     }
 
+    /**
+     * @see java.lang.Exception
+     */
     public IllegalRequestException(String message, Throwable e) {
         super(message,e);
     }

@@ -20,34 +20,78 @@
 
 package de.uniulm.omi.monitoring.metric.impl;
 
+/**
+ * A basic metric for the system.
+ * <p/>
+ * A metric always consists of:
+ * - a name: the name of the matric
+ * - a value: a value for this metric.
+ * - a timestamp: the unix timestamp when this metric was taken.
+ */
 public abstract class Metric {
 
+    /**
+     * The name of the metric.
+     */
     protected String name;
 
+    /**
+     * The value of the metric.
+     */
     protected Object value;
 
+    /**
+     * The time the metric was taken as unix timestamp.
+     */
     protected long timestamp;
 
+    /**
+     * Constructor for the metric.
+     *
+     * @param name      the name of the metric.
+     * @param value     the value of the metric.
+     * @param timestamp the timestamp of the metric.
+     */
     public Metric(String name, Object value, long timestamp) {
         this.name = name;
         this.value = value;
         this.timestamp = timestamp;
     }
 
+    /**
+     * Getter for the name of the metric.
+     *
+     * @return the name of the metric.
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Getter for the value of the metric.
+     *
+     * @return the value of the metric.
+     */
     public Object getValue() {
         return value;
     }
 
+    /**
+     * Getter for the timestamp of the metric.
+     *
+     * @return the time the metric was taken.
+     */
     public long getTimestamp() {
         return timestamp;
     }
 
+    /**
+     * To String method for the metric.
+     *
+     * @return the metric as string representation, mainly for logging purposes.
+     */
     public String toString() {
-        return String.format("Name: %s, Value: %s, Time: %s",this.getName(),this.getValue(),this.getTimestamp());
+        return String.format("Name: %s, Value: %s, Time: %s", this.getName(), this.getValue(), this.getTimestamp());
     }
 
 }

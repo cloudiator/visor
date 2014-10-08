@@ -33,18 +33,43 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.util.Collection;
 
+/**
+ * A concrete implementation of the reporting interface, reporting
+ * metrics to the kairos database.
+ */
 public class KairosDb implements ReportingInterface<Metric> {
 
+    /**
+     * The server of the kairos db.
+     */
     protected String server;
+    /**
+     * The port of the kairos db.
+     */
     protected String port;
 
+    /**
+     * A logger.
+     */
     private static final Logger logger = LogManager.getLogger(KairosDb.class);
 
+    /**
+     * Constructor. Sets the server and the port of the kairos database.
+     *
+     * @param server the FQDN for the server
+     * @param port   the port.
+     */
     public KairosDb(String server, String port) {
         this.server = server;
         this.port = port;
     }
 
+    /**
+     * Sends a metric to the kairos server.
+     *
+     * @param metricBuilder the metricbuilder containing the metrics.
+     * @throws MetricReportingException If the kairos server could not be reached.
+     */
     protected void sendMetric(MetricBuilder metricBuilder) throws MetricReportingException {
         try {
             HttpClient client = new HttpClient("http://" + this.server + ":" + this.port);
@@ -70,6 +95,13 @@ public class KairosDb implements ReportingInterface<Metric> {
         }
     }
 
+    /**
+     * Report method.
+     * Converts the given metric to a metric kairos understands and sends them.
+     *
+     * @param metric the metric to report.
+     * @throws MetricReportingException of the metric could not be converted. or sent to kairos.
+     */
     @Override
     public void report(Metric metric) throws MetricReportingException {
         logger.debug(String.format("Reporting new metric: %s", metric));
@@ -82,6 +114,13 @@ public class KairosDb implements ReportingInterface<Metric> {
         this.sendMetric(metricConverter.convert());
     }
 
+    /**
+     * Report method for multiple metrics.
+     * Converts the metrics to metrics kairos can understand and sends them.
+     *
+     * @param metrics a collection of metrics.
+     * @throws MetricReportingException if the metric could not be converted or sent to kairos.
+     */
     @Override
     public void report(Collection<Metric> metrics) throws MetricReportingException {
         MetricConverter metricConverter = new MetricConverter();

@@ -20,7 +20,7 @@
 
 package de.uniulm.omi.monitoring.reporting.impl;
 
-import de.uniulm.omi.monitoring.metric.api.Tag;
+import de.uniulm.omi.monitoring.metric.api.KairosTag;
 import org.kairosdb.client.builder.Metric;
 import org.kairosdb.client.builder.MetricBuilder;
 
@@ -45,9 +45,9 @@ public class MetricConverter {
         //we need to add the tags
         //fields
         for (Field field : metric.getClass().getFields()) {
-            if (field.isAnnotationPresent(Tag.class)) {
+            if (field.isAnnotationPresent(KairosTag.class)) {
                 try {
-                    kairosMetric.addTag(field.getAnnotation(Tag.class).name(), (String) field.get(metric));
+                    kairosMetric.addTag(field.getAnnotation(KairosTag.class).name(), (String) field.get(metric));
                 } catch (IllegalAccessException e) {
                     throw new MetricConversionException(String.format("Could not access field %s annotated with Tag", field.getName()),e);
                 }
@@ -56,9 +56,9 @@ public class MetricConverter {
 
         //methods
         for (Method method : metric.getClass().getMethods()) {
-            if (method.isAnnotationPresent(Tag.class)) {
+            if (method.isAnnotationPresent(KairosTag.class)) {
                 try {
-                    kairosMetric.addTag(method.getAnnotation(Tag.class).name(), (String) method.invoke(metric));
+                    kairosMetric.addTag(method.getAnnotation(KairosTag.class).name(), (String) method.invoke(metric));
                 } catch (IllegalAccessException | InvocationTargetException e) {
                     throw new MetricConversionException(String.format("Could not access method %s annotated with Tag", method.getName()),e);
                 }

@@ -20,13 +20,32 @@
 
 package de.uniulm.omi.monitoring.reporting.api;
 
-import de.uniulm.omi.monitoring.reporting.impl.MetricReportingException;
+import de.uniulm.omi.monitoring.reporting.impl.ReportingException;
 
 import java.util.Collection;
 
+/**
+ * Interface for reporting generic items.
+ *
+ * @param <T> the class of the reported item.
+ *
+ * @todo: split in single and multiple...
+ */
 public interface ReportingInterface<T> {
 
-    public void report(T item) throws MetricReportingException;
+    /**
+     * Reports the generic item.
+     *
+     * @param item the item to report.
+     * @throws ReportingException If an error occurred while reporting the item.
+     */
+    public void report(T item) throws ReportingException;
 
-    public void report(Collection<T> items) throws MetricReportingException;
+    /**
+     * Reports a collection of the generic item.
+     *
+     * @param items a collection of generic items to report.
+     * @throws ReportingException If an error occurred while reporting on of the items.
+     */
+    public void report(Collection<T> items) throws ReportingException;
 }

@@ -24,6 +24,11 @@ import de.uniulm.omi.monitoring.reporting.api.ReportingInterface;
 
 import java.util.concurrent.BlockingQueue;
 
+/**
+ * Generic implementation of a queue worker.
+ *
+ * @param <T>
+ */
 public class QueueWorker<T> implements Runnable {
 
     private BlockingQueue<T> queue;
@@ -40,7 +45,7 @@ public class QueueWorker<T> implements Runnable {
                 T item = this.queue.take();
                 try {
                     this.reportingInterface.report(item);
-                } catch (MetricReportingException e) {
+                } catch (ReportingException e) {
                     this.queue.put(item);
                 }
             } catch (InterruptedException e) {

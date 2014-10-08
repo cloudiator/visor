@@ -24,13 +24,33 @@ import de.uniulm.omi.monitoring.probes.Interval;
 import de.uniulm.omi.monitoring.probes.impl.MetricNotAvailableException;
 
 /**
- * Created by daniel on 22.09.14.
+ * Interface which needs to be implemented to create a Probe.
+ * <p/>
+ * A probe is run with the given interval measuring the metric with the provided name.
+ *
+ * @todo: Probes the measure application specific data?
  */
 public interface Probe {
 
+    /**
+     * The interval this probe is run with.
+     *
+     * @return the interval this probe is run with.
+     */
     public Interval getInterval();
 
+    /**
+     * The name of the metric this probe measures.
+     *
+     * @return the name of the metric this probe measures.
+     */
     public String getMetricName();
 
+    /**
+     * The value of metric this probe measures at the time it is called.
+     *
+     * @return the measured value at this point of time.
+     * @throws MetricNotAvailableException
+     */
     public Object getMetricValue() throws MetricNotAvailableException;
 }

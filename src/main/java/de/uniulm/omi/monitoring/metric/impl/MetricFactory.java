@@ -24,7 +24,9 @@ import de.uniulm.omi.monitoring.cli.CliOptions;
 import de.uniulm.omi.monitoring.server.IllegalRequestException;
 
 /**
- * Created by daniel on 22.09.14.
+ * A helper class for creating metrics.
+ * <p/>
+ * Offers methods to created metrics from different other representations.
  */
 public class MetricFactory {
 
@@ -50,19 +52,42 @@ public class MetricFactory {
         return instance;
     }
 
+    /**
+     * Creates a metric from a request via the telnet server.
+     *
+     * @param request the request received from the server.
+     * @return the correct representation as metric.
+     * @throws IllegalRequestException If the server request could not be parsed.
+     */
     public ApplicationMetric fromRequest(String request) throws IllegalRequestException {
         return this.parseRequest(request);
     }
 
+    /**
+     * Creates a metric from the given name and the value.
+     * Automatically adds the local ip address and the timestamp.
+     *
+     * @param name  the name of the metric.
+     * @param value the value of the metric.
+     * @return a server specific metric having the name and the value given.
+     */
     public ServerMetric fromNameAndValue(String name, Object value) {
         return new ServerMetric(name, value, System.currentTimeMillis(), CliOptions.getLocalIp());
     }
 
+    /**
+     * Parses the given request, and creates an application metric from the request.
+     *
+     * @param request the request received from the server
+     * @return an application specific metric representing the request.
+     * @throws IllegalRequestException if the request was invalid and could not be parsed.
+     * @todo: Refactor. Needs to place nearer to the server, multiple request parsers?
+     */
     protected ApplicationMetric parseRequest(String request) throws IllegalRequestException {
         // split the request at blanks
         String[] parts = request.split(" ");
 
-        if(parts.length != 4) {
+        if (parts.length != 4) {
             throw new IllegalRequestException("Illegal request.");
         }
 

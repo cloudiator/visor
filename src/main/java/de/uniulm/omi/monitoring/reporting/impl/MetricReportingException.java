@@ -23,7 +23,7 @@ package de.uniulm.omi.monitoring.reporting.impl;
 /**
  * Created by daniel on 07.10.14.
  */
-public class MetricReportingException extends Exception {
+public class MetricReportingException extends ReportingException {
 
     public MetricReportingException() {
     }
