@@ -21,6 +21,8 @@
 package de.uniulm.omi.monitoring.reporting.impl;
 
 import de.uniulm.omi.monitoring.reporting.api.ReportingInterface;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.concurrent.BlockingQueue;
 
@@ -33,6 +35,7 @@ public class QueueWorker<T> implements Runnable {
 
     private BlockingQueue<T> queue;
     private ReportingInterface<T> reportingInterface;
+    private static final Logger logger = LogManager.getLogger(QueueWorker.class);
 
     public QueueWorker(BlockingQueue<T> queue, ReportingInterface<T> reportingInterface) {
         this.queue = queue;
@@ -46,11 +49,15 @@ public class QueueWorker<T> implements Runnable {
                 try {
                     this.reportingInterface.report(item);
                 } catch (ReportingException e) {
+                    logger.error("Could not report metric, put it back to queue",e);
                     this.queue.put(item);
                 }
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
+                logger.error(e);
                 break;
+            } catch (Throwable t) {
+                logger.fatal(t);
             }
         }
     }

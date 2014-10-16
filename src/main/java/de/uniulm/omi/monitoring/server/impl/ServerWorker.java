@@ -58,8 +58,8 @@ public class ServerWorker<T> implements Runnable {
                     logger.error("Could not report metric.", e);
                 } catch (ParsingException e) {
                     logger.error("Could not parse line: " + line, e);
-                } catch (RuntimeException e) {
-                    logger.error(e);
+                } catch (Throwable t) {
+                    logger.fatal(t);
                 }
             }
         }

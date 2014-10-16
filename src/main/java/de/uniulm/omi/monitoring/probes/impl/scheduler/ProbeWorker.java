@@ -79,8 +79,8 @@ public class ProbeWorker implements Runnable {
             logger.error(String.format("Could not retrieve metric %s", probe.getMetricName()));
         } catch (ReportingException e) {
             logger.error("Could not report metric", e);
-        } catch (RuntimeException e) {
-            logger.error(e);
+        } catch (Throwable t) {
+            logger.fatal(t);
         }
     }
 }
