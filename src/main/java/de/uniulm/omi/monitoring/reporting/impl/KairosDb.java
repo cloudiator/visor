@@ -84,7 +84,10 @@ public class KairosDb implements ReportingInterface<Metric> {
                 logger.debug("Kairos DB returned OK. Status code: " + response.getStatusCode());
             }
             client.shutdown();
-        } catch (MalformedURLException | URISyntaxException e) {
+        } catch (MalformedURLException e) {
+            logger.fatal("KairosDB URL is invalid.", e);
+            System.exit(1);
+        } catch (URISyntaxException e) {
             logger.fatal("KairosDB URL is invalid.", e);
             System.exit(1);
         } catch (IOException e) {

@@ -67,7 +67,7 @@ public class ProbeScheduler {
         logger.info(String.format("Initializing scheduler with %s workers.", numOfWorkers));
         this.scheduledExecutorService = Executors.newScheduledThreadPool(numOfWorkers);
         this.metricReportingInterface = metricReportingInterface;
-        this.registeredProbes = new HashMap<>();
+        this.registeredProbes = new HashMap<Probe, ScheduledFuture>();
     }
 
     /**

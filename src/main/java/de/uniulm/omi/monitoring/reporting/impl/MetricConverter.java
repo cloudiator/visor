@@ -59,7 +59,9 @@ public class MetricConverter {
             if (method.isAnnotationPresent(KairosTag.class)) {
                 try {
                     kairosMetric.addTag(method.getAnnotation(KairosTag.class).name(), (String) method.invoke(metric));
-                } catch (IllegalAccessException | InvocationTargetException e) {
+                } catch (IllegalAccessException e) {
+                    throw new MetricConversionException(String.format("Could not access method %s annotated with Tag", method.getName()),e);
+                } catch (InvocationTargetException e) {
                     throw new MetricConversionException(String.format("Could not access method %s annotated with Tag", method.getName()),e);
                 }
             }

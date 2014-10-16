@@ -75,7 +75,7 @@ public class Server<T> implements Runnable {
             Socket clientSocket;
             try {
                 clientSocket = this.serverSocket.accept();
-                this.executorService.execute(new ServerWorker<>(clientSocket.getInputStream(), this.requestParser, this.reportingInterface));
+                this.executorService.execute(new ServerWorker<T>(clientSocket.getInputStream(), this.requestParser, this.reportingInterface));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

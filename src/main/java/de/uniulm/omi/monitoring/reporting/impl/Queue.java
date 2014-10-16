@@ -50,12 +50,12 @@ public class Queue<T> implements ReportingInterface<T> {
      */
     public Queue(int numWorkers, ReportingInterface<T> reportingInterface) {
         //initialize metric queue
-        this.queue = new LinkedBlockingQueue<>();
+        this.queue = new LinkedBlockingQueue<T>();
         //initialize thread pool
         ExecutorService executorService = Executors.newFixedThreadPool(numWorkers);
         // create workers
         for (int i = 0; i < numWorkers; i++) {
-            executorService.submit(new QueueWorker<>(this.queue, reportingInterface));
+            executorService.submit(new QueueWorker<T>(this.queue, reportingInterface));
         }
     }
 
