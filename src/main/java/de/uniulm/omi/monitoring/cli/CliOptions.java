@@ -26,6 +26,7 @@ import org.apache.commons.cli.*;
 /**
  * Created by daniel on 24.09.14.
  */
+@SuppressWarnings("AccessStaticViaInstance")
 public class CliOptions {
 
     private static Options options;
