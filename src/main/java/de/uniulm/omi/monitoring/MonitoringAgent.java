@@ -20,30 +20,39 @@
 
 package de.uniulm.omi.monitoring;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import de.uniulm.omi.monitoring.cli.CliOptions;
-import de.uniulm.omi.monitoring.metric.impl.ApplicationMetric;
 import de.uniulm.omi.monitoring.metric.impl.Metric;
 import de.uniulm.omi.monitoring.probes.impl.CpuUsageProbe;
 import de.uniulm.omi.monitoring.probes.impl.MemoryUsageProbe;
 import de.uniulm.omi.monitoring.probes.impl.scheduler.ProbeScheduler;
 import de.uniulm.omi.monitoring.reporting.api.ReportingInterface;
+import de.uniulm.omi.monitoring.reporting.impl.CommandLineReporter;
 import de.uniulm.omi.monitoring.reporting.impl.KairosDb;
 import de.uniulm.omi.monitoring.reporting.impl.Queue;
-import de.uniulm.omi.monitoring.server.impl.MetricRequestParser;
+import de.uniulm.omi.monitoring.server.impl.MetricRequestLineParser;
 import de.uniulm.omi.monitoring.server.impl.Server;
 import org.apache.commons.cli.ParseException;
 
 public class MonitoringAgent {
+
+    private final Injector injector;
+
+    public MonitoringAgent() {
+        injector = Guice.createInjector();
+    }
 
     public static void main(String[] args) throws ParseException {
 
         CliOptions.setArguments(args);
 
         //metric queue
-        ReportingInterface<Metric> metricQueue = new Queue<Metric>(1, new KairosDb(CliOptions.getKairosServer(), CliOptions.getKairosPort()));
+        //ReportingInterface<Metric> metricQueue = new Queue<>(1, new KairosDb(CliOptions.getKairosServer(), CliOptions.getKairosPort()));
+        ReportingInterface<Metric> metricQueue = new Queue<>(1, new CommandLineReporter());
 
         //create a new server
-        Server<? extends Metric> server = new Server<Metric>(9002, metricQueue, new MetricRequestParser(), 1);
+        Server<? extends Metric> server = new Server<>(9002, metricQueue, new MetricRequestLineParser(), 1);
 
         //run the server
         Thread thread = new Thread(server);
@@ -51,7 +60,7 @@ public class MonitoringAgent {
 
         //create a scheduler
         ProbeScheduler scheduler = new ProbeScheduler(1, metricQueue);
-        scheduler.registerProbe(new CpuUsageProbe());
-        scheduler.registerProbe(new MemoryUsageProbe());
+        scheduler.schedule(new CpuUsageProbe());
+        scheduler.schedule(new MemoryUsageProbe());
     }
 }

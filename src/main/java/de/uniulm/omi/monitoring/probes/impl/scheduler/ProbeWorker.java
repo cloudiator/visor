@@ -45,8 +45,6 @@ public class ProbeWorker implements Runnable {
     protected Probe probe;
     /**
      * The reporting interface this worker uses to report the metrics.
-     *
-     * @todo: dependency injection?
      */
     protected ReportingInterface<Metric> metricReportingInterface;
 

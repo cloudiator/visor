@@ -36,11 +36,11 @@ public class ServerWorker<T> implements Runnable {
 
     private InputStream inputStream;
     private ReportingInterface<T> reportingInterface;
-    private RequestParser<T> requestParser;
+    private RequestParser<T,String> requestParser;
 
     private static final Logger logger = LogManager.getLogger(ServerWorker.class);
 
-    public ServerWorker(InputStream inputStream, RequestParser<T> requestParser, ReportingInterface<T> reportingInterface) {
+    public ServerWorker(InputStream inputStream, RequestParser<T,String> requestParser, ReportingInterface<T> reportingInterface) {
         this.inputStream = inputStream;
         this.requestParser = requestParser;
         this.reportingInterface = reportingInterface;

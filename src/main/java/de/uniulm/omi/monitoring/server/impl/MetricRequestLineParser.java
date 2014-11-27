@@ -28,7 +28,7 @@ import de.uniulm.omi.monitoring.server.api.RequestParser;
 /**
  * Created by daniel on 08.10.14.
  */
-public class MetricRequestParser implements RequestParser<Metric> {
+public class MetricRequestLineParser implements RequestParser<Metric,String> {
 
     /**
      * Parses the given request, and creates an application metric from the request.

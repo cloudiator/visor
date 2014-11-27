@@ -18,15 +18,28 @@
  *
  */
 
-package de.uniulm.omi.monitoring.server.api;
+package de.uniulm.omi.monitoring.probes.api.scheduler;
 
-import de.uniulm.omi.monitoring.server.impl.ParsingException;
+import de.uniulm.omi.monitoring.probes.api.Probe;
 
 /**
- * Created by daniel on 08.10.14.
+ * Interface for the probe scheduler.
  */
-public interface RequestParser<T,S> {
+public interface ProbeSchedulerInterface {
 
-    public T parseRequest(S s) throws ParsingException;
+    /**
+     * Registers a probe with the scheduler. The scheduler will then
+     * execute the registered probe with its interval.
+     *
+     * @param probe The probe which should be executed.
+     */
+    public void schedule(Probe probe);
 
+    /**
+     * Unregister a probe from the scheduler. A currently running task is not interrupted,
+     * but future tasks are canceled.
+     *
+     * @param probe the probe to unregister.
+     */
+    public void remove(Probe probe);
 }

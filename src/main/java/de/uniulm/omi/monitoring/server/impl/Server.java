@@ -20,7 +20,6 @@
 
 package de.uniulm.omi.monitoring.server.impl;
 
-import de.uniulm.omi.monitoring.cli.CliOptions;
 import de.uniulm.omi.monitoring.reporting.api.ReportingInterface;
 import de.uniulm.omi.monitoring.server.api.RequestParser;
 import org.apache.logging.log4j.LogManager;
@@ -33,25 +32,20 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * A small server.
- * <p/>
- * Receives requests on the defined port, parses them with
- * the defined request parses, and then reports the result
- * to the given reporting interface.
+ *
  */
 public class Server<T> implements Runnable {
 
 
-
     protected final int port;
     protected final ReportingInterface<T> reportingInterface;
-    protected final RequestParser<T> requestParser;
+    protected final RequestParser<T, String> requestParser;
     private ServerSocket serverSocket;
     private final ExecutorService executorService;
 
     private static final Logger logger = LogManager.getLogger(Server.class);
 
-    public Server(int port, ReportingInterface<T> reportingInterface, RequestParser<T> requestParser, int numberOfWorkers) {
+    public Server(int port, ReportingInterface<T> reportingInterface, RequestParser<T, String> requestParser, int numberOfWorkers) {
         this.port = port;
         this.reportingInterface = reportingInterface;
         this.requestParser = requestParser;
@@ -71,11 +65,11 @@ public class Server<T> implements Runnable {
         }
 
 
-        while (true) {
+        while (!Thread.currentThread().isInterrupted()) {
             Socket clientSocket;
             try {
                 clientSocket = this.serverSocket.accept();
-                this.executorService.execute(new ServerWorker<T>(clientSocket.getInputStream(), this.requestParser, this.reportingInterface));
+                this.executorService.execute(new ServerWorker<>(clientSocket.getInputStream(), this.requestParser, this.reportingInterface));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

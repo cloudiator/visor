@@ -22,6 +22,9 @@ package de.uniulm.omi.monitoring.probes;
 
 import java.util.concurrent.TimeUnit;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * The interval class.
  * <p/>
@@ -47,12 +50,8 @@ public class Interval {
      */
     public Interval(long period, TimeUnit timeUnit) {
 
-        if (period <= 0) {
-            throw new IllegalArgumentException("The period must be larger then 0");
-        }
-        if (timeUnit == null) {
-            throw new IllegalArgumentException("The time unit must not be null.");
-        }
+        checkArgument(period > 0,"The period must be > 0");
+        checkNotNull(timeUnit,"The time unit must not be null.");
         this.period = period;
         this.timeUnit = timeUnit;
     }

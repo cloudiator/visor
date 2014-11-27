@@ -18,15 +18,27 @@
  *
  */
 
-package de.uniulm.omi.monitoring.server.api;
+package de.uniulm.omi.monitoring.reporting.impl;
 
-import de.uniulm.omi.monitoring.server.impl.ParsingException;
+import de.uniulm.omi.monitoring.metric.impl.Metric;
+import de.uniulm.omi.monitoring.reporting.api.ReportingInterface;
+
+import java.util.Collection;
 
 /**
- * Created by daniel on 08.10.14.
+ * Created by daniel on 27.11.14.
  */
-public interface RequestParser<T,S> {
+public class CommandLineReporter implements ReportingInterface<Metric> {
 
-    public T parseRequest(S s) throws ParsingException;
+    @Override
+    public void report(Metric metric) throws ReportingException {
+        System.out.println(metric.toString());
+    }
 
+    @Override
+    public void report(Collection<Metric> metrics) throws ReportingException {
+        for(Metric metric : metrics) {
+            this.report(metric);
+        }
+    }
 }

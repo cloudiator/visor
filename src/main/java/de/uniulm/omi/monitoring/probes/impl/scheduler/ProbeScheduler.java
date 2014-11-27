@@ -22,6 +22,7 @@ package de.uniulm.omi.monitoring.probes.impl.scheduler;
 
 import de.uniulm.omi.monitoring.metric.impl.Metric;
 import de.uniulm.omi.monitoring.probes.api.Probe;
+import de.uniulm.omi.monitoring.probes.api.scheduler.ProbeSchedulerInterface;
 import de.uniulm.omi.monitoring.reporting.api.ReportingInterface;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -37,7 +38,7 @@ import java.util.concurrent.ScheduledFuture;
  * <p/>
  * Schedules the registered probes with their interval.
  */
-public class ProbeScheduler {
+public class ProbeScheduler implements ProbeSchedulerInterface {
 
     /**
      * A logger class.
@@ -50,8 +51,6 @@ public class ProbeScheduler {
     private final ScheduledExecutorService scheduledExecutorService;
     /**
      * The reporting interface where the measured metrics are reported.
-     *
-     * @todo: dependency injection.
      */
     protected ReportingInterface<Metric> metricReportingInterface;
 
@@ -67,28 +66,18 @@ public class ProbeScheduler {
         logger.info(String.format("Initializing scheduler with %s workers.", numOfWorkers));
         this.scheduledExecutorService = Executors.newScheduledThreadPool(numOfWorkers);
         this.metricReportingInterface = metricReportingInterface;
-        this.registeredProbes = new HashMap<Probe, ScheduledFuture>();
+        this.registeredProbes = new HashMap<>();
     }
 
-    /**
-     * Registers a probe with the scheduler. The scheduler will then
-     * execute the registered probe with its interval.
-     *
-     * @param probe The probe which should be executed.
-     */
-    public void registerProbe(Probe probe) {
+    @Override
+    public void schedule(Probe probe) {
         logger.info(String.format("New probe for metric %s registered with interval %s - %s at scheduler. ", probe.getMetricName(), probe.getInterval().getPeriod(), probe.getInterval().getTimeUnit()));
         ScheduledFuture scheduledFuture = this.scheduledExecutorService.scheduleAtFixedRate(new ProbeWorker(probe, metricReportingInterface), 0, probe.getInterval().getPeriod(), probe.getInterval().getTimeUnit());
         this.registeredProbes.put(probe, scheduledFuture);
     }
 
-    /**
-     * Unregister a probe from the scheduler. A currently running task is not interrupted,
-     * but future tasks are canceled.
-     *
-     * @param probe the probe to unregister.
-     */
-    public void unregisterProbe(Probe probe) {
+    @Override
+    public void remove(Probe probe) {
         ScheduledFuture scheduledFuture = this.registeredProbes.get(probe);
         if (scheduledFuture == null) {
             logger.error("Probe " + probe.getMetricName() + " could not be unregistered.");
