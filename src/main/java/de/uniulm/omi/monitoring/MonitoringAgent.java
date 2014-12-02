@@ -52,7 +52,7 @@ public class MonitoringAgent {
         //ReportingInterface<Metric> metricQueue = new Queue<>(1, new CommandLineReporter());
 
         //create a new server
-        Server<? extends Metric> server = new Server<>(9002, metricQueue, new MetricRequestLineParser(), 1);
+        Server<? extends Metric> server = new Server<>(CliOptions.getPort(), metricQueue, new MetricRequestLineParser(), 1);
 
         //run the server
         Thread thread = new Thread(server);
