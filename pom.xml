@@ -30,8 +30,8 @@
 
     <repositories>
         <repository>
-            <id>eladron</id>
-            <name>Eladron Releases</name>
+            <id>omi</id>
+            <name>OMI Releases</name>
             <url>http://eladron.e-technik.uni-ulm.de:8081/nexus/content/repositories/releases</url>
         </repository>
     </repositories>
@@ -77,10 +77,15 @@
 
     <distributionManagement>
         <repository>
-            <id>eladron</id>
-            <name>eladron</name>
-            <url>http://eladron.e-technik.uni-ulm.de:8081/nexus/content/repositories/snapshots</url>
+            <id>omi</id>
+            <name>OMI Releases</name>
+            <url>http://eladron.e-technik.uni-ulm.de:8081/nexus/content/repositories/releases</url>
         </repository>
+	<snapshotRepository>
+            <id>omi-snapshots</id>
+            <name>OMI Snapshots</name>
+            <url>http://eladron.e-technik.uni-ulm.de:8081/nexus/content/repositories/snapshots</url>
+        </snapshotRepository>
     </distributionManagement>
 
     <build>
