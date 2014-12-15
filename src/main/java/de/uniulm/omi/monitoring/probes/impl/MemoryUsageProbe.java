@@ -21,34 +21,18 @@
 package de.uniulm.omi.monitoring.probes.impl;
 
 import com.sun.management.OperatingSystemMXBean;
-import de.uniulm.omi.monitoring.probes.Interval;
+import de.uniulm.omi.monitoring.metric.api.MetricNotAvailableException;
 import de.uniulm.omi.monitoring.probes.api.Probe;
 
 import java.lang.management.ManagementFactory;
-import java.util.concurrent.TimeUnit;
 
 /**
  * The MemoryUsageProbe class.
- * <p/>
+ * <p>
  * Measures the currently used memory by the operating system in percentage.
  */
 public class MemoryUsageProbe implements Probe {
 
-    /**
-     * The interval this probe is measured with.
-     *
-     * @return the interval.
-     */
-    @Override
-    public Interval getInterval() {
-        return new Interval(20, TimeUnit.SECONDS);
-    }
-
-    /**
-     * The name of this metric.
-     *
-     * @return the name of this metric.
-     */
     @Override
     public String getMetricName() {
         return "memory_usage_percentage";
@@ -56,14 +40,14 @@ public class MemoryUsageProbe implements Probe {
 
     /**
      * Measures the value of this metric.
-     * <p/>
+     * <p>
      * It uses the com.sun.management.OperatingSystemMXBean to measure the total
      * physical memory and the free physical memory of the system.
      * It then calculates the consumed memory from those values.
      *
      * @return the currently consumed memory of the system in percent.
-     * @throws MetricNotAvailableException if the measurement could not be completed as one of the memory measurements
-     *                                     returned a negative value
+     * @throws de.uniulm.omi.monitoring.metric.api.MetricNotAvailableException if the measurement could not be completed as one of the memory measurements
+     *                                                                         returned a negative value
      */
     @Override
     public Double getMetricValue() throws MetricNotAvailableException {

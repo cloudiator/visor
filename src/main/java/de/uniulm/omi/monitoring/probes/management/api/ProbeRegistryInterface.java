@@ -18,31 +18,22 @@
  *
  */
 
-package de.uniulm.omi.monitoring.probes.api;
+package de.uniulm.omi.monitoring.probes.management.api;
 
-import de.uniulm.omi.monitoring.metric.api.MetricNotAvailableException;
+import com.google.inject.ImplementedBy;
 import de.uniulm.omi.monitoring.probes.Interval;
+import de.uniulm.omi.monitoring.probes.api.Probe;
+import de.uniulm.omi.monitoring.probes.management.impl.DefaultProbeRegistry;
 
 /**
- * Interface which needs to be implemented to create a Probe.
- * <p/>
- * A probe is run with the given interval measuring the metric with the provided name.
- *
+ * Created by daniel on 11.12.14.
  */
-public interface Probe {
+@ImplementedBy(DefaultProbeRegistry.class)
+public interface ProbeRegistryInterface {
 
-    /**
-     * The name of the metric this probe measures.
-     *
-     * @return the name of the metric this probe measures.
-     */
-    public String getMetricName();
+    public void registerProbe(Probe probe, Interval interval);
 
-    /**
-     * The value of metric this probe measures at the time it is called.
-     *
-     * @return the measured value at this point of time.
-     * @throws de.uniulm.omi.monitoring.metric.api.MetricNotAvailableException
-     */
-    public Object getMetricValue() throws MetricNotAvailableException;
+    public void changeInterval(Probe probe, Interval interval);
+
+    public void unregisterProbe(Probe probe);
 }

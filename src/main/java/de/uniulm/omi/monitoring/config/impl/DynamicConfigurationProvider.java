@@ -18,23 +18,14 @@
  *
  */
 
-package de.uniulm.omi.monitoring.metric.impl;
+package de.uniulm.omi.monitoring.config.impl;
 
-import com.google.inject.Inject;
-import de.uniulm.omi.monitoring.config.api.ConfigurationProviderInterface;
-import de.uniulm.omi.monitoring.metric.api.MetricFactoryInterface;
+import com.google.inject.Singleton;
+import de.uniulm.omi.monitoring.config.api.DynamicConfigurationProviderInterface;
 
-public class MetricFactory implements MetricFactoryInterface {
-
-    private final ConfigurationProviderInterface configurationProvider;
-
-    @Inject
-    public MetricFactory(ConfigurationProviderInterface configurationProvider) {
-        this.configurationProvider = configurationProvider;
-    }
-
-    @Override
-    public ServerMetric fromNameAndValue(String name, Object value) {
-        return new ServerMetric(name, value, System.currentTimeMillis(), configurationProvider.getLocalIp());
-    }
+/**
+ * Created by daniel on 15.12.14.
+ */
+@Singleton
+public class DynamicConfigurationProvider implements DynamicConfigurationProviderInterface {
 }

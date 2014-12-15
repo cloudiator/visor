@@ -18,23 +18,21 @@
  *
  */
 
-package de.uniulm.omi.monitoring.metric.impl;
+package de.uniulm.omi.monitoring.config.api;
 
-import com.google.inject.Inject;
-import de.uniulm.omi.monitoring.config.api.ConfigurationProviderInterface;
-import de.uniulm.omi.monitoring.metric.api.MetricFactoryInterface;
+import com.google.inject.ImplementedBy;
+import de.uniulm.omi.monitoring.config.impl.CliConfigurationProvider;
 
-public class MetricFactory implements MetricFactoryInterface {
+/**
+ * Created by daniel on 15.12.14.
+ */
+@ImplementedBy(CliConfigurationProvider.class)
+public interface CliConfigurationProviderInterface {
 
-    private final ConfigurationProviderInterface configurationProvider;
+    public String getLocalIp();
 
-    @Inject
-    public MetricFactory(ConfigurationProviderInterface configurationProvider) {
-        this.configurationProvider = configurationProvider;
-    }
+    public int getPort();
 
-    @Override
-    public ServerMetric fromNameAndValue(String name, Object value) {
-        return new ServerMetric(name, value, System.currentTimeMillis(), configurationProvider.getLocalIp());
-    }
+    public String getConfigurationFileLocation();
+
 }

@@ -18,23 +18,27 @@
  *
  */
 
-package de.uniulm.omi.monitoring.metric.impl;
+package de.uniulm.omi.monitoring.reporting.impl.queue;
 
 import com.google.inject.Inject;
-import de.uniulm.omi.monitoring.config.api.ConfigurationProviderInterface;
-import de.uniulm.omi.monitoring.metric.api.MetricFactoryInterface;
+import de.uniulm.omi.monitoring.reporting.api.ReportingInterface;
 
-public class MetricFactory implements MetricFactoryInterface {
+import java.util.concurrent.BlockingQueue;
 
-    private final ConfigurationProviderInterface configurationProvider;
+/**
+ * Created by daniel on 12.12.14.
+ */
+public class QueueWorkerFactory<T> implements QueueWorkerFactoryInterface<T> {
+
+    private final ReportingInterface<T> reportingInterface;
 
     @Inject
-    public MetricFactory(ConfigurationProviderInterface configurationProvider) {
-        this.configurationProvider = configurationProvider;
+    public QueueWorkerFactory(ReportingInterface<T> reportingInterface) {
+        this.reportingInterface = reportingInterface;
     }
 
     @Override
-    public ServerMetric fromNameAndValue(String name, Object value) {
-        return new ServerMetric(name, value, System.currentTimeMillis(), configurationProvider.getLocalIp());
+    public QueueWorker<T> create(BlockingQueue<T> queue) {
+        return new QueueWorker<>(queue, this.reportingInterface);
     }
 }

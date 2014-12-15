@@ -18,23 +18,19 @@
  *
  */
 
-package de.uniulm.omi.monitoring.metric.impl;
+package de.uniulm.omi.monitoring.probes.management.api;
 
-import com.google.inject.Inject;
-import de.uniulm.omi.monitoring.config.api.ConfigurationProviderInterface;
-import de.uniulm.omi.monitoring.metric.api.MetricFactoryInterface;
+import com.google.inject.ImplementedBy;
+import de.uniulm.omi.monitoring.probes.api.Probe;
+import de.uniulm.omi.monitoring.probes.management.impl.ProbeWorker;
+import de.uniulm.omi.monitoring.probes.management.impl.ProbeWorkerFactory;
 
-public class MetricFactory implements MetricFactoryInterface {
+/**
+ * Created by daniel on 11.12.14.
+ */
+@ImplementedBy(ProbeWorkerFactory.class)
+public interface ProbeWorkerFactoryInterface {
 
-    private final ConfigurationProviderInterface configurationProvider;
+    public ProbeWorker create(Probe probe);
 
-    @Inject
-    public MetricFactory(ConfigurationProviderInterface configurationProvider) {
-        this.configurationProvider = configurationProvider;
-    }
-
-    @Override
-    public ServerMetric fromNameAndValue(String name, Object value) {
-        return new ServerMetric(name, value, System.currentTimeMillis(), configurationProvider.getLocalIp());
-    }
 }

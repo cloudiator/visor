@@ -18,31 +18,21 @@
  *
  */
 
-package de.uniulm.omi.monitoring.probes.api;
+package de.uniulm.omi.monitoring.execution.api;
 
-import de.uniulm.omi.monitoring.metric.api.MetricNotAvailableException;
+import com.google.inject.ImplementedBy;
+import de.uniulm.omi.monitoring.execution.impl.ScheduledExecutionService;
 import de.uniulm.omi.monitoring.probes.Interval;
 
 /**
- * Interface which needs to be implemented to create a Probe.
- * <p/>
- * A probe is run with the given interval measuring the metric with the provided name.
- *
+ * Created by daniel on 11.12.14.
  */
-public interface Probe {
+@ImplementedBy(ScheduledExecutionService.class)
+public interface ScheduledExecutionServiceInterface extends ExecutionServiceInterface {
 
-    /**
-     * The name of the metric this probe measures.
-     *
-     * @return the name of the metric this probe measures.
-     */
-    public String getMetricName();
+    public void schedule(Runnable runnable, Interval interval);
 
-    /**
-     * The value of metric this probe measures at the time it is called.
-     *
-     * @return the measured value at this point of time.
-     * @throws de.uniulm.omi.monitoring.metric.api.MetricNotAvailableException
-     */
-    public Object getMetricValue() throws MetricNotAvailableException;
+    public void remove(Runnable runnable);
+
+    public void reschedule(Runnable runnable, Interval newInterval);
 }

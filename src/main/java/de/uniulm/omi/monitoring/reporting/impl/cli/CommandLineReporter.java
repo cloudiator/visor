@@ -18,23 +18,28 @@
  *
  */
 
-package de.uniulm.omi.monitoring.metric.impl;
+package de.uniulm.omi.monitoring.reporting.impl.cli;
 
-import com.google.inject.Inject;
-import de.uniulm.omi.monitoring.config.api.ConfigurationProviderInterface;
-import de.uniulm.omi.monitoring.metric.api.MetricFactoryInterface;
+import de.uniulm.omi.monitoring.metric.impl.Metric;
+import de.uniulm.omi.monitoring.reporting.api.ReportingInterface;
+import de.uniulm.omi.monitoring.reporting.impl.ReportingException;
 
-public class MetricFactory implements MetricFactoryInterface {
+import java.util.Collection;
 
-    private final ConfigurationProviderInterface configurationProvider;
+/**
+ * Created by daniel on 27.11.14.
+ */
+public class CommandLineReporter implements ReportingInterface<Metric> {
 
-    @Inject
-    public MetricFactory(ConfigurationProviderInterface configurationProvider) {
-        this.configurationProvider = configurationProvider;
+    @Override
+    public void report(Metric metric) throws ReportingException {
+        System.out.println(metric.toString());
     }
 
     @Override
-    public ServerMetric fromNameAndValue(String name, Object value) {
-        return new ServerMetric(name, value, System.currentTimeMillis(), configurationProvider.getLocalIp());
+    public void report(Collection<Metric> metrics) throws ReportingException {
+        for(Metric metric : metrics) {
+            this.report(metric);
+        }
     }
 }

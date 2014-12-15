@@ -18,23 +18,17 @@
  *
  */
 
-package de.uniulm.omi.monitoring.metric.impl;
+package de.uniulm.omi.monitoring.execution.api;
 
-import com.google.inject.Inject;
-import de.uniulm.omi.monitoring.config.api.ConfigurationProviderInterface;
-import de.uniulm.omi.monitoring.metric.api.MetricFactoryInterface;
+import com.google.inject.ImplementedBy;
+import de.uniulm.omi.monitoring.execution.impl.ScheduledExecutionService;
 
-public class MetricFactory implements MetricFactoryInterface {
+/**
+ * Created by daniel on 12.12.14.
+ */
+@ImplementedBy(ScheduledExecutionService.class)
+public interface ExecutionServiceInterface {
+    public void execute(Runnable runnable);
 
-    private final ConfigurationProviderInterface configurationProvider;
-
-    @Inject
-    public MetricFactory(ConfigurationProviderInterface configurationProvider) {
-        this.configurationProvider = configurationProvider;
-    }
-
-    @Override
-    public ServerMetric fromNameAndValue(String name, Object value) {
-        return new ServerMetric(name, value, System.currentTimeMillis(), configurationProvider.getLocalIp());
-    }
+    public void shutdown(int seconds);
 }

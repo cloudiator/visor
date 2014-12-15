@@ -18,31 +18,24 @@
  *
  */
 
-package de.uniulm.omi.monitoring.probes.api;
+package de.uniulm.omi.monitoring.metric.api;
 
-import de.uniulm.omi.monitoring.metric.api.MetricNotAvailableException;
-import de.uniulm.omi.monitoring.probes.Interval;
+import com.google.inject.ImplementedBy;
+import de.uniulm.omi.monitoring.metric.impl.MetricFactory;
+import de.uniulm.omi.monitoring.metric.impl.ServerMetric;
 
 /**
- * Interface which needs to be implemented to create a Probe.
- * <p/>
- * A probe is run with the given interval measuring the metric with the provided name.
- *
+ * Created by daniel on 15.12.14.
  */
-public interface Probe {
-
+@ImplementedBy(MetricFactory.class)
+public interface MetricFactoryInterface {
     /**
-     * The name of the metric this probe measures.
+     * Creates a metric from the given name and the value.
+     * Automatically adds the local ip address and the timestamp.
      *
-     * @return the name of the metric this probe measures.
+     * @param name  the name of the metric.
+     * @param value the value of the metric.
+     * @return a server specific metric having the name and the value given.
      */
-    public String getMetricName();
-
-    /**
-     * The value of metric this probe measures at the time it is called.
-     *
-     * @return the measured value at this point of time.
-     * @throws de.uniulm.omi.monitoring.metric.api.MetricNotAvailableException
-     */
-    public Object getMetricValue() throws MetricNotAvailableException;
+    public ServerMetric fromNameAndValue(String name, Object value);
 }

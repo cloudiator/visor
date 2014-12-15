@@ -18,23 +18,33 @@
  *
  */
 
-package de.uniulm.omi.monitoring.metric.impl;
+package de.uniulm.omi.monitoring.execution.impl;
 
 import com.google.inject.Inject;
-import de.uniulm.omi.monitoring.config.api.ConfigurationProviderInterface;
-import de.uniulm.omi.monitoring.metric.api.MetricFactoryInterface;
+import de.uniulm.omi.monitoring.execution.api.ExecutionServiceInterface;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-public class MetricFactory implements MetricFactoryInterface {
+/**
+ * Created by daniel on 15.12.14.
+ */
+public class ShutdownHook extends Thread {
 
-    private final ConfigurationProviderInterface configurationProvider;
+    private static final Logger logger = LogManager.getLogger(ShutdownHook.class);
+
+    private final ExecutionServiceInterface executionService;
 
     @Inject
-    public MetricFactory(ConfigurationProviderInterface configurationProvider) {
-        this.configurationProvider = configurationProvider;
+    public ShutdownHook(ExecutionServiceInterface executionService) {
+        this.executionService = executionService;
     }
 
     @Override
-    public ServerMetric fromNameAndValue(String name, Object value) {
-        return new ServerMetric(name, value, System.currentTimeMillis(), configurationProvider.getLocalIp());
+    public void run() {
+        super.run();
+
+        logger.debug("Running shutdown hook.");
+
+        this.executionService.shutdown(60);
     }
 }

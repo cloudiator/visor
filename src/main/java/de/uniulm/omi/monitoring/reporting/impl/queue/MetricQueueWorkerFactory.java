@@ -18,23 +18,19 @@
  *
  */
 
-package de.uniulm.omi.monitoring.metric.impl;
+package de.uniulm.omi.monitoring.reporting.impl.queue;
 
 import com.google.inject.Inject;
-import de.uniulm.omi.monitoring.config.api.ConfigurationProviderInterface;
-import de.uniulm.omi.monitoring.metric.api.MetricFactoryInterface;
+import de.uniulm.omi.monitoring.metric.impl.Metric;
+import de.uniulm.omi.monitoring.reporting.api.ReportingInterface;
 
-public class MetricFactory implements MetricFactoryInterface {
-
-    private final ConfigurationProviderInterface configurationProvider;
+/**
+ * Created by daniel on 15.12.14.
+ */
+public class MetricQueueWorkerFactory extends QueueWorkerFactory<Metric> {
 
     @Inject
-    public MetricFactory(ConfigurationProviderInterface configurationProvider) {
-        this.configurationProvider = configurationProvider;
-    }
-
-    @Override
-    public ServerMetric fromNameAndValue(String name, Object value) {
-        return new ServerMetric(name, value, System.currentTimeMillis(), configurationProvider.getLocalIp());
+    public MetricQueueWorkerFactory(ReportingInterface<Metric> reportingInterface) {
+        super(reportingInterface);
     }
 }

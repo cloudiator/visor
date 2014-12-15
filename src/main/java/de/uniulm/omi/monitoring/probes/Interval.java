@@ -27,7 +27,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * The interval class.
- * <p/>
+ * <p>
  * Represents an interval consisting of a timeunit and a period.
  */
 public class Interval {
@@ -49,9 +49,8 @@ public class Interval {
      * @param timeUnit the time unit of the interval.
      */
     public Interval(long period, TimeUnit timeUnit) {
-
-        checkArgument(period > 0,"The period must be > 0");
-        checkNotNull(timeUnit,"The time unit must not be null.");
+        checkArgument(period > 0, "The period must be > 0");
+        checkNotNull(timeUnit, "The time unit must not be null.");
         this.period = period;
         this.timeUnit = timeUnit;
     }
@@ -72,5 +71,10 @@ public class Interval {
      */
     public TimeUnit getTimeUnit() {
         return timeUnit;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Interval{period=%d, timeUnit=%s}", period, timeUnit);
     }
 }

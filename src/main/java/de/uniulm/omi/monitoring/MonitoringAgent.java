@@ -20,47 +20,28 @@
 
 package de.uniulm.omi.monitoring;
 
+import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import de.uniulm.omi.monitoring.cli.CliOptions;
-import de.uniulm.omi.monitoring.metric.impl.Metric;
-import de.uniulm.omi.monitoring.probes.impl.CpuUsageProbe;
-import de.uniulm.omi.monitoring.probes.impl.MemoryUsageProbe;
-import de.uniulm.omi.monitoring.probes.impl.scheduler.ProbeScheduler;
-import de.uniulm.omi.monitoring.reporting.api.ReportingInterface;
-import de.uniulm.omi.monitoring.reporting.impl.CommandLineReporter;
-import de.uniulm.omi.monitoring.reporting.impl.KairosDb;
-import de.uniulm.omi.monitoring.reporting.impl.Queue;
-import de.uniulm.omi.monitoring.server.impl.MetricRequestLineParser;
-import de.uniulm.omi.monitoring.server.impl.Server;
+import de.uniulm.omi.monitoring.config.cli.CommandLineArgumentsHolder;
+import de.uniulm.omi.monitoring.execution.impl.ShutdownHook;
+import de.uniulm.omi.monitoring.modules.impl.CommandLineReportingModule;
+import de.uniulm.omi.monitoring.probes.management.impl.DefaultProbeRegistry;
 import org.apache.commons.cli.ParseException;
+
 
 public class MonitoringAgent {
 
-    private final Injector injector;
+    public static void main(final String[] args) throws ParseException {
 
-    public MonitoringAgent() {
-        injector = Guice.createInjector();
-    }
+        final Injector injector = Guice.createInjector(new CommandLineReportingModule(), new AbstractModule() {
+            @Override
+            protected void configure() {
+                bind(CommandLineArgumentsHolder.class).toInstance(new CommandLineArgumentsHolder(args));
+            }
+        });
 
-    public static void main(String[] args) throws ParseException {
-
-        CliOptions.setArguments(args);
-
-        //metric queue
-        ReportingInterface<Metric> metricQueue = new Queue<>(1, new KairosDb(CliOptions.getKairosServer(), CliOptions.getKairosPort()));
-        //ReportingInterface<Metric> metricQueue = new Queue<>(1, new CommandLineReporter());
-
-        //create a new server
-        Server<? extends Metric> server = new Server<>(CliOptions.getPort(), metricQueue, new MetricRequestLineParser(), 1);
-
-        //run the server
-        Thread thread = new Thread(server);
-        thread.start();
-
-        //create a scheduler
-        ProbeScheduler scheduler = new ProbeScheduler(1, metricQueue);
-        scheduler.schedule(new CpuUsageProbe());
-        scheduler.schedule(new MemoryUsageProbe());
+        Runtime.getRuntime().addShutdownHook(injector.getInstance(ShutdownHook.class));
+        injector.getInstance(DefaultProbeRegistry.class);
     }
 }
