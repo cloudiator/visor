@@ -20,13 +20,12 @@
 
 package de.uniulm.omi.monitoring.probes.management.impl;
 
-import com.google.inject.ImplementedBy;
 import com.google.inject.Inject;
+import de.uniulm.omi.monitoring.execution.api.ScheduledExecutionServiceInterface;
 import de.uniulm.omi.monitoring.probes.Interval;
 import de.uniulm.omi.monitoring.probes.api.Probe;
 import de.uniulm.omi.monitoring.probes.management.api.ProbeRegistryInterface;
 import de.uniulm.omi.monitoring.probes.management.api.ProbeWorkerFactoryInterface;
-import de.uniulm.omi.monitoring.execution.api.ScheduledExecutionServiceInterface;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

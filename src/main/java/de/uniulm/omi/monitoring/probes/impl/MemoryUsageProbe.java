@@ -20,18 +20,23 @@
 
 package de.uniulm.omi.monitoring.probes.impl;
 
-import com.sun.management.OperatingSystemMXBean;
 import de.uniulm.omi.monitoring.metric.api.MetricNotAvailableException;
 import de.uniulm.omi.monitoring.probes.api.Probe;
-
-import java.lang.management.ManagementFactory;
+import de.uniulm.omi.monitoring.probes.strategies.api.MemoryMeasurementStrategy;
 
 /**
  * The MemoryUsageProbe class.
  * <p>
- * Measures the currently used memory by the operating system in percentage.
+ * Measures the current
+ * ly used memory by the operating system in percentage.
  */
 public class MemoryUsageProbe implements Probe {
+
+    private final MemoryMeasurementStrategy<Double> memoryMeasurementStrategy;
+
+    public MemoryUsageProbe(MemoryMeasurementStrategy<Double> memoryMeasurementStrategy) {
+        this.memoryMeasurementStrategy = memoryMeasurementStrategy;
+    }
 
     @Override
     public String getMetricName() {
@@ -51,18 +56,7 @@ public class MemoryUsageProbe implements Probe {
      */
     @Override
     public Double getMetricValue() throws MetricNotAvailableException {
-        OperatingSystemMXBean osBean = ManagementFactory.getPlatformMXBean(
-                OperatingSystemMXBean.class);
-
-        //memory usage
-        double totalPhysicalMemory = osBean.getTotalPhysicalMemorySize();
-        double freePhysicalMemory = osBean.getFreePhysicalMemorySize();
-
-        if (totalPhysicalMemory < 0 || freePhysicalMemory < 0) {
-            throw new MetricNotAvailableException("Received negative value for total or free physical memory size");
-        }
-
-        return 100 - ((freePhysicalMemory / totalPhysicalMemory) * 100);
+        return this.memoryMeasurementStrategy.measure();
     }
 
 }

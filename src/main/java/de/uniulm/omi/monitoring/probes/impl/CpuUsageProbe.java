@@ -20,16 +20,20 @@
 
 package de.uniulm.omi.monitoring.probes.impl;
 
-import com.sun.management.OperatingSystemMXBean;
 import de.uniulm.omi.monitoring.metric.api.MetricNotAvailableException;
 import de.uniulm.omi.monitoring.probes.api.Probe;
-
-import java.lang.management.ManagementFactory;
+import de.uniulm.omi.monitoring.probes.strategies.api.CpuMeasurementStrategy;
 
 /**
  * A probe for measuring the CPU usage in % on the given machine.
  */
 public class CpuUsageProbe implements Probe {
+
+    private final CpuMeasurementStrategy<Double> cpuMeasurementStrategy;
+
+    public CpuUsageProbe(CpuMeasurementStrategy<Double> measurementStrategy) {
+        this.cpuMeasurementStrategy = measurementStrategy;
+    }
 
     @Override
     public String getMetricName() {
@@ -47,16 +51,6 @@ public class CpuUsageProbe implements Probe {
      */
     @Override
     public Double getMetricValue() throws MetricNotAvailableException {
-        OperatingSystemMXBean osBean = ManagementFactory.getPlatformMXBean(
-                OperatingSystemMXBean.class);
-
-        double systemCpuLoad = osBean.getSystemCpuLoad();
-        double systemCpuLoadPercentage = systemCpuLoad * 100;
-
-        if (systemCpuLoad < 0) {
-            throw new MetricNotAvailableException("Received negative value");
-        }
-
-        return systemCpuLoadPercentage;
+        return this.cpuMeasurementStrategy.measure();
     }
 }

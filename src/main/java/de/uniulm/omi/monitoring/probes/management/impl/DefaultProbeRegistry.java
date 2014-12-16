@@ -21,12 +21,14 @@
 package de.uniulm.omi.monitoring.probes.management.impl;
 
 import com.google.inject.Inject;
+import de.uniulm.omi.monitoring.execution.api.ScheduledExecutionServiceInterface;
 import de.uniulm.omi.monitoring.probes.Interval;
 import de.uniulm.omi.monitoring.probes.impl.CpuUsageProbe;
 import de.uniulm.omi.monitoring.probes.impl.MemoryUsageProbe;
 import de.uniulm.omi.monitoring.probes.management.api.ProbeRegistryInterface;
 import de.uniulm.omi.monitoring.probes.management.api.ProbeWorkerFactoryInterface;
-import de.uniulm.omi.monitoring.execution.api.ScheduledExecutionServiceInterface;
+import de.uniulm.omi.monitoring.probes.strategies.impl.OSMxBeanCpuStrategy;
+import de.uniulm.omi.monitoring.probes.strategies.impl.OSMxBeanMemoryStrategy;
 
 import java.util.concurrent.TimeUnit;
 
@@ -42,8 +44,8 @@ public class DefaultProbeRegistry extends ProbeRegistry {
     }
 
     public void registerDefaultProbes(ProbeRegistryInterface probeRegistry) {
-        probeRegistry.registerProbe(new CpuUsageProbe(), new Interval(1, TimeUnit.SECONDS));
-        probeRegistry.registerProbe(new MemoryUsageProbe(), new Interval(1, TimeUnit.SECONDS));
+        probeRegistry.registerProbe(new CpuUsageProbe(new OSMxBeanCpuStrategy()), new Interval(1, TimeUnit.SECONDS));
+        probeRegistry.registerProbe(new MemoryUsageProbe(new OSMxBeanMemoryStrategy()), new Interval(1, TimeUnit.SECONDS));
     }
 
 }
