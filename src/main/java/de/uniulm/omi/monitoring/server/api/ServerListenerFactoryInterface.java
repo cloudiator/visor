@@ -18,27 +18,20 @@
  *
  */
 
-package de.uniulm.omi.monitoring.metric.api;
+package de.uniulm.omi.monitoring.server.api;
 
 import com.google.inject.ImplementedBy;
-import de.uniulm.omi.monitoring.metric.impl.ApplicationMetric;
-import de.uniulm.omi.monitoring.metric.impl.MetricFactory;
-import de.uniulm.omi.monitoring.metric.impl.ServerMetric;
+import de.uniulm.omi.monitoring.server.impl.ServerListener;
+import de.uniulm.omi.monitoring.server.impl.ServerListenerFactory;
+
+import java.net.ServerSocket;
 
 /**
- * Created by daniel on 15.12.14.
+ * Created by daniel on 16.12.14.
  */
-@ImplementedBy(MetricFactory.class)
-public interface MetricFactoryInterface {
-    /**
-     * Creates a metric from the given name and the value.
-     * Automatically adds the local ip address and the timestamp.
-     *
-     * @param name  the name of the metric.
-     * @param value the value of the metric.
-     * @return a server specific metric having the name and the value given.
-     */
-    public ServerMetric from(String name, Object value);
+@ImplementedBy(ServerListenerFactory.class)
+public interface ServerListenerFactoryInterface {
 
-    public ApplicationMetric from(String metricName, Object value, Long timestamp, String application);
+    public ServerListener create(ServerSocket serverSocket);
+
 }

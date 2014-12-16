@@ -18,10 +18,11 @@
  *
  */
 
-package de.uniulm.omi.monitoring.server;
+package de.uniulm.omi.monitoring.server.api;
 
 /**
- * Created by daniel on 15.12.14.
+ * Created by daniel on 16.12.14.
  */
-public class RequestWorker {
+public interface RequestParsingInterface<T, S> {
+    public S parse(T t) throws ParsingException;
 }

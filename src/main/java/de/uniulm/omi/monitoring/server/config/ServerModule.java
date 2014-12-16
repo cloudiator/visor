@@ -18,30 +18,22 @@
  *
  */
 
-package de.uniulm.omi.monitoring.execution.impl;
+package de.uniulm.omi.monitoring.server.config;
 
-import com.google.inject.Inject;
-import de.uniulm.omi.monitoring.execution.api.ExecutionServiceInterface;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import com.google.inject.AbstractModule;
+import com.google.inject.TypeLiteral;
+import de.uniulm.omi.monitoring.metric.impl.Metric;
+import de.uniulm.omi.monitoring.server.api.RequestParsingInterface;
+import de.uniulm.omi.monitoring.server.impl.StringToMetricParser;
 
 /**
- * Created by daniel on 15.12.14.
+ * Created by daniel on 16.12.14.
  */
-public class ShutdownHook extends Thread {
-
-    private static final Logger logger = LogManager.getLogger(ShutdownHook.class);
-
-    private final ExecutionServiceInterface executionService;
-
-    @Inject
-    public ShutdownHook(ExecutionServiceInterface executionService) {
-        this.executionService = executionService;
-    }
+public class ServerModule extends AbstractModule {
 
     @Override
-    public void run() {
-        logger.debug("Running shutdown hook.");
-        this.executionService.shutdown(60);
+    protected void configure() {
+        bind(new TypeLiteral<RequestParsingInterface<String, Metric>>() {
+        }).to(StringToMetricParser.class);
     }
 }

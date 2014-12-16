@@ -27,6 +27,8 @@ import de.uniulm.omi.monitoring.config.cli.CommandLineArgumentsHolder;
 import de.uniulm.omi.monitoring.execution.impl.ShutdownHook;
 import de.uniulm.omi.monitoring.modules.impl.CommandLineReportingModule;
 import de.uniulm.omi.monitoring.probes.management.impl.DefaultProbeRegistry;
+import de.uniulm.omi.monitoring.server.config.ServerModule;
+import de.uniulm.omi.monitoring.server.impl.SocketServer;
 import org.apache.commons.cli.ParseException;
 
 
@@ -34,7 +36,7 @@ public class MonitoringAgent {
 
     public static void main(final String[] args) throws ParseException {
 
-        final Injector injector = Guice.createInjector(new CommandLineReportingModule(), new AbstractModule() {
+        final Injector injector = Guice.createInjector(new CommandLineReportingModule(), new ServerModule(), new AbstractModule() {
             @Override
             protected void configure() {
                 bind(CommandLineArgumentsHolder.class).toInstance(new CommandLineArgumentsHolder(args));
@@ -43,5 +45,7 @@ public class MonitoringAgent {
 
         Runtime.getRuntime().addShutdownHook(injector.getInstance(ShutdownHook.class));
         injector.getInstance(DefaultProbeRegistry.class);
+        injector.getInstance(SocketServer.class);
     }
+
 }

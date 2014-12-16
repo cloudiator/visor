@@ -18,35 +18,30 @@
  *
  */
 
-package de.uniulm.omi.monitoring.server;
+package de.uniulm.omi.monitoring.server.impl;
 
+import com.google.inject.Inject;
 import de.uniulm.omi.monitoring.execution.api.ExecutionServiceInterface;
+import de.uniulm.omi.monitoring.server.api.ServerListenerFactoryInterface;
 
-import java.io.IOException;
 import java.net.ServerSocket;
-import java.net.Socket;
 
 /**
- * Created by daniel on 15.12.14.
+ * Created by daniel on 16.12.14.
  */
-public class ServerListener implements Runnable {
+public class ServerListenerFactory implements ServerListenerFactoryInterface {
 
-    private final ServerSocket serverSocket;
+    private final SocketWorkerFactory socketWorkerFactory;
     private final ExecutionServiceInterface executionService;
 
-    public ServerListener(ServerSocket serverSocket, ExecutionServiceInterface executionService) {
-        this.serverSocket = serverSocket;
+    @Inject
+    public ServerListenerFactory(ExecutionServiceInterface executionService, SocketWorkerFactory socketWorkerFactory) {
         this.executionService = executionService;
+        this.socketWorkerFactory = socketWorkerFactory;
     }
 
     @Override
-    public void run() {
-        while (!Thread.currentThread().isInterrupted()) {
-            try {
-                Socket accept = this.serverSocket.accept();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
+    public ServerListener create(ServerSocket serverSocket) {
+        return new ServerListener(serverSocket, this.executionService, this.socketWorkerFactory);
     }
 }

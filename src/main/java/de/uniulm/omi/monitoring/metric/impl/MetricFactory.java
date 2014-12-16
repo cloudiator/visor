@@ -34,7 +34,12 @@ public class MetricFactory implements MetricFactoryInterface {
     }
 
     @Override
-    public ServerMetric fromNameAndValue(String name, Object value) {
-        return new ServerMetric(name, value, System.currentTimeMillis(), configurationProvider.getLocalIp());
+    public ServerMetric from(String metricName, Object value) {
+        return new ServerMetric(metricName, value, System.currentTimeMillis(), configurationProvider.getLocalIp());
+    }
+
+    @Override
+    public ApplicationMetric from(String metricName, Object value, Long timestamp, String application) {
+        return new ApplicationMetric(metricName, value, timestamp, application, configurationProvider.getLocalIp());
     }
 }

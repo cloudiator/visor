@@ -18,30 +18,18 @@
  *
  */
 
-package de.uniulm.omi.monitoring.execution.impl;
-
-import com.google.inject.Inject;
-import de.uniulm.omi.monitoring.execution.api.ExecutionServiceInterface;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+package de.uniulm.omi.monitoring.server.api;
 
 /**
- * Created by daniel on 15.12.14.
+ * Created by daniel on 16.12.14.
  */
-public class ShutdownHook extends Thread {
+public class ParsingException extends Exception {
 
-    private static final Logger logger = LogManager.getLogger(ShutdownHook.class);
-
-    private final ExecutionServiceInterface executionService;
-
-    @Inject
-    public ShutdownHook(ExecutionServiceInterface executionService) {
-        this.executionService = executionService;
+    public ParsingException(String message) {
+        super(message);
     }
 
-    @Override
-    public void run() {
-        logger.debug("Running shutdown hook.");
-        this.executionService.shutdown(60);
+    public ParsingException(String message, Throwable cause) {
+        super(message, cause);
     }
 }

@@ -69,7 +69,7 @@ public class ProbeWorker implements Runnable {
     public void run() {
         logger.debug(String.format("Measuring probe %s at %s", this.probe.getMetricName(), System.currentTimeMillis()));
         try {
-            this.metricReporting.report(this.metricFactoryInterface.fromNameAndValue(this.probe.getMetricName(), this.probe.getMetricValue()));
+            this.metricReporting.report(this.metricFactoryInterface.from(this.probe.getMetricName(), this.probe.getMetricValue()));
         } catch (MetricNotAvailableException e) {
             logger.error(String.format("Could not retrieve metric %s", probe.getMetricName()));
         } catch (ReportingException e) {

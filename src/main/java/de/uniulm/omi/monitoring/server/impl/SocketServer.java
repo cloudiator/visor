@@ -18,9 +18,12 @@
  *
  */
 
-package de.uniulm.omi.monitoring.server;
+package de.uniulm.omi.monitoring.server.impl;
 
+import com.google.inject.Inject;
 import de.uniulm.omi.monitoring.config.api.ConfigurationProviderInterface;
+import de.uniulm.omi.monitoring.execution.api.ExecutionServiceInterface;
+import de.uniulm.omi.monitoring.server.api.ServerListenerFactoryInterface;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -32,21 +35,17 @@ import java.net.ServerSocket;
  */
 public class SocketServer {
 
-    private ServerSocket serverSocket;
     private static final Logger logger = LogManager.getLogger(SocketServer.class);
 
-    public SocketServer(ConfigurationProviderInterface configurationProvider) {
+    @Inject
+    public SocketServer(ConfigurationProviderInterface configurationProvider, ExecutionServiceInterface executionService, ServerListenerFactoryInterface serverListenerFactory) {
 
         try {
-            this.serverSocket = new ServerSocket(configurationProvider.getPort());
+            logger.info(String.format("Starting socket server on port %d", configurationProvider.getPort()));
+            ServerSocket serverSocket = new ServerSocket(configurationProvider.getPort());
+            executionService.execute(serverListenerFactory.create(serverSocket));
         } catch (IOException e) {
-            logger.error("Could not start server", e);
-            try {
-                if (this.serverSocket != null) {
-                    this.serverSocket.close();
-                }
-            } catch (IOException ignored) {
-            }
+            logger.fatal("Could not start server", e);
             System.exit(1);
         }
     }

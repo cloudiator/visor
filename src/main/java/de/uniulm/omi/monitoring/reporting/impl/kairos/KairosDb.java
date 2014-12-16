@@ -56,8 +56,8 @@ public class KairosDb implements ReportingInterface<Metric> {
     private static final Logger logger = LogManager.getLogger(KairosDb.class);
 
     public KairosDb(ConfigurationProvider configurationProvider) {
-        this.server = "eladron.e-technik.uni-ulm.de";
-        this.port = "9001";
+        this.server = "";
+        this.port = "";
     }
 
     /**
