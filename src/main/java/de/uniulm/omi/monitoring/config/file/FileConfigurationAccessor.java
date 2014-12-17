@@ -18,43 +18,37 @@
  *
  */
 
-package de.uniulm.omi.monitoring.config.impl;
+package de.uniulm.omi.monitoring.config.file;
 
-import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import de.uniulm.omi.monitoring.config.api.CliConfigurationProviderInterface;
-import de.uniulm.omi.monitoring.config.api.FileConfigurationProviderInterface;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
-
 /**
  * Created by daniel on 15.12.14.
  */
 @Singleton
-public class FileConfigurationProvider implements FileConfigurationProviderInterface {
+public class FileConfigurationAccessor {
 
     private final Properties properties;
 
-    @Inject
-    public FileConfigurationProvider(final CliConfigurationProviderInterface cliConfigurationProvider) {
+    public FileConfigurationAccessor(String configurationFilePath) {
         this.properties = new Properties();
         try {
-            properties.load(new BufferedInputStream(new FileInputStream(cliConfigurationProvider.getConfigurationFileLocation())));
+            properties.load(new BufferedInputStream(new FileInputStream(configurationFilePath)));
         } catch (IOException e) {
             throw new IllegalStateException("Could not read properties file.", e);
         }
     }
 
-    @Override
-    public int getExecutionThreads() {
-        String executionThreads = this.properties.getProperty("executionThreads");
-        checkState(executionThreads != null, "Could not read configuration value for executionThreads.");
-        return Integer.parseInt(checkNotNull(executionThreads));
+    public String getProperty(String key) {
+        return this.properties.getProperty(key);
+    }
+
+    public Properties getProperties() {
+        return this.properties;
     }
 }

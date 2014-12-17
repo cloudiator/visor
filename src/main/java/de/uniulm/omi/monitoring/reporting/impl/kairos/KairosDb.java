@@ -20,7 +20,8 @@
 
 package de.uniulm.omi.monitoring.reporting.impl.kairos;
 
-import de.uniulm.omi.monitoring.config.impl.ConfigurationProvider;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import de.uniulm.omi.monitoring.metric.impl.Metric;
 import de.uniulm.omi.monitoring.reporting.api.ReportingInterface;
 import de.uniulm.omi.monitoring.reporting.impl.MetricReportingException;
@@ -35,6 +36,9 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.util.Collection;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * A concrete implementation of the reporting interface, reporting
  * metrics to the kairos database.
@@ -48,16 +52,20 @@ public class KairosDb implements ReportingInterface<Metric> {
     /**
      * The port of the kairos db.
      */
-    protected final String port;
+    protected final int port;
 
     /**
      * A logger.
      */
     private static final Logger logger = LogManager.getLogger(KairosDb.class);
 
-    public KairosDb(ConfigurationProvider configurationProvider) {
-        this.server = "";
-        this.port = "";
+    @Inject
+    public KairosDb(@Named("kairosServer") String server, @Named("kairosPort") int port) {
+        checkNotNull(server);
+        checkArgument(!server.isEmpty(), "Server must not be empty.");
+        checkArgument(port > 0, "Port must be >0");
+        this.server = server;
+        this.port = port;
     }
 
     /**

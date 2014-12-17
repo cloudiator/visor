@@ -21,7 +21,7 @@
 package de.uniulm.omi.monitoring.server.impl;
 
 import com.google.inject.Inject;
-import de.uniulm.omi.monitoring.config.api.ConfigurationProviderInterface;
+import com.google.inject.name.Named;
 import de.uniulm.omi.monitoring.execution.api.ExecutionServiceInterface;
 import de.uniulm.omi.monitoring.server.api.ServerListenerFactoryInterface;
 import org.apache.logging.log4j.LogManager;
@@ -29,6 +29,8 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+
+import static com.google.common.base.Preconditions.checkArgument;
 
 /**
  * Created by daniel on 15.12.14.
@@ -38,14 +40,17 @@ public class SocketServer {
     private static final Logger logger = LogManager.getLogger(SocketServer.class);
 
     @Inject
-    public SocketServer(ConfigurationProviderInterface configurationProvider, ExecutionServiceInterface executionService, ServerListenerFactoryInterface serverListenerFactory) {
-
+    public SocketServer(@Named("telnetPort") int port, ExecutionServiceInterface executionService, ServerListenerFactoryInterface serverListenerFactory) {
+        checkArgument(port > 0, "Argument port must be > 0");
+        if (port < 1024) {
+            logger.warn("You are running the telnet server on a port < 1024. This is usually not a good idea.");
+        }
         try {
-            logger.info(String.format("Starting socket server on port %d", configurationProvider.getPort()));
-            ServerSocket serverSocket = new ServerSocket(configurationProvider.getPort());
+            logger.info(String.format("Starting socket server on port %d", port));
+            ServerSocket serverSocket = new ServerSocket(port);
             executionService.execute(serverListenerFactory.create(serverSocket));
         } catch (IOException e) {
-            logger.fatal("Server crashed.",e);
+            logger.fatal("Server crashed.", e);
             System.exit(1);
         }
     }

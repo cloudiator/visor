@@ -22,7 +22,7 @@ package de.uniulm.omi.monitoring.server.impl;
 
 import com.google.inject.Inject;
 import de.uniulm.omi.monitoring.metric.impl.Metric;
-import de.uniulm.omi.monitoring.modules.api.QueuedReporting;
+import de.uniulm.omi.monitoring.reporting.modules.api.QueuedReporting;
 import de.uniulm.omi.monitoring.reporting.api.ReportingInterface;
 import de.uniulm.omi.monitoring.server.api.RequestParsingInterface;
 import de.uniulm.omi.monitoring.server.api.SocketWorkerFactoryInterface;

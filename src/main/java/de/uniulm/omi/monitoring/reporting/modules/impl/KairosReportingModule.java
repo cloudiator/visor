@@ -18,20 +18,18 @@
  *
  */
 
-package de.uniulm.omi.monitoring.config.cli;
+package de.uniulm.omi.monitoring.reporting.modules.impl;
+import de.uniulm.omi.monitoring.reporting.modules.api.ReportingModule;
+import de.uniulm.omi.monitoring.metric.impl.Metric;
+import de.uniulm.omi.monitoring.reporting.api.ReportingInterface;
+import de.uniulm.omi.monitoring.reporting.impl.kairos.KairosDb;
 
 /**
- * Created by daniel on 15.12.14.
+ * Created by daniel on 10.12.14.
  */
-public class CommandLineArgumentsHolder {
-
-    private final String[] args;
-
-    public CommandLineArgumentsHolder(String[] args) {
-        this.args = args;
-    }
-
-    public String[] getArgs() {
-        return args;
+public class KairosReportingModule extends ReportingModule {
+    @Override
+    protected Class<? extends ReportingInterface<Metric>> getReportingInterface() {
+        return KairosDb.class;
     }
 }

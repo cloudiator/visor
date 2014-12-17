@@ -20,12 +20,11 @@
 
 package de.uniulm.omi.monitoring;
 
-import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import de.uniulm.omi.monitoring.config.cli.CommandLineArgumentsHolder;
+import de.uniulm.omi.monitoring.config.impl.BaseConfigurationModule;
 import de.uniulm.omi.monitoring.execution.impl.ShutdownHook;
-import de.uniulm.omi.monitoring.modules.impl.CommandLineReportingModule;
+import de.uniulm.omi.monitoring.reporting.modules.impl.CommandLineReportingModule;
 import de.uniulm.omi.monitoring.probes.management.impl.DefaultProbeRegistry;
 import de.uniulm.omi.monitoring.server.config.ServerModule;
 import de.uniulm.omi.monitoring.server.impl.SocketServer;
@@ -36,12 +35,7 @@ public class MonitoringAgent {
 
     public static void main(final String[] args) throws ParseException {
 
-        final Injector injector = Guice.createInjector(new CommandLineReportingModule(), new ServerModule(), new AbstractModule() {
-            @Override
-            protected void configure() {
-                bind(CommandLineArgumentsHolder.class).toInstance(new CommandLineArgumentsHolder(args));
-            }
-        });
+        final Injector injector = Guice.createInjector(new CommandLineReportingModule(), new ServerModule(), new BaseConfigurationModule(args));
 
         Runtime.getRuntime().addShutdownHook(injector.getInstance(ShutdownHook.class));
         injector.getInstance(DefaultProbeRegistry.class);

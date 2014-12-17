@@ -22,7 +22,7 @@ package de.uniulm.omi.monitoring.execution.impl;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import de.uniulm.omi.monitoring.config.api.ConfigurationProviderInterface;
+import com.google.inject.name.Named;
 import de.uniulm.omi.monitoring.execution.api.ScheduledExecutionServiceInterface;
 import de.uniulm.omi.monitoring.probes.Interval;
 import org.apache.logging.log4j.LogManager;
@@ -35,8 +35,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
+import static com.google.common.base.Preconditions.*;
 
 /**
  * Created by daniel on 11.12.14.
@@ -54,9 +53,10 @@ public class ScheduledExecutionService implements ScheduledExecutionServiceInter
     private final Map<Runnable, ScheduledFuture> registeredWorkers;
 
     @Inject
-    public ScheduledExecutionService(ConfigurationProviderInterface configurationProvider) {
-        logger.debug(String.format("Starting execution service with %d threads", configurationProvider.getExecutionThreads()));
-        scheduledExecutorService = Executors.newScheduledThreadPool(configurationProvider.getExecutionThreads());
+    public ScheduledExecutionService(@Named("executionThreads") int executionThreads) {
+        checkArgument(executionThreads >= 1, "Execution thread must be >= 1");
+        logger.debug(String.format("Starting execution service with %s threads", executionThreads));
+        scheduledExecutorService = Executors.newScheduledThreadPool(executionThreads);
         registeredWorkers = new HashMap<>();
     }
 

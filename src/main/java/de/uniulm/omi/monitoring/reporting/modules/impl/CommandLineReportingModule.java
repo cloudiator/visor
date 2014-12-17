@@ -18,38 +18,19 @@
  *
  */
 
-package de.uniulm.omi.monitoring.config.impl;
+package de.uniulm.omi.monitoring.reporting.modules.impl;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-import de.uniulm.omi.monitoring.config.api.CliConfigurationProviderInterface;
-import de.uniulm.omi.monitoring.config.cli.CliOptions;
+import de.uniulm.omi.monitoring.metric.impl.Metric;
+import de.uniulm.omi.monitoring.reporting.modules.api.ReportingModule;
+import de.uniulm.omi.monitoring.reporting.api.ReportingInterface;
+import de.uniulm.omi.monitoring.reporting.impl.cli.CommandLineReporter;
 
 /**
  * Created by daniel on 15.12.14.
  */
-@Singleton
-public class CliConfigurationProvider implements CliConfigurationProviderInterface {
-
-    private final CliOptions cliOptions;
-
-    @Inject
-    public CliConfigurationProvider(CliOptions cliOptions) {
-        this.cliOptions = cliOptions;
-    }
-
+public class CommandLineReportingModule extends ReportingModule {
     @Override
-    public String getLocalIp() {
-        return this.cliOptions.getLocalIp();
-    }
-
-    @Override
-    public int getPort() {
-        return this.cliOptions.getPort();
-    }
-
-    @Override
-    public String getConfigurationFileLocation() {
-        return this.cliOptions.getConfFileLocation();
+    protected Class<? extends ReportingInterface<Metric>> getReportingInterface() {
+        return CommandLineReporter.class;
     }
 }

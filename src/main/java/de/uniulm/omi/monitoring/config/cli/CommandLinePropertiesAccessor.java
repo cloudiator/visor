@@ -34,7 +34,7 @@ import static com.google.common.base.Preconditions.checkState;
  * Created by daniel on 24.09.14.
  */
 @SuppressWarnings("AccessStaticViaInstance")
-public class CliOptions {
+public class CommandLinePropertiesAccessor {
 
     private final Options options;
     private CommandLine commandLine;
@@ -43,12 +43,12 @@ public class CliOptions {
 
     @Inject
     @Singleton
-    public CliOptions(CommandLineArgumentsHolder commandLineArgumentsHolder) {
+    public CommandLinePropertiesAccessor(String[] args) {
         this.options = new Options();
         this.generateOptions(this.options);
 
         try {
-            this.commandLine = this.parser.parse(options, commandLineArgumentsHolder.getArgs());
+            this.commandLine = this.parser.parse(options, args);
         } catch (ParseException e) {
             this.commandLine = null;
             this.printHelp();

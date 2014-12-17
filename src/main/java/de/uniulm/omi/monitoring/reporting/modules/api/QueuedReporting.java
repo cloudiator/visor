@@ -18,14 +18,21 @@
  *
  */
 
-package de.uniulm.omi.monitoring.config.impl;
+package de.uniulm.omi.monitoring.reporting.modules.api;
 
-import com.google.inject.Singleton;
-import de.uniulm.omi.monitoring.config.api.DynamicConfigurationProviderInterface;
+import com.google.inject.BindingAnnotation;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
+
+import static java.lang.annotation.ElementType.*;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * Created by daniel on 15.12.14.
+ * Created by daniel on 12.12.14.
  */
-@Singleton
-public class DynamicConfigurationProvider implements DynamicConfigurationProviderInterface {
+@BindingAnnotation
+@Target({FIELD, PARAMETER, METHOD})
+@Retention(RUNTIME)
+public @interface QueuedReporting {
 }

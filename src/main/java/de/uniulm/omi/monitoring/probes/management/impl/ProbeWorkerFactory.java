@@ -23,7 +23,7 @@ package de.uniulm.omi.monitoring.probes.management.impl;
 import com.google.inject.Inject;
 import de.uniulm.omi.monitoring.metric.api.MetricFactoryInterface;
 import de.uniulm.omi.monitoring.metric.impl.Metric;
-import de.uniulm.omi.monitoring.modules.api.QueuedReporting;
+import de.uniulm.omi.monitoring.reporting.modules.api.QueuedReporting;
 import de.uniulm.omi.monitoring.probes.api.Probe;
 import de.uniulm.omi.monitoring.probes.management.api.ProbeWorkerFactoryInterface;
 import de.uniulm.omi.monitoring.reporting.api.ReportingInterface;

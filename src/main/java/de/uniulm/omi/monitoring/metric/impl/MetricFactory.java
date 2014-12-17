@@ -21,25 +21,28 @@
 package de.uniulm.omi.monitoring.metric.impl;
 
 import com.google.inject.Inject;
-import de.uniulm.omi.monitoring.config.api.ConfigurationProviderInterface;
+import com.google.inject.name.Named;
 import de.uniulm.omi.monitoring.metric.api.MetricFactoryInterface;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public class MetricFactory implements MetricFactoryInterface {
 
-    private final ConfigurationProviderInterface configurationProvider;
+    private final String localIp;
 
     @Inject
-    public MetricFactory(ConfigurationProviderInterface configurationProvider) {
-        this.configurationProvider = configurationProvider;
+    public MetricFactory(@Named("localIp") String localIp) {
+        checkNotNull(localIp);
+        this.localIp = localIp;
     }
 
     @Override
     public ServerMetric from(String metricName, Object value) {
-        return new ServerMetric(metricName, value, System.currentTimeMillis(), configurationProvider.getLocalIp());
+        return new ServerMetric(metricName, value, System.currentTimeMillis(), this.localIp);
     }
 
     @Override
     public ApplicationMetric from(String metricName, Object value, Long timestamp, String application) {
-        return new ApplicationMetric(metricName, value, timestamp, application, configurationProvider.getLocalIp());
+        return new ApplicationMetric(metricName, value, timestamp, application, this.localIp);
     }
 }

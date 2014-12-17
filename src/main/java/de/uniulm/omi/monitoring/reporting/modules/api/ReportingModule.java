@@ -18,7 +18,7 @@
  *
  */
 
-package de.uniulm.omi.monitoring.modules.api;
+package de.uniulm.omi.monitoring.reporting.modules.api;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
@@ -33,10 +33,8 @@ import de.uniulm.omi.monitoring.reporting.impl.queue.QueueWorkerFactoryInterface
  */
 public abstract class ReportingModule extends AbstractModule {
 
-
     @Override
     protected void configure() {
-
         bind(new TypeLiteral<QueueWorkerFactoryInterface<Metric>>() {
         }).to(MetricQueueWorkerFactory.class);
 
