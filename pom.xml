@@ -25,9 +25,6 @@
     <artifactId>agent</artifactId>
     <packaging>pom</packaging>
     <version>1.1-SNAPSHOT</version>
-    <modules>
-        <module>telnet-server</module>
-    </modules>
     <name>agent</name>
     <url>http://maven.apache.org</url>
 
@@ -132,7 +129,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>de.uniulm.omi.monitoring.MonitoringAgent</mainClass>
+                            <mainClass>de.uniulm.omi.executionware.agent.MonitoringAgent</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
