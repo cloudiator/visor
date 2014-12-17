@@ -65,13 +65,6 @@ public class CommandLinePropertiesAccessor {
                         .create("ip")
         );
         options.addOption(OptionBuilder
-                        .withLongOpt("port")
-                        .withDescription("Port on which the telnet server should start")
-                        .isRequired()
-                        .hasArg()
-                        .create("p")
-        );
-        options.addOption(OptionBuilder
                         .withLongOpt("configFile")
                         .withDescription("Configuration file location.")
                         .isRequired()

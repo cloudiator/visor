@@ -1,4 +1,4 @@
-/*
+package de.uniulm.omi.monitoring;/*
  *
  *  * Copyright (c) 2014 University of Ulm
  *  *
@@ -18,28 +18,30 @@
  *
  */
 
-package de.uniulm.omi.monitoring.config.impl;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.Module;
+import de.uniulm.omi.monitoring.execution.impl.ShutdownHook;
+import de.uniulm.omi.monitoring.probes.management.impl.DefaultProbeRegistry;
+import de.uniulm.omi.monitoring.server.impl.SocketServer;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.name.Names;
-import de.uniulm.omi.monitoring.config.file.FileConfigurationAccessor;
+import java.util.Set;
 
 /**
  * Created by daniel on 17.12.14.
  */
-public class BaseConfigurationModule extends AbstractModule {
+public class MonitoringAgentService {
 
-    private final FileConfigurationAccessor fileConfiguration;
-    private final String ip;
+    private final Set<Module> modules;
 
-    public BaseConfigurationModule(FileConfigurationAccessor fileConfiguration, String ip) {
-        this.fileConfiguration = fileConfiguration;
-        this.ip = ip;
+    public MonitoringAgentService(Set<Module> modules) {
+        this.modules = modules;
     }
 
-    @Override
-    protected void configure() {
-        Names.bindProperties(binder(), fileConfiguration.getProperties());
-        bindConstant().annotatedWith(Names.named("localIp")).to(this.ip);
+    public void start() {
+        final Injector injector = Guice.createInjector(this.modules);
+        injector.getInstance(DefaultProbeRegistry.class);
+        injector.getInstance(SocketServer.class);
+        Runtime.getRuntime().addShutdownHook(injector.getInstance(ShutdownHook.class));
     }
 }
