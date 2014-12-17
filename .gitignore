@@ -6,3 +6,4 @@
 out
 target
 logs/*
+conf/configuration.properties
