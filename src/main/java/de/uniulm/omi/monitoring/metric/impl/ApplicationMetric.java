@@ -24,7 +24,7 @@ import de.uniulm.omi.monitoring.metric.api.KairosTag;
 
 /**
  * The application metric class.
- * <p/>
+ * <p>
  * Adds an application name to a server metric, defining the application
  * that reported the metric, meaning that this metric is application specific.
  */
@@ -59,5 +59,7 @@ public class ApplicationMetric extends ServerMetric {
         return applicationName;
     }
 
-
+    public String toString() {
+        return String.format("Name: %s, Application: %s, Value: %s, Time: %s", this.getName(), this.getApplicationName(), this.getValue(), this.getTimestamp());
+    }
 }

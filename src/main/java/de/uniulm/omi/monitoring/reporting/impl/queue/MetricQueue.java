@@ -21,12 +21,14 @@
 package de.uniulm.omi.monitoring.reporting.impl.queue;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import de.uniulm.omi.monitoring.execution.impl.ScheduledExecutionService;
 import de.uniulm.omi.monitoring.metric.impl.Metric;
 
 /**
  * Created by daniel on 15.12.14.
  */
+@Singleton
 public class MetricQueue extends Queue<Metric> {
 
     @Inject

@@ -21,11 +21,13 @@
 package de.uniulm.omi.monitoring.reporting.impl.queue;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import de.uniulm.omi.monitoring.execution.impl.ScheduledExecutionService;
-import de.uniulm.omi.monitoring.metric.impl.Metric;
 import de.uniulm.omi.monitoring.probes.Interval;
 import de.uniulm.omi.monitoring.reporting.api.ReportingInterface;
 import de.uniulm.omi.monitoring.reporting.impl.ReportingException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Collection;
 import java.util.concurrent.BlockingQueue;
@@ -39,12 +41,14 @@ import java.util.concurrent.TimeUnit;
  *
  * @param <T> the class of the generic item.
  */
+@Singleton
 public class Queue<T> implements ReportingInterface<T> {
 
     /**
      * The queue storing the items.
      */
     private final BlockingQueue<T> queue;
+    private static final Logger logger = LogManager.getLogger(Queue.class);
 
     @Inject
     public Queue(ScheduledExecutionService executionService, QueueWorkerFactoryInterface<T> queueWorkerFactory) {
@@ -59,7 +63,7 @@ public class Queue<T> implements ReportingInterface<T> {
         try {
             this.queue.put(item);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 

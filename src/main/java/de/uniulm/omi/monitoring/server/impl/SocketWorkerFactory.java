@@ -22,6 +22,7 @@ package de.uniulm.omi.monitoring.server.impl;
 
 import com.google.inject.Inject;
 import de.uniulm.omi.monitoring.metric.impl.Metric;
+import de.uniulm.omi.monitoring.modules.api.QueuedReporting;
 import de.uniulm.omi.monitoring.reporting.api.ReportingInterface;
 import de.uniulm.omi.monitoring.server.api.RequestParsingInterface;
 import de.uniulm.omi.monitoring.server.api.SocketWorkerFactoryInterface;
@@ -38,10 +39,11 @@ public class SocketWorkerFactory implements SocketWorkerFactoryInterface {
     private final RequestParsingInterface<String, Metric> requestParser;
 
     @Inject
-    public SocketWorkerFactory(ReportingInterface<Metric> metricReporting, RequestParsingInterface<String, Metric> requestParser) {
+    public SocketWorkerFactory(@QueuedReporting ReportingInterface<Metric> metricReporting, RequestParsingInterface<String, Metric> requestParser) {
         this.metricReporting = metricReporting;
         this.requestParser = requestParser;
     }
+
     @Override
     public SocketWorker create(Socket socket) {
         return new SocketWorker(socket, metricReporting, requestParser);

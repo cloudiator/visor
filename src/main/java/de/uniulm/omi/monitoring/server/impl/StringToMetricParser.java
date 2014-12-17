@@ -48,14 +48,19 @@ public class StringToMetricParser implements RequestParsingInterface<String, Met
     public Metric parse(String s) throws ParsingException {
         checkNotNull(s);
 
-        String[] parts = s.split(" ");
+        final String[] parts = s.split(" ");
         if (parts.length != 4) {
-            throw new ParsingException("Could not parse request. Expected 4 strings, got " + parts.length);
+            throw new ParsingException("Expected 4 strings, got " + parts.length);
         }
-        String applicationName = parts[0];
-        String metricName = parts[1];
-        String value = parts[2];
-        long timestamp = Long.valueOf(parts[3]);
+        final String applicationName = parts[0];
+        final String metricName = parts[1];
+        final String value = parts[2];
+        long timestamp;
+        try {
+            timestamp = Long.valueOf(parts[3]);
+        } catch (NumberFormatException e) {
+            throw new ParsingException("Could not convert 4th string to long.");
+        }
 
         return this.metricFactory.from(metricName, value, timestamp, applicationName);
     }

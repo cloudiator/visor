@@ -2,7 +2,9 @@
 <Configuration status="warn" name="monitoring-agent" packages="">
     <Appenders>
         <Console name="STDOUT" target="SYSTEM_OUT">
-            <PatternLayout pattern="%m%n"/>
+            <PatternLayout>
+                <Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
+            </PatternLayout>
         </Console>
         <File name="FILE" fileName="logs/monitoring-agent.log">
             <PatternLayout>

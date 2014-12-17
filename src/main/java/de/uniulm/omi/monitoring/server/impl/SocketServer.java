@@ -45,7 +45,7 @@ public class SocketServer {
             ServerSocket serverSocket = new ServerSocket(configurationProvider.getPort());
             executionService.execute(serverListenerFactory.create(serverSocket));
         } catch (IOException e) {
-            logger.fatal("Could not start server", e);
+            logger.fatal("Server crashed.",e);
             System.exit(1);
         }
     }

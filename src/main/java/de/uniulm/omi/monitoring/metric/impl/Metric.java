@@ -20,9 +20,12 @@
 
 package de.uniulm.omi.monitoring.metric.impl;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * A basic metric for the system.
- * <p/>
+ * <p>
  * A metric always consists of:
  * - a name: the name of the matric
  * - a value: a value for this metric.
@@ -53,6 +56,14 @@ public abstract class Metric {
      * @param timestamp the timestamp of the metric.
      */
     public Metric(String name, Object value, long timestamp) {
+
+        checkNotNull(name);
+        checkNotNull(value);
+        checkNotNull(timestamp);
+
+        checkArgument(!name.isEmpty(), "Name must not be empty.");
+        checkArgument(timestamp > 0, "Timestamp must be > 0");
+
         this.name = name;
         this.value = value;
         this.timestamp = timestamp;

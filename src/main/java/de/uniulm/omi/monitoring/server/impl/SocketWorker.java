@@ -38,7 +38,6 @@ import java.util.Scanner;
  */
 public class SocketWorker implements Runnable {
 
-
     private final Socket socket;
     private final ReportingInterface<Metric> metricReporting;
     private final RequestParsingInterface<String, Metric> requestParser;
@@ -50,14 +49,25 @@ public class SocketWorker implements Runnable {
         this.requestParser = requestParser;
     }
 
+    protected void closeSocket() {
+        try {
+            this.socket.close();
+        } catch (IOException ignored) {
+        }
+    }
+
     @Override
     public void run() {
+        logger.debug("New connection to server");
         while (!Thread.currentThread().isInterrupted()) {
             try {
+                this.socket.setSoTimeout(20 * 1000);
                 Scanner in = new Scanner(this.socket.getInputStream());
                 while (in.hasNextLine()) {
                     String line = in.nextLine();
-                    this.metricReporting.report(requestParser.parse(line));
+                    Metric metric = this.requestParser.parse(line);
+                    logger.debug("Server received new metric " + metric.getName());
+                    this.metricReporting.report(metric);
                 }
             } catch (IOException e) {
                 logger.error(e);
@@ -65,12 +75,12 @@ public class SocketWorker implements Runnable {
                 logger.error("Error parsing metric.", e);
             } catch (ReportingException e) {
                 logger.error("Could not report metric.", e);
+            } catch (Throwable t) {
+                logger.fatal(t);
             } finally {
-                try {
-                    socket.close();
-                    Thread.currentThread().interrupt();
-                } catch (IOException ignored) {
-                }
+                logger.debug("Closing connection to server.");
+                closeSocket();
+                Thread.currentThread().interrupt();
             }
         }
     }
