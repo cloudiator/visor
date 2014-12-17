@@ -3,12 +3,12 @@ Building: the agent is build with maven.
 ```
 usage: de.uniulm.omi.monitoring.MonitoringAgent
  -ip,--localIp <arg>      IP of the local machine
-  -kip,--kairosUrl         Url of the kairosDB
- -kp,--kairosPort <arg>   Port of the kairosDB
- -p, --port <arg>         Port of the telnet server
+ -conf, --confFile <arg>  Location of the properties file.
 ```
 
-The monitoring agent starts a small telnet server on either the default port 9002 or the port specified via the -p option.
+A default configuration file can be found in the conf directory.
+
+The monitoring agent starts a small telnet server on the port configured in the configuration file.
 Communication with the port is line based:
 applicationName metricName value timestamp\n
 
