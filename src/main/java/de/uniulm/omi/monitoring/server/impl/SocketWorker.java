@@ -43,7 +43,7 @@ public class SocketWorker implements Runnable {
     private final RequestParsingInterface<String, Metric> requestParser;
     private static final Logger logger = LogManager.getLogger(SocketWorker.class);
 
-    public SocketWorker(final Socket socket, ReportingInterface<Metric> metricReporting, RequestParsingInterface<String, Metric> requestParser) {
+    SocketWorker(final Socket socket, ReportingInterface<Metric> metricReporting, RequestParsingInterface<String, Metric> requestParser) {
         this.socket = socket;
         this.metricReporting = metricReporting;
         this.requestParser = requestParser;

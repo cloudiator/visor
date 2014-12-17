@@ -39,7 +39,7 @@ public class ApplicationMetric extends ServerMetric {
      * @param applicationName the name of the application reporting the metric.
      * @param Ip              the IP of the server, where the metric was measured.
      */
-    public ApplicationMetric(String name, Object value, long timestamp, String applicationName, String Ip) {
+    ApplicationMetric(String name, Object value, long timestamp, String applicationName, String Ip) {
         super(name, value, timestamp, Ip);
         this.applicationName = applicationName;
     }
@@ -47,7 +47,7 @@ public class ApplicationMetric extends ServerMetric {
     /**
      * The name of the application reporting the metric.
      */
-    protected String applicationName;
+    private final String applicationName;
 
     /**
      * Getter for the application name.

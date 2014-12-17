@@ -36,17 +36,17 @@ public abstract class Metric {
     /**
      * The name of the metric.
      */
-    protected String name;
+    protected final String name;
 
     /**
      * The value of the metric.
      */
-    protected Object value;
+    protected final Object value;
 
     /**
      * The time the metric was taken as unix timestamp.
      */
-    protected long timestamp;
+    protected final long timestamp;
 
     /**
      * Constructor for the metric.
@@ -55,7 +55,7 @@ public abstract class Metric {
      * @param value     the value of the metric.
      * @param timestamp the timestamp of the metric.
      */
-    public Metric(String name, Object value, long timestamp) {
+    Metric(String name, Object value, long timestamp) {
 
         checkNotNull(name);
         checkNotNull(value);

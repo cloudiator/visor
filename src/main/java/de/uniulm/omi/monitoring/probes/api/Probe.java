@@ -21,13 +21,11 @@
 package de.uniulm.omi.monitoring.probes.api;
 
 import de.uniulm.omi.monitoring.metric.api.MetricNotAvailableException;
-import de.uniulm.omi.monitoring.probes.Interval;
 
 /**
  * Interface which needs to be implemented to create a Probe.
- * <p/>
+ * <p>
  * A probe is run with the given interval measuring the metric with the provided name.
- *
  */
 public interface Probe {
 

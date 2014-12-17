@@ -35,12 +35,12 @@ public class Interval {
     /**
      * The period of the interval.
      */
-    protected long period;
+    protected final long period;
 
     /**
      * The timeunit of the interval.
      */
-    protected TimeUnit timeUnit;
+    protected final TimeUnit timeUnit;
 
     /**
      * Constructor for the interval

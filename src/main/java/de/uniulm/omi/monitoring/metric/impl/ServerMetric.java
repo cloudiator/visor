@@ -33,7 +33,7 @@ public class ServerMetric extends Metric {
     /**
      * The ip address of the server where the metric was measured.
      */
-    protected String ip;
+    protected final String ip;
 
     /**
      * Constructor for the server metric.

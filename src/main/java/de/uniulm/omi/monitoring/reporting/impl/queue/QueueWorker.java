@@ -36,8 +36,8 @@ import java.util.concurrent.BlockingQueue;
  */
 public class QueueWorker<T> implements Runnable {
 
-    private BlockingQueue<T> queue;
-    private ReportingInterface<T> reportingInterface;
+    private final BlockingQueue<T> queue;
+    private final ReportingInterface<T> reportingInterface;
     private static final Logger logger = LogManager.getLogger(QueueWorker.class);
 
     public QueueWorker(BlockingQueue<T> queue, ReportingInterface<T> reportingInterface) {

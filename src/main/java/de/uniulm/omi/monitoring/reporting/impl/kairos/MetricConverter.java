@@ -33,7 +33,7 @@ import java.lang.reflect.Method;
  */
 public class MetricConverter {
 
-    private MetricBuilder metricBuilder;
+    private final MetricBuilder metricBuilder;
 
     public MetricConverter() {
         this.metricBuilder = MetricBuilder.getInstance();
@@ -49,7 +49,7 @@ public class MetricConverter {
                 try {
                     kairosMetric.addTag(field.getAnnotation(KairosTag.class).name(), (String) field.get(metric));
                 } catch (IllegalAccessException e) {
-                    throw new MetricConversionException(String.format("Could not access field %s annotated with Tag", field.getName()),e);
+                    throw new MetricConversionException(String.format("Could not access field %s annotated with Tag", field.getName()), e);
                 }
             }
         }
@@ -59,10 +59,8 @@ public class MetricConverter {
             if (method.isAnnotationPresent(KairosTag.class)) {
                 try {
                     kairosMetric.addTag(method.getAnnotation(KairosTag.class).name(), (String) method.invoke(metric));
-                } catch (IllegalAccessException e) {
-                    throw new MetricConversionException(String.format("Could not access method %s annotated with Tag", method.getName()),e);
-                } catch (InvocationTargetException e) {
-                    throw new MetricConversionException(String.format("Could not access method %s annotated with Tag", method.getName()),e);
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    throw new MetricConversionException(String.format("Could not access method %s annotated with Tag", method.getName()), e);
                 }
             }
         }

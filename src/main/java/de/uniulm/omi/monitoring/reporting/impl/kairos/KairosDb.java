@@ -44,11 +44,11 @@ public class KairosDb implements ReportingInterface<Metric> {
     /**
      * The server of the kairos db.
      */
-    protected String server;
+    protected final String server;
     /**
      * The port of the kairos db.
      */
-    protected String port;
+    protected final String port;
 
     /**
      * A logger.

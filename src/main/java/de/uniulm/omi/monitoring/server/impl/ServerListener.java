@@ -39,7 +39,7 @@ public class ServerListener implements Runnable {
     private final SocketWorkerFactoryInterface socketWorkerFactory;
     private static final Logger logger = LogManager.getLogger(SocketServer.class);
 
-    public ServerListener(ServerSocket serverSocket, ExecutionServiceInterface executionService, SocketWorkerFactoryInterface socketWorkerFactory) {
+    ServerListener(ServerSocket serverSocket, ExecutionServiceInterface executionService, SocketWorkerFactoryInterface socketWorkerFactory) {
         this.serverSocket = serverSocket;
         this.executionService = executionService;
         this.socketWorkerFactory = socketWorkerFactory;
