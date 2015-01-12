@@ -18,21 +18,19 @@
  *
  */
 
-package de.uniulm.omi.executionware.agent.execution.api;
+package de.uniulm.omi.executionware.agent.monitoring.metric.impl;
 
-import com.google.inject.ImplementedBy;
-import de.uniulm.omi.executionware.agent.execution.impl.ScheduledExecutionService;
-import de.uniulm.omi.executionware.agent.monitoring.Interval;
+import org.junit.Test;
 
-/**
- * Created by daniel on 11.12.14.
- */
-@ImplementedBy(ScheduledExecutionService.class)
-public interface ScheduledExecutionServiceInterface extends ExecutionServiceInterface {
+public class ApplicationMetricTest {
 
-    public void schedule(Runnable runnable, Interval interval);
+    @Test
+    public void testGetApplicationName() throws Exception {
 
-    public void remove(Runnable runnable);
+    }
 
-    public void reschedule(Runnable runnable, Interval newInterval);
+    @Test
+    public void testToString() throws Exception {
+
+    }
 }

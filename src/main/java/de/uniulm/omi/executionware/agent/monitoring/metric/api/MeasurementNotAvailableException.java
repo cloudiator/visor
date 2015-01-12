@@ -18,21 +18,25 @@
  *
  */
 
-package de.uniulm.omi.executionware.agent.execution.api;
-
-import com.google.inject.ImplementedBy;
-import de.uniulm.omi.executionware.agent.execution.impl.ScheduledExecutionService;
-import de.uniulm.omi.executionware.agent.monitoring.Interval;
+package de.uniulm.omi.executionware.agent.monitoring.metric.api;
 
 /**
- * Created by daniel on 11.12.14.
+ * This exception is thrown if a probe could not execute its measurement, and
+ * the metric is therefore not available.
  */
-@ImplementedBy(ScheduledExecutionService.class)
-public interface ScheduledExecutionServiceInterface extends ExecutionServiceInterface {
+public class MeasurementNotAvailableException extends Exception {
 
-    public void schedule(Runnable runnable, Interval interval);
+    /**
+     * @see java.lang.Exception
+     */
+    public MeasurementNotAvailableException(String message) {
+        super(message);
+    }
 
-    public void remove(Runnable runnable);
-
-    public void reschedule(Runnable runnable, Interval newInterval);
+    /**
+     * @see java.lang.Exception
+     */
+    public MeasurementNotAvailableException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

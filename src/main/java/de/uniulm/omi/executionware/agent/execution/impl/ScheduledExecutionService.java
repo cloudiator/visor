@@ -24,7 +24,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import de.uniulm.omi.executionware.agent.execution.api.ScheduledExecutionServiceInterface;
-import de.uniulm.omi.executionware.agent.probes.Interval;
+import de.uniulm.omi.executionware.agent.monitoring.Interval;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

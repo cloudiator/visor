@@ -23,7 +23,7 @@ package de.uniulm.omi.executionware.agent.reporting.impl.queue;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import de.uniulm.omi.executionware.agent.execution.impl.ScheduledExecutionService;
-import de.uniulm.omi.executionware.agent.probes.Interval;
+import de.uniulm.omi.executionware.agent.monitoring.Interval;
 import de.uniulm.omi.executionware.agent.reporting.api.ReportingInterface;
 import de.uniulm.omi.executionware.agent.reporting.impl.ReportingException;
 import org.apache.logging.log4j.LogManager;

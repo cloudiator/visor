@@ -22,8 +22,8 @@ package de.uniulm.omi.executionware.agent.server.impl;
 
 import com.google.inject.Inject;
 import de.uniulm.omi.executionware.agent.server.api.ParsingException;
-import de.uniulm.omi.executionware.agent.metric.api.MetricFactoryInterface;
-import de.uniulm.omi.executionware.agent.metric.impl.Metric;
+import de.uniulm.omi.executionware.agent.monitoring.metric.api.MetricFactoryInterface;
+import de.uniulm.omi.executionware.agent.monitoring.metric.impl.Metric;
 import de.uniulm.omi.executionware.agent.server.api.RequestParsingInterface;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

@@ -22,7 +22,7 @@ package de.uniulm.omi.executionware.agent.reporting.modules.impl;
 
 import de.uniulm.omi.executionware.agent.reporting.api.ReportingInterface;
 import de.uniulm.omi.executionware.agent.reporting.modules.api.ReportingModule;
-import de.uniulm.omi.executionware.agent.metric.impl.Metric;
+import de.uniulm.omi.executionware.agent.monitoring.metric.impl.Metric;
 import de.uniulm.omi.executionware.agent.reporting.impl.cli.CommandLineReporter;
 
 /**

@@ -23,7 +23,7 @@ import com.google.inject.Injector;
 import com.google.inject.Module;
 import de.uniulm.omi.executionware.agent.execution.impl.ShutdownHook;
 import de.uniulm.omi.executionware.agent.server.impl.SocketServer;
-import de.uniulm.omi.executionware.agent.probes.management.impl.DefaultProbeRegistry;
+import de.uniulm.omi.executionware.agent.monitoring.management.impl.DefaultProbeRegistry;
 
 import java.util.Set;
 

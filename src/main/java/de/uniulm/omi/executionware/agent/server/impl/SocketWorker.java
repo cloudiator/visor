@@ -22,7 +22,7 @@ package de.uniulm.omi.executionware.agent.server.impl;
 
 
 import de.uniulm.omi.executionware.agent.reporting.api.ReportingInterface;
-import de.uniulm.omi.executionware.agent.metric.impl.Metric;
+import de.uniulm.omi.executionware.agent.monitoring.metric.impl.Metric;
 import de.uniulm.omi.executionware.agent.reporting.impl.ReportingException;
 import de.uniulm.omi.executionware.agent.server.api.ParsingException;
 import de.uniulm.omi.executionware.agent.server.api.RequestParsingInterface;

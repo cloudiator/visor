@@ -18,21 +18,16 @@
  *
  */
 
-package de.uniulm.omi.executionware.agent.execution.api;
+package de.uniulm.omi.executionware.agent.monitoring.monitors.api;
 
-import com.google.inject.ImplementedBy;
-import de.uniulm.omi.executionware.agent.execution.impl.ScheduledExecutionService;
-import de.uniulm.omi.executionware.agent.monitoring.Interval;
+import de.uniulm.omi.executionware.agent.monitoring.metric.api.MeasurementNotAvailableException;
+import de.uniulm.omi.executionware.agent.monitoring.metric.impl.Metric;
 
 /**
- * Created by daniel on 11.12.14.
+ * Created by daniel on 18.12.14.
  */
-@ImplementedBy(ScheduledExecutionService.class)
-public interface ScheduledExecutionServiceInterface extends ExecutionServiceInterface {
+public interface Monitor {
 
-    public void schedule(Runnable runnable, Interval interval);
+    public Metric getMetric() throws MeasurementNotAvailableException;
 
-    public void remove(Runnable runnable);
-
-    public void reschedule(Runnable runnable, Interval newInterval);
 }

@@ -22,7 +22,7 @@ package de.uniulm.omi.executionware.agent.server.config;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
-import de.uniulm.omi.executionware.agent.metric.impl.Metric;
+import de.uniulm.omi.executionware.agent.monitoring.metric.impl.Metric;
 import de.uniulm.omi.executionware.agent.server.api.RequestParsingInterface;
 import de.uniulm.omi.executionware.agent.server.impl.StringToMetricParser;
 

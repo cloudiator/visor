@@ -18,21 +18,21 @@
  *
  */
 
-package de.uniulm.omi.executionware.agent.execution.api;
+package de.uniulm.omi.executionware.agent.monitoring.metric.api;
 
 import com.google.inject.ImplementedBy;
-import de.uniulm.omi.executionware.agent.execution.impl.ScheduledExecutionService;
-import de.uniulm.omi.executionware.agent.monitoring.Interval;
+import de.uniulm.omi.executionware.agent.monitoring.metric.impl.ApplicationMetric;
+import de.uniulm.omi.executionware.agent.monitoring.metric.impl.MetricFactory;
+import de.uniulm.omi.executionware.agent.monitoring.metric.impl.ServerMetric;
+import de.uniulm.omi.executionware.agent.monitoring.probes.api.Measurement;
 
 /**
- * Created by daniel on 11.12.14.
+ * Created by daniel on 15.12.14.
  */
-@ImplementedBy(ScheduledExecutionService.class)
-public interface ScheduledExecutionServiceInterface extends ExecutionServiceInterface {
+@ImplementedBy(MetricFactory.class)
+public interface MetricFactoryInterface {
 
-    public void schedule(Runnable runnable, Interval interval);
+    public ServerMetric from(String metricName, Measurement measurement);
 
-    public void remove(Runnable runnable);
-
-    public void reschedule(Runnable runnable, Interval newInterval);
+    public ApplicationMetric from(String metricName, Object value, Long timestamp, String application);
 }

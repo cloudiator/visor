@@ -23,7 +23,7 @@ package de.uniulm.omi.executionware.agent.reporting.impl.kairos;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import de.uniulm.omi.executionware.agent.reporting.api.ReportingInterface;
-import de.uniulm.omi.executionware.agent.metric.impl.Metric;
+import de.uniulm.omi.executionware.agent.monitoring.metric.impl.Metric;
 import de.uniulm.omi.executionware.agent.reporting.impl.MetricReportingException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

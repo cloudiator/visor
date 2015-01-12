@@ -20,7 +20,7 @@
 
 package de.uniulm.omi.executionware.agent.reporting.impl.kairos;
 
-import de.uniulm.omi.executionware.agent.metric.api.KairosTag;
+import de.uniulm.omi.executionware.agent.monitoring.metric.api.KairosTag;
 import org.kairosdb.client.builder.Metric;
 import org.kairosdb.client.builder.MetricBuilder;
 
@@ -39,7 +39,7 @@ public class MetricConverter {
         this.metricBuilder = MetricBuilder.getInstance();
     }
 
-    public MetricConverter add(de.uniulm.omi.executionware.agent.metric.impl.Metric metric) throws MetricConversionException {
+    public MetricConverter add(de.uniulm.omi.executionware.agent.monitoring.metric.impl.Metric metric) throws MetricConversionException {
         Metric kairosMetric = metricBuilder.addMetric(metric.getName()).addDataPoint(metric.getTimestamp(), metric.getValue());
 
         //we need to add the tags

@@ -18,21 +18,22 @@
  *
  */
 
-package de.uniulm.omi.executionware.agent.execution.api;
+package de.uniulm.omi.executionware.agent.monitoring.management.api;
 
 import com.google.inject.ImplementedBy;
-import de.uniulm.omi.executionware.agent.execution.impl.ScheduledExecutionService;
+import de.uniulm.omi.executionware.agent.monitoring.management.impl.DefaultProbeRegistry;
 import de.uniulm.omi.executionware.agent.monitoring.Interval;
+import de.uniulm.omi.executionware.agent.monitoring.probes.api.Probe;
 
 /**
  * Created by daniel on 11.12.14.
  */
-@ImplementedBy(ScheduledExecutionService.class)
-public interface ScheduledExecutionServiceInterface extends ExecutionServiceInterface {
+@ImplementedBy(DefaultProbeRegistry.class)
+public interface ProbeRegistryInterface {
 
-    public void schedule(Runnable runnable, Interval interval);
+    public void registerProbe(Probe probe, Interval interval);
 
-    public void remove(Runnable runnable);
+    public void changeInterval(Probe probe, Interval interval);
 
-    public void reschedule(Runnable runnable, Interval newInterval);
+    public void unregisterProbe(Probe probe);
 }
