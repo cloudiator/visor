@@ -22,7 +22,7 @@ package de.uniulm.omi.executionware.agent.server.impl;
 
 import com.google.inject.Inject;
 import de.uniulm.omi.executionware.agent.server.api.ParsingException;
-import de.uniulm.omi.executionware.agent.monitoring.metric.api.MetricFactoryInterface;
+import de.uniulm.omi.executionware.agent.monitoring.metric.api.MetricFactory;
 import de.uniulm.omi.executionware.agent.monitoring.metric.impl.Metric;
 import de.uniulm.omi.executionware.agent.server.api.RequestParsingInterface;
 import org.apache.logging.log4j.LogManager;
@@ -35,11 +35,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class StringToMetricParser implements RequestParsingInterface<String, Metric> {
 
-    private final MetricFactoryInterface metricFactory;
+    private final MetricFactory metricFactory;
     private static final Logger logger = LogManager.getLogger(StringToMetricParser.class);
 
     @Inject
-    public StringToMetricParser(MetricFactoryInterface metricFactory) {
+    public StringToMetricParser(MetricFactory metricFactory) {
         checkNotNull(metricFactory);
         this.metricFactory = metricFactory;
     }

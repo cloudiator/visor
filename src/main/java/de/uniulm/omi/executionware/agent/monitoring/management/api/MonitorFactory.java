@@ -18,18 +18,17 @@
  *
  */
 
-package de.uniulm.omi.executionware.agent.monitoring.monitors.api;
+package de.uniulm.omi.executionware.agent.monitoring.management.api;
 
-import de.uniulm.omi.executionware.agent.monitoring.metric.api.MeasurementNotAvailableException;
-import de.uniulm.omi.executionware.agent.monitoring.metric.impl.Metric;
+import com.google.inject.ImplementedBy;
+import de.uniulm.omi.executionware.agent.monitoring.management.impl.MonitorFactoryImpl;
+import de.uniulm.omi.executionware.agent.monitoring.monitors.api.Monitor;
+import de.uniulm.omi.executionware.agent.monitoring.probes.api.Probe;
 
 /**
- * Created by daniel on 18.12.14.
+ * Created by daniel on 15.01.15.
  */
-public interface Monitor {
-
-
-
-    public Metric getMetric() throws MeasurementNotAvailableException;
-
+@ImplementedBy(MonitorFactoryImpl.class)
+public interface MonitorFactory {
+    public Monitor create(String metricName, Probe probe);
 }

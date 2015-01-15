@@ -20,20 +20,12 @@
 
 package de.uniulm.omi.executionware.agent.monitoring.management.api;
 
-import com.google.inject.ImplementedBy;
-import de.uniulm.omi.executionware.agent.monitoring.management.impl.DefaultProbeRegistry;
-import de.uniulm.omi.executionware.agent.monitoring.Interval;
-import de.uniulm.omi.executionware.agent.monitoring.probes.api.Probe;
-
 /**
- * Created by daniel on 11.12.14.
+ * Created by daniel on 15.01.15.
  */
-@ImplementedBy(DefaultProbeRegistry.class)
-public interface ProbeRegistryInterface {
+public class ProbeNotFoundException extends Exception {
 
-    public void registerProbe(Probe probe, Interval interval);
-
-    public void changeInterval(Probe probe, Interval interval);
-
-    public void unregisterProbe(Probe probe);
+    public ProbeNotFoundException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

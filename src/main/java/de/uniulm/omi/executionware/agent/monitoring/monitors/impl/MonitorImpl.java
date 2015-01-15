@@ -21,28 +21,28 @@
 package de.uniulm.omi.executionware.agent.monitoring.monitors.impl;
 
 import de.uniulm.omi.executionware.agent.monitoring.metric.api.MeasurementNotAvailableException;
-import de.uniulm.omi.executionware.agent.monitoring.metric.api.MetricFactoryInterface;
-import de.uniulm.omi.executionware.agent.monitoring.metric.impl.ServerMetric;
+import de.uniulm.omi.executionware.agent.monitoring.metric.api.MetricFactory;
+import de.uniulm.omi.executionware.agent.monitoring.metric.impl.Metric;
 import de.uniulm.omi.executionware.agent.monitoring.monitors.api.Monitor;
-import de.uniulm.omi.executionware.agent.monitoring.probes.api.ServerProbe;
+import de.uniulm.omi.executionware.agent.monitoring.probes.api.Probe;
 
 /**
  * Created by daniel on 18.12.14.
  */
-public class ServerMonitor implements Monitor {
+public class MonitorImpl implements Monitor {
 
     private final String metricName;
-    private final ServerProbe serverProbe;
-    private final MetricFactoryInterface metricFactory;
+    private final Probe probe;
+    private final MetricFactory metricFactory;
 
-    public ServerMonitor(String metricName, ServerProbe serverProbe, MetricFactoryInterface metricFactory) {
+    public MonitorImpl(String metricName, Probe probe, MetricFactory metricFactory) {
         this.metricName = metricName;
-        this.serverProbe = serverProbe;
+        this.probe = probe;
         this.metricFactory = metricFactory;
     }
 
     @Override
-    public ServerMetric getMetric() throws MeasurementNotAvailableException {
-        return this.metricFactory.from(this.metricName, this.serverProbe.getMeasurementValue());
+    public Metric getMetric() throws MeasurementNotAvailableException {
+        return this.metricFactory.from(this.metricName, this.probe.getMeasurement());
     }
 }

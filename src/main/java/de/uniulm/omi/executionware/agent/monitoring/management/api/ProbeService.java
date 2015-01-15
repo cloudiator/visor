@@ -18,21 +18,17 @@
  *
  */
 
-package de.uniulm.omi.executionware.agent.monitoring.metric.api;
+package de.uniulm.omi.executionware.agent.monitoring.management.api;
 
 import com.google.inject.ImplementedBy;
-import de.uniulm.omi.executionware.agent.monitoring.metric.impl.ApplicationMetric;
-import de.uniulm.omi.executionware.agent.monitoring.metric.impl.MetricFactory;
-import de.uniulm.omi.executionware.agent.monitoring.metric.impl.ServerMetric;
-import de.uniulm.omi.executionware.agent.monitoring.probes.api.Measurement;
+import de.uniulm.omi.executionware.agent.monitoring.management.impl.ProbeServiceImpl;
+import de.uniulm.omi.executionware.agent.monitoring.probes.api.Probe;
 
 /**
- * Created by daniel on 15.12.14.
+ * Created by daniel on 15.01.15.
  */
-@ImplementedBy(MetricFactory.class)
-public interface MetricFactoryInterface {
+@ImplementedBy(ProbeServiceImpl.class)
+public interface ProbeService {
 
-    public ServerMetric from(String metricName, Measurement measurement);
-
-    public ApplicationMetric from(String metricName, Object value, Long timestamp, String application);
+    public Probe findProbe(String className) throws ProbeNotFoundException;
 }

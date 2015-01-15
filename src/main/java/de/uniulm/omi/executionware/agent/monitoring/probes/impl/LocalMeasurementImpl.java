@@ -18,19 +18,30 @@
  *
  */
 
-package de.uniulm.omi.executionware.agent.monitoring.management.api;
+package de.uniulm.omi.executionware.agent.monitoring.probes.impl;
 
-import com.google.inject.ImplementedBy;
-import de.uniulm.omi.executionware.agent.monitoring.management.impl.ProbeWorker;
-import de.uniulm.omi.executionware.agent.monitoring.management.impl.ProbeWorkerFactory;
-import de.uniulm.omi.executionware.agent.monitoring.probes.api.Probe;
+import de.uniulm.omi.executionware.agent.monitoring.probes.api.LocalMeasurement;
 
 /**
- * Created by daniel on 11.12.14.
+ * Created by daniel on 18.12.14.
  */
-@ImplementedBy(ProbeWorkerFactory.class)
-public interface ProbeWorkerFactoryInterface {
+public class LocalMeasurementImpl implements LocalMeasurement {
 
-    public ProbeWorker create(Probe probe);
+    public final long timestamp;
+    public final Object value;
 
+    public LocalMeasurementImpl(long timestamp, Object value) {
+        this.timestamp = timestamp;
+        this.value = value;
+    }
+
+    @Override
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    @Override
+    public Object getValue() {
+        return value;
+    }
 }

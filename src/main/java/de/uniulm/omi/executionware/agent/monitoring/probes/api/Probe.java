@@ -30,17 +30,10 @@ import de.uniulm.omi.executionware.agent.monitoring.metric.api.MeasurementNotAva
 public interface Probe {
 
     /**
-     * The name of the measurement this probe does.
-     *
-     * @return the name of the measurement this probe measures.
-     */
-    public String getMeasurementName();
-
-    /**
      * The value of metric this probe measures at the time it is called.
      *
      * @return the measured value at this point of time.
      * @throws de.uniulm.omi.executionware.agent.monitoring.metric.api.MeasurementNotAvailableException
      */
-    public Measurement getMeasurementValue() throws MeasurementNotAvailableException;
+    public LocalMeasurement getMeasurement() throws MeasurementNotAvailableException;
 }

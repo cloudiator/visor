@@ -22,7 +22,7 @@ package de.uniulm.omi.executionware.agent.monitoring.probes.impl;
 
 import com.sun.management.OperatingSystemMXBean;
 import de.uniulm.omi.executionware.agent.monitoring.metric.api.MeasurementNotAvailableException;
-import de.uniulm.omi.executionware.agent.monitoring.probes.api.Measurement;
+import de.uniulm.omi.executionware.agent.monitoring.probes.api.LocalMeasurement;
 import de.uniulm.omi.executionware.agent.monitoring.probes.api.ServerProbe;
 
 import java.lang.management.ManagementFactory;
@@ -36,12 +36,7 @@ import java.lang.management.ManagementFactory;
 public class MemoryUsageProbe implements ServerProbe {
 
     @Override
-    public String getMeasurementName() {
-        return "memory_usage_percentage";
-    }
-
-    @Override
-    public Measurement getMeasurementValue() throws MeasurementNotAvailableException {
+    public LocalMeasurement getMeasurement() throws MeasurementNotAvailableException {
         OperatingSystemMXBean osBean = ManagementFactory.getPlatformMXBean(
                 OperatingSystemMXBean.class);
 
@@ -53,7 +48,7 @@ public class MemoryUsageProbe implements ServerProbe {
             throw new MeasurementNotAvailableException("Received negative value for total or free physical memory size");
         }
 
-        return new MeasurementImpl(System.currentTimeMillis(), 100 - ((freePhysicalMemory / totalPhysicalMemory) * 100));
+        return new LocalMeasurementImpl(System.currentTimeMillis(), 100 - ((freePhysicalMemory / totalPhysicalMemory) * 100));
     }
 
     @Override

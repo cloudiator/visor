@@ -22,10 +22,13 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 import de.uniulm.omi.executionware.agent.execution.impl.ShutdownHook;
+import de.uniulm.omi.executionware.agent.monitoring.Interval;
+import de.uniulm.omi.executionware.agent.monitoring.management.api.MonitoringService;
+import de.uniulm.omi.executionware.agent.monitoring.management.api.ProbeNotFoundException;
 import de.uniulm.omi.executionware.agent.server.impl.SocketServer;
-import de.uniulm.omi.executionware.agent.monitoring.management.impl.DefaultProbeRegistry;
 
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by daniel on 17.12.14.
@@ -40,7 +43,11 @@ public class MonitoringAgentService {
 
     public void start() {
         final Injector injector = Guice.createInjector(this.modules);
-        injector.getInstance(DefaultProbeRegistry.class);
+        try {
+            injector.getInstance(MonitoringService.class).startMonitoring("cpu_usage", "de.uniulm.omi.executionware.agent.monitoring.probes.impl.CpuUsageProbe", new Interval(1, TimeUnit.SECONDS));
+        } catch (ProbeNotFoundException e) {
+            throw new RuntimeException(e);
+        }
         injector.getInstance(SocketServer.class);
         Runtime.getRuntime().addShutdownHook(injector.getInstance(ShutdownHook.class));
     }

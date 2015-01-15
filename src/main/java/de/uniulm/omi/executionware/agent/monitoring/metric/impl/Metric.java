@@ -34,7 +34,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * <p>
  * Use MetricFactory to create metrics.
  *
- * @see de.uniulm.omi.executionware.agent.monitoring.metric.impl.MetricFactory
+ * @see MetricFactoryImpl
  */
 public abstract class Metric {
 

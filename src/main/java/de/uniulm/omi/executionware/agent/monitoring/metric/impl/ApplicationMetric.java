@@ -29,7 +29,7 @@ import de.uniulm.omi.executionware.agent.monitoring.metric.api.KairosTag;
  * that reported the metric, meaning that this metric is application specific.
  *
  * Use MetricFactory to create metrics.
- * @see de.uniulm.omi.executionware.agent.monitoring.metric.impl.MetricFactory
+ * @see MetricFactoryImpl
  */
 public class ApplicationMetric extends ServerMetric {
 

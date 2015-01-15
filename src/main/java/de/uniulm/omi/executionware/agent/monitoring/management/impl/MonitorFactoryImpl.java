@@ -21,29 +21,26 @@
 package de.uniulm.omi.executionware.agent.monitoring.management.impl;
 
 import com.google.inject.Inject;
-import de.uniulm.omi.executionware.agent.monitoring.metric.api.MetricFactoryInterface;
-import de.uniulm.omi.executionware.agent.monitoring.metric.impl.Metric;
-import de.uniulm.omi.executionware.agent.reporting.modules.api.QueuedReporting;
+import de.uniulm.omi.executionware.agent.monitoring.management.api.MonitorFactory;
+import de.uniulm.omi.executionware.agent.monitoring.metric.api.MetricFactory;
+import de.uniulm.omi.executionware.agent.monitoring.monitors.api.Monitor;
+import de.uniulm.omi.executionware.agent.monitoring.monitors.impl.MonitorImpl;
 import de.uniulm.omi.executionware.agent.monitoring.probes.api.Probe;
-import de.uniulm.omi.executionware.agent.monitoring.management.api.ProbeWorkerFactoryInterface;
-import de.uniulm.omi.executionware.agent.reporting.api.ReportingInterface;
 
 /**
- * Created by daniel on 11.12.14.
+ * Created by daniel on 15.01.15.
  */
-public class ProbeWorkerFactory implements ProbeWorkerFactoryInterface {
+public class MonitorFactoryImpl implements MonitorFactory {
 
-    private final ReportingInterface<Metric> metricReportingInterface;
-    private final MetricFactoryInterface metricFactory;
+    private final MetricFactory metricFactory;
 
     @Inject
-    public ProbeWorkerFactory(@QueuedReporting ReportingInterface<Metric> metricReportingInterface, MetricFactoryInterface metricFactory) {
-        this.metricReportingInterface = metricReportingInterface;
+    public MonitorFactoryImpl(MetricFactory metricFactory) {
         this.metricFactory = metricFactory;
     }
 
     @Override
-    public ProbeWorker create(Probe probe) {
-        return new ProbeWorker(probe, this.metricReportingInterface, this.metricFactory);
+    public Monitor create(String metricName, Probe probe) {
+        return new MonitorImpl(metricName, probe, this.metricFactory);
     }
 }

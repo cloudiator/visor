@@ -22,8 +22,8 @@ package de.uniulm.omi.executionware.agent.monitoring.metric.impl;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import de.uniulm.omi.executionware.agent.monitoring.metric.api.MetricFactoryInterface;
-import de.uniulm.omi.executionware.agent.monitoring.probes.api.Measurement;
+import de.uniulm.omi.executionware.agent.monitoring.metric.api.MetricFactory;
+import de.uniulm.omi.executionware.agent.monitoring.probes.api.LocalMeasurement;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -32,7 +32,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * <p>
  * Used for creating metric objects.
  */
-public class MetricFactory implements MetricFactoryInterface {
+public class MetricFactoryImpl implements MetricFactory {
 
     private final String localIp;
 
@@ -42,14 +42,14 @@ public class MetricFactory implements MetricFactoryInterface {
      * @param localIp the ip of the machine
      */
     @Inject
-    public MetricFactory(@Named("localIp") String localIp) {
+    public MetricFactoryImpl(@Named("localIp") String localIp) {
         checkNotNull(localIp);
         this.localIp = localIp;
     }
 
     @Override
-    public ServerMetric from(String metricName, Measurement measurement) {
-        return new ServerMetric(metricName, measurement.getValue(), measurement.getTimestamp(), this.localIp);
+    public ServerMetric from(String metricName, LocalMeasurement localMeasurement) {
+        return new ServerMetric(metricName, localMeasurement.getValue(), localMeasurement.getTimestamp(), this.localIp);
     }
 
     @Override

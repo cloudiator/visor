@@ -18,18 +18,21 @@
  *
  */
 
-package de.uniulm.omi.executionware.agent.monitoring.monitors.api;
+package de.uniulm.omi.executionware.agent.monitoring.metric.api;
 
-import de.uniulm.omi.executionware.agent.monitoring.metric.api.MeasurementNotAvailableException;
-import de.uniulm.omi.executionware.agent.monitoring.metric.impl.Metric;
+import com.google.inject.ImplementedBy;
+import de.uniulm.omi.executionware.agent.monitoring.metric.impl.ApplicationMetric;
+import de.uniulm.omi.executionware.agent.monitoring.metric.impl.MetricFactoryImpl;
+import de.uniulm.omi.executionware.agent.monitoring.metric.impl.ServerMetric;
+import de.uniulm.omi.executionware.agent.monitoring.probes.api.LocalMeasurement;
 
 /**
- * Created by daniel on 18.12.14.
+ * Created by daniel on 15.12.14.
  */
-public interface Monitor {
+@ImplementedBy(MetricFactoryImpl.class)
+public interface MetricFactory {
 
+    public ServerMetric from(String metricName, LocalMeasurement localMeasurement);
 
-
-    public Metric getMetric() throws MeasurementNotAvailableException;
-
+    public ApplicationMetric from(String metricName, Object value, Long timestamp, String application);
 }

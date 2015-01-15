@@ -22,7 +22,7 @@ package de.uniulm.omi.executionware.agent.monitoring.probes.impl;
 
 import com.sun.management.OperatingSystemMXBean;
 import de.uniulm.omi.executionware.agent.monitoring.metric.api.MeasurementNotAvailableException;
-import de.uniulm.omi.executionware.agent.monitoring.probes.api.Measurement;
+import de.uniulm.omi.executionware.agent.monitoring.probes.api.LocalMeasurement;
 import de.uniulm.omi.executionware.agent.monitoring.probes.api.ServerProbe;
 
 import java.lang.management.ManagementFactory;
@@ -33,12 +33,7 @@ import java.lang.management.ManagementFactory;
 public class CpuUsageProbe implements ServerProbe {
 
     @Override
-    public String getMeasurementName() {
-        return "cpu_usage_percentage";
-    }
-
-    @Override
-    public Measurement getMeasurementValue() throws MeasurementNotAvailableException {
+    public LocalMeasurement getMeasurement() throws MeasurementNotAvailableException {
         OperatingSystemMXBean osBean = ManagementFactory.getPlatformMXBean(
                 OperatingSystemMXBean.class);
 
@@ -49,7 +44,7 @@ public class CpuUsageProbe implements ServerProbe {
             throw new MeasurementNotAvailableException("Received negative value");
         }
 
-        return new MeasurementImpl(System.currentTimeMillis(),systemCpuLoadPercentage);
+        return new LocalMeasurementImpl(System.currentTimeMillis(), systemCpuLoadPercentage);
     }
 
     @Override

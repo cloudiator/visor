@@ -18,18 +18,14 @@
  *
  */
 
-package de.uniulm.omi.executionware.agent.monitoring.monitors.api;
-
-import de.uniulm.omi.executionware.agent.monitoring.metric.api.MeasurementNotAvailableException;
-import de.uniulm.omi.executionware.agent.monitoring.metric.impl.Metric;
+package de.uniulm.omi.executionware.agent.monitoring.probes.api;
 
 /**
  * Created by daniel on 18.12.14.
  */
-public interface Monitor {
+public interface LocalMeasurement {
+    
+    public long getTimestamp();
 
-
-
-    public Metric getMetric() throws MeasurementNotAvailableException;
-
+    public Object getValue();
 }

@@ -18,14 +18,21 @@
  *
  */
 
-package de.uniulm.omi.executionware.agent.monitoring.probes.api;
+package de.uniulm.omi.executionware.agent.monitoring.management.api;
+
+import com.google.inject.ImplementedBy;
+import de.uniulm.omi.executionware.agent.monitoring.Interval;
+import de.uniulm.omi.executionware.agent.monitoring.management.impl.MonitoringServiceImpl;
 
 /**
- * Created by daniel on 18.12.14.
+ * Created by daniel on 11.12.14.
  */
-public interface Measurement {
-    
-    public long getTimestamp();
+@ImplementedBy(MonitoringServiceImpl.class)
+public interface MonitoringService {
 
-    public Object getValue();
+    public void startMonitoring(String metricName, String probeClassName, Interval interval) throws ProbeNotFoundException;
+
+    public void stopMonitoring(String metricName);
+
+    public boolean isMonitoring(String metricName);
 }

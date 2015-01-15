@@ -18,30 +18,19 @@
  *
  */
 
-package de.uniulm.omi.executionware.agent.monitoring.probes.impl;
+package de.uniulm.omi.executionware.agent.monitoring.management.api;
 
-import de.uniulm.omi.executionware.agent.monitoring.probes.api.Measurement;
+import com.google.inject.ImplementedBy;
+import de.uniulm.omi.executionware.agent.monitoring.management.impl.MonitorWorker;
+import de.uniulm.omi.executionware.agent.monitoring.management.impl.MonitorWorkerFactoryImpl;
+import de.uniulm.omi.executionware.agent.monitoring.monitors.api.Monitor;
 
 /**
- * Created by daniel on 18.12.14.
+ * Created by daniel on 11.12.14.
  */
-public class MeasurementImpl implements Measurement {
+@ImplementedBy(MonitorWorkerFactoryImpl.class)
+public interface MonitorWorkerFactory {
 
-    public final long timestamp;
-    public final Object value;
+    public MonitorWorker create(Monitor monitor);
 
-    public MeasurementImpl(long timestamp, Object value) {
-        this.timestamp = timestamp;
-        this.value = value;
-    }
-
-    @Override
-    public long getTimestamp() {
-        return timestamp;
-    }
-
-    @Override
-    public Object getValue() {
-        return value;
-    }
 }
