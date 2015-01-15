@@ -25,7 +25,7 @@ import de.uniulm.omi.executionware.agent.execution.api.ScheduledExecutionService
 import de.uniulm.omi.executionware.agent.monitoring.Interval;
 import de.uniulm.omi.executionware.agent.monitoring.management.api.*;
 import de.uniulm.omi.executionware.agent.monitoring.monitors.api.Monitor;
-import de.uniulm.omi.executionware.agent.monitoring.probes.api.Probe;
+import de.uniulm.omi.executionware.agent.monitoring.probes.api.Sensor;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -41,22 +41,22 @@ public class MonitoringServiceImpl implements MonitoringService {
     private final Map<String, MonitorWorker> monitorRegistry;
     private final ScheduledExecutionServiceInterface scheduler;
     private final MonitorWorkerFactory monitorWorkerFactory;
-    private final ProbeService probeService;
+    private final SensorService sensorService;
     private final MonitorFactory monitorFactory;
 
     @Inject
-    public MonitoringServiceImpl(ScheduledExecutionServiceInterface scheduler, MonitorWorkerFactory monitorWorkerFactory, ProbeService probeService, MonitorFactory monitorFactory) {
+    public MonitoringServiceImpl(ScheduledExecutionServiceInterface scheduler, MonitorWorkerFactory monitorWorkerFactory, SensorService sensorService, MonitorFactory monitorFactory) {
         this.scheduler = scheduler;
         this.monitorWorkerFactory = monitorWorkerFactory;
-        this.probeService = probeService;
+        this.sensorService = sensorService;
         this.monitorFactory = monitorFactory;
         monitorRegistry = new HashMap<>();
     }
 
     @Override
-    public void startMonitoring(String metricName, String probeClassName, Interval interval) throws ProbeNotFoundException {
-        final Probe probe = this.probeService.findProbe(probeClassName);
-        final Monitor monitor = this.monitorFactory.create(metricName, probe);
+    public void startMonitoring(String metricName, String probeClassName, Interval interval) throws SensorNotFoundException {
+        final Sensor sensor = this.sensorService.findSensor(probeClassName);
+        final Monitor monitor = this.monitorFactory.create(metricName, sensor);
         final MonitorWorker monitorWorker = this.monitorWorkerFactory.create(monitor);
         this.scheduler.schedule(monitorWorker, interval);
         this.monitorRegistry.put(metricName, monitorWorker);

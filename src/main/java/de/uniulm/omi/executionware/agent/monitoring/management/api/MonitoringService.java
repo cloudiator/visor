@@ -30,7 +30,7 @@ import de.uniulm.omi.executionware.agent.monitoring.management.impl.MonitoringSe
 @ImplementedBy(MonitoringServiceImpl.class)
 public interface MonitoringService {
 
-    public void startMonitoring(String metricName, String probeClassName, Interval interval) throws ProbeNotFoundException;
+    public void startMonitoring(String metricName, String probeClassName, Interval interval) throws SensorNotFoundException;
 
     public void stopMonitoring(String metricName);
 

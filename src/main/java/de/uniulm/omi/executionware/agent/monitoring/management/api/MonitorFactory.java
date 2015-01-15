@@ -23,12 +23,12 @@ package de.uniulm.omi.executionware.agent.monitoring.management.api;
 import com.google.inject.ImplementedBy;
 import de.uniulm.omi.executionware.agent.monitoring.management.impl.MonitorFactoryImpl;
 import de.uniulm.omi.executionware.agent.monitoring.monitors.api.Monitor;
-import de.uniulm.omi.executionware.agent.monitoring.probes.api.Probe;
+import de.uniulm.omi.executionware.agent.monitoring.probes.api.Sensor;
 
 /**
  * Created by daniel on 15.01.15.
  */
 @ImplementedBy(MonitorFactoryImpl.class)
 public interface MonitorFactory {
-    public Monitor create(String metricName, Probe probe);
+    public Monitor create(String metricName, Sensor sensor);
 }

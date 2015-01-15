@@ -25,7 +25,7 @@ import de.uniulm.omi.executionware.agent.monitoring.management.api.MonitorFactor
 import de.uniulm.omi.executionware.agent.monitoring.metric.api.MetricFactory;
 import de.uniulm.omi.executionware.agent.monitoring.monitors.api.Monitor;
 import de.uniulm.omi.executionware.agent.monitoring.monitors.impl.MonitorImpl;
-import de.uniulm.omi.executionware.agent.monitoring.probes.api.Probe;
+import de.uniulm.omi.executionware.agent.monitoring.probes.api.Sensor;
 
 /**
  * Created by daniel on 15.01.15.
@@ -40,7 +40,7 @@ public class MonitorFactoryImpl implements MonitorFactory {
     }
 
     @Override
-    public Monitor create(String metricName, Probe probe) {
-        return new MonitorImpl(metricName, probe, this.metricFactory);
+    public Monitor create(String metricName, Sensor sensor) {
+        return new MonitorImpl(metricName, sensor, this.metricFactory);
     }
 }

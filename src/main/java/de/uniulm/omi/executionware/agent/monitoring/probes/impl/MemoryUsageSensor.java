@@ -23,7 +23,7 @@ package de.uniulm.omi.executionware.agent.monitoring.probes.impl;
 import com.sun.management.OperatingSystemMXBean;
 import de.uniulm.omi.executionware.agent.monitoring.metric.api.MeasurementNotAvailableException;
 import de.uniulm.omi.executionware.agent.monitoring.probes.api.LocalMeasurement;
-import de.uniulm.omi.executionware.agent.monitoring.probes.api.ServerProbe;
+import de.uniulm.omi.executionware.agent.monitoring.probes.api.Sensor;
 
 import java.lang.management.ManagementFactory;
 
@@ -33,7 +33,7 @@ import java.lang.management.ManagementFactory;
  * Measures the current
  * ly used memory by the operating system in percentage.
  */
-public class MemoryUsageProbe implements ServerProbe {
+public class MemoryUsageSensor implements Sensor {
 
     @Override
     public LocalMeasurement getMeasurement() throws MeasurementNotAvailableException {
@@ -49,10 +49,5 @@ public class MemoryUsageProbe implements ServerProbe {
         }
 
         return new LocalMeasurementImpl(System.currentTimeMillis(), 100 - ((freePhysicalMemory / totalPhysicalMemory) * 100));
-    }
-
-    @Override
-    public boolean isSupported() {
-        return true;
     }
 }

@@ -20,17 +20,9 @@
 
 package de.uniulm.omi.executionware.agent.monitoring.probes.api;
 
-/**
- * Created by daniel on 18.12.14.
- */
-public interface ServerProbe extends Probe {
+import de.uniulm.omi.executionware.agent.monitoring.metric.api.MeasurementNotAvailableException;
 
-    /**
-     * Checks if the probe is supported in the current
-     * environment.
-     *
-     * @return true if the probe can be run in the current context, false if not.
-     */
-    public boolean isSupported();
+public interface Sensor {
 
+    public LocalMeasurement getMeasurement() throws MeasurementNotAvailableException;
 }

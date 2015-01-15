@@ -18,22 +18,14 @@
  *
  */
 
-package de.uniulm.omi.executionware.agent.monitoring.probes.api;
-
-import de.uniulm.omi.executionware.agent.monitoring.metric.api.MeasurementNotAvailableException;
+package de.uniulm.omi.executionware.agent.monitoring.management.api;
 
 /**
- * Interface which needs to be implemented to create a Probe.
- * <p>
- * A probe is run with the given interval measuring the metric with the provided name.
+ * Created by daniel on 15.01.15.
  */
-public interface Probe {
+public class SensorNotFoundException extends Exception {
 
-    /**
-     * The value of metric this probe measures at the time it is called.
-     *
-     * @return the measured value at this point of time.
-     * @throws de.uniulm.omi.executionware.agent.monitoring.metric.api.MeasurementNotAvailableException
-     */
-    public LocalMeasurement getMeasurement() throws MeasurementNotAvailableException;
+    public SensorNotFoundException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

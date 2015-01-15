@@ -24,7 +24,7 @@ import de.uniulm.omi.executionware.agent.monitoring.metric.api.MeasurementNotAva
 import de.uniulm.omi.executionware.agent.monitoring.metric.api.MetricFactory;
 import de.uniulm.omi.executionware.agent.monitoring.metric.impl.Metric;
 import de.uniulm.omi.executionware.agent.monitoring.monitors.api.Monitor;
-import de.uniulm.omi.executionware.agent.monitoring.probes.api.Probe;
+import de.uniulm.omi.executionware.agent.monitoring.probes.api.Sensor;
 
 /**
  * Created by daniel on 18.12.14.
@@ -32,17 +32,17 @@ import de.uniulm.omi.executionware.agent.monitoring.probes.api.Probe;
 public class MonitorImpl implements Monitor {
 
     private final String metricName;
-    private final Probe probe;
+    private final Sensor sensor;
     private final MetricFactory metricFactory;
 
-    public MonitorImpl(String metricName, Probe probe, MetricFactory metricFactory) {
+    public MonitorImpl(String metricName, Sensor sensor, MetricFactory metricFactory) {
         this.metricName = metricName;
-        this.probe = probe;
+        this.sensor = sensor;
         this.metricFactory = metricFactory;
     }
 
     @Override
     public Metric getMetric() throws MeasurementNotAvailableException {
-        return this.metricFactory.from(this.metricName, this.probe.getMeasurement());
+        return this.metricFactory.from(this.metricName, this.sensor.getMeasurement());
     }
 }

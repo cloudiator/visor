@@ -24,7 +24,7 @@ import com.google.inject.Module;
 import de.uniulm.omi.executionware.agent.execution.impl.ShutdownHook;
 import de.uniulm.omi.executionware.agent.monitoring.Interval;
 import de.uniulm.omi.executionware.agent.monitoring.management.api.MonitoringService;
-import de.uniulm.omi.executionware.agent.monitoring.management.api.ProbeNotFoundException;
+import de.uniulm.omi.executionware.agent.monitoring.management.api.SensorNotFoundException;
 import de.uniulm.omi.executionware.agent.server.impl.SocketServer;
 
 import java.util.Set;
@@ -45,7 +45,7 @@ public class MonitoringAgentService {
         final Injector injector = Guice.createInjector(this.modules);
         try {
             injector.getInstance(MonitoringService.class).startMonitoring("cpu_usage", "de.uniulm.omi.executionware.agent.monitoring.probes.impl.CpuUsageProbe", new Interval(1, TimeUnit.SECONDS));
-        } catch (ProbeNotFoundException e) {
+        } catch (SensorNotFoundException e) {
             throw new RuntimeException(e);
         }
         injector.getInstance(SocketServer.class);

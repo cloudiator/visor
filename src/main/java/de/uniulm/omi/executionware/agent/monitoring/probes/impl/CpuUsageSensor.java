@@ -23,14 +23,14 @@ package de.uniulm.omi.executionware.agent.monitoring.probes.impl;
 import com.sun.management.OperatingSystemMXBean;
 import de.uniulm.omi.executionware.agent.monitoring.metric.api.MeasurementNotAvailableException;
 import de.uniulm.omi.executionware.agent.monitoring.probes.api.LocalMeasurement;
-import de.uniulm.omi.executionware.agent.monitoring.probes.api.ServerProbe;
+import de.uniulm.omi.executionware.agent.monitoring.probes.api.Sensor;
 
 import java.lang.management.ManagementFactory;
 
 /**
  * A probe for measuring the CPU usage in % on the given machine.
  */
-public class CpuUsageProbe implements ServerProbe {
+public class CpuUsageSensor implements Sensor {
 
     @Override
     public LocalMeasurement getMeasurement() throws MeasurementNotAvailableException {
@@ -45,10 +45,5 @@ public class CpuUsageProbe implements ServerProbe {
         }
 
         return new LocalMeasurementImpl(System.currentTimeMillis(), systemCpuLoadPercentage);
-    }
-
-    @Override
-    public boolean isSupported() {
-        return true;
     }
 }

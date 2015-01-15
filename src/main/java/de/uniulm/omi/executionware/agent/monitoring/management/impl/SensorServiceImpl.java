@@ -18,17 +18,23 @@
  *
  */
 
-package de.uniulm.omi.executionware.agent.monitoring.management.api;
+package de.uniulm.omi.executionware.agent.monitoring.management.impl;
 
-import com.google.inject.ImplementedBy;
-import de.uniulm.omi.executionware.agent.monitoring.management.impl.ProbeServiceImpl;
-import de.uniulm.omi.executionware.agent.monitoring.probes.api.Probe;
+import de.uniulm.omi.executionware.agent.monitoring.management.api.SensorNotFoundException;
+import de.uniulm.omi.executionware.agent.monitoring.management.api.SensorService;
+import de.uniulm.omi.executionware.agent.monitoring.probes.api.Sensor;
 
 /**
  * Created by daniel on 15.01.15.
  */
-@ImplementedBy(ProbeServiceImpl.class)
-public interface ProbeService {
+public class SensorServiceImpl implements SensorService {
 
-    public Probe findProbe(String className) throws ProbeNotFoundException;
+    @Override
+    public Sensor findSensor(String className) throws SensorNotFoundException {
+        try {
+            return (Sensor) Class.forName(className).newInstance();
+        } catch (ClassCastException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+            throw new SensorNotFoundException("Could not load sensor with name " + className, e);
+        }
+    }
 }
