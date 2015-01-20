@@ -44,8 +44,8 @@ public class MonitoringAgentService {
     public void start() {
         final Injector injector = Guice.createInjector(this.modules);
         try {
-            injector.getInstance(MonitoringService.class).startMonitoring("cpu_usage", "de.uniulm.omi.executionware.agent.monitoring.probes.impl.CpuUsageSensor", new Interval(1, TimeUnit.SECONDS));
-            injector.getInstance(MonitoringService.class).startMonitoring("memory_usage", "de.uniulm.omi.executionware.agent.monitoring.probes.impl.MemoryUsageSensor", new Interval(1, TimeUnit.SECONDS));
+            injector.getInstance(MonitoringService.class).startMonitoring("cpu_usage", "de.uniulm.omi.executionware.agent.monitoring.sensors.impl.CpuUsageSensor", new Interval(1, TimeUnit.SECONDS));
+            injector.getInstance(MonitoringService.class).startMonitoring("memory_usage", "de.uniulm.omi.executionware.agent.monitoring.sensors.impl.MemoryUsageSensor", new Interval(1, TimeUnit.SECONDS));
         } catch (SensorNotFoundException e) {
             throw new RuntimeException(e);
         }

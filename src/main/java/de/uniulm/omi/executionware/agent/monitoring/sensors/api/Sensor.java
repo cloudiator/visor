@@ -18,11 +18,13 @@
  *
  */
 
-package de.uniulm.omi.executionware.agent.monitoring.probes.api;
+package de.uniulm.omi.executionware.agent.monitoring.sensors.api;
 
 import de.uniulm.omi.executionware.agent.monitoring.metric.api.MeasurementNotAvailableException;
 
 public interface Sensor {
 
-    public LocalMeasurement getMeasurement() throws MeasurementNotAvailableException;
+    public void init();
+
+    public Measurement getMeasurement() throws MeasurementNotAvailableException;
 }

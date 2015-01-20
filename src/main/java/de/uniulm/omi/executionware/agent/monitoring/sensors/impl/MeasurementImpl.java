@@ -18,19 +18,19 @@
  *
  */
 
-package de.uniulm.omi.executionware.agent.monitoring.probes.impl;
+package de.uniulm.omi.executionware.agent.monitoring.sensors.impl;
 
-import de.uniulm.omi.executionware.agent.monitoring.probes.api.LocalMeasurement;
+import de.uniulm.omi.executionware.agent.monitoring.sensors.api.Measurement;
 
 /**
  * Created by daniel on 18.12.14.
  */
-public class LocalMeasurementImpl implements LocalMeasurement {
+public class MeasurementImpl implements Measurement {
 
     public final long timestamp;
     public final Object value;
 
-    public LocalMeasurementImpl(long timestamp, Object value) {
+    public MeasurementImpl(long timestamp, Object value) {
         this.timestamp = timestamp;
         this.value = value;
     }

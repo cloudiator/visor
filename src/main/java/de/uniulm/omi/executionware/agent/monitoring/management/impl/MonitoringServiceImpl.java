@@ -25,7 +25,7 @@ import de.uniulm.omi.executionware.agent.execution.api.ScheduledExecutionService
 import de.uniulm.omi.executionware.agent.monitoring.Interval;
 import de.uniulm.omi.executionware.agent.monitoring.management.api.*;
 import de.uniulm.omi.executionware.agent.monitoring.monitors.api.Monitor;
-import de.uniulm.omi.executionware.agent.monitoring.probes.api.Sensor;
+import de.uniulm.omi.executionware.agent.monitoring.sensors.api.Sensor;
 
 import java.util.HashMap;
 import java.util.Map;

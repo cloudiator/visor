@@ -18,12 +18,12 @@
  *
  */
 
-package de.uniulm.omi.executionware.agent.monitoring.probes.api;
+package de.uniulm.omi.executionware.agent.monitoring.sensors.api;
 
 /**
  * Created by daniel on 18.12.14.
  */
-public interface LocalMeasurement {
+public interface Measurement {
     
     public long getTimestamp();
 

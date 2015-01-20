@@ -24,7 +24,7 @@ import com.google.inject.ImplementedBy;
 import de.uniulm.omi.executionware.agent.monitoring.metric.impl.ApplicationMetric;
 import de.uniulm.omi.executionware.agent.monitoring.metric.impl.MetricFactoryImpl;
 import de.uniulm.omi.executionware.agent.monitoring.metric.impl.ServerMetric;
-import de.uniulm.omi.executionware.agent.monitoring.probes.api.LocalMeasurement;
+import de.uniulm.omi.executionware.agent.monitoring.sensors.api.Measurement;
 
 /**
  * Created by daniel on 15.12.14.
@@ -32,7 +32,7 @@ import de.uniulm.omi.executionware.agent.monitoring.probes.api.LocalMeasurement;
 @ImplementedBy(MetricFactoryImpl.class)
 public interface MetricFactory {
 
-    public ServerMetric from(String metricName, LocalMeasurement localMeasurement);
+    public ServerMetric from(String metricName, Measurement measurement);
 
     public ApplicationMetric from(String metricName, Object value, Long timestamp, String application);
 }

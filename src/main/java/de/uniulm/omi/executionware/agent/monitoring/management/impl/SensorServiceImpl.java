@@ -22,7 +22,7 @@ package de.uniulm.omi.executionware.agent.monitoring.management.impl;
 
 import de.uniulm.omi.executionware.agent.monitoring.management.api.SensorNotFoundException;
 import de.uniulm.omi.executionware.agent.monitoring.management.api.SensorService;
-import de.uniulm.omi.executionware.agent.monitoring.probes.api.Sensor;
+import de.uniulm.omi.executionware.agent.monitoring.sensors.api.Sensor;
 
 /**
  * Created by daniel on 15.01.15.

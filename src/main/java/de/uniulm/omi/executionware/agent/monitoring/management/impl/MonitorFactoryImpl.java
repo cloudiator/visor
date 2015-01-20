@@ -25,7 +25,7 @@ import de.uniulm.omi.executionware.agent.monitoring.management.api.MonitorFactor
 import de.uniulm.omi.executionware.agent.monitoring.metric.api.MetricFactory;
 import de.uniulm.omi.executionware.agent.monitoring.monitors.api.Monitor;
 import de.uniulm.omi.executionware.agent.monitoring.monitors.impl.MonitorImpl;
-import de.uniulm.omi.executionware.agent.monitoring.probes.api.Sensor;
+import de.uniulm.omi.executionware.agent.monitoring.sensors.api.Sensor;
 
 /**
  * Created by daniel on 15.01.15.

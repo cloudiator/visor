@@ -18,12 +18,12 @@
  *
  */
 
-package de.uniulm.omi.executionware.agent.monitoring.probes.impl;
+package de.uniulm.omi.executionware.agent.monitoring.sensors.impl;
 
 import com.sun.management.OperatingSystemMXBean;
 import de.uniulm.omi.executionware.agent.monitoring.metric.api.MeasurementNotAvailableException;
-import de.uniulm.omi.executionware.agent.monitoring.probes.api.LocalMeasurement;
-import de.uniulm.omi.executionware.agent.monitoring.probes.api.Sensor;
+import de.uniulm.omi.executionware.agent.monitoring.sensors.api.Measurement;
+import de.uniulm.omi.executionware.agent.monitoring.sensors.api.Sensor;
 
 import java.lang.management.ManagementFactory;
 
@@ -36,7 +36,12 @@ import java.lang.management.ManagementFactory;
 public class MemoryUsageSensor implements Sensor {
 
     @Override
-    public LocalMeasurement getMeasurement() throws MeasurementNotAvailableException {
+    public void init() {
+        //intentionally left empty
+    }
+
+    @Override
+    public Measurement getMeasurement() throws MeasurementNotAvailableException {
         OperatingSystemMXBean osBean = ManagementFactory.getPlatformMXBean(
                 OperatingSystemMXBean.class);
 
@@ -48,6 +53,6 @@ public class MemoryUsageSensor implements Sensor {
             throw new MeasurementNotAvailableException("Received negative value for total or free physical memory size");
         }
 
-        return new LocalMeasurementImpl(System.currentTimeMillis(), 100 - ((freePhysicalMemory / totalPhysicalMemory) * 100));
+        return new MeasurementImpl(System.currentTimeMillis(), 100 - ((freePhysicalMemory / totalPhysicalMemory) * 100));
     }
 }

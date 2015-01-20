@@ -28,8 +28,5 @@ import de.uniulm.omi.executionware.agent.monitoring.metric.impl.Metric;
  */
 public interface Monitor {
 
-
-
     public Metric getMetric() throws MeasurementNotAvailableException;
-
 }
