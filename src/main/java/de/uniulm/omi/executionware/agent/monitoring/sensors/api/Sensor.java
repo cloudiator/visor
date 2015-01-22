@@ -20,11 +20,15 @@
 
 package de.uniulm.omi.executionware.agent.monitoring.sensors.api;
 
+import com.google.common.base.Optional;
 import de.uniulm.omi.executionware.agent.monitoring.metric.api.MeasurementNotAvailableException;
+import de.uniulm.omi.executionware.agent.monitoring.monitors.impl.MonitorContext;
 
 public interface Sensor {
 
     public void init();
+
+    public void setMonitorContext(Optional<MonitorContext> monitorContext);
 
     public Measurement getMeasurement() throws MeasurementNotAvailableException;
 }

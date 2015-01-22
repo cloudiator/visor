@@ -20,13 +20,8 @@
 
 package de.uniulm.omi.executionware.agent.reporting.impl.kairos;
 
-import de.uniulm.omi.executionware.agent.monitoring.metric.api.KairosTag;
-import org.kairosdb.client.builder.Metric;
+import de.uniulm.omi.executionware.agent.monitoring.metric.api.Metric;
 import org.kairosdb.client.builder.MetricBuilder;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 /**
  * Created by daniel on 23.09.14.
@@ -39,31 +34,10 @@ public class MetricConverter {
         this.metricBuilder = MetricBuilder.getInstance();
     }
 
-    public MetricConverter add(de.uniulm.omi.executionware.agent.monitoring.metric.impl.Metric metric) throws MetricConversionException {
-        Metric kairosMetric = metricBuilder.addMetric(metric.getName()).addDataPoint(metric.getTimestamp(), metric.getValue());
+    public MetricConverter add(Metric metric) throws MetricConversionException {
+        org.kairosdb.client.builder.Metric kairosMetric = metricBuilder.addMetric(metric.getName()).addDataPoint(metric.getTimestamp(), metric.getValue());
 
-        //we need to add the tags
-        //fields
-        for (Field field : metric.getClass().getFields()) {
-            if (field.isAnnotationPresent(KairosTag.class)) {
-                try {
-                    kairosMetric.addTag(field.getAnnotation(KairosTag.class).name(), (String) field.get(metric));
-                } catch (IllegalAccessException e) {
-                    throw new MetricConversionException(String.format("Could not access field %s annotated with Tag", field.getName()), e);
-                }
-            }
-        }
-
-        //methods
-        for (Method method : metric.getClass().getMethods()) {
-            if (method.isAnnotationPresent(KairosTag.class)) {
-                try {
-                    kairosMetric.addTag(method.getAnnotation(KairosTag.class).name(), (String) method.invoke(metric));
-                } catch (IllegalAccessException | InvocationTargetException e) {
-                    throw new MetricConversionException(String.format("Could not access method %s annotated with Tag", method.getName()), e);
-                }
-            }
-        }
+        kairosMetric.addTags(metric.getTags());
         return this;
     }
 

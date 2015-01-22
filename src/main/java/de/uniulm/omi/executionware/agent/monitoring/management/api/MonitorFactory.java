@@ -23,6 +23,7 @@ package de.uniulm.omi.executionware.agent.monitoring.management.api;
 import com.google.inject.ImplementedBy;
 import de.uniulm.omi.executionware.agent.monitoring.management.impl.MonitorFactoryImpl;
 import de.uniulm.omi.executionware.agent.monitoring.monitors.api.Monitor;
+import de.uniulm.omi.executionware.agent.monitoring.monitors.impl.MonitorContext;
 import de.uniulm.omi.executionware.agent.monitoring.sensors.api.Sensor;
 
 /**
@@ -31,4 +32,6 @@ import de.uniulm.omi.executionware.agent.monitoring.sensors.api.Sensor;
 @ImplementedBy(MonitorFactoryImpl.class)
 public interface MonitorFactory {
     public Monitor create(String metricName, Sensor sensor);
+
+    Monitor create(String metricName, Sensor sensor, MonitorContext monitorContext);
 }

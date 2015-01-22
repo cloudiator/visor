@@ -22,8 +22,8 @@ package de.uniulm.omi.executionware.agent.reporting.modules.api;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
+import de.uniulm.omi.executionware.agent.monitoring.metric.api.Metric;
 import de.uniulm.omi.executionware.agent.reporting.api.ReportingInterface;
-import de.uniulm.omi.executionware.agent.monitoring.metric.impl.Metric;
 import de.uniulm.omi.executionware.agent.reporting.impl.queue.MetricQueue;
 import de.uniulm.omi.executionware.agent.reporting.impl.queue.MetricQueueWorkerFactory;
 import de.uniulm.omi.executionware.agent.reporting.impl.queue.QueueWorkerFactoryInterface;

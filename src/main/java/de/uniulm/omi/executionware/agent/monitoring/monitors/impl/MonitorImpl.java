@@ -21,8 +21,8 @@
 package de.uniulm.omi.executionware.agent.monitoring.monitors.impl;
 
 import de.uniulm.omi.executionware.agent.monitoring.metric.api.MeasurementNotAvailableException;
+import de.uniulm.omi.executionware.agent.monitoring.metric.api.Metric;
 import de.uniulm.omi.executionware.agent.monitoring.metric.api.MetricFactory;
-import de.uniulm.omi.executionware.agent.monitoring.metric.impl.Metric;
 import de.uniulm.omi.executionware.agent.monitoring.monitors.api.Monitor;
 import de.uniulm.omi.executionware.agent.monitoring.sensors.api.Sensor;
 
@@ -31,9 +31,9 @@ import de.uniulm.omi.executionware.agent.monitoring.sensors.api.Sensor;
  */
 public class MonitorImpl implements Monitor {
 
-    private final String metricName;
-    private final Sensor sensor;
-    private final MetricFactory metricFactory;
+    protected final String metricName;
+    protected final Sensor sensor;
+    protected final MetricFactory metricFactory;
 
     public MonitorImpl(String metricName, Sensor sensor, MetricFactory metricFactory) {
         this.metricName = metricName;

@@ -22,7 +22,9 @@ package de.uniulm.omi.executionware.agent.monitoring.metric.impl;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+import de.uniulm.omi.executionware.agent.monitoring.metric.api.Metric;
 import de.uniulm.omi.executionware.agent.monitoring.metric.api.MetricFactory;
+import de.uniulm.omi.executionware.agent.monitoring.monitors.impl.MonitorContext;
 import de.uniulm.omi.executionware.agent.monitoring.sensors.api.Measurement;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -47,13 +49,38 @@ public class MetricFactoryImpl implements MetricFactory {
         this.localIp = localIp;
     }
 
+
     @Override
-    public ServerMetric from(String metricName, Measurement measurement) {
-        return new ServerMetric(metricName, measurement.getValue(), measurement.getTimestamp(), this.localIp);
+    public Metric from(String metricName, Measurement measurement) {
+        return MetricBuilder
+                .create()
+                .name(metricName)
+                .timestamp(measurement.getTimestamp())
+                .value(measurement.getValue())
+                .addTag("server", localIp)
+                .build();
     }
 
     @Override
-    public ApplicationMetric from(String metricName, Object value, Long timestamp, String application) {
-        return new ApplicationMetric(metricName, value, timestamp, application, this.localIp);
+    public Metric from(String metricName, Object value, Long timestamp, String application) {
+        return MetricBuilder
+                .create()
+                .name(metricName)
+                .timestamp(timestamp)
+                .value(value)
+                .addTag("server", localIp)
+                .addTag("application", application)
+                .build();
+    }
+
+    @Override
+    public Metric from(String metricName, Measurement measurement, MonitorContext monitorContext) {
+        return MetricBuilder.create()
+                .name(metricName)
+                .timestamp(measurement.getTimestamp())
+                .value(measurement.getValue())
+                .addTag("server", localIp)
+                .addTag(monitorContext.getContext(), monitorContext.getValue())
+                .build();
     }
 }

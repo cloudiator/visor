@@ -21,7 +21,7 @@
 package de.uniulm.omi.executionware.agent.monitoring.management.impl;
 
 import de.uniulm.omi.executionware.agent.monitoring.metric.api.MeasurementNotAvailableException;
-import de.uniulm.omi.executionware.agent.monitoring.metric.impl.Metric;
+import de.uniulm.omi.executionware.agent.monitoring.metric.api.Metric;
 import de.uniulm.omi.executionware.agent.monitoring.monitors.api.Monitor;
 import de.uniulm.omi.executionware.agent.reporting.api.ReportingInterface;
 import de.uniulm.omi.executionware.agent.reporting.impl.ReportingException;

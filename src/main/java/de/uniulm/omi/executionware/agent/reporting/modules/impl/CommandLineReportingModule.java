@@ -20,10 +20,10 @@
 
 package de.uniulm.omi.executionware.agent.reporting.modules.impl;
 
+import de.uniulm.omi.executionware.agent.monitoring.metric.api.Metric;
 import de.uniulm.omi.executionware.agent.reporting.api.ReportingInterface;
-import de.uniulm.omi.executionware.agent.reporting.modules.api.ReportingModule;
-import de.uniulm.omi.executionware.agent.monitoring.metric.impl.Metric;
 import de.uniulm.omi.executionware.agent.reporting.impl.cli.CommandLineReporter;
+import de.uniulm.omi.executionware.agent.reporting.modules.api.ReportingModule;
 
 /**
  * Created by daniel on 15.12.14.

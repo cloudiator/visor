@@ -23,6 +23,9 @@ package de.uniulm.omi.executionware.agent.monitoring.management.api;
 import com.google.inject.ImplementedBy;
 import de.uniulm.omi.executionware.agent.monitoring.Interval;
 import de.uniulm.omi.executionware.agent.monitoring.management.impl.MonitoringServiceImpl;
+import de.uniulm.omi.executionware.agent.monitoring.monitors.impl.MonitorContext;
+
+import javax.annotation.Nullable;
 
 /**
  * Created by daniel on 11.12.14.
@@ -30,7 +33,7 @@ import de.uniulm.omi.executionware.agent.monitoring.management.impl.MonitoringSe
 @ImplementedBy(MonitoringServiceImpl.class)
 public interface MonitoringService {
 
-    public void startMonitoring(String metricName, String probeClassName, Interval interval) throws SensorNotFoundException;
+    public void startMonitoring(String metricName, String sensorClassName, Interval interval, @Nullable MonitorContext monitorContext) throws SensorNotFoundException;
 
     public void stopMonitoring(String metricName);
 

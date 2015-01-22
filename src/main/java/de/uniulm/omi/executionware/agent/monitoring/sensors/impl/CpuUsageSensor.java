@@ -20,8 +20,10 @@
 
 package de.uniulm.omi.executionware.agent.monitoring.sensors.impl;
 
+import com.google.common.base.Optional;
 import com.sun.management.OperatingSystemMXBean;
 import de.uniulm.omi.executionware.agent.monitoring.metric.api.MeasurementNotAvailableException;
+import de.uniulm.omi.executionware.agent.monitoring.monitors.impl.MonitorContext;
 import de.uniulm.omi.executionware.agent.monitoring.sensors.api.Measurement;
 import de.uniulm.omi.executionware.agent.monitoring.sensors.api.Sensor;
 
@@ -34,6 +36,11 @@ public class CpuUsageSensor implements Sensor {
 
     @Override
     public void init() {
+        //intentionally left empty
+    }
+
+    @Override
+    public void setMonitorContext(Optional<MonitorContext> monitorContext) {
         //intentionally left empty
     }
 

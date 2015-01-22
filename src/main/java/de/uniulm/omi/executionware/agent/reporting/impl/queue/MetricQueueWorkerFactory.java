@@ -21,7 +21,7 @@
 package de.uniulm.omi.executionware.agent.reporting.impl.queue;
 
 import com.google.inject.Inject;
-import de.uniulm.omi.executionware.agent.monitoring.metric.impl.Metric;
+import de.uniulm.omi.executionware.agent.monitoring.metric.api.Metric;
 import de.uniulm.omi.executionware.agent.reporting.api.ReportingInterface;
 
 /**

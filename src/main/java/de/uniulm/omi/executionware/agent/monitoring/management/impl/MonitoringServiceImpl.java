@@ -20,17 +20,21 @@
 
 package de.uniulm.omi.executionware.agent.monitoring.management.impl;
 
+import com.google.common.base.Optional;
 import com.google.inject.Inject;
 import de.uniulm.omi.executionware.agent.execution.api.ScheduledExecutionServiceInterface;
 import de.uniulm.omi.executionware.agent.monitoring.Interval;
 import de.uniulm.omi.executionware.agent.monitoring.management.api.*;
 import de.uniulm.omi.executionware.agent.monitoring.monitors.api.Monitor;
+import de.uniulm.omi.executionware.agent.monitoring.monitors.impl.MonitorContext;
 import de.uniulm.omi.executionware.agent.monitoring.sensors.api.Sensor;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Created by daniel on 11.12.14.
@@ -54,8 +58,17 @@ public class MonitoringServiceImpl implements MonitoringService {
     }
 
     @Override
-    public void startMonitoring(String metricName, String probeClassName, Interval interval) throws SensorNotFoundException {
-        final Sensor sensor = this.sensorService.findSensor(probeClassName);
+    public void startMonitoring(String metricName, String sensorClassName, Interval interval, @Nullable MonitorContext monitorContext) throws SensorNotFoundException {
+
+        checkNotNull(metricName);
+        checkArgument(!metricName.isEmpty());
+        checkNotNull(sensorClassName);
+        checkArgument(!sensorClassName.isEmpty());
+        checkNotNull(interval);
+
+        final Sensor sensor = this.sensorService.findSensor(sensorClassName);
+        sensor.init();
+        sensor.setMonitorContext(Optional.fromNullable(monitorContext));
         final Monitor monitor = this.monitorFactory.create(metricName, sensor);
         final MonitorWorker monitorWorker = this.monitorWorkerFactory.create(monitor);
         this.scheduler.schedule(monitorWorker, interval);

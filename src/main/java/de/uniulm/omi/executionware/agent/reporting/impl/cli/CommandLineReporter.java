@@ -20,7 +20,7 @@
 
 package de.uniulm.omi.executionware.agent.reporting.impl.cli;
 
-import de.uniulm.omi.executionware.agent.monitoring.metric.impl.Metric;
+import de.uniulm.omi.executionware.agent.monitoring.metric.api.Metric;
 import de.uniulm.omi.executionware.agent.reporting.api.ReportingInterface;
 import de.uniulm.omi.executionware.agent.reporting.impl.ReportingException;
 
@@ -38,7 +38,7 @@ public class CommandLineReporter implements ReportingInterface<Metric> {
 
     @Override
     public void report(Collection<Metric> metrics) throws ReportingException {
-        for(Metric metric : metrics) {
+        for (Metric metric : metrics) {
             this.report(metric);
         }
     }

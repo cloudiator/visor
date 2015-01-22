@@ -24,7 +24,9 @@ import com.google.inject.Inject;
 import de.uniulm.omi.executionware.agent.monitoring.management.api.MonitorFactory;
 import de.uniulm.omi.executionware.agent.monitoring.metric.api.MetricFactory;
 import de.uniulm.omi.executionware.agent.monitoring.monitors.api.Monitor;
+import de.uniulm.omi.executionware.agent.monitoring.monitors.impl.MonitorContext;
 import de.uniulm.omi.executionware.agent.monitoring.monitors.impl.MonitorImpl;
+import de.uniulm.omi.executionware.agent.monitoring.monitors.impl.MonitorWithContext;
 import de.uniulm.omi.executionware.agent.monitoring.sensors.api.Sensor;
 
 /**
@@ -42,5 +44,10 @@ public class MonitorFactoryImpl implements MonitorFactory {
     @Override
     public Monitor create(String metricName, Sensor sensor) {
         return new MonitorImpl(metricName, sensor, this.metricFactory);
+    }
+
+    @Override
+    public Monitor create(String metricName, Sensor sensor, MonitorContext monitorContext) {
+        return new MonitorWithContext(metricName, sensor, this.metricFactory, monitorContext);
     }
 }

@@ -23,7 +23,7 @@ package de.uniulm.omi.executionware.agent.reporting.impl.queue;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import de.uniulm.omi.executionware.agent.execution.impl.ScheduledExecutionService;
-import de.uniulm.omi.executionware.agent.monitoring.metric.impl.Metric;
+import de.uniulm.omi.executionware.agent.monitoring.metric.api.Metric;
 
 /**
  * Created by daniel on 15.12.14.
