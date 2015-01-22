@@ -23,6 +23,8 @@ package de.uniulm.omi.executionware.agent.reporting.impl.kairos;
 import de.uniulm.omi.executionware.agent.monitoring.metric.api.Metric;
 import org.kairosdb.client.builder.MetricBuilder;
 
+import java.util.Map;
+
 /**
  * Created by daniel on 23.09.14.
  */
@@ -37,7 +39,11 @@ public class MetricConverter {
     public MetricConverter add(Metric metric) throws MetricConversionException {
         org.kairosdb.client.builder.Metric kairosMetric = metricBuilder.addMetric(metric.getName()).addDataPoint(metric.getTimestamp(), metric.getValue());
 
-        kairosMetric.addTags(metric.getTags());
+        //workaround for https://github.com/kairosdb/kairosdb-client/issues/27
+        //manually add single tags as addTags() is broken.
+        for (final Map.Entry<String, String> entry : metric.getTags().entrySet()) {
+            kairosMetric.addTag(entry.getKey(), entry.getValue());
+        }
         return this;
     }
 
