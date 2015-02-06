@@ -22,11 +22,15 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 import de.uniulm.omi.executionware.agent.execution.impl.ShutdownHook;
-import de.uniulm.omi.executionware.agent.monitoring.Interval;
-import de.uniulm.omi.executionware.agent.monitoring.management.api.MonitoringService;
-import de.uniulm.omi.executionware.agent.monitoring.management.api.SensorNotFoundException;
+import de.uniulm.omi.executionware.agent.monitoring.api.InvalidMonitorContextException;
+import de.uniulm.omi.executionware.agent.monitoring.api.MonitoringService;
+import de.uniulm.omi.executionware.agent.monitoring.api.SensorInitializationException;
+import de.uniulm.omi.executionware.agent.monitoring.api.SensorNotFoundException;
+import de.uniulm.omi.executionware.agent.monitoring.impl.Interval;
+import de.uniulm.omi.executionware.agent.rest.RestServer;
 import de.uniulm.omi.executionware.agent.server.impl.SocketServer;
 
+import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -44,12 +48,13 @@ public class MonitoringAgentService {
     public void start() {
         final Injector injector = Guice.createInjector(this.modules);
         try {
-            injector.getInstance(MonitoringService.class).startMonitoring("cpu_usage", "de.uniulm.omi.executionware.agent.monitoring.sensors.impl.CpuUsageSensor", new Interval(1, TimeUnit.SECONDS),null);
-            injector.getInstance(MonitoringService.class).startMonitoring("memory_usage", "de.uniulm.omi.executionware.agent.monitoring.sensors.impl.MemoryUsageSensor", new Interval(1, TimeUnit.SECONDS),null);
-        } catch (SensorNotFoundException e) {
+            injector.getInstance(MonitoringService.class).startMonitoring("cpu_usage", "de.uniulm.omi.executionware.agent.monitoring.sensors.CpuUsageSensor", new Interval(1, TimeUnit.SECONDS), Collections.<String, String>emptyMap());
+            injector.getInstance(MonitoringService.class).startMonitoring("memory_usage", "de.uniulm.omi.executionware.agent.monitoring.sensors.MemoryUsageSensor", new Interval(1, TimeUnit.SECONDS), Collections.<String, String>emptyMap());
+        } catch (SensorNotFoundException | InvalidMonitorContextException | SensorInitializationException e) {
             throw new RuntimeException(e);
         }
         injector.getInstance(SocketServer.class);
+        injector.getInstance(RestServer.class);
         Runtime.getRuntime().addShutdownHook(injector.getInstance(ShutdownHook.class));
     }
 }

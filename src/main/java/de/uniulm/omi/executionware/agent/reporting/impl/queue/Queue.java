@@ -23,7 +23,7 @@ package de.uniulm.omi.executionware.agent.reporting.impl.queue;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import de.uniulm.omi.executionware.agent.execution.impl.ScheduledExecutionService;
-import de.uniulm.omi.executionware.agent.monitoring.Interval;
+import de.uniulm.omi.executionware.agent.monitoring.impl.Interval;
 import de.uniulm.omi.executionware.agent.reporting.api.ReportingInterface;
 import de.uniulm.omi.executionware.agent.reporting.impl.ReportingException;
 import org.apache.logging.log4j.LogManager;
@@ -53,7 +53,7 @@ public class Queue<T> implements ReportingInterface<T> {
     @Inject
     public Queue(ScheduledExecutionService executionService, QueueWorkerFactoryInterface<T> queueWorkerFactory) {
         this.queue = new LinkedBlockingQueue<>();
-        executionService.schedule(queueWorkerFactory.create(this.queue), new Interval(20, TimeUnit.SECONDS));
+        executionService.schedule(queueWorkerFactory.create(this.queue, new Interval(20, TimeUnit.SECONDS)));
     }
 
     public void report(T item) throws ReportingException {

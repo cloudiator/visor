@@ -20,7 +20,7 @@
 
 package de.uniulm.omi.executionware.agent.reporting.impl.kairos;
 
-import de.uniulm.omi.executionware.agent.monitoring.metric.api.Metric;
+import de.uniulm.omi.executionware.agent.monitoring.api.Metric;
 import org.kairosdb.client.builder.MetricBuilder;
 
 import java.util.Map;

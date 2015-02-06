@@ -18,14 +18,15 @@
  *
  */
 
-package de.uniulm.omi.executionware.agent.monitoring.sensors.api;
+package de.uniulm.omi.executionware.agent.monitoring.api;
+
+import com.google.inject.ImplementedBy;
+import de.uniulm.omi.executionware.agent.monitoring.impl.SensorFactoryImpl;
 
 /**
- * Created by daniel on 18.12.14.
+ * Created by daniel on 15.01.15.
  */
-public interface Measurement {
-    
-    public long getTimestamp();
-
-    public Object getValue();
+@ImplementedBy(SensorFactoryImpl.class)
+public interface SensorFactory {
+    public Sensor from(String className) throws SensorNotFoundException, SensorInitializationException;
 }

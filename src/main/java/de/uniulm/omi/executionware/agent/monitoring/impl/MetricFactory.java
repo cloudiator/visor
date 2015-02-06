@@ -16,19 +16,22 @@
  * under the License.
  */
 
-package de.uniulm.omi.executionware.agent.monitoring.metric.api;
+package de.uniulm.omi.executionware.agent.monitoring.impl;
 
-import java.util.Map;
+import de.uniulm.omi.executionware.agent.monitoring.api.Measurement;
+import de.uniulm.omi.executionware.agent.monitoring.api.Metric;
 
 /**
- * Created by daniel on 20.01.15.
+ * Created by daniel on 06.02.15.
  */
-public interface Metric {
-    String getName();
+public class MetricFactory {
 
-    Object getValue();
+    private MetricFactory() {
 
-    long getTimestamp();
+    }
 
-    Map<String, String> getTags();
+    public static Metric from(String metricName, Measurement measurement, MonitorContext monitorContext) {
+        return MetricBuilder.newBuilder().name(metricName).value(measurement.getValue()).timestamp(measurement.getTimestamp()).addTags(monitorContext.getContext()).build();
+    }
+
 }

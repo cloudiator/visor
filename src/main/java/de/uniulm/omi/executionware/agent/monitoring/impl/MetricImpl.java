@@ -18,7 +18,9 @@
  *
  */
 
-package de.uniulm.omi.executionware.agent.monitoring.metric.impl;
+package de.uniulm.omi.executionware.agent.monitoring.impl;
+
+import de.uniulm.omi.executionware.agent.monitoring.api.Metric;
 
 import java.util.Map;
 
@@ -37,9 +39,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * <p>
  * Use MetricFactory to create metrics.
  *
- * @see de.uniulm.omi.executionware.agent.monitoring.metric.api.MetricFactory
+ * @see de.uniulm.omi.executionware.agent.monitoring.impl.MetricFactory
  */
-public class MetricImpl implements de.uniulm.omi.executionware.agent.monitoring.metric.api.Metric {
+public class MetricImpl implements Metric {
 
     protected final String name;
 
@@ -58,12 +60,10 @@ public class MetricImpl implements de.uniulm.omi.executionware.agent.monitoring.
      * @param tags      tags for the metric.
      */
     MetricImpl(String name, Object value, long timestamp, Map<String, String> tags) {
-
         checkNotNull(name);
         checkNotNull(value);
         checkNotNull(timestamp);
         checkNotNull(tags);
-
         checkArgument(!name.isEmpty(), "Name must not be empty.");
         checkArgument(timestamp > 0, "Timestamp must be > 0");
 
@@ -129,5 +129,4 @@ public class MetricImpl implements de.uniulm.omi.executionware.agent.monitoring.
         tags.append("]");
         return String.format("Metric(Name: %s, Value: %s, Time: %s, Tags: %s)", this.getName(), this.getValue(), this.getTimestamp(), tags.toString());
     }
-
 }

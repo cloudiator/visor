@@ -18,7 +18,7 @@
  *
  */
 
-package de.uniulm.omi.executionware.agent.monitoring;
+package de.uniulm.omi.executionware.agent.monitoring.impl;
 
 import java.util.concurrent.TimeUnit;
 

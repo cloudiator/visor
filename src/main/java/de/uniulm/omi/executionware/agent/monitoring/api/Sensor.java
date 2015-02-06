@@ -18,14 +18,16 @@
  *
  */
 
-package de.uniulm.omi.executionware.agent.monitoring.management.api;
+package de.uniulm.omi.executionware.agent.monitoring.api;
 
-/**
- * Created by daniel on 15.01.15.
- */
-public class SensorNotFoundException extends Exception {
+import com.google.common.base.Optional;
+import de.uniulm.omi.executionware.agent.monitoring.impl.MonitorContext;
 
-    public SensorNotFoundException(String message, Throwable cause) {
-        super(message, cause);
-    }
+public interface Sensor {
+
+    public void init() throws SensorInitializationException;
+
+    public void setMonitorContext(Optional<MonitorContext> monitorContext) throws InvalidMonitorContextException;
+
+    public Measurement getMeasurement() throws MeasurementNotAvailableException;
 }

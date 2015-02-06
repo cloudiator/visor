@@ -53,13 +53,11 @@ public class ServerListener implements Runnable {
                 this.executionService.execute(this.socketWorkerFactory.create(accept));
             } catch (IOException e) {
                 logger.error("Error occurred while accepting connection.", e);
-            } finally {
-                try {
-                    this.serverSocket.close();
-                } catch (IOException ignored) {
-                }
-                Thread.currentThread().interrupt();
             }
+        }
+        try {
+            this.serverSocket.close();
+        } catch (IOException ignored) {
         }
     }
 }

@@ -18,19 +18,29 @@
  *
  */
 
-package de.uniulm.omi.executionware.agent.monitoring.management.api;
+package de.uniulm.omi.executionware.agent.monitoring.api;
 
 import com.google.inject.ImplementedBy;
-import de.uniulm.omi.executionware.agent.monitoring.management.impl.MonitorWorker;
-import de.uniulm.omi.executionware.agent.monitoring.management.impl.MonitorWorkerFactoryImpl;
-import de.uniulm.omi.executionware.agent.monitoring.monitors.api.Monitor;
+import de.uniulm.omi.executionware.agent.monitoring.impl.Interval;
+import de.uniulm.omi.executionware.agent.monitoring.impl.MonitoringServiceImpl;
+import de.uniulm.omi.executionware.agent.monitoring.impl.MonitorContext;
+
+import javax.annotation.Nullable;
+import java.util.Collection;
+import java.util.Map;
 
 /**
  * Created by daniel on 11.12.14.
  */
-@ImplementedBy(MonitorWorkerFactoryImpl.class)
-public interface MonitorWorkerFactory {
+@ImplementedBy(MonitoringServiceImpl.class)
+public interface MonitoringService {
 
-    public MonitorWorker create(Monitor monitor);
 
+    public void startMonitoring(String metricName, String sensorClassName, Interval interval, Map<String, String> monitorContext) throws SensorNotFoundException, SensorInitializationException, InvalidMonitorContextException;
+
+    public void stopMonitoring(String metricName);
+
+    public Collection<Monitor> getMonitors();
+
+    public boolean isMonitoring(String metricName);
 }

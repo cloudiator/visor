@@ -21,6 +21,7 @@
 package de.uniulm.omi.executionware.agent.reporting.impl.queue;
 
 import com.google.inject.Inject;
+import de.uniulm.omi.executionware.agent.monitoring.impl.Interval;
 import de.uniulm.omi.executionware.agent.reporting.api.ReportingInterface;
 
 import java.util.concurrent.BlockingQueue;
@@ -38,7 +39,7 @@ public class QueueWorkerFactory<T> implements QueueWorkerFactoryInterface<T> {
     }
 
     @Override
-    public QueueWorker<T> create(BlockingQueue<T> queue) {
-        return new QueueWorker<>(queue, this.reportingInterface);
+    public QueueWorker<T> create(BlockingQueue<T> queue, Interval interval) {
+        return new QueueWorker<>(queue, this.reportingInterface, interval);
     }
 }

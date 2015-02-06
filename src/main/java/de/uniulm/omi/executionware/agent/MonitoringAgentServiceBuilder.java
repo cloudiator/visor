@@ -22,8 +22,8 @@ package de.uniulm.omi.executionware.agent;
 
 import com.google.inject.Module;
 import de.uniulm.omi.executionware.agent.config.file.FileConfigurationAccessor;
-import de.uniulm.omi.executionware.agent.server.config.ServerModule;
 import de.uniulm.omi.executionware.agent.config.impl.BaseConfigurationModule;
+import de.uniulm.omi.executionware.agent.server.config.ServerModule;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -75,6 +75,7 @@ public class MonitoringAgentServiceBuilder {
             this.modules.add(new ServerModule());
             this.modules.add(new BaseConfigurationModule(this.fileConfigurationAccessor, this.ip));
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+            e.printStackTrace();
             System.exit(1);
         }
 

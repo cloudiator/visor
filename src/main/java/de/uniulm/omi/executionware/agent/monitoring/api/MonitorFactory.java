@@ -18,22 +18,18 @@
  *
  */
 
-package de.uniulm.omi.executionware.agent.monitoring.metric.api;
+package de.uniulm.omi.executionware.agent.monitoring.api;
 
 import com.google.inject.ImplementedBy;
-import de.uniulm.omi.executionware.agent.monitoring.metric.impl.MetricFactoryImpl;
-import de.uniulm.omi.executionware.agent.monitoring.monitors.impl.MonitorContext;
-import de.uniulm.omi.executionware.agent.monitoring.sensors.api.Measurement;
+import de.uniulm.omi.executionware.agent.monitoring.impl.Interval;
+import de.uniulm.omi.executionware.agent.monitoring.impl.MonitorFactoryImpl;
+
+import java.util.Map;
 
 /**
- * Created by daniel on 15.12.14.
+ * Created by daniel on 15.01.15.
  */
-@ImplementedBy(MetricFactoryImpl.class)
-public interface MetricFactory {
-
-    public Metric from(String metricName, Measurement measurement);
-
-    public Metric from(String metricName, Object value, Long timestamp, String application);
-
-    public Metric from(String metricName, Measurement measurement, MonitorContext monitorContext);
+@ImplementedBy(MonitorFactoryImpl.class)
+public interface MonitorFactory {
+    public Monitor create(String metricName, Sensor sensor, Interval interval, Map<String,String> context) throws InvalidMonitorContextException;
 }

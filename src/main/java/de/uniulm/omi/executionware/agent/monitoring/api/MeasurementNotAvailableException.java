@@ -18,15 +18,25 @@
  *
  */
 
-package de.uniulm.omi.executionware.agent.monitoring.monitors.api;
-
-import de.uniulm.omi.executionware.agent.monitoring.metric.api.MeasurementNotAvailableException;
-import de.uniulm.omi.executionware.agent.monitoring.metric.api.Metric;
+package de.uniulm.omi.executionware.agent.monitoring.api;
 
 /**
- * Created by daniel on 18.12.14.
+ * This exception is thrown if a probe could not execute its measurement, and
+ * the metric is therefore not available.
  */
-public interface Monitor {
+public class MeasurementNotAvailableException extends Exception {
 
-    public Metric getMetric() throws MeasurementNotAvailableException;
+    /**
+     * @see java.lang.Exception
+     */
+    public MeasurementNotAvailableException(String message) {
+        super(message);
+    }
+
+    /**
+     * @see java.lang.Exception
+     */
+    public MeasurementNotAvailableException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

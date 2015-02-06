@@ -20,6 +20,8 @@
 
 package de.uniulm.omi.executionware.agent.reporting.impl.queue;
 
+import de.uniulm.omi.executionware.agent.monitoring.impl.Interval;
+
 import java.util.concurrent.BlockingQueue;
 
 /**
@@ -27,6 +29,6 @@ import java.util.concurrent.BlockingQueue;
  */
 public interface QueueWorkerFactoryInterface<T> {
 
-    public QueueWorker<T> create(BlockingQueue<T> queue);
 
+    QueueWorker<T> create(BlockingQueue<T> queue, Interval interval);
 }

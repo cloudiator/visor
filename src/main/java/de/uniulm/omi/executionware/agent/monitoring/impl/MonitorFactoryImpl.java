@@ -18,29 +18,34 @@
  *
  */
 
-package de.uniulm.omi.executionware.agent.monitoring.management.impl;
+package de.uniulm.omi.executionware.agent.monitoring.impl;
 
 import com.google.inject.Inject;
-import de.uniulm.omi.executionware.agent.monitoring.management.api.MonitorWorkerFactory;
-import de.uniulm.omi.executionware.agent.monitoring.metric.api.Metric;
-import de.uniulm.omi.executionware.agent.monitoring.monitors.api.Monitor;
+import com.google.inject.name.Named;
+import de.uniulm.omi.executionware.agent.monitoring.api.*;
 import de.uniulm.omi.executionware.agent.reporting.api.ReportingInterface;
 import de.uniulm.omi.executionware.agent.reporting.modules.api.QueuedReporting;
 
-/**
- * Created by daniel on 11.12.14.
- */
-public class MonitorWorkerFactoryImpl implements MonitorWorkerFactory {
+import java.util.Map;
 
+/**
+ * Created by daniel on 15.01.15.
+ */
+public class
+        MonitorFactoryImpl implements MonitorFactory {
+
+    private final String localIp;
     private final ReportingInterface<Metric> metricReportingInterface;
 
     @Inject
-    public MonitorWorkerFactoryImpl(@QueuedReporting ReportingInterface<Metric> metricReportingInterface) {
+    public MonitorFactoryImpl(@Named("localIp") String localIp, @QueuedReporting ReportingInterface<Metric> metricReportingInterface) {
+        this.localIp = localIp;
         this.metricReportingInterface = metricReportingInterface;
     }
 
     @Override
-    public MonitorWorker create(Monitor monitor) {
-        return new MonitorWorker(monitor, this.metricReportingInterface);
+    public Monitor create(String metricName, Sensor sensor, Interval interval, Map<String, String> context) throws InvalidMonitorContextException {
+        MonitorContext monitorContext = MonitorContext.builder().addContext(MonitorContext.LOCAL_IP, localIp).addContext(context).build();
+        return new MonitorImpl(metricName, sensor, interval, monitorContext, metricReportingInterface);
     }
 }

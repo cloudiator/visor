@@ -23,8 +23,8 @@ package de.uniulm.omi.executionware.agent.execution.impl;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
+import de.uniulm.omi.executionware.agent.execution.api.Schedulable;
 import de.uniulm.omi.executionware.agent.execution.api.ScheduledExecutionServiceInterface;
-import de.uniulm.omi.executionware.agent.monitoring.Interval;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -50,40 +50,38 @@ public class ScheduledExecutionService implements ScheduledExecutionServiceInter
      */
     private final ScheduledExecutorService scheduledExecutorService;
 
-    private final Map<Runnable, ScheduledFuture> registeredWorkers;
+    private final Map<Schedulable, ScheduledFuture> registeredSchedulables;
 
     @Inject
     public ScheduledExecutionService(@Named("executionThreads") int executionThreads) {
         checkArgument(executionThreads >= 1, "Execution thread must be >= 1");
         logger.debug(String.format("Starting execution service with %s threads", executionThreads));
         scheduledExecutorService = Executors.newScheduledThreadPool(executionThreads);
-        registeredWorkers = new HashMap<>();
+        registeredSchedulables = new HashMap<>();
     }
 
     @Override
-    public void schedule(final Runnable runnable, final Interval interval) {
-        checkNotNull(runnable);
-        checkNotNull(interval);
-        logger.debug("Scheduling " + runnable.getClass().getName() + " with interval of " + interval);
-        final ScheduledFuture<?> scheduledFuture = this.scheduledExecutorService.scheduleAtFixedRate(runnable, 0, interval.getPeriod(), interval.getTimeUnit());
-        this.registeredWorkers.put(runnable, scheduledFuture);
+    public void schedule(Schedulable schedulable) {
+        checkNotNull(schedulable);
+        logger.debug("Scheduling " + schedulable.getClass().getName() + " with interval of " + schedulable.getInterval());
+        final ScheduledFuture<?> scheduledFuture = this.scheduledExecutorService.scheduleAtFixedRate(
+                schedulable.getRunnable(), 0, schedulable.getInterval().getPeriod(), schedulable.getInterval().getTimeUnit());
+        this.registeredSchedulables.put(schedulable, scheduledFuture);
     }
 
     @Override
-    public void remove(Runnable runnable) {
-        checkNotNull(runnable);
-        checkState(this.registeredWorkers.containsKey(runnable), "The runnable " + runnable + " was never registered with the scheduler.");
-        this.registeredWorkers.get(runnable).cancel(false);
-        this.registeredWorkers.remove(runnable);
+    public void remove(Schedulable schedulable) {
+        checkNotNull(schedulable);
+        checkState(this.registeredSchedulables.containsKey(schedulable), "The schedulable " + schedulable + " was never registered with the scheduler.");
+        this.registeredSchedulables.get(schedulable).cancel(false);
+        this.registeredSchedulables.remove(schedulable);
     }
 
     @Override
-    public void reschedule(Runnable runnable, Interval newInterval) {
-        checkNotNull(runnable);
-        checkNotNull(newInterval);
-
-        this.remove(runnable);
-        this.schedule(runnable, newInterval);
+    public void reschedule(Schedulable schedulable) {
+        checkNotNull(schedulable);
+        this.remove(schedulable);
+        this.schedule(schedulable);
     }
 
     @Override

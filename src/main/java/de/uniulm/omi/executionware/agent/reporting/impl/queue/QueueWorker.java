@@ -20,6 +20,8 @@
 
 package de.uniulm.omi.executionware.agent.reporting.impl.queue;
 
+import de.uniulm.omi.executionware.agent.execution.api.Schedulable;
+import de.uniulm.omi.executionware.agent.monitoring.impl.Interval;
 import de.uniulm.omi.executionware.agent.reporting.api.ReportingInterface;
 import de.uniulm.omi.executionware.agent.reporting.impl.ReportingException;
 import org.apache.logging.log4j.LogManager;
@@ -34,26 +36,37 @@ import java.util.concurrent.BlockingQueue;
  *
  * @param <T>
  */
-public class QueueWorker<T> implements Runnable {
+public class QueueWorker<T> implements Schedulable, Runnable {
 
     private final BlockingQueue<T> queue;
     private final ReportingInterface<T> reportingInterface;
     private static final Logger logger = LogManager.getLogger(QueueWorker.class);
+    private final Interval interval;
 
-    public QueueWorker(BlockingQueue<T> queue, ReportingInterface<T> reportingInterface) {
+    public QueueWorker(BlockingQueue<T> queue, ReportingInterface<T> reportingInterface, Interval interval) {
         this.queue = queue;
         this.reportingInterface = reportingInterface;
+        this.interval = interval;
     }
 
     public void run() {
         List<T> tList = new ArrayList<>();
         this.queue.drainTo(tList);
         try {
-            logger.info("Reporting "+tList.size()+" items.");
+            logger.info("Reporting " + tList.size() + " items.");
             this.reportingInterface.report(tList);
         } catch (ReportingException e) {
             logger.error("Could not report metrics, throwing them away.", e);
         }
     }
 
+    @Override
+    public Interval getInterval() {
+        return this.interval;
+    }
+
+    @Override
+    public Runnable getRunnable() {
+        return this;
+    }
 }

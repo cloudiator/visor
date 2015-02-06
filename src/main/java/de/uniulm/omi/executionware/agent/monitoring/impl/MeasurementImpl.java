@@ -18,17 +18,30 @@
  *
  */
 
-package de.uniulm.omi.executionware.agent.monitoring.management.api;
+package de.uniulm.omi.executionware.agent.monitoring.impl;
 
-import com.google.inject.ImplementedBy;
-import de.uniulm.omi.executionware.agent.monitoring.management.impl.SensorServiceImpl;
-import de.uniulm.omi.executionware.agent.monitoring.sensors.api.Sensor;
+import de.uniulm.omi.executionware.agent.monitoring.api.Measurement;
 
 /**
- * Created by daniel on 15.01.15.
+ * Created by daniel on 18.12.14.
  */
-@ImplementedBy(SensorServiceImpl.class)
-public interface SensorService {
+public class MeasurementImpl implements Measurement {
 
-    public Sensor findSensor(String className) throws SensorNotFoundException;
+    public final long timestamp;
+    public final Object value;
+
+    public MeasurementImpl(long timestamp, Object value) {
+        this.timestamp = timestamp;
+        this.value = value;
+    }
+
+    @Override
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    @Override
+    public Object getValue() {
+        return value;
+    }
 }

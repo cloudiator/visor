@@ -21,8 +21,10 @@
 package de.uniulm.omi.executionware.agent.server.impl;
 
 import com.google.inject.Inject;
-import de.uniulm.omi.executionware.agent.monitoring.metric.api.Metric;
-import de.uniulm.omi.executionware.agent.monitoring.metric.api.MetricFactory;
+import com.google.inject.name.Named;
+import de.uniulm.omi.executionware.agent.monitoring.api.Metric;
+import de.uniulm.omi.executionware.agent.monitoring.impl.MetricBuilder;
+import de.uniulm.omi.executionware.agent.monitoring.impl.MonitorContext;
 import de.uniulm.omi.executionware.agent.server.api.ParsingException;
 import de.uniulm.omi.executionware.agent.server.api.RequestParsingInterface;
 import org.apache.logging.log4j.LogManager;
@@ -35,13 +37,12 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class StringToMetricParser implements RequestParsingInterface<String, Metric> {
 
-    private final MetricFactory metricFactory;
     private static final Logger logger = LogManager.getLogger(StringToMetricParser.class);
+    private final String localIp;
 
     @Inject
-    public StringToMetricParser(MetricFactory metricFactory) {
-        checkNotNull(metricFactory);
-        this.metricFactory = metricFactory;
+    public StringToMetricParser(@Named("localIp") String localIp) {
+        this.localIp = localIp;
     }
 
     @Override
@@ -62,6 +63,6 @@ public class StringToMetricParser implements RequestParsingInterface<String, Met
             throw new ParsingException("Could not convert 4th string to long.");
         }
 
-        return this.metricFactory.from(metricName, value, timestamp, applicationName);
+        return MetricBuilder.newBuilder().name(metricName).value(value).timestamp(timestamp).addTag("application", applicationName).addTag(MonitorContext.LOCAL_IP, this.localIp).build();
     }
 }

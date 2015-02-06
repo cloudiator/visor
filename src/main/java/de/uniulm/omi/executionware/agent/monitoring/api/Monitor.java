@@ -18,30 +18,19 @@
  *
  */
 
-package de.uniulm.omi.executionware.agent.monitoring.sensors.impl;
+package de.uniulm.omi.executionware.agent.monitoring.api;
 
-import de.uniulm.omi.executionware.agent.monitoring.sensors.api.Measurement;
+import de.uniulm.omi.executionware.agent.execution.api.Schedulable;
+import de.uniulm.omi.executionware.agent.monitoring.impl.MonitorContext;
 
 /**
  * Created by daniel on 18.12.14.
  */
-public class MeasurementImpl implements Measurement {
+public interface Monitor extends Schedulable {
 
-    public final long timestamp;
-    public final Object value;
+    public String getMetricName();
 
-    public MeasurementImpl(long timestamp, Object value) {
-        this.timestamp = timestamp;
-        this.value = value;
-    }
+    public Sensor getSensor();
 
-    @Override
-    public long getTimestamp() {
-        return timestamp;
-    }
-
-    @Override
-    public Object getValue() {
-        return value;
-    }
+    public MonitorContext getMonitorContext();
 }

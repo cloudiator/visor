@@ -16,7 +16,10 @@
  * under the License.
  */
 
-package de.uniulm.omi.executionware.agent.monitoring.metric.impl;
+package de.uniulm.omi.executionware.agent.monitoring.impl;
+
+import com.google.common.collect.ImmutableMap;
+import de.uniulm.omi.executionware.agent.monitoring.api.Metric;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,7 +38,7 @@ public class MetricBuilder {
         tags = new HashMap<>();
     }
 
-    static MetricBuilder create() {
+    public static MetricBuilder newBuilder() {
         return new MetricBuilder();
     }
 
@@ -59,8 +62,12 @@ public class MetricBuilder {
         return this;
     }
 
-    public de.uniulm.omi.executionware.agent.monitoring.metric.api.Metric build() {
-        return new MetricImpl(name, value, timestamp, tags);
+    public MetricBuilder addTags(Map<String, String> tags) {
+        this.tags.putAll(tags);
+        return this;
     }
 
+    public Metric build() {
+        return new MetricImpl(name, value, timestamp, ImmutableMap.copyOf(this.tags));
+    }
 }

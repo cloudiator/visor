@@ -18,23 +18,14 @@
  *
  */
 
-package de.uniulm.omi.executionware.agent.monitoring.management.impl;
-
-import de.uniulm.omi.executionware.agent.monitoring.management.api.SensorNotFoundException;
-import de.uniulm.omi.executionware.agent.monitoring.management.api.SensorService;
-import de.uniulm.omi.executionware.agent.monitoring.sensors.api.Sensor;
+package de.uniulm.omi.executionware.agent.monitoring.api;
 
 /**
  * Created by daniel on 15.01.15.
  */
-public class SensorServiceImpl implements SensorService {
+public class SensorNotFoundException extends Exception {
 
-    @Override
-    public Sensor findSensor(String className) throws SensorNotFoundException {
-        try {
-            return (Sensor) Class.forName(className).newInstance();
-        } catch (ClassCastException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {
-            throw new SensorNotFoundException("Could not load sensor with name " + className, e);
-        }
+    public SensorNotFoundException(String message, Throwable cause) {
+        super(message, cause);
     }
 }

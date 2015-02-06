@@ -18,21 +18,25 @@
  *
  */
 
-package de.uniulm.omi.executionware.agent.monitoring.sensors.impl;
+package de.uniulm.omi.executionware.agent.monitoring.sensors;
 
 import com.google.common.base.Optional;
 import com.sun.management.OperatingSystemMXBean;
-import de.uniulm.omi.executionware.agent.monitoring.metric.api.MeasurementNotAvailableException;
-import de.uniulm.omi.executionware.agent.monitoring.monitors.impl.MonitorContext;
-import de.uniulm.omi.executionware.agent.monitoring.sensors.api.Measurement;
-import de.uniulm.omi.executionware.agent.monitoring.sensors.api.Sensor;
+import de.uniulm.omi.executionware.agent.monitoring.api.MeasurementNotAvailableException;
+import de.uniulm.omi.executionware.agent.monitoring.impl.MeasurementImpl;
+import de.uniulm.omi.executionware.agent.monitoring.impl.MonitorContext;
+import de.uniulm.omi.executionware.agent.monitoring.api.Measurement;
+import de.uniulm.omi.executionware.agent.monitoring.api.Sensor;
 
 import java.lang.management.ManagementFactory;
 
 /**
- * A probe for measuring the CPU usage in % on the given machine.
+ * The MemoryUsageProbe class.
+ * <p>
+ * Measures the current
+ * ly used memory by the operating system in percentage.
  */
-public class CpuUsageSensor implements Sensor {
+public class MemoryUsageSensor implements Sensor {
 
     @Override
     public void init() {
@@ -49,13 +53,14 @@ public class CpuUsageSensor implements Sensor {
         OperatingSystemMXBean osBean = ManagementFactory.getPlatformMXBean(
                 OperatingSystemMXBean.class);
 
-        double systemCpuLoad = osBean.getSystemCpuLoad();
-        double systemCpuLoadPercentage = systemCpuLoad * 100;
+        //memory usage
+        double totalPhysicalMemory = osBean.getTotalPhysicalMemorySize();
+        double freePhysicalMemory = osBean.getFreePhysicalMemorySize();
 
-        if (systemCpuLoad < 0) {
-            throw new MeasurementNotAvailableException("Received negative value");
+        if (totalPhysicalMemory < 0 || freePhysicalMemory < 0) {
+            throw new MeasurementNotAvailableException("Received negative value for total or free physical memory size");
         }
 
-        return new MeasurementImpl(System.currentTimeMillis(), systemCpuLoadPercentage);
+        return new MeasurementImpl(System.currentTimeMillis(), 100 - ((freePhysicalMemory / totalPhysicalMemory) * 100));
     }
 }

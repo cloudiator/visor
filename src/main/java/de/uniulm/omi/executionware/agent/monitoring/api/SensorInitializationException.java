@@ -16,26 +16,29 @@
  * under the License.
  */
 
-package de.uniulm.omi.executionware.agent.monitoring.monitors.impl;
+package de.uniulm.omi.executionware.agent.monitoring.api;
 
 /**
- * Created by daniel on 21.01.15.
+ * Created by daniel on 06.02.15.
  */
-public class MonitorContext {
+public class SensorInitializationException extends Exception {
 
-    private final String context;
-    private final String value;
-
-    public MonitorContext(String context, String value) {
-        this.context = context;
-        this.value = value;
+    public SensorInitializationException() {
     }
 
-    public String getContext() {
-        return context;
+    public SensorInitializationException(String message) {
+        super(message);
     }
 
-    public String getValue() {
-        return value;
+    public SensorInitializationException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public SensorInitializationException(Throwable cause) {
+        super(cause);
+    }
+
+    public SensorInitializationException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
     }
 }

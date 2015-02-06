@@ -22,7 +22,6 @@ package de.uniulm.omi.executionware.agent.execution.api;
 
 import com.google.inject.ImplementedBy;
 import de.uniulm.omi.executionware.agent.execution.impl.ScheduledExecutionService;
-import de.uniulm.omi.executionware.agent.monitoring.Interval;
 
 /**
  * Created by daniel on 11.12.14.
@@ -30,9 +29,9 @@ import de.uniulm.omi.executionware.agent.monitoring.Interval;
 @ImplementedBy(ScheduledExecutionService.class)
 public interface ScheduledExecutionServiceInterface extends ExecutionServiceInterface {
 
-    public void schedule(Runnable runnable, Interval interval);
+    public void schedule(Schedulable schedulable);
 
-    public void remove(Runnable runnable);
+    public void remove(Schedulable schedulable);
 
-    public void reschedule(Runnable runnable, Interval newInterval);
+    public void reschedule(Schedulable schedulable);
 }

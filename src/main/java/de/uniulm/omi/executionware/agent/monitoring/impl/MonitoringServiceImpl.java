@@ -18,18 +18,13 @@
  *
  */
 
-package de.uniulm.omi.executionware.agent.monitoring.management.impl;
+package de.uniulm.omi.executionware.agent.monitoring.impl;
 
-import com.google.common.base.Optional;
 import com.google.inject.Inject;
 import de.uniulm.omi.executionware.agent.execution.api.ScheduledExecutionServiceInterface;
-import de.uniulm.omi.executionware.agent.monitoring.Interval;
-import de.uniulm.omi.executionware.agent.monitoring.management.api.*;
-import de.uniulm.omi.executionware.agent.monitoring.monitors.api.Monitor;
-import de.uniulm.omi.executionware.agent.monitoring.monitors.impl.MonitorContext;
-import de.uniulm.omi.executionware.agent.monitoring.sensors.api.Sensor;
+import de.uniulm.omi.executionware.agent.monitoring.api.*;
 
-import javax.annotation.Nullable;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,44 +36,48 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class MonitoringServiceImpl implements MonitoringService {
 
-
-    private final Map<String, MonitorWorker> monitorRegistry;
+    private final Map<String, Monitor> monitorRegistry;
     private final ScheduledExecutionServiceInterface scheduler;
-    private final MonitorWorkerFactory monitorWorkerFactory;
-    private final SensorService sensorService;
+    private final SensorFactory sensorFactory;
     private final MonitorFactory monitorFactory;
 
     @Inject
-    public MonitoringServiceImpl(ScheduledExecutionServiceInterface scheduler, MonitorWorkerFactory monitorWorkerFactory, SensorService sensorService, MonitorFactory monitorFactory) {
+    public MonitoringServiceImpl(ScheduledExecutionServiceInterface scheduler, SensorFactory sensorFactory, MonitorFactory monitorFactory) {
         this.scheduler = scheduler;
-        this.monitorWorkerFactory = monitorWorkerFactory;
-        this.sensorService = sensorService;
+        this.sensorFactory = sensorFactory;
         this.monitorFactory = monitorFactory;
         monitorRegistry = new HashMap<>();
     }
 
     @Override
-    public void startMonitoring(String metricName, String sensorClassName, Interval interval, @Nullable MonitorContext monitorContext) throws SensorNotFoundException {
+    public void startMonitoring(String metricName, String sensorClassName, Interval interval, Map<String, String> monitorContext) throws SensorNotFoundException, SensorInitializationException, InvalidMonitorContextException {
 
         checkNotNull(metricName);
         checkArgument(!metricName.isEmpty());
+
         checkNotNull(sensorClassName);
         checkArgument(!sensorClassName.isEmpty());
+
         checkNotNull(interval);
 
-        final Sensor sensor = this.sensorService.findSensor(sensorClassName);
-        sensor.init();
-        sensor.setMonitorContext(Optional.fromNullable(monitorContext));
-        final Monitor monitor = this.monitorFactory.create(metricName, sensor);
-        final MonitorWorker monitorWorker = this.monitorWorkerFactory.create(monitor);
-        this.scheduler.schedule(monitorWorker, interval);
-        this.monitorRegistry.put(metricName, monitorWorker);
+        checkNotNull(monitorContext);
+
+        final Sensor sensor = this.sensorFactory.from(sensorClassName);
+        final Monitor monitor = this.monitorFactory.create(metricName, sensor, interval, monitorContext);
+        this.monitorRegistry.put(metricName, monitor);
+        this.scheduler.schedule(monitor);
     }
 
     @Override
     public void stopMonitoring(String metricName) {
         checkArgument(isMonitoring(metricName));
         this.scheduler.remove(this.monitorRegistry.get(metricName));
+        this.monitorRegistry.remove(metricName);
+    }
+
+    @Override
+    public Collection<Monitor> getMonitors() {
+        return this.monitorRegistry.values();
     }
 
     @Override
