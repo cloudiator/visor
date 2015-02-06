@@ -27,7 +27,6 @@ import de.uniulm.omi.executionware.agent.monitoring.api.MonitoringService;
 import de.uniulm.omi.executionware.agent.monitoring.api.SensorInitializationException;
 import de.uniulm.omi.executionware.agent.monitoring.api.SensorNotFoundException;
 import de.uniulm.omi.executionware.agent.monitoring.impl.Interval;
-import de.uniulm.omi.executionware.agent.rest.RestServer;
 import de.uniulm.omi.executionware.agent.server.impl.SocketServer;
 
 import java.util.Collections;
@@ -54,7 +53,6 @@ public class MonitoringAgentService {
             throw new RuntimeException(e);
         }
         injector.getInstance(SocketServer.class);
-        injector.getInstance(RestServer.class);
         Runtime.getRuntime().addShutdownHook(injector.getInstance(ShutdownHook.class));
     }
 }
