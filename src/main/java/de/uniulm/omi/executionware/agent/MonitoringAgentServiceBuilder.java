@@ -21,13 +21,12 @@
 package de.uniulm.omi.executionware.agent;
 
 import com.google.inject.Module;
-import de.uniulm.omi.executionware.agent.config.file.FileConfigurationAccessor;
+import de.uniulm.omi.executionware.agent.config.api.IpProvider;
+import de.uniulm.omi.executionware.agent.config.impl.FileConfigurationAccessor;
 import de.uniulm.omi.executionware.agent.config.impl.BaseConfigurationModule;
 import de.uniulm.omi.executionware.agent.server.config.ServerModule;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import static com.google.common.base.Preconditions.checkState;
 
@@ -37,11 +36,12 @@ import static com.google.common.base.Preconditions.checkState;
 public class MonitoringAgentServiceBuilder {
 
     private FileConfigurationAccessor fileConfigurationAccessor;
-    private String ip;
+    private List<IpProvider> ipProviderList;
     private Set<Module> modules;
 
     private MonitoringAgentServiceBuilder() {
         this.modules = new HashSet<>();
+        this.ipProviderList = new LinkedList<>();
     }
 
     public static MonitoringAgentServiceBuilder createNew() {
@@ -53,8 +53,8 @@ public class MonitoringAgentServiceBuilder {
         return this;
     }
 
-    public MonitoringAgentServiceBuilder ip(String ip) {
-        this.ip = ip;
+    public MonitoringAgentServiceBuilder addIpProvider(IpProvider ipProvider) {
+        this.ipProviderList.add(ipProvider);
         return this;
     }
 
@@ -69,12 +69,21 @@ public class MonitoringAgentServiceBuilder {
         this.modules.add((Module) Class.forName(reportingModule).newInstance());
     }
 
+    protected String resolvePublicIpAddress() {
+        for (IpProvider ipProvider : ipProviderList) {
+            if (ipProvider.getPublicIp() != null) {
+                return ipProvider.getPublicIp();
+            }
+        }
+        throw new IllegalStateException("Could not find any public ip address.");
+    }
+
     public MonitoringAgentService build() {
         try {
             this.loadReportingModuleBasedOnPropertiesFile();
             this.modules.add(new ServerModule());
-            this.modules.add(new BaseConfigurationModule(this.fileConfigurationAccessor, this.ip));
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+            this.modules.add(new BaseConfigurationModule(this.fileConfigurationAccessor, this.resolvePublicIpAddress()));
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | IllegalStateException e) {
             e.printStackTrace();
             System.exit(1);
         }

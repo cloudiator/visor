@@ -20,7 +20,9 @@
 
 package de.uniulm.omi.executionware.agent;
 
-import de.uniulm.omi.executionware.agent.config.cli.CommandLinePropertiesAccessor;
+import de.uniulm.omi.executionware.agent.config.api.CommandLinePropertiesAccessor;
+import de.uniulm.omi.executionware.agent.config.impl.AwsIpWebService;
+import de.uniulm.omi.executionware.agent.config.impl.CommandLinePropertiesAccessorImpl;
 import org.apache.commons.cli.ParseException;
 
 
@@ -28,9 +30,9 @@ public class MonitoringAgent {
 
     public static void main(final String[] args) throws ParseException {
 
-        final CommandLinePropertiesAccessor commandLinePropertiesAccessor = new CommandLinePropertiesAccessor(args);
+        final CommandLinePropertiesAccessor commandLinePropertiesAccessor = new CommandLinePropertiesAccessorImpl(args);
 
-        MonitoringAgentServiceBuilder.createNew().confFilePath(commandLinePropertiesAccessor.getConfFileLocation()).ip(commandLinePropertiesAccessor.getLocalIp()).build().start();
+        MonitoringAgentServiceBuilder.createNew().confFilePath(commandLinePropertiesAccessor.getConfFileLocation()).addIpProvider(commandLinePropertiesAccessor).addIpProvider(new AwsIpWebService()).build().start();
 
     }
 

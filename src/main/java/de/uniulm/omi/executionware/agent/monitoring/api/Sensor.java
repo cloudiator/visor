@@ -20,14 +20,13 @@
 
 package de.uniulm.omi.executionware.agent.monitoring.api;
 
-import com.google.common.base.Optional;
 import de.uniulm.omi.executionware.agent.monitoring.impl.MonitorContext;
 
 public interface Sensor {
 
     public void init() throws SensorInitializationException;
 
-    public void setMonitorContext(Optional<MonitorContext> monitorContext) throws InvalidMonitorContextException;
+    public void setMonitorContext(MonitorContext monitorContext) throws InvalidMonitorContextException;
 
     public Measurement getMeasurement() throws MeasurementNotAvailableException;
 }

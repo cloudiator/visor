@@ -48,6 +48,19 @@ public class MonitorContext {
         return context;
     }
 
+    @Override
+    public String toString() {
+        StringBuilder context = new StringBuilder("[");
+        for (Map.Entry<String, String> mapEntry : this.getContext().entrySet()) {
+            context.append(mapEntry.getKey());
+            context.append(": ");
+            context.append(mapEntry.getValue());
+            context.append(",");
+        }
+        context.append("]");
+        return String.format("MonitorContext(Context: %s)", context.toString());
+    }
+
     public static class MonitorContextBuilder {
 
         private final Map<String, String> map;
