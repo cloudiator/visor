@@ -21,6 +21,7 @@
 package de.uniulm.omi.executionware.agent.monitoring.impl;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import de.uniulm.omi.executionware.agent.execution.api.ScheduledExecutionServiceInterface;
 import de.uniulm.omi.executionware.agent.monitoring.api.*;
 
@@ -34,6 +35,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Created by daniel on 11.12.14.
  */
+@Singleton
 public class MonitoringServiceImpl implements MonitoringService {
 
     private final Map<String, Monitor> monitorRegistry;
@@ -78,6 +80,11 @@ public class MonitoringServiceImpl implements MonitoringService {
     @Override
     public Collection<Monitor> getMonitors() {
         return this.monitorRegistry.values();
+    }
+
+    @Override
+    public Monitor getMonitor(String metricName) {
+        return this.monitorRegistry.get(metricName);
     }
 
     @Override

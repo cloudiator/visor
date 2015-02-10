@@ -23,6 +23,8 @@ package de.uniulm.omi.executionware.agent;
 import de.uniulm.omi.executionware.agent.config.cli.CommandLinePropertiesAccessor;
 import org.apache.commons.cli.ParseException;
 
+import java.util.concurrent.TimeUnit;
+
 
 public class MonitoringAgent {
 

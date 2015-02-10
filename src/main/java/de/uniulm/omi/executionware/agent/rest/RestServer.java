@@ -20,7 +20,8 @@ package de.uniulm.omi.executionware.agent.rest;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import de.uniulm.omi.executionware.agent.rest.resources.Monitor;
+import de.uniulm.omi.executionware.agent.monitoring.api.MonitoringService;
+import de.uniulm.omi.executionware.agent.rest.controllers.MonitorController;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 
@@ -37,15 +38,14 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class RestServer {
 
     @Inject
-    public RestServer(@Named("localIp") String localIp, @Named("restPort") int restPort) {
+    public RestServer(@Named("localIp") String localIp, @Named("restPort") int restPort, MonitoringService monitoringService) {
         checkNotNull(localIp);
         checkArgument(!localIp.isEmpty());
         checkArgument(restPort > 0);
 
         URI baseUri = UriBuilder.fromUri("http://" + localIp).port(restPort).build();
         ResourceConfig config = new ResourceConfig();
-        //config.packages("de.uniulm.omi.executionware.agent.rest.resources");
-        config.register(new Monitor());
+        config.register(new MonitorController(monitoringService));
         try {
             GrizzlyHttpServerFactory.createHttpServer(baseUri, config).start();
         } catch (IOException e) {

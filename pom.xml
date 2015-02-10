@@ -89,6 +89,11 @@
             <artifactId>jersey-grizzly-connector</artifactId>
             <version>2.13</version>
         </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-json-jackson</artifactId>
+            <version>2.13</version>
+        </dependency>
     </dependencies>
 
     <distributionManagement>

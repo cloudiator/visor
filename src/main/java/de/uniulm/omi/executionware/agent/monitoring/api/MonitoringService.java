@@ -23,9 +23,7 @@ package de.uniulm.omi.executionware.agent.monitoring.api;
 import com.google.inject.ImplementedBy;
 import de.uniulm.omi.executionware.agent.monitoring.impl.Interval;
 import de.uniulm.omi.executionware.agent.monitoring.impl.MonitoringServiceImpl;
-import de.uniulm.omi.executionware.agent.monitoring.impl.MonitorContext;
 
-import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Map;
 
@@ -41,6 +39,8 @@ public interface MonitoringService {
     public void stopMonitoring(String metricName);
 
     public Collection<Monitor> getMonitors();
+
+    public Monitor getMonitor(String metricName);
 
     public boolean isMonitoring(String metricName);
 }

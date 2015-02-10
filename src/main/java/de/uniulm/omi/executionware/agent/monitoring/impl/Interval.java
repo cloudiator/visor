@@ -55,6 +55,10 @@ public class Interval {
         this.timeUnit = timeUnit;
     }
 
+    public Interval(long period, String timeUnit) {
+        this(period, TimeUnit.valueOf(timeUnit));
+    }
+
     /**
      * Getter for the period.
      *
