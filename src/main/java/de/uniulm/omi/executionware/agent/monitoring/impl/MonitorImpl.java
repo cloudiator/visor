@@ -43,7 +43,7 @@ public class MonitorImpl implements Monitor {
         this.metricName = metricName;
         this.sensor = sensor;
         this.monitorContext = monitorContext;
-        this.sensor.setMonitorContext(Optional.fromNullable(monitorContext));
+        this.sensor.setMonitorContext(monitorContext);
         this.monitorWorker = new MonitorWorker(this, metricReportingInterface);
         this.interval = interval;
     }
@@ -73,6 +73,16 @@ public class MonitorImpl implements Monitor {
         return this.monitorWorker;
     }
 
+    @Override
+    public String toString() {
+        return "Monitor{" +
+                "metricName='" + metricName + '\'' +
+                ", sensor=" + sensor +
+                ", monitorContext=" + monitorContext +
+                ", interval=" + interval +
+                '}';
+    }
+
     private class MonitorWorker implements Runnable {
 
         private final Monitor monitor;
@@ -86,6 +96,7 @@ public class MonitorImpl implements Monitor {
         @Override
         public void run() {
             try {
+                logger.debug("Measuring Monitor " + this.monitor);
                 this.metricReportingInterface.report(MetricFactory.from(monitor.getMetricName(), monitor.getSensor().getMeasurement(), monitor.getMonitorContext()));
             } catch (MeasurementNotAvailableException e) {
                 logger.error(String.format("Could not retrieve metric"));

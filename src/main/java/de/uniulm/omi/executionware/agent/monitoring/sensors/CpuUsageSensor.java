@@ -20,33 +20,20 @@
 
 package de.uniulm.omi.executionware.agent.monitoring.sensors;
 
-import com.google.common.base.Optional;
 import com.sun.management.OperatingSystemMXBean;
+import de.uniulm.omi.executionware.agent.monitoring.api.Measurement;
 import de.uniulm.omi.executionware.agent.monitoring.api.MeasurementNotAvailableException;
 import de.uniulm.omi.executionware.agent.monitoring.impl.MeasurementImpl;
 import de.uniulm.omi.executionware.agent.monitoring.impl.MonitorContext;
-import de.uniulm.omi.executionware.agent.monitoring.api.Measurement;
-import de.uniulm.omi.executionware.agent.monitoring.api.Sensor;
 
 import java.lang.management.ManagementFactory;
 
 /**
  * A probe for measuring the CPU usage in % on the given machine.
  */
-public class CpuUsageSensor implements Sensor {
-
+public class CpuUsageSensor extends AbstractSensor {
     @Override
-    public void init() {
-        //intentionally left empty
-    }
-
-    @Override
-    public void setMonitorContext(Optional<MonitorContext> monitorContext) {
-        //intentionally left empty
-    }
-
-    @Override
-    public Measurement getMeasurement() throws MeasurementNotAvailableException {
+    protected Measurement getMeasurement(MonitorContext monitorContext) throws MeasurementNotAvailableException {
         OperatingSystemMXBean osBean = ManagementFactory.getPlatformMXBean(
                 OperatingSystemMXBean.class);
 

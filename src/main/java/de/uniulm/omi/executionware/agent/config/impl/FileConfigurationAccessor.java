@@ -18,7 +18,7 @@
  *
  */
 
-package de.uniulm.omi.executionware.agent.config.file;
+package de.uniulm.omi.executionware.agent.config.impl;
 
 import com.google.inject.Singleton;
 

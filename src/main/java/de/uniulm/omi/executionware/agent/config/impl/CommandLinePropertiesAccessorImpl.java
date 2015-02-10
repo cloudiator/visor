@@ -18,23 +18,24 @@
  *
  */
 
-package de.uniulm.omi.executionware.agent.config.cli;
+package de.uniulm.omi.executionware.agent.config.impl;
 
 import com.google.inject.Inject;
 import de.uniulm.omi.executionware.agent.MonitoringAgent;
+import de.uniulm.omi.executionware.agent.config.api.CommandLinePropertiesAccessor;
 import org.apache.commons.cli.*;
 
 import javax.annotation.Nullable;
 import javax.inject.Singleton;
+import java.util.List;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
 /**
  * Created by daniel on 24.09.14.
  */
 @SuppressWarnings("AccessStaticViaInstance")
-public class CommandLinePropertiesAccessor {
+public class CommandLinePropertiesAccessorImpl implements CommandLinePropertiesAccessor {
 
     private final Options options;
     private CommandLine commandLine;
@@ -43,7 +44,7 @@ public class CommandLinePropertiesAccessor {
 
     @Inject
     @Singleton
-    public CommandLinePropertiesAccessor(String[] args) {
+    public CommandLinePropertiesAccessorImpl(String[] args) {
         this.options = new Options();
         this.generateOptions(this.options);
 
@@ -60,7 +61,6 @@ public class CommandLinePropertiesAccessor {
         options.addOption(OptionBuilder
                         .withLongOpt("localIp")
                         .withDescription("IP of the local machine")
-                        .isRequired()
                         .hasArg()
                         .create("ip")
         );
@@ -86,21 +86,21 @@ public class CommandLinePropertiesAccessor {
         return commandLine.getOptionValue(name);
     }
 
-    public String getLocalIp() {
-        final String ip = getCommandLineOption("ip");
-        checkState(ip != null, "No command line argument value for ip (localIp)");
-        return ip;
-    }
-
-    public int getPort() {
-        String port = this.getCommandLineOption("p");
-        checkState(port != null, "No command line argument value for p (port)");
-        return Integer.valueOf(checkNotNull(port));
-    }
-
+    @Override
     public String getConfFileLocation() {
         String confFile = this.getCommandLineOption("conf");
         checkState(confFile != null, "No command line argument value for conf (configFile)");
         return confFile;
+    }
+
+    @Override
+    @Nullable
+    public String getPublicIp() {
+        return getCommandLineOption("ip");
+    }
+
+    @Override
+    public List<String> getOtherIps() {
+        return null;
     }
 }

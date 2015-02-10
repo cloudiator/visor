@@ -22,7 +22,6 @@ package de.uniulm.omi.executionware.agent.config.impl;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;
-import de.uniulm.omi.executionware.agent.config.file.FileConfigurationAccessor;
 
 /**
  * Created by daniel on 17.12.14.
