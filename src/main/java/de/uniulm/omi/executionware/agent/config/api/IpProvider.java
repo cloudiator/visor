@@ -29,7 +29,4 @@ public interface IpProvider {
 
     @Nullable
     public String getPublicIp();
-
-    public List<String> getOtherIps();
-
 }

@@ -27,7 +27,6 @@ import org.apache.commons.cli.*;
 
 import javax.annotation.Nullable;
 import javax.inject.Singleton;
-import java.util.List;
 
 import static com.google.common.base.Preconditions.checkState;
 
@@ -97,10 +96,5 @@ public class CommandLinePropertiesAccessorImpl implements CommandLinePropertiesA
     @Nullable
     public String getPublicIp() {
         return getCommandLineOption("ip");
-    }
-
-    @Override
-    public List<String> getOtherIps() {
-        return null;
     }
 }
