@@ -62,7 +62,7 @@ public class MonitorController {
         return new MonitorToMonitorJsonConverter().apply(monitoringService.getMonitor(metricName));
     }
 
-    @PUT
+    @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/monitors")
