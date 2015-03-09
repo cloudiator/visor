@@ -19,11 +19,23 @@
 package de.uniulm.omi.executionware.agent.monitoring.api;
 
 /**
- * Created by daniel on 18.12.14.
+ * Represents a measurement taken by a sensor.
+ *
+ * @author Daniel Baur
  */
 public interface Measurement {
-    
+
+    /**
+     * The timestamp the measurement object was taken.
+     *
+     * @return unix timestamp
+     */
     public long getTimestamp();
 
+    /**
+     * The value for this measurement at the defined timestamp.
+     *
+     * @return a object representing the value. manadatory
+     */
     public Object getValue();
 }

@@ -25,7 +25,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
 /**
- * Created by daniel on 10.02.15.
+ * @author Daniel Baur
  */
 public abstract class AbstractSensor implements Sensor {
 
@@ -64,6 +64,15 @@ public abstract class AbstractSensor implements Sensor {
         // intentionally left empty
     }
 
+    /**
+     * Returns a single measurement object.
+     *
+     * @param monitorContext the context for the measurement.
+     *
+     * @return a measurement taken by this sensor.
+     *
+     * @throws MeasurementNotAvailableException
+     */
     protected abstract Measurement getMeasurement(MonitorContext monitorContext) throws MeasurementNotAvailableException;
 
     @Override

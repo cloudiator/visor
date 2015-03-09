@@ -22,9 +22,34 @@ import de.uniulm.omi.executionware.agent.monitoring.impl.MonitorContext;
 
 public interface Sensor {
 
+    /**
+     * Initializes the sensor.
+     * <p>
+     * This e.g. allows the sensor to install dependencies for the operating
+     * system, or allows the sensor to configure itself for the current
+     * environment.
+     *
+     * @throws SensorInitializationException for problems during the initialization
+     */
     public void init() throws SensorInitializationException;
 
+    /**
+     * Sets the monitor context for the sensor.
+     * <p>
+     * Tells the sensor the context in which it is running.
+     *
+     * @param monitorContext context of the sensor.
+     *
+     * @throws InvalidMonitorContextException if the monitor context is not valid.
+     */
     public void setMonitorContext(MonitorContext monitorContext) throws InvalidMonitorContextException;
 
+    /**
+     * Called to retrieve a measurement from this probe.
+     *
+     * @return the current measurement for this probe.
+     *
+     * @throws MeasurementNotAvailableException
+     */
     public Measurement getMeasurement() throws MeasurementNotAvailableException;
 }
