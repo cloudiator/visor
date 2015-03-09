@@ -25,6 +25,7 @@ import de.uniulm.omi.executionware.agent.rest.controllers.MonitorController;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
+import org.glassfish.jersey.moxy.json.MoxyJsonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 
 import javax.ws.rs.core.UriBuilder;
@@ -51,6 +52,7 @@ public class RestServer {
         URI baseUri = UriBuilder.fromUri("http://0.0.0.0").port(restPort).build();
         ResourceConfig config = new ResourceConfig();
         config.register(new MonitorController(monitoringService));
+        config.register(MoxyJsonFeature.class);
         try {
             GrizzlyHttpServerFactory.createHttpServer(baseUri, config).start();
         } catch (IOException e) {
