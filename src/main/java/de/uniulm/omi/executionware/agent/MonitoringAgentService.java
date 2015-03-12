@@ -70,8 +70,10 @@ public class MonitoringAgentService {
             injector.getInstance(MonitoringService.class).startMonitoring("cpu_usage", "de.uniulm.omi.executionware.agent.monitoring.sensors.CpuUsageSensor", new Interval(1, TimeUnit.SECONDS), Collections.<String, String>emptyMap());
             injector.getInstance(MonitoringService.class).startMonitoring("memory_usage", "de.uniulm.omi.executionware.agent.monitoring.sensors.MemoryUsageSensor", new Interval(1, TimeUnit.SECONDS), Collections.<String, String>emptyMap());
             
-            injector.getInstance(MonitoringService.class).startMonitoring("sql_usage_nb_query", "de.uniulm.omi.executionware.agent.monitoring.sensors.mysqlsensors.NbFailedConnectionsMySQLSensor", new Interval(1, TimeUnit.SECONDS), Collections.<String, String>emptyMap());
-            injector.getInstance(MonitoringService.class).startMonitoring("sql_usage_nb_query", "de.uniulm.omi.executionware.agent.monitoring.sensors.mysqlsensors.NbQueriesMySQLSensor", new Interval(1, TimeUnit.SECONDS), Collections.<String, String>emptyMap());
+            injector.getInstance(MonitoringService.class).startMonitoring("mysql_nb_failed_connections", "de.uniulm.omi.executionware.agent.monitoring.sensors.mysqlsensors.NbFailedConnectionsMySQLSensor", new Interval(1, TimeUnit.SECONDS), Collections.<String, String>emptyMap());
+            injector.getInstance(MonitoringService.class).startMonitoring("mysql_nb_queries", "de.uniulm.omi.executionware.agent.monitoring.sensors.mysqlsensors.NbQueriesMySQLSensor", new Interval(1, TimeUnit.SECONDS), Collections.<String, String>emptyMap());
+            injector.getInstance(MonitoringService.class).startMonitoring("mysql_prc_allowed_connections", "de.uniulm.omi.executionware.agent.monitoring.sensors.mysqlsensors.PercentAllowedConnectionsMySQLSensor", new Interval(1, TimeUnit.SECONDS), Collections.<String, String>emptyMap());
+        
         } catch (SensorNotFoundException | InvalidMonitorContextException | SensorInitializationException e) {
             throw new RuntimeException(e);
         }

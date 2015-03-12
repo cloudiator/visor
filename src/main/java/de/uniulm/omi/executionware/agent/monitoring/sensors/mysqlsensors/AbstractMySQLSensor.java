@@ -3,28 +3,21 @@ package de.uniulm.omi.executionware.agent.monitoring.sensors.mysqlsensors;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
-import de.uniulm.omi.executionware.agent.monitoring.api.Measurement;
-import de.uniulm.omi.executionware.agent.monitoring.api.MeasurementNotAvailableException;
-import de.uniulm.omi.executionware.agent.monitoring.api.MySQLOptions;
 import de.uniulm.omi.executionware.agent.monitoring.api.SensorInitializationException;
-import de.uniulm.omi.executionware.agent.monitoring.impl.MeasurementImpl;
-import de.uniulm.omi.executionware.agent.monitoring.impl.MonitorContext;
 import de.uniulm.omi.executionware.agent.monitoring.sensors.AbstractSensor;
 
 /**
  * 
  * @author zarioha
- * A probe for measuring the MySQL metadata.
+ * An abstract probe for measuring the MySQL metadata.
  * 
  */
 public abstract class AbstractMySQLSensor extends AbstractSensor 
 {
-	private static Connection connection;
+	//TODO have a single connection for all mysql sensor and close it when close monitoring
+	protected static Connection connection;
 
 	//TODO by convention : use '%' user (anonymous) without password to read metadata
 	private final String jdbcDriver = "org.drizzle.jdbc.DrizzleDriver";
@@ -34,19 +27,17 @@ public abstract class AbstractMySQLSensor extends AbstractSensor
 	private final String jdbcUrl = "jdbc:drizzle://localhost:3306/";
 	
 	protected PreparedStatement ps ;
-	protected MySQLOptions option;
+
+	protected String query;
 	protected int preview;
-	
+
+    //return the value added since the last value
 	protected int getPerQueryValue(int val) {
 		int value = val;
 		int valuePerQuery = value-preview;
 		preview = value;
 		return valuePerQuery;
 	}
-	protected void prepareStatement(String query) throws SQLException {
-		this.ps = connection.prepareStatement(query);
-	} 
-
 	
     @Override
     protected void initialize() throws SensorInitializationException {   
@@ -63,19 +54,18 @@ public abstract class AbstractMySQLSensor extends AbstractSensor
 		}
 
 		try {
-			String query =  makeRequest(option);
-			prepareStatement(query);	
+			this.ps = connection.prepareStatement(query);	
 		} catch (SQLException ex) {
 			throw new SensorInitializationException("Error prepared query");
 		}
     }
     
-    protected String makeRequest(MySQLOptions... vars) {
+    protected String makeRequest(String... vars) {
 		// adding "/*!50002 GLOBAL */" for compatibility with all version of MySql
 		// see documentation : http://dev.mysql.com/doc/refman/5.0/en/show-status.html
 		String req = "SHOW /*!50002 GLOBAL */ STATUS";
 		int i=0;
-		for(MySQLOptions var : vars) {
+		for(String var : vars) {
 			if(i==0) {
 				req+=" where Variable_name like '"+var+"'";
 				i++;
@@ -86,22 +76,5 @@ public abstract class AbstractMySQLSensor extends AbstractSensor
 		}
 		return req;
 	}
-    
-    
 
-    @Override
-    protected Measurement getMeasurement(MonitorContext monitorContext) throws MeasurementNotAvailableException {
-    	try {
-			ResultSet rs = ps.executeQuery();
-			long queryTimeMillis = System.currentTimeMillis();
-			rs.next();			
-			
-			//TODO dont know if the better way is to send global value our per query value (not per second)
-			int value = getPerQueryValue(rs.getInt("Value"));
-			
-			return new MeasurementImpl(queryTimeMillis,value);
-		} catch (SQLException ex) {
-			throw new MeasurementNotAvailableException("Error query execution");
-		}   
-    }
 }
