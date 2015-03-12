@@ -50,8 +50,6 @@ import de.uniulm.omi.executionware.agent.rest.RestServer;
 import de.uniulm.omi.executionware.agent.server.impl.SocketServer;
 
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -71,7 +69,9 @@ public class MonitoringAgentService {
         try {
             injector.getInstance(MonitoringService.class).startMonitoring("cpu_usage", "de.uniulm.omi.executionware.agent.monitoring.sensors.CpuUsageSensor", new Interval(1, TimeUnit.SECONDS), Collections.<String, String>emptyMap());
             injector.getInstance(MonitoringService.class).startMonitoring("memory_usage", "de.uniulm.omi.executionware.agent.monitoring.sensors.MemoryUsageSensor", new Interval(1, TimeUnit.SECONDS), Collections.<String, String>emptyMap());
-            injector.getInstance(MonitoringService.class).startMonitoring("sql_usage_nb_query", "de.uniulm.omi.executionware.agent.monitoring.sensors.MySQLSensor", new Interval(1, TimeUnit.SECONDS), Collections.<String, String>emptyMap());
+            
+            injector.getInstance(MonitoringService.class).startMonitoring("sql_usage_nb_query", "de.uniulm.omi.executionware.agent.monitoring.sensors.mysqlsensors.NbFailedConnectionsMySQLSensor", new Interval(1, TimeUnit.SECONDS), Collections.<String, String>emptyMap());
+            injector.getInstance(MonitoringService.class).startMonitoring("sql_usage_nb_query", "de.uniulm.omi.executionware.agent.monitoring.sensors.mysqlsensors.NbQueriesMySQLSensor", new Interval(1, TimeUnit.SECONDS), Collections.<String, String>emptyMap());
         } catch (SensorNotFoundException | InvalidMonitorContextException | SensorInitializationException e) {
             throw new RuntimeException(e);
         }
