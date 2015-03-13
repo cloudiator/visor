@@ -2,9 +2,13 @@ package de.uniulm.omi.executionware.agent.monitoring.sensors.mysqlsensors;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import com.google.inject.Guice;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+
+import de.uniulm.omi.executionware.agent.config.impl.FileConfigurationAccessor;
 import de.uniulm.omi.executionware.agent.monitoring.api.SensorInitializationException;
 import de.uniulm.omi.executionware.agent.monitoring.sensors.AbstractSensor;
 
@@ -18,63 +22,27 @@ public abstract class AbstractMySQLSensor extends AbstractSensor
 {
 	//TODO have a single connection for all mysql sensor and close it when close monitoring
 	protected static Connection connection;
-
 	//TODO by convention : use '%' user (anonymous) without password to read metadata
-	private final String jdbcDriver = "org.drizzle.jdbc.DrizzleDriver";
-	private final String jdbcName = "root";
-	private final String jdbcPassword = "";	
+	private String jdbcDriver = "org.drizzle.jdbc.DrizzleDriver";
+	private String jdbcName = "root";
+	private String jdbcPassword = "";	
 	//TODO configure the URL by another way? (maybe by setMonitorContext())
-	private final String jdbcUrl = "jdbc:drizzle://localhost:3306/";
+	private String jdbcUrl = "jdbc:drizzle://localhost:3306/";
 	
-	protected PreparedStatement ps ;
-
-	protected String query;
-	protected int preview;
-
-    //return the value added since the last value
-	protected int getPerQueryValue(int val) {
-		int value = val;
-		int valuePerQuery = value-preview;
-		preview = value;
-		return valuePerQuery;
-	}
+	
 	
     @Override
-    protected void initialize() throws SensorInitializationException {   
-    	try  {
+   // FileConfigurationAccessor
+    protected void initialize() throws SensorInitializationException { 
+		try {
 			Class.forName(jdbcDriver);
-		} catch (Exception ex)  {
-	        throw new SensorInitializationException("JdbcDriver not found");
+		} catch (ClassNotFoundException e) {
+		    throw new SensorInitializationException("JdbcDriver not found",e);
 		}
-    	
 		try {
 			connection = DriverManager.getConnection(jdbcUrl,jdbcName,jdbcPassword);
-		} catch (Exception ex) {
-	        throw new SensorInitializationException("Error during connection");
-		}
-
-		try {
-			this.ps = connection.prepareStatement(query);	
-		} catch (SQLException ex) {
-			throw new SensorInitializationException("Error prepared query");
+		} catch (SQLException e) {
+			throw new SensorInitializationException("Error during connection",e);
 		}
     }
-    
-    protected String makeRequest(String... vars) {
-		// adding "/*!50002 GLOBAL */" for compatibility with all version of MySql
-		// see documentation : http://dev.mysql.com/doc/refman/5.0/en/show-status.html
-		String req = "SHOW /*!50002 GLOBAL */ STATUS";
-		int i=0;
-		for(String var : vars) {
-			if(i==0) {
-				req+=" where Variable_name like '"+var+"'";
-				i++;
-			}
-			else {
-				req+=" or Variable_name like '"+var+"'";
-			}
-		}
-		return req;
-	}
-
 }
