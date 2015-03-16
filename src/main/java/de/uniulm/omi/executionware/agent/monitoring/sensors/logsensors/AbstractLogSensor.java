@@ -35,7 +35,7 @@ public abstract class AbstractLogSensor extends AbstractSensor {
     	 try {
 			file = new RandomAccessFile(fileName, "r");
 		} catch (FileNotFoundException e) {
-			throw new SensorInitializationException("Open File error for : "+fileName,e);
+			throw new SensorInitializationException("Error opening file : "+fileName,e);
 		}
     }
     
@@ -47,7 +47,7 @@ public abstract class AbstractLogSensor extends AbstractSensor {
 			List<String> lines =  new ArrayList<String>();
 			if (file.length() < filePointer) 
 			{
-				String message = "Somes Lines Was ereased (chars from "+file.length()+" to "+filePointer+" are missing)";
+				String message = "Some lines were erased (chars from "+file.length()+" to "+filePointer+" are missing)";
 				filePointer = 0;
 				throw new MeasurementNotAvailableException(message);
 			} 
@@ -102,7 +102,7 @@ public abstract class AbstractLogSensor extends AbstractSensor {
 
 			//file.close();
 		} catch (IOException e) {
-			throw new MeasurementNotAvailableException("File access error for : "+ fileName,e);
+			throw new MeasurementNotAvailableException("Error accessing file : "+ fileName,e);
 		}
     }
 }
