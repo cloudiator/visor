@@ -13,6 +13,10 @@ import de.uniulm.omi.executionware.agent.monitoring.sensors.AbstractSensor;
 
 public class HaproxyLogSensor extends AbstractLogSensor {
 
+	public HaproxyLogSensor() {
+		this.fileName = "logs/haproxy.log";
+	}
+	
 	public static void main(String[] args) throws SensorInitializationException, MeasurementNotAvailableException {
 		AbstractSensor logReader = new HaproxyLogSensor();
 		logReader.init();

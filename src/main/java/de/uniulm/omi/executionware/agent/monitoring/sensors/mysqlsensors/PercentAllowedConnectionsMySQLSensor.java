@@ -4,10 +4,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.google.inject.Inject;
-import com.google.inject.name.Named;
-
-import de.uniulm.omi.executionware.agent.config.impl.FileConfigurationAccessor;
 import de.uniulm.omi.executionware.agent.monitoring.api.Measurement;
 import de.uniulm.omi.executionware.agent.monitoring.api.MeasurementNotAvailableException;
 import de.uniulm.omi.executionware.agent.monitoring.api.SensorInitializationException;

@@ -23,7 +23,7 @@ import de.uniulm.omi.executionware.agent.monitoring.sensors.AbstractSensor;
 
 public abstract class AbstractLogSensor extends AbstractSensor {
 
-	private String fileName = "log.txt";
+	protected String fileName;
 	private long filePointer;
 	private RandomAccessFile file;
 

@@ -4,11 +4,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-import com.google.inject.Guice;
-import com.google.inject.Inject;
-import com.google.inject.name.Named;
-
-import de.uniulm.omi.executionware.agent.config.impl.FileConfigurationAccessor;
 import de.uniulm.omi.executionware.agent.monitoring.api.SensorInitializationException;
 import de.uniulm.omi.executionware.agent.monitoring.sensors.AbstractSensor;
 

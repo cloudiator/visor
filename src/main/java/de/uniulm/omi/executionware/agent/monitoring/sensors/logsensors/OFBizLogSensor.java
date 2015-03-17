@@ -14,6 +14,10 @@ import de.uniulm.omi.executionware.agent.monitoring.sensors.AbstractSensor;
  */
 
 public class OFBizLogSensor extends AbstractLogSensor {
+
+	public OFBizLogSensor() {
+		this.fileName = "logs/ofbiz.log";
+	}
 	
 	public static void main(String[] args) throws SensorInitializationException, MeasurementNotAvailableException {
 		AbstractSensor logReader = new OFBizLogSensor();
