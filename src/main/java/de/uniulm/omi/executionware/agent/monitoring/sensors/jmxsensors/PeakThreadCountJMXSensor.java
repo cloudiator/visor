@@ -16,43 +16,35 @@
  * under the License.
  */
 
-package de.uniulm.omi.executionware.agent.monitoring.sensors;
-
-import java.lang.management.ManagementFactory;
-
-import com.sun.management.OperatingSystemMXBean;
+package de.uniulm.omi.executionware.agent.monitoring.sensors.jmxsensors;
 
 import de.uniulm.omi.executionware.agent.monitoring.api.Measurement;
 import de.uniulm.omi.executionware.agent.monitoring.api.MeasurementNotAvailableException;
 import de.uniulm.omi.executionware.agent.monitoring.api.SensorInitializationException;
 import de.uniulm.omi.executionware.agent.monitoring.impl.MeasurementImpl;
 import de.uniulm.omi.executionware.agent.monitoring.impl.MonitorContext;
+import de.uniulm.omi.executionware.agent.monitoring.sensors.AbstractSensor;
+
+import java.lang.management.ManagementFactory;
+import java.lang.management.ThreadMXBean;
 
 /**
- * A probe for measuring the CPU usage in % on the given machine.
+ * 
+ * @author zarioha
+ * A probe for measuring the peak live thread count since the Java virtual machine started
  */
-public class CpuUsageSensor extends AbstractSensor {
+public class PeakThreadCountJMXSensor extends AbstractSensor {
 	
-	private OperatingSystemMXBean osBean;
-    
+	private  ThreadMXBean threadBean;
     @Override
     protected Measurement getMeasurement(MonitorContext monitorContext) throws MeasurementNotAvailableException {
-
-        double systemCpuLoad = osBean.getSystemCpuLoad();
-        double systemCpuLoadPercentage = systemCpuLoad * 100;
-
-        if (systemCpuLoad < 0) {
-            throw new MeasurementNotAvailableException("Received negative value");
-        }
-
-        return new MeasurementImpl(System.currentTimeMillis(), systemCpuLoadPercentage);
+        long peakThreadCount = threadBean.getPeakThreadCount();
+        return new MeasurementImpl(System.currentTimeMillis(), peakThreadCount);
     }
     
     @Override
-    protected void initialize() throws SensorInitializationException 
-    {
+    protected void initialize() throws SensorInitializationException {
     	super.initialize();
-    	osBean = ManagementFactory.getPlatformMXBean(
-                OperatingSystemMXBean.class);
+    	threadBean = ManagementFactory.getThreadMXBean();
     }
 }

@@ -16,43 +16,35 @@
  * under the License.
  */
 
-package de.uniulm.omi.executionware.agent.monitoring.sensors;
+package de.uniulm.omi.executionware.agent.monitoring.sensors.jmxsensors;
 
 import java.lang.management.ManagementFactory;
-
-import com.sun.management.OperatingSystemMXBean;
+import java.lang.management.MemoryMXBean;
 
 import de.uniulm.omi.executionware.agent.monitoring.api.Measurement;
 import de.uniulm.omi.executionware.agent.monitoring.api.MeasurementNotAvailableException;
 import de.uniulm.omi.executionware.agent.monitoring.api.SensorInitializationException;
 import de.uniulm.omi.executionware.agent.monitoring.impl.MeasurementImpl;
 import de.uniulm.omi.executionware.agent.monitoring.impl.MonitorContext;
+import de.uniulm.omi.executionware.agent.monitoring.sensors.AbstractSensor;
 
 /**
- * A probe for measuring the CPU usage in % on the given machine.
+ * 
+ * @author zarioha
+ * A probe for measuring the amount of the heap used memory in bytes
  */
-public class CpuUsageSensor extends AbstractSensor {
+public class HeapMemoryUsageJMXSensor extends AbstractSensor {
 	
-	private OperatingSystemMXBean osBean;
-    
+	private  MemoryMXBean memoryBean;
     @Override
     protected Measurement getMeasurement(MonitorContext monitorContext) throws MeasurementNotAvailableException {
-
-        double systemCpuLoad = osBean.getSystemCpuLoad();
-        double systemCpuLoadPercentage = systemCpuLoad * 100;
-
-        if (systemCpuLoad < 0) {
-            throw new MeasurementNotAvailableException("Received negative value");
-        }
-
-        return new MeasurementImpl(System.currentTimeMillis(), systemCpuLoadPercentage);
+        long heapMemoryUsed = memoryBean.getHeapMemoryUsage().getUsed();
+        return new MeasurementImpl(System.currentTimeMillis(), heapMemoryUsed);
     }
     
     @Override
-    protected void initialize() throws SensorInitializationException 
-    {
+    protected void initialize() throws SensorInitializationException {
     	super.initialize();
-    	osBean = ManagementFactory.getPlatformMXBean(
-                OperatingSystemMXBean.class);
+    	memoryBean = ManagementFactory.getMemoryMXBean();
     }
 }

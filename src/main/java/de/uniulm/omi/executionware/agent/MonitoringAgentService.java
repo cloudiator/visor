@@ -78,6 +78,11 @@ public class MonitoringAgentService {
             //LogFile sensors
             injector.getInstance(MonitoringService.class).startMonitoring("haproxy_log", "de.uniulm.omi.executionware.agent.monitoring.sensors.logsensors.HaproxyLogSensor", new Interval(1, TimeUnit.SECONDS), Collections.<String, String>emptyMap());
             injector.getInstance(MonitoringService.class).startMonitoring("ofbiz_log",   "de.uniulm.omi.executionware.agent.monitoring.sensors.logsensors.OFBizLogSensor", new Interval(1, TimeUnit.SECONDS), Collections.<String, String>emptyMap());
+        
+            //JMXBean sensors
+            injector.getInstance(MonitoringService.class).startMonitoring("heapmemory_usage", "de.uniulm.omi.executionware.agent.monitoring.sensors.jmxsensors.HeapMemoryUsageJMXSensor", new Interval(1, TimeUnit.SECONDS), Collections.<String, String>emptyMap());
+            injector.getInstance(MonitoringService.class).startMonitoring("peakthread_count", "de.uniulm.omi.executionware.agent.monitoring.sensors.jmxsensors.PeakThreadCountJMXSensor", new Interval(1, TimeUnit.SECONDS), Collections.<String, String>emptyMap());
+            injector.getInstance(MonitoringService.class).startMonitoring("uptime", "de.uniulm.omi.executionware.agent.monitoring.sensors.jmxsensors.UpTimeJMXSensor", new Interval(1, TimeUnit.SECONDS), Collections.<String, String>emptyMap());
             
         } catch (SensorNotFoundException | InvalidMonitorContextException | SensorInitializationException e) {
             throw new RuntimeException(e);

@@ -16,43 +16,36 @@
  * under the License.
  */
 
-package de.uniulm.omi.executionware.agent.monitoring.sensors;
-
-import java.lang.management.ManagementFactory;
-
-import com.sun.management.OperatingSystemMXBean;
+package de.uniulm.omi.executionware.agent.monitoring.sensors.jmxsensors;
 
 import de.uniulm.omi.executionware.agent.monitoring.api.Measurement;
 import de.uniulm.omi.executionware.agent.monitoring.api.MeasurementNotAvailableException;
 import de.uniulm.omi.executionware.agent.monitoring.api.SensorInitializationException;
 import de.uniulm.omi.executionware.agent.monitoring.impl.MeasurementImpl;
 import de.uniulm.omi.executionware.agent.monitoring.impl.MonitorContext;
+import de.uniulm.omi.executionware.agent.monitoring.sensors.AbstractSensor;
+
+import java.lang.management.ManagementFactory;
+import java.lang.management.RuntimeMXBean;
 
 /**
- * A probe for measuring the CPU usage in % on the given machine.
+ * 
+ * @author zarioha
+ * A probe for measuring the upTime of the Java virtual machine
  */
-public class CpuUsageSensor extends AbstractSensor {
+public class UpTimeJMXSensor extends AbstractSensor {
 	
-	private OperatingSystemMXBean osBean;
-    
+	private  RuntimeMXBean runtimeBean;
     @Override
     protected Measurement getMeasurement(MonitorContext monitorContext) throws MeasurementNotAvailableException {
-
-        double systemCpuLoad = osBean.getSystemCpuLoad();
-        double systemCpuLoadPercentage = systemCpuLoad * 100;
-
-        if (systemCpuLoad < 0) {
-            throw new MeasurementNotAvailableException("Received negative value");
-        }
-
-        return new MeasurementImpl(System.currentTimeMillis(), systemCpuLoadPercentage);
+        long upTime = runtimeBean.getUptime();
+        return new MeasurementImpl(System.currentTimeMillis(), upTime);
     }
     
     @Override
     protected void initialize() throws SensorInitializationException 
     {
     	super.initialize();
-    	osBean = ManagementFactory.getPlatformMXBean(
-                OperatingSystemMXBean.class);
+    	runtimeBean = ManagementFactory.getRuntimeMXBean();
     }
 }
