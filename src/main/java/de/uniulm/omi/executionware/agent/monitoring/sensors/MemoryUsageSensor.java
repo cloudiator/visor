@@ -18,13 +18,15 @@
 
 package de.uniulm.omi.executionware.agent.monitoring.sensors;
 
+import java.lang.management.ManagementFactory;
+
 import com.sun.management.OperatingSystemMXBean;
+
 import de.uniulm.omi.executionware.agent.monitoring.api.Measurement;
 import de.uniulm.omi.executionware.agent.monitoring.api.MeasurementNotAvailableException;
+import de.uniulm.omi.executionware.agent.monitoring.api.SensorInitializationException;
 import de.uniulm.omi.executionware.agent.monitoring.impl.MeasurementImpl;
 import de.uniulm.omi.executionware.agent.monitoring.impl.MonitorContext;
-
-import java.lang.management.ManagementFactory;
 
 /**
  * The MemoryUsageProbe class.
@@ -34,11 +36,10 @@ import java.lang.management.ManagementFactory;
  */
 public class MemoryUsageSensor extends AbstractSensor {
 
+	private OperatingSystemMXBean osBean;
+	
     @Override
     protected Measurement getMeasurement(MonitorContext monitorContext) throws MeasurementNotAvailableException {
-        OperatingSystemMXBean osBean = ManagementFactory.getPlatformMXBean(
-                OperatingSystemMXBean.class);
-
         //memory usage
         double totalPhysicalMemory = osBean.getTotalPhysicalMemorySize();
         double freePhysicalMemory = osBean.getFreePhysicalMemorySize();
@@ -48,5 +49,13 @@ public class MemoryUsageSensor extends AbstractSensor {
         }
 
         return new MeasurementImpl(System.currentTimeMillis(), 100 - ((freePhysicalMemory / totalPhysicalMemory) * 100));
+    }
+    
+    @Override
+    protected void initialize() throws SensorInitializationException 
+    {
+    	super.initialize();
+    	osBean = ManagementFactory.getPlatformMXBean(
+                OperatingSystemMXBean.class);
     }
 }

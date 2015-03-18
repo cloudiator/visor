@@ -39,6 +39,7 @@ package de.uniulm.omi.executionware.agent;/*
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
+
 import de.uniulm.omi.executionware.agent.execution.impl.ShutdownHook;
 import de.uniulm.omi.executionware.agent.monitoring.api.InvalidMonitorContextException;
 import de.uniulm.omi.executionware.agent.monitoring.api.MonitoringService;
@@ -68,6 +69,23 @@ public class MonitoringAgentService {
         try {
             injector.getInstance(MonitoringService.class).startMonitoring("cpu_usage", "de.uniulm.omi.executionware.agent.monitoring.sensors.CpuUsageSensor", new Interval(1, TimeUnit.SECONDS), Collections.<String, String>emptyMap());
             injector.getInstance(MonitoringService.class).startMonitoring("memory_usage", "de.uniulm.omi.executionware.agent.monitoring.sensors.MemoryUsageSensor", new Interval(1, TimeUnit.SECONDS), Collections.<String, String>emptyMap());
+            
+            //MYSQL sensors
+            injector.getInstance(MonitoringService.class).startMonitoring("mysql_nb_failed_connections", "de.uniulm.omi.executionware.agent.monitoring.sensors.mysqlsensors.NbFailedConnectionsMySQLSensor", new Interval(1, TimeUnit.SECONDS), Collections.<String, String>emptyMap());
+            injector.getInstance(MonitoringService.class).startMonitoring("mysql_nb_queries", "de.uniulm.omi.executionware.agent.monitoring.sensors.mysqlsensors.NbQueriesMySQLSensor", new Interval(1, TimeUnit.SECONDS), Collections.<String, String>emptyMap());
+            injector.getInstance(MonitoringService.class).startMonitoring("mysql_prc_allowed_connections", "de.uniulm.omi.executionware.agent.monitoring.sensors.mysqlsensors.PercentAllowedConnectionsMySQLSensor", new Interval(1, TimeUnit.SECONDS), Collections.<String, String>emptyMap());
+            injector.getInstance(MonitoringService.class).startMonitoring("mysql_prc_full_table_scan", "de.uniulm.omi.executionware.agent.monitoring.sensors.mysqlsensors.PercentageOfTableScanMySQLSensor", new Interval(1, TimeUnit.SECONDS), Collections.<String, String>emptyMap());
+            
+            //LogFile sensors
+            injector.getInstance(MonitoringService.class).startMonitoring("haproxy_log", "de.uniulm.omi.executionware.agent.monitoring.sensors.logsensors.HaproxyLogSensor", new Interval(1, TimeUnit.SECONDS), Collections.<String, String>emptyMap());
+            injector.getInstance(MonitoringService.class).startMonitoring("ofbiz_log",   "de.uniulm.omi.executionware.agent.monitoring.sensors.logsensors.OFBizLogSensor", new Interval(1, TimeUnit.SECONDS), Collections.<String, String>emptyMap());
+            injector.getInstance(MonitoringService.class).startMonitoring("mysql_log",   "de.uniulm.omi.executionware.agent.monitoring.sensors.logsensors.MySQLLogSensor", new Interval(1, TimeUnit.SECONDS), Collections.<String, String>emptyMap());
+            
+            //JMXBean sensors
+            injector.getInstance(MonitoringService.class).startMonitoring("heapmemory_usage", "de.uniulm.omi.executionware.agent.monitoring.sensors.jmxsensors.HeapMemoryUsageJMXSensor", new Interval(1, TimeUnit.SECONDS), Collections.<String, String>emptyMap());
+            injector.getInstance(MonitoringService.class).startMonitoring("peakthread_count", "de.uniulm.omi.executionware.agent.monitoring.sensors.jmxsensors.PeakThreadCountJMXSensor", new Interval(1, TimeUnit.SECONDS), Collections.<String, String>emptyMap());
+            injector.getInstance(MonitoringService.class).startMonitoring("uptime", "de.uniulm.omi.executionware.agent.monitoring.sensors.jmxsensors.UpTimeJMXSensor", new Interval(1, TimeUnit.SECONDS), Collections.<String, String>emptyMap());
+            
         } catch (SensorNotFoundException | InvalidMonitorContextException | SensorInitializationException e) {
             throw new RuntimeException(e);
         }

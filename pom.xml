@@ -92,6 +92,11 @@
             <artifactId>jersey-media-moxy</artifactId>
             <version>2.13</version>
         </dependency>
+		<dependency>
+			<groupId>org.drizzle.jdbc</groupId>
+			<artifactId>drizzle-jdbc</artifactId>
+			<version>1.2</version>
+		</dependency>
     </dependencies>
 
     <distributionManagement>
