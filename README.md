@@ -1,19 +1,36 @@
-Building: the agent is build with maven.
+﻿# Visor - a simple monitoring agent for the cloudiator toolchain.
+***
+## Description
 
-```
-usage: de.uniulm.omi.monitoring.MonitoringAgent
- -ip,--localIp <arg>      IP of the local machine
- -conf, --confFile <arg>  Location of the properties file.
-```
+Visor is a simple monitoring agent used within the cloudiator toolchain. It is responsible
+for monitoring servers/virtual machines. It supports multiple sensor for gathering resource information. In addition it offers a telnet interface, allowing applications on the same machine to report metrics to the monitoring infrastructure.
 
+The collected data will be stored within a configurable time-series database.
+
+For configuration purposes, it offers a small RESTful interface, allowing the start/stop spoecific sensors.
+
+***
+## Building
+The agent is build using maven:
+```
+mvn clean install
+```
+Afterwards a bundled jar with dependencies can be found in the target folder.
+***
+## Usage
+Visor requires JRE 8.
+```
+java -jar target/visor-{version}-jar-with-dependencies.jar
+```
+```
+usage: de.uniulm.omi.cloudiator.visor.MonitoringAgent
+ -conf,--configFile <arg>   Configuration file location.
+ -ip,--localIp              IP of the local machine (optional)
+```
+***
+## Configuration
 A default configuration file can be found in the conf directory.
-
-The monitoring agent starts a small telnet server on the port configured in the configuration file.
-Communication with the port is line based:
-applicationName metricName value timestamp\n
-
-applicationName: the name of the application reporting the metric
-metricName: the name of the metric you want to report
-value: the value of the metric
-timestamp: unix timestamp of the measurement
+***
+## Documentation
+[See Documentation for more details.](documentation/README.md)
 
