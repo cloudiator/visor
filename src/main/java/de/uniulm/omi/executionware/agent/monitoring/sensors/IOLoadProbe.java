@@ -43,8 +43,8 @@ public class IOLoadProbe extends Thread{
 	double readSpeed;
 	int measurePeriod;
 	boolean mark = true;
-	long averageNumberOfReads;
-	long averageNumberOfWrites;
+	double averageNumberOfReads;
+	double averageNumberOfWrites;
 	String fsRoot;
 	ReadCalculator readCalculator;
 	WriteCalculator writeCalculator;
@@ -99,8 +99,8 @@ public class IOLoadProbe extends Thread{
 class ReadCalculator extends Thread{
 	Sigar sigarImpl;
 	SigarProxy sigar;
-	long averageNumberOfReads = 0;
-	long averageNumberOfWrites = 0;
+	double averageNumberOfReads = 0;
+	double averageNumberOfWrites = 0;
 	int measurePeriod = 5000;
 	String fsRoot;
 	
@@ -124,10 +124,10 @@ class ReadCalculator extends Thread{
 			}
 		}
 	}
-	public long getAverageNumberOfReads(){
+	public double getAverageNumberOfReads(){
 		return this.averageNumberOfReads;
 	}
-	private long calculateAverageNumberOfReads(int measurePeriod, String fsRoot) throws SigarException, InterruptedException
+	private double calculateAverageNumberOfReads(int measurePeriod, String fsRoot) throws SigarException, InterruptedException
 	{
 		long totalNumberOfRequests = 0;
 		int smallCyclePeriod = 1000;
@@ -204,8 +204,8 @@ class ReadCalculator extends Thread{
 class WriteCalculator extends Thread{
 	Sigar sigarImpl;
 	SigarProxy sigar;
-	long averageNumberOfReads = 0;
-	long averageNumberOfWrites = 0;
+	double averageNumberOfReads = 0;
+	double averageNumberOfWrites = 0;
 	int measurePeriod = 5000;
 	String fsRoot;
 	
@@ -229,7 +229,7 @@ class WriteCalculator extends Thread{
 			}
 		}
 	}
-	public long getAverageNumberOfWrites(){
+	public double getAverageNumberOfWrites(){
 		return this.averageNumberOfWrites;
 	}
 	private long calculateAverageNumberOfWrites(int measurePeriod, String fsRoot) throws SigarException, InterruptedException

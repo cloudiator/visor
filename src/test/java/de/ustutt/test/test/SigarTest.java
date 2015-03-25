@@ -49,7 +49,7 @@ public class SigarTest {
 		FreeDiskSpaceProbe diskprobe = new FreeDiskSpaceProbe();
 		System.out.println("Free disk space is: "+diskprobe.getFreeDiskSpace(properties.getProperty("fs_root")));
 	}
-	@Ignore
+	//@Ignore
 	@Test
 	public void testNetworkState() throws IOException, SigarException, InterruptedException{
 		double averageRxRate;
@@ -60,7 +60,7 @@ public class SigarTest {
 		System.out.println("Average receive rate is "+averageRxRate/1024 + " kBytes/sec");
 		System.out.println("Average transmit rate is "+averageTxRate/1024 + " kBytes/sec");
 	}
-	@Ignore
+	//@Ignore
 	@Test
 	public void testAverageNumberOfReads() throws SigarException, InterruptedException
 	{
@@ -77,7 +77,7 @@ public class SigarTest {
 		AverageLatencyProbe latency = new AverageLatencyProbe();
 		System.out.println("Latency to "+ip+": "+ latency.getAverageLatence(ip, port) + "ms");
 	}
-	@Ignore
+	//@Ignore
 	@Test
 	public void testUsedBandwidth() throws SigarException, InterruptedException{
 		NetworkStateProbe networkState = new NetworkStateProbe();
