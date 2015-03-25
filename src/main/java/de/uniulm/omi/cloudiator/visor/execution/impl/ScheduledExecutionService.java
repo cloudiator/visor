@@ -28,7 +28,6 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
@@ -38,8 +37,7 @@ import static com.google.common.base.Preconditions.*;
 /**
  * Created by daniel on 11.12.14.
  */
-@Singleton
-public class ScheduledExecutionService implements ScheduledExecutionServiceInterface {
+@Singleton public class ScheduledExecutionService implements ScheduledExecutionServiceInterface {
 
     private static final Logger logger = LogManager.getLogger(ScheduledExecutionService.class);
 
@@ -50,46 +48,44 @@ public class ScheduledExecutionService implements ScheduledExecutionServiceInter
 
     private final Map<Schedulable, ScheduledFuture> registeredSchedulables;
 
-    @Inject
-    public ScheduledExecutionService(@Named("executionThreads") int executionThreads) {
+    @Inject public ScheduledExecutionService(@Named("executionThreads") int executionThreads) {
         checkArgument(executionThreads >= 1, "Execution thread must be >= 1");
         logger.debug(String.format("Starting execution service with %s threads", executionThreads));
-        scheduledExecutorService = Executors.newScheduledThreadPool(executionThreads);
+        scheduledExecutorService = ExtendedScheduledThreadPoolExecutor.create(executionThreads);
         registeredSchedulables = new HashMap<>();
     }
 
-    @Override
-    public void schedule(Schedulable schedulable) {
+    @Override public void schedule(Schedulable schedulable) {
         checkNotNull(schedulable);
-        logger.debug("Scheduling " + schedulable.getClass().getName() + " with interval of " + schedulable.getInterval());
-        final ScheduledFuture<?> scheduledFuture = this.scheduledExecutorService.scheduleAtFixedRate(
-                schedulable.getRunnable(), 0, schedulable.getInterval().getPeriod(), schedulable.getInterval().getTimeUnit());
+        logger.debug(
+            "Scheduling " + schedulable.getClass().getName() + " with interval of " + schedulable
+                .getInterval());
+        final ScheduledFuture<?> scheduledFuture = this.scheduledExecutorService
+            .scheduleAtFixedRate(schedulable.getRunnable(), 0,
+                schedulable.getInterval().getPeriod(), schedulable.getInterval().getTimeUnit());
         this.registeredSchedulables.put(schedulable, scheduledFuture);
     }
 
-    @Override
-    public void remove(Schedulable schedulable) {
+    @Override public void remove(Schedulable schedulable) {
         checkNotNull(schedulable);
-        checkState(this.registeredSchedulables.containsKey(schedulable), "The schedulable " + schedulable + " was never registered with the scheduler.");
+        checkState(this.registeredSchedulables.containsKey(schedulable),
+            "The schedulable " + schedulable + " was never registered with the scheduler.");
         this.registeredSchedulables.get(schedulable).cancel(false);
         this.registeredSchedulables.remove(schedulable);
     }
 
-    @Override
-    public void reschedule(Schedulable schedulable) {
+    @Override public void reschedule(Schedulable schedulable) {
         checkNotNull(schedulable);
         this.remove(schedulable);
         this.schedule(schedulable);
     }
 
-    @Override
-    public void execute(Runnable runnable) {
+    @Override public void execute(Runnable runnable) {
         checkNotNull(runnable);
         this.scheduledExecutorService.execute(runnable);
     }
 
-    @Override
-    public void shutdown(final int seconds) {
+    @Override public void shutdown(final int seconds) {
 
         logger.debug(String.format("Shutting down execution service in %d seconds", seconds));
 

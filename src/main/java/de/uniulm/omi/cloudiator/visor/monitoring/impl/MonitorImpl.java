@@ -36,8 +36,9 @@ public class MonitorImpl implements Monitor {
     private final MonitorWorker monitorWorker;
     private final Interval interval;
 
-    public MonitorImpl(String metricName, Sensor sensor, Interval interval, MonitorContext monitorContext, ReportingInterface<Metric> metricReportingInterface) throws
-        InvalidMonitorContextException {
+    public MonitorImpl(String metricName, Sensor sensor, Interval interval,
+        MonitorContext monitorContext, ReportingInterface<Metric> metricReportingInterface)
+        throws InvalidMonitorContextException {
         this.metricName = metricName;
         this.sensor = sensor;
         this.monitorContext = monitorContext;
@@ -46,39 +47,33 @@ public class MonitorImpl implements Monitor {
         this.interval = interval;
     }
 
-    @Override
-    public String getMetricName() {
+    @Override public String getMetricName() {
         return metricName;
     }
 
-    @Override
-    public Sensor getSensor() {
+    @Override public Sensor getSensor() {
         return sensor;
     }
 
-    @Override
-    public MonitorContext getMonitorContext() {
+    @Override public MonitorContext getMonitorContext() {
         return monitorContext;
     }
 
-    @Override
-    public Interval getInterval() {
+    @Override public Interval getInterval() {
         return this.interval;
     }
 
-    @Override
-    public Runnable getRunnable() {
+    @Override public Runnable getRunnable() {
         return this.monitorWorker;
     }
 
-    @Override
-    public String toString() {
+    @Override public String toString() {
         return "Monitor{" +
-                "metricName='" + metricName + '\'' +
-                ", sensor=" + sensor +
-                ", monitorContext=" + monitorContext +
-                ", interval=" + interval +
-                '}';
+            "metricName='" + metricName + '\'' +
+            ", sensor=" + sensor +
+            ", monitorContext=" + monitorContext +
+            ", interval=" + interval +
+            '}';
     }
 
     private class MonitorWorker implements Runnable {
@@ -91,17 +86,16 @@ public class MonitorImpl implements Monitor {
             this.metricReportingInterface = metricReportingInterface;
         }
 
-        @Override
-        public void run() {
+        @Override public void run() {
             try {
                 logger.debug("Measuring Monitor " + this.monitor);
-                this.metricReportingInterface.report(MetricFactory.from(monitor.getMetricName(), monitor.getSensor().getMeasurement(), monitor.getMonitorContext()));
+                this.metricReportingInterface.report(MetricFactory
+                    .from(monitor.getMetricName(), monitor.getSensor().getMeasurement(),
+                        monitor.getMonitorContext()));
             } catch (MeasurementNotAvailableException e) {
                 logger.error(String.format("Could not retrieve metric"));
             } catch (ReportingException e) {
                 logger.error("Could not report metric", e);
-            } catch (Throwable t) {
-                logger.fatal(t);
             }
         }
     }

@@ -19,11 +19,11 @@
 package de.uniulm.omi.cloudiator.visor.server.impl;
 
 
-import de.uniulm.omi.cloudiator.visor.server.api.RequestParsingInterface;
 import de.uniulm.omi.cloudiator.visor.monitoring.api.Metric;
 import de.uniulm.omi.cloudiator.visor.reporting.api.ReportingInterface;
 import de.uniulm.omi.cloudiator.visor.reporting.impl.ReportingException;
 import de.uniulm.omi.cloudiator.visor.server.api.ParsingException;
+import de.uniulm.omi.cloudiator.visor.server.api.RequestParsingInterface;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -41,7 +41,8 @@ public class SocketWorker implements Runnable {
     private final RequestParsingInterface<String, Metric> requestParser;
     private static final Logger logger = LogManager.getLogger(SocketWorker.class);
 
-    SocketWorker(final Socket socket, ReportingInterface<Metric> metricReporting, RequestParsingInterface<String, Metric> requestParser) {
+    SocketWorker(final Socket socket, ReportingInterface<Metric> metricReporting,
+        RequestParsingInterface<String, Metric> requestParser) {
         this.socket = socket;
         this.metricReporting = metricReporting;
         this.requestParser = requestParser;
@@ -54,8 +55,7 @@ public class SocketWorker implements Runnable {
         }
     }
 
-    @Override
-    public void run() {
+    @Override public void run() {
         logger.debug("New connection to server");
         while (!Thread.currentThread().isInterrupted()) {
             try {
@@ -73,8 +73,6 @@ public class SocketWorker implements Runnable {
                 logger.error("Error parsing metric.", e);
             } catch (ReportingException e) {
                 logger.error("Could not report metric.", e);
-            } catch (Throwable t) {
-                logger.fatal(t);
             } finally {
                 logger.debug("Closing connection to server.");
                 closeSocket();
