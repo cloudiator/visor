@@ -89,6 +89,15 @@
             <artifactId>jersey-grizzly-connector</artifactId>
             <version>2.13</version>
         </dependency>
+
+<!-- Dependency for test unit monitoring probes I/O, network and disk -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
+
     </dependencies>
 
     <distributionManagement>
