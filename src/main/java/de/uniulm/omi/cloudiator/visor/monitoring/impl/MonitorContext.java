@@ -50,15 +50,15 @@ public class MonitorContext {
 
     @Override
     public String toString() {
-        StringBuilder context = new StringBuilder("[");
+        StringBuilder contextString = new StringBuilder("[");
         for (Map.Entry<String, String> mapEntry : this.getContext().entrySet()) {
-            context.append(mapEntry.getKey());
-            context.append(": ");
-            context.append(mapEntry.getValue());
-            context.append(",");
+            contextString.append(mapEntry.getKey());
+            contextString.append(": ");
+            contextString.append(mapEntry.getValue());
+            contextString.append(",");
         }
-        context.append("]");
-        return String.format("MonitorContext(Context: %s)", context.toString());
+        contextString.append("]");
+        return String.format("MonitorContext(Context: %s)", contextString.toString());
     }
 
     public static class MonitorContextBuilder {

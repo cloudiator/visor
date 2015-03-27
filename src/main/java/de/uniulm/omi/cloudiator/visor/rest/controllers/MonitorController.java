@@ -38,8 +38,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Created by daniel on 06.02.15.
  */
-@Path("/")
-public class MonitorController {
+@Path("/") public class MonitorController {
 
     private final MonitoringService monitoringService;
 
@@ -48,37 +47,37 @@ public class MonitorController {
         this.monitoringService = monitoringService;
     }
 
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("/monitors")
+    @GET @Produces(MediaType.APPLICATION_JSON) @Path("/monitors")
     public Collection<Monitor> getMonitors() {
-        return Collections2.transform(monitoringService.getMonitors(), new MonitorToMonitorJsonConverter());
+        return Collections2
+            .transform(monitoringService.getMonitors(), new MonitorToMonitorJsonConverter());
     }
 
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("/monitors/{metricName}")
+    @GET @Produces(MediaType.APPLICATION_JSON) @Path("/monitors/{metricName}")
     public Monitor getMonitor(@PathParam("metricName") String metricName) {
         return new MonitorToMonitorJsonConverter().apply(monitoringService.getMonitor(metricName));
     }
 
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("/monitors")
-    public Monitor createMonitor(Monitor monitor) throws InvalidMonitorContextException, SensorInitializationException, SensorNotFoundException {
+    @POST @Consumes(MediaType.APPLICATION_JSON) @Produces(MediaType.APPLICATION_JSON)
+    @Path("/monitors") public Monitor createMonitor(Monitor monitor) {
 
         MonitorContext.MonitorContextBuilder builder = MonitorContext.builder();
         for (Context context : monitor.getContexts()) {
             builder.addContext(context.getKey(), context.getValue());
         }
-        this.monitoringService.startMonitoring(monitor.getMetricName(), monitor.getSensorClassName(), new Interval(monitor.getInterval().getPeriod(), monitor.getInterval().getTimeUnit()), builder.build().getContext());
-        return new MonitorToMonitorJsonConverter().apply(this.monitoringService.getMonitor(monitor.getMetricName()));
+        try {
+            this.monitoringService
+                .startMonitoring(monitor.getMetricName(), monitor.getSensorClassName(),
+                    new Interval(monitor.getInterval().getPeriod(),
+                        monitor.getInterval().getTimeUnit()), builder.build().getContext());
+        } catch (SensorNotFoundException | SensorInitializationException | InvalidMonitorContextException e) {
+            throw new BadRequestException(e);
+        }
+        return new MonitorToMonitorJsonConverter()
+            .apply(this.monitoringService.getMonitor(monitor.getMetricName()));
     }
 
-    @DELETE
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("/monitors/{metricName}")
+    @DELETE @Produces(MediaType.APPLICATION_JSON) @Path("/monitors/{metricName}")
     public void deleteMonitor(@PathParam("metricName") String metricName) {
         this.monitoringService.stopMonitoring(metricName);
     }

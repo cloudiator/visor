@@ -51,7 +51,7 @@ public class StringToMetricParser implements RequestParsingInterface<String, Met
         final String value = parts[2];
         long timestamp;
         try {
-            timestamp = Long.valueOf(parts[3]);
+            timestamp = Long.parseLong(parts[3]);
         } catch (NumberFormatException e) {
             throw new ParsingException("Could not convert 4th string to long.");
         }

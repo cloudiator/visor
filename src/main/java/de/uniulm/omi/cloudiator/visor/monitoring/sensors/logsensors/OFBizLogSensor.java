@@ -1,4 +1,3 @@
-
 /*
  * Copyright (c) 2014-2015 University of Ulm
  *
@@ -19,35 +18,35 @@
 
 package de.uniulm.omi.cloudiator.visor.monitoring.sensors.logsensors;
 
-import java.util.regex.Pattern;
-
 import de.uniulm.omi.cloudiator.visor.monitoring.api.MeasurementNotAvailableException;
 import de.uniulm.omi.cloudiator.visor.monitoring.api.SensorInitializationException;
 import de.uniulm.omi.cloudiator.visor.monitoring.sensors.AbstractSensor;
 
+import java.util.regex.Pattern;
+
 /**
- * 
  * @author zarioha
- * This Sensor read log file from OFBizLog
+ *         This Sensor read log file from OFBizLog
  */
 
 public class OFBizLogSensor extends AbstractLogSensor {
 
-	public OFBizLogSensor() {
-		this.fileName = "logs/ofbiz.log";
-	}
-	
-	public static void main(String[] args) throws SensorInitializationException,
-      MeasurementNotAvailableException {
-		AbstractSensor logReader = new OFBizLogSensor();
-		logReader.init();
-		logReader.getMeasurement();
-	}
+    public OFBizLogSensor() {
+        this.fileName = "logs/ofbiz.log";
+    }
 
-    protected void initialize() throws SensorInitializationException {
-    	super.initialize();
-    	String pattern = "(19|20\\d{2})-(0?[1-9]|1[012])-(0?[1-9]|[12]\\d|3[01]) ([01]?\\d|2[0-3]):([0-5]\\d):([0-5]\\d),(\\d{3}).*\\((http.+?)\\).*\\[\\[\\[(.+?)\\(Domain.*(Request Done).*total:(.*),";
-    	this.requestPattern = Pattern.compile(pattern);
-    
+    public static void main(String[] args)
+        throws SensorInitializationException, MeasurementNotAvailableException {
+        AbstractSensor logReader = new OFBizLogSensor();
+        logReader.init();
+        logReader.getMeasurement();
+    }
+
+    @Override protected void initialize() throws SensorInitializationException {
+        super.initialize();
+        String pattern =
+            "(19|20\\d{2})-(0?[1-9]|1[012])-(0?[1-9]|[12]\\d|3[01]) ([01]?\\d|2[0-3]):([0-5]\\d):([0-5]\\d),(\\d{3}).*\\((http.+?)\\).*\\[\\[\\[(.+?)\\(Domain.*(Request Done).*total:(.*),";
+        this.requestPattern = Pattern.compile(pattern);
+
     }
 }

@@ -37,14 +37,14 @@ public class ServerListener implements Runnable {
     private final SocketWorkerFactoryInterface socketWorkerFactory;
     private static final Logger LOGGER = LogManager.getLogger(SocketServer.class);
 
-    ServerListener(ServerSocket serverSocket, ExecutionServiceInterface executionService, SocketWorkerFactoryInterface socketWorkerFactory) {
+    ServerListener(ServerSocket serverSocket, ExecutionServiceInterface executionService,
+        SocketWorkerFactoryInterface socketWorkerFactory) {
         this.serverSocket = serverSocket;
         this.executionService = executionService;
         this.socketWorkerFactory = socketWorkerFactory;
     }
 
-    @Override
-    public void run() {
+    @Override public void run() {
         while (!Thread.currentThread().isInterrupted()) {
             try {
                 Socket accept = this.serverSocket.accept();
@@ -56,6 +56,7 @@ public class ServerListener implements Runnable {
         try {
             this.serverSocket.close();
         } catch (IOException ignored) {
+            LOGGER.warn(ignored);
         }
     }
 }

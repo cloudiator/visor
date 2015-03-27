@@ -18,26 +18,24 @@
 
 package de.uniulm.omi.cloudiator.visor.monitoring.sensors;
 
-import java.lang.management.ManagementFactory;
-
 import com.sun.management.OperatingSystemMXBean;
-
-import de.uniulm.omi.cloudiator.visor.monitoring.api.MeasurementNotAvailableException;
-import de.uniulm.omi.cloudiator.visor.monitoring.impl.MonitorContext;
 import de.uniulm.omi.cloudiator.visor.monitoring.api.Measurement;
+import de.uniulm.omi.cloudiator.visor.monitoring.api.MeasurementNotAvailableException;
 import de.uniulm.omi.cloudiator.visor.monitoring.api.SensorInitializationException;
 import de.uniulm.omi.cloudiator.visor.monitoring.impl.MeasurementImpl;
+import de.uniulm.omi.cloudiator.visor.monitoring.impl.MonitorContext;
+
+import java.lang.management.ManagementFactory;
 
 /**
  * A probe for measuring the CPU usage in % on the given machine.
  */
 public class CpuUsageSensor extends AbstractSensor {
-	
-	private OperatingSystemMXBean osBean;
-    
-    @Override
-    protected Measurement getMeasurement(MonitorContext monitorContext) throws
-        MeasurementNotAvailableException {
+
+    private OperatingSystemMXBean osBean;
+
+    @Override protected Measurement getMeasurement(MonitorContext monitorContext)
+        throws MeasurementNotAvailableException {
 
         double systemCpuLoad = osBean.getSystemCpuLoad();
         double systemCpuLoadPercentage = systemCpuLoad * 100;
@@ -48,12 +46,9 @@ public class CpuUsageSensor extends AbstractSensor {
 
         return new MeasurementImpl(System.currentTimeMillis(), systemCpuLoadPercentage);
     }
-    
-    @Override
-    protected void initialize() throws SensorInitializationException 
-    {
-    	super.initialize();
-    	osBean = ManagementFactory.getPlatformMXBean(
-                OperatingSystemMXBean.class);
+
+    @Override protected void initialize() throws SensorInitializationException {
+        super.initialize();
+        osBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
     }
 }

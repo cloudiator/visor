@@ -1,4 +1,3 @@
-
 /*
  * Copyright (c) 2014-2015 University of Ulm
  *
@@ -24,28 +23,27 @@ import de.uniulm.omi.cloudiator.visor.monitoring.api.SensorInitializationExcepti
 import de.uniulm.omi.cloudiator.visor.monitoring.sensors.AbstractSensor;
 
 /**
- * 
  * @author zarioha
- * This Sensor read log file from Haproxy
+ *         This Sensor read log file from Haproxy
  */
 
 public class HaproxyLogSensor extends AbstractLogSensor {
 
-	public HaproxyLogSensor() {
-		this.fileName = "logs/haproxy.log";
-	}
-	
-	public static void main(String[] args) throws SensorInitializationException,
-      MeasurementNotAvailableException {
-		AbstractSensor logReader = new HaproxyLogSensor();
-		logReader.init();
-		logReader.getMeasurement();
-	}
+    public HaproxyLogSensor() {
+        this.fileName = "logs/haproxy.log";
+    }
 
-    protected void initialize() throws SensorInitializationException {
-    	super.initialize();
-    	 
-    	this.contains.add("JSESSIONID");
-    	this.dontContains.add(".css");
+    public static void main(String[] args)
+        throws SensorInitializationException, MeasurementNotAvailableException {
+        AbstractSensor logReader = new HaproxyLogSensor();
+        logReader.init();
+        logReader.getMeasurement();
+    }
+
+    @Override protected void initialize() throws SensorInitializationException {
+        super.initialize();
+
+        this.contains.add("JSESSIONID");
+        this.dontContains.add(".css");
     }
 }

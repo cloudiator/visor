@@ -20,9 +20,11 @@ package de.uniulm.omi.cloudiator.visor;
 
 import com.google.inject.Module;
 import de.uniulm.omi.cloudiator.visor.config.api.IpProvider;
-import de.uniulm.omi.cloudiator.visor.config.impl.FileConfigurationAccessor;
 import de.uniulm.omi.cloudiator.visor.config.impl.BaseConfigurationModule;
+import de.uniulm.omi.cloudiator.visor.config.impl.FileConfigurationAccessor;
 import de.uniulm.omi.cloudiator.visor.server.config.ServerModule;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 
@@ -36,6 +38,7 @@ public class MonitoringAgentServiceBuilder {
     private FileConfigurationAccessor fileConfigurationAccessor;
     private List<IpProvider> ipProviderList;
     private Set<Module> modules;
+    private static final Logger LOGGER = LogManager.getLogger(MonitoringAgentServiceBuilder.class);
 
     private MonitoringAgentServiceBuilder() {
         this.modules = new HashSet<>();
@@ -61,8 +64,10 @@ public class MonitoringAgentServiceBuilder {
         return this;
     }
 
-    protected void loadReportingModuleBasedOnPropertiesFile() throws ClassNotFoundException, IllegalAccessException, InstantiationException {
-        final String reportingModule = this.fileConfigurationAccessor.getProperty("reportingModule");
+    protected void loadReportingModuleBasedOnPropertiesFile()
+        throws ClassNotFoundException, IllegalAccessException, InstantiationException {
+        final String reportingModule =
+            this.fileConfigurationAccessor.getProperty("reportingModule");
         checkState(reportingModule != null);
         this.modules.add((Module) Class.forName(reportingModule).newInstance());
     }
@@ -80,9 +85,10 @@ public class MonitoringAgentServiceBuilder {
         try {
             this.loadReportingModuleBasedOnPropertiesFile();
             this.modules.add(new ServerModule());
-            this.modules.add(new BaseConfigurationModule(this.fileConfigurationAccessor, this.resolvePublicIpAddress()));
+            this.modules.add(new BaseConfigurationModule(this.fileConfigurationAccessor,
+                this.resolvePublicIpAddress()));
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | IllegalStateException e) {
-            e.printStackTrace();
+            LOGGER.fatal(e);
             System.exit(1);
         }
 

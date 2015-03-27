@@ -44,7 +44,7 @@ import java.net.URL;
         try {
             LOGGER.debug("Contacting AWS IP service at " + AWS_SERVICE);
             whatIsMyIp = new URL(AWS_SERVICE);
-            in = new BufferedReader(new InputStreamReader(whatIsMyIp.openStream()));
+            in = new BufferedReader(new InputStreamReader(whatIsMyIp.openStream(),"UTF-8"));
             String ip = in.readLine();
             LOGGER.info("AWS IP service returned " + ip + " as public ip");
             return ip;
@@ -56,6 +56,7 @@ import java.net.URL;
                 try {
                     in.close();
                 } catch (IOException ignored) {
+                    LOGGER.warn(ignored);
                 }
             }
         }

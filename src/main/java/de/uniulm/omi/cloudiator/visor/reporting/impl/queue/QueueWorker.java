@@ -41,13 +41,14 @@ public class QueueWorker<T> implements Schedulable, Runnable {
     private static final Logger LOGGER = LogManager.getLogger(QueueWorker.class);
     private final Interval interval;
 
-    public QueueWorker(BlockingQueue<T> queue, ReportingInterface<T> reportingInterface, Interval interval) {
+    public QueueWorker(BlockingQueue<T> queue, ReportingInterface<T> reportingInterface,
+        Interval interval) {
         this.queue = queue;
         this.reportingInterface = reportingInterface;
         this.interval = interval;
     }
 
-    public void run() {
+    @Override public void run() {
         List<T> tList = new ArrayList<>();
         this.queue.drainTo(tList);
         try {
@@ -58,13 +59,11 @@ public class QueueWorker<T> implements Schedulable, Runnable {
         }
     }
 
-    @Override
-    public Interval getInterval() {
+    @Override public Interval getInterval() {
         return this.interval;
     }
 
-    @Override
-    public Runnable getRunnable() {
+    @Override public Runnable getRunnable() {
         return this;
     }
 }

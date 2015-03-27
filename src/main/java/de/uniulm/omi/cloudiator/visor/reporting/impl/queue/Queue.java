@@ -39,34 +39,33 @@ import java.util.concurrent.TimeUnit;
  *
  * @param <T> the class of the generic item.
  */
-@Singleton
-public class Queue<T> implements ReportingInterface<T> {
+@Singleton public class Queue<T> implements ReportingInterface<T> {
 
     /**
      * The queue storing the items.
      */
-    private final BlockingQueue<T> queue;
+    private final BlockingQueue<T> queueDelegate;
     private static final Logger LOGGER = LogManager.getLogger(Queue.class);
 
-    @Inject
-    public Queue(ScheduledExecutionService executionService, QueueWorkerFactoryInterface<T> queueWorkerFactory) {
-        this.queue = new LinkedBlockingQueue<>();
-        executionService.schedule(queueWorkerFactory.create(this.queue, new Interval(20, TimeUnit.SECONDS)));
+    @Inject public Queue(ScheduledExecutionService executionService,
+        QueueWorkerFactoryInterface<T> queueWorkerFactory) {
+        this.queueDelegate = new LinkedBlockingQueue<>();
+        executionService
+            .schedule(queueWorkerFactory.create(this.queueDelegate, new Interval(20, TimeUnit.SECONDS)));
     }
 
-    public void report(T item) throws ReportingException {
-        if (this.queue.remainingCapacity() == 0) {
+    @Override public void report(T item) throws ReportingException {
+        if (this.queueDelegate.remainingCapacity() == 0) {
             throw new ReportingException("Item could not be reported as queue is full.");
         }
         try {
-            this.queue.put(item);
+            this.queueDelegate.put(item);
         } catch (InterruptedException e) {
             LOGGER.error(e);
         }
     }
 
-    @Override
-    public void report(Collection<T> items) throws ReportingException {
+    @Override public void report(Collection<T> items) throws ReportingException {
         for (T item : items) {
             this.report(item);
         }

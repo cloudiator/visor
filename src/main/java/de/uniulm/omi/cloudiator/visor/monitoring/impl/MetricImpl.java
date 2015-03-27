@@ -27,14 +27,14 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * A basic metric for the system.
- * <p>
+ * <p/>
  * A metric always consists of:
  * - a name: the name of the metric
  * - a value: a value for this metric.
  * - a timestamp: the unix timestamp when this metric was taken.
  * - a map of key value tags
- * <p>
- * <p>
+ * <p/>
+ * <p/>
  * Use MetricFactory to create metrics.
  *
  * @see MetricFactory
@@ -76,8 +76,7 @@ public class MetricImpl implements Metric {
      *
      * @return the name of the metric.
      */
-    @Override
-    public String getName() {
+    @Override public String getName() {
         return name;
     }
 
@@ -86,8 +85,7 @@ public class MetricImpl implements Metric {
      *
      * @return the value of the metric.
      */
-    @Override
-    public Object getValue() {
+    @Override public Object getValue() {
         return value;
     }
 
@@ -96,8 +94,7 @@ public class MetricImpl implements Metric {
      *
      * @return the time the metric was taken.
      */
-    @Override
-    public long getTimestamp() {
+    @Override public long getTimestamp() {
         return timestamp;
     }
 
@@ -106,8 +103,7 @@ public class MetricImpl implements Metric {
      *
      * @return tags for the metric.
      */
-    @Override
-    public Map<String, String> getTags() {
+    @Override public Map<String, String> getTags() {
         return tags;
     }
 
@@ -116,15 +112,16 @@ public class MetricImpl implements Metric {
      *
      * @return the metric as string representation, mainly for logging purposes.
      */
-    public String toString() {
-        StringBuilder tags = new StringBuilder("[");
+    @Override public String toString() {
+        StringBuilder tagsString = new StringBuilder("[");
         for (Map.Entry<String, String> mapEntry : this.getTags().entrySet()) {
-            tags.append(mapEntry.getKey());
-            tags.append(": ");
-            tags.append(mapEntry.getValue());
-            tags.append(",");
+            tagsString.append(mapEntry.getKey());
+            tagsString.append(": ");
+            tagsString.append(mapEntry.getValue());
+            tagsString.append(",");
         }
-        tags.append("]");
-        return String.format("Metric(Name: %s, Value: %s, Time: %s, Tags: %s)", this.getName(), this.getValue(), this.getTimestamp(), tags.toString());
+        tagsString.append("]");
+        return String.format("Metric(Name: %s, Value: %s, Time: %s, Tags: %s)", this.getName(),
+            this.getValue(), this.getTimestamp(), tagsString.toString());
     }
 }

@@ -25,8 +25,8 @@ import de.uniulm.omi.cloudiator.visor.monitoring.api.Measurement;
  */
 public class MeasurementImpl implements Measurement {
 
-    public final long timestamp;
-    public final Object value;
+    private final long timestamp;
+    private final Object value;
 
     public MeasurementImpl(long timestamp, Object value) {
         this.timestamp = timestamp;

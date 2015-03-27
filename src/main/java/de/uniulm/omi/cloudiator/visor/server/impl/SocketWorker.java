@@ -52,6 +52,7 @@ public class SocketWorker implements Runnable {
         try {
             this.socket.close();
         } catch (IOException ignored) {
+            LOGGER.warn(ignored);
         }
     }
 
@@ -60,7 +61,7 @@ public class SocketWorker implements Runnable {
         while (!Thread.currentThread().isInterrupted()) {
             try {
                 this.socket.setSoTimeout(20 * 1000);
-                Scanner in = new Scanner(this.socket.getInputStream());
+                Scanner in = new Scanner(this.socket.getInputStream(), "UTF-8");
                 while (in.hasNextLine()) {
                     String line = in.nextLine();
                     Metric metric = this.requestParser.parse(line);

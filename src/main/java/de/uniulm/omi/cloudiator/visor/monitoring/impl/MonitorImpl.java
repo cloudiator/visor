@@ -76,7 +76,7 @@ public class MonitorImpl implements Monitor {
             '}';
     }
 
-    private class MonitorWorker implements Runnable {
+    private static class MonitorWorker implements Runnable {
 
         private final Monitor monitor;
         private final ReportingInterface<Metric> metricReportingInterface;

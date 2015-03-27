@@ -33,15 +33,13 @@ public abstract class AbstractSensor implements Sensor {
     private boolean isInitialized = false;
 
 
-    @Override
-    public void init() throws SensorInitializationException {
+    @Override public void init() throws SensorInitializationException {
         this.initialize();
         this.isInitialized = true;
     }
 
-    @Override
-    public void setMonitorContext(MonitorContext monitorContext) throws
-        InvalidMonitorContextException {
+    @Override public void setMonitorContext(MonitorContext monitorContext)
+        throws InvalidMonitorContextException {
         checkNotNull(monitorContext);
         checkState(isInitialized);
         if (!validateMonitorContext(monitorContext)) {
@@ -50,10 +48,10 @@ public abstract class AbstractSensor implements Sensor {
         this.monitorContext = monitorContext;
     }
 
-    @Override
-    public Measurement getMeasurement() throws MeasurementNotAvailableException {
+    @Override public Measurement getMeasurement() throws MeasurementNotAvailableException {
         checkState(isInitialized, "Measurement method was called before initialization.");
-        checkNotNull(monitorContext != null, "Measurement method was called, before monitoring context was set.");
+        checkNotNull(monitorContext != null,
+            "Measurement method was called, before monitoring context was set.");
         return this.getMeasurement(this.monitorContext);
     }
 
@@ -69,15 +67,13 @@ public abstract class AbstractSensor implements Sensor {
      * Returns a single measurement object.
      *
      * @param monitorContext the context for the measurement.
-     *
      * @return a measurement taken by this sensor.
-     *
      * @throws MeasurementNotAvailableException
      */
-    protected abstract Measurement getMeasurement(MonitorContext monitorContext) throws MeasurementNotAvailableException;
+    protected abstract Measurement getMeasurement(MonitorContext monitorContext)
+        throws MeasurementNotAvailableException;
 
-    @Override
-    public String toString() {
+    @Override public String toString() {
         return this.getClass().getCanonicalName();
     }
 }
