@@ -20,8 +20,8 @@ package de.uniulm.omi.cloudiator.visor.rest;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import de.uniulm.omi.cloudiator.visor.rest.controllers.MonitorController;
 import de.uniulm.omi.cloudiator.visor.monitoring.api.MonitoringService;
+import de.uniulm.omi.cloudiator.visor.rest.controllers.MonitorController;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.net.URI;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Created by daniel on 06.02.15.
@@ -41,15 +42,18 @@ public class RestServer {
 
     private static final Logger logger = LogManager.getLogger(RestServer.class);
 
-    @Inject
-    public RestServer(@Named("restPort") int restPort, MonitoringService monitoringService) {
+    @Inject public RestServer(@Named("restPort") int restPort, @Named("restHost") String restHost,
+        MonitoringService monitoringService) {
         checkArgument(restPort > 0);
 
         if (restPort <= 1024) {
             logger.warn("You try to open a port below 1024. This is usual not a good idea...");
         }
 
-        URI baseUri = UriBuilder.fromUri("http://0.0.0.0").port(restPort).build();
+        checkNotNull(restHost);
+        checkArgument(!restHost.isEmpty());
+
+        URI baseUri = UriBuilder.fromUri(restHost).port(restPort).build();
         ResourceConfig config = new ResourceConfig();
         config.register(new MonitorController(monitoringService));
         config.register(MoxyJsonFeature.class);

@@ -93,7 +93,7 @@ public class MonitorImpl implements Monitor {
                     .from(monitor.getMetricName(), monitor.getSensor().getMeasurement(),
                         monitor.getMonitorContext()));
             } catch (MeasurementNotAvailableException e) {
-                logger.error(String.format("Could not retrieve metric"));
+                logger.error("Could not retrieve metric", e);
             } catch (ReportingException e) {
                 logger.error("Could not report metric", e);
             }

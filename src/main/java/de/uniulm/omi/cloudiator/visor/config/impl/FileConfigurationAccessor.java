@@ -28,15 +28,16 @@ import java.util.Properties;
 /**
  * Created by daniel on 15.12.14.
  */
-@Singleton
-public class FileConfigurationAccessor {
+@Singleton public class FileConfigurationAccessor {
 
     private final Properties properties;
 
     public FileConfigurationAccessor(String configurationFilePath) {
         this.properties = new Properties();
-        try {
-            properties.load(new BufferedInputStream(new FileInputStream(configurationFilePath)));
+        try (final FileInputStream fileInputStream = new FileInputStream(configurationFilePath);
+            final BufferedInputStream bufferedInputStream = new BufferedInputStream(
+                fileInputStream)) {
+            properties.load(bufferedInputStream);
         } catch (IOException e) {
             throw new IllegalStateException("Could not read properties file.", e);
         }
