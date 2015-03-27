@@ -27,8 +27,6 @@ import java.net.SocketAddress;
 
 /**
  * Return latency when connecting to the given host in milliseconds
- * @author Vadim Raskin
- *
  */
 public class AverageLatencyProbe {
 	public double getAverageLatence(String ip, int port) throws IOException{

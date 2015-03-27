@@ -19,7 +19,6 @@
  */
 package de.uniulm.omi.executionware.agent.monitoring.sensors;
 
-
 import java.util.ArrayList;
 
 import org.hyperic.sigar.NetInterfaceStat;
