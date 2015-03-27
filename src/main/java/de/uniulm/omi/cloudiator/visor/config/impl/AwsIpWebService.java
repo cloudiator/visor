@@ -32,26 +32,24 @@ import java.net.URL;
 /**
  * Created by daniel on 10.02.15.
  */
-@Singleton
-public class AwsIpWebService implements IpProvider {
+@Singleton public class AwsIpWebService implements IpProvider {
 
     private static final String AWS_SERVICE = "http://checkip.amazonaws.com";
-    private static final Logger logger = LogManager.getLogger(AwsIpWebService.class);
+    private static final Logger LOGGER = LogManager.getLogger(AwsIpWebService.class);
     private String ipCache;
 
     private static String contactService() {
         URL whatIsMyIp;
         BufferedReader in = null;
         try {
-            logger.debug("Contacting AWS IP service at " + AWS_SERVICE);
+            LOGGER.debug("Contacting AWS IP service at " + AWS_SERVICE);
             whatIsMyIp = new URL(AWS_SERVICE);
-            in = new BufferedReader(new InputStreamReader(
-                    whatIsMyIp.openStream()));
+            in = new BufferedReader(new InputStreamReader(whatIsMyIp.openStream()));
             String ip = in.readLine();
-            logger.info("AWS IP service returned " + ip + " as public ip");
+            LOGGER.info("AWS IP service returned " + ip + " as public ip");
             return ip;
         } catch (IOException e) {
-            logger.error("Error contacting AWS IP service.", e);
+            LOGGER.error("Error contacting AWS IP service.", e);
             return null;
         } finally {
             if (in != null) {
@@ -63,9 +61,7 @@ public class AwsIpWebService implements IpProvider {
         }
     }
 
-    @Nullable
-    @Override
-    public String getPublicIp() {
+    @Nullable @Override public String getPublicIp() {
         if (this.ipCache == null) {
             this.ipCache = contactService();
         }

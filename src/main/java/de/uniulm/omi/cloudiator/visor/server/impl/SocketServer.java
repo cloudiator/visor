@@ -35,20 +35,21 @@ import static com.google.common.base.Preconditions.checkArgument;
  */
 public class SocketServer {
 
-    private static final Logger logger = LogManager.getLogger(SocketServer.class);
+    private static final Logger LOGGER = LogManager.getLogger(SocketServer.class);
 
     @Inject
     public SocketServer(@Named("telnetPort") int port, ExecutionServiceInterface executionService, ServerListenerFactoryInterface serverListenerFactory) {
         checkArgument(port > 0, "Argument port must be > 0");
         if (port < 1024) {
-            logger.warn("You are running the telnet server on a port < 1024. This is usually not a good idea.");
+            LOGGER.warn(
+                "You are running the telnet server on a port < 1024. This is usually not a good idea.");
         }
         try {
-            logger.info(String.format("Starting socket server on port %d", port));
+            LOGGER.info(String.format("Starting socket server on port %d", port));
             ServerSocket serverSocket = new ServerSocket(port);
             executionService.execute(serverListenerFactory.create(serverSocket));
         } catch (IOException e) {
-            logger.fatal("Server crashed.", e);
+            LOGGER.fatal("Server crashed.", e);
             System.exit(1);
         }
     }

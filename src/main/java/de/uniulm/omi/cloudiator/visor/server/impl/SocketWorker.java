@@ -39,7 +39,7 @@ public class SocketWorker implements Runnable {
     private final Socket socket;
     private final ReportingInterface<Metric> metricReporting;
     private final RequestParsingInterface<String, Metric> requestParser;
-    private static final Logger logger = LogManager.getLogger(SocketWorker.class);
+    private static final Logger LOGGER = LogManager.getLogger(SocketWorker.class);
 
     SocketWorker(final Socket socket, ReportingInterface<Metric> metricReporting,
         RequestParsingInterface<String, Metric> requestParser) {
@@ -56,7 +56,7 @@ public class SocketWorker implements Runnable {
     }
 
     @Override public void run() {
-        logger.debug("New connection to server");
+        LOGGER.debug("New connection to server");
         while (!Thread.currentThread().isInterrupted()) {
             try {
                 this.socket.setSoTimeout(20 * 1000);
@@ -64,17 +64,17 @@ public class SocketWorker implements Runnable {
                 while (in.hasNextLine()) {
                     String line = in.nextLine();
                     Metric metric = this.requestParser.parse(line);
-                    logger.debug("Server received new metric " + metric.getName());
+                    LOGGER.debug("Server received new metric " + metric.getName());
                     this.metricReporting.report(metric);
                 }
             } catch (IOException e) {
-                logger.error(e);
+                LOGGER.error(e);
             } catch (ParsingException e) {
-                logger.error("Error parsing metric.", e);
+                LOGGER.error("Error parsing metric.", e);
             } catch (ReportingException e) {
-                logger.error("Could not report metric.", e);
+                LOGGER.error("Could not report metric.", e);
             } finally {
-                logger.debug("Closing connection to server.");
+                LOGGER.debug("Closing connection to server.");
                 closeSocket();
                 Thread.currentThread().interrupt();
             }

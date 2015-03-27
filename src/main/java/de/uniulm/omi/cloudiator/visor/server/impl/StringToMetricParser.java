@@ -21,12 +21,10 @@ package de.uniulm.omi.cloudiator.visor.server.impl;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import de.uniulm.omi.cloudiator.visor.monitoring.api.Metric;
-import de.uniulm.omi.cloudiator.visor.monitoring.impl.MonitorContext;
-import de.uniulm.omi.cloudiator.visor.server.api.RequestParsingInterface;
 import de.uniulm.omi.cloudiator.visor.monitoring.impl.MetricBuilder;
+import de.uniulm.omi.cloudiator.visor.monitoring.impl.MonitorContext;
 import de.uniulm.omi.cloudiator.visor.server.api.ParsingException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import de.uniulm.omi.cloudiator.visor.server.api.RequestParsingInterface;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -35,16 +33,13 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class StringToMetricParser implements RequestParsingInterface<String, Metric> {
 
-    private static final Logger logger = LogManager.getLogger(StringToMetricParser.class);
     private final String localIp;
 
-    @Inject
-    public StringToMetricParser(@Named("localIp") String localIp) {
+    @Inject public StringToMetricParser(@Named("localIp") String localIp) {
         this.localIp = localIp;
     }
 
-    @Override
-    public Metric parse(String s) throws ParsingException {
+    @Override public Metric parse(String s) throws ParsingException {
         checkNotNull(s);
 
         final String[] parts = s.split(" ");
@@ -61,7 +56,8 @@ public class StringToMetricParser implements RequestParsingInterface<String, Met
             throw new ParsingException("Could not convert 4th string to long.");
         }
 
-        return MetricBuilder.newBuilder().name(metricName).value(value).timestamp(timestamp).addTag("application", applicationName).addTag(
-            MonitorContext.LOCAL_IP, this.localIp).build();
+        return MetricBuilder.newBuilder().name(metricName).value(value).timestamp(timestamp)
+            .addTag("application", applicationName).addTag(MonitorContext.LOCAL_IP, this.localIp)
+            .build();
     }
 }

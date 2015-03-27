@@ -35,7 +35,7 @@ public class ServerListener implements Runnable {
     private final ServerSocket serverSocket;
     private final ExecutionServiceInterface executionService;
     private final SocketWorkerFactoryInterface socketWorkerFactory;
-    private static final Logger logger = LogManager.getLogger(SocketServer.class);
+    private static final Logger LOGGER = LogManager.getLogger(SocketServer.class);
 
     ServerListener(ServerSocket serverSocket, ExecutionServiceInterface executionService, SocketWorkerFactoryInterface socketWorkerFactory) {
         this.serverSocket = serverSocket;
@@ -50,7 +50,7 @@ public class ServerListener implements Runnable {
                 Socket accept = this.serverSocket.accept();
                 this.executionService.execute(this.socketWorkerFactory.create(accept));
             } catch (IOException e) {
-                logger.error("Error occurred while accepting connection.", e);
+                LOGGER.error("Error occurred while accepting connection.", e);
             }
         }
         try {

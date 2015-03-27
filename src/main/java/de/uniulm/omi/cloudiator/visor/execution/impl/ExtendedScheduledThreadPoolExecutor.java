@@ -32,7 +32,7 @@ public class ExtendedScheduledThreadPoolExecutor extends ScheduledThreadPoolExec
         return new ExtendedScheduledThreadPoolExecutor(nThreads);
     }
 
-    private static final Logger logger =
+    private static final Logger LOGGER =
         LogManager.getLogger(ExtendedScheduledThreadPoolExecutor.class);
 
     public ExtendedScheduledThreadPoolExecutor(int corePoolSize) {
@@ -64,7 +64,7 @@ public class ExtendedScheduledThreadPoolExecutor extends ScheduledThreadPoolExec
             }
         }
         if (t != null) {
-            logger.fatal("Uncaught exception occurred during the execution of task.", t);
+            LOGGER.fatal("Uncaught exception occurred during the execution of task.", t);
         }
     }
 }

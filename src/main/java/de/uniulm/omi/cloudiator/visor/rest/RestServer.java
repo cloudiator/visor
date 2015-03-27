@@ -40,14 +40,14 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class RestServer {
 
-    private static final Logger logger = LogManager.getLogger(RestServer.class);
+    private static final Logger LOGGER = LogManager.getLogger(RestServer.class);
 
     @Inject public RestServer(@Named("restPort") int restPort, @Named("restHost") String restHost,
         MonitoringService monitoringService) {
         checkArgument(restPort > 0);
 
         if (restPort <= 1024) {
-            logger.warn("You try to open a port below 1024. This is usual not a good idea...");
+            LOGGER.warn("You try to open a port below 1024. This is usual not a good idea...");
         }
 
         checkNotNull(restHost);
@@ -60,7 +60,7 @@ public class RestServer {
         try {
             GrizzlyHttpServerFactory.createHttpServer(baseUri, config).start();
         } catch (IOException e) {
-            logger.fatal("Could not start rest server.", e);
+            LOGGER.fatal("Could not start rest server.", e);
             System.exit(1);
         }
     }

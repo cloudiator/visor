@@ -55,10 +55,9 @@ public class KairosDb implements ReportingInterface<Metric> {
     /**
      * A logger.
      */
-    private static final Logger logger = LogManager.getLogger(KairosDb.class);
+    private static final Logger LOGGER = LogManager.getLogger(KairosDb.class);
 
-    @Inject
-    public KairosDb(@Named("kairosServer") String server, @Named("kairosPort") int port) {
+    @Inject public KairosDb(@Named("kairosServer") String server, @Named("kairosPort") int port) {
         checkNotNull(server);
         checkArgument(!server.isEmpty(), "Server must not be empty.");
         checkArgument(port > 0, "Port must be >0");
@@ -79,21 +78,19 @@ public class KairosDb implements ReportingInterface<Metric> {
 
             //check if response is ok
             if (response.getStatusCode() / 100 != 2) {
-                logger.error("Kairos DB reported error. Status code: " + response.getStatusCode());
-                logger.error("Error message: " + response.getErrors());
+                LOGGER.error("Kairos DB reported error. Status code: " + response.getStatusCode());
+                LOGGER.error("Error message: " + response.getErrors());
                 throw new MetricReportingException();
             } else {
-                logger.debug("Kairos DB returned OK. Status code: " + response.getStatusCode());
+                LOGGER.debug("Kairos DB returned OK. Status code: " + response.getStatusCode());
             }
             client.shutdown();
         } catch (MalformedURLException | URISyntaxException e) {
-            logger.fatal("KairosDB URL is invalid.", e);
+            LOGGER.fatal("KairosDB URL is invalid.", e);
             System.exit(1);
         } catch (IOException e) {
-            logger.error("Could not request KairosDB.", e);
+            LOGGER.error("Could not request KairosDB.", e);
             throw new MetricReportingException(e);
-        } catch (RuntimeException e) {
-            logger.fatal(e);
         }
     }
 
@@ -104,9 +101,8 @@ public class KairosDb implements ReportingInterface<Metric> {
      * @param metric the metric to report.
      * @throws MetricReportingException of the metric could not be converted. or sent to kairos.
      */
-    @Override
-    public void report(Metric metric) throws MetricReportingException {
-        logger.debug(String.format("Reporting new metric: %s", metric));
+    @Override public void report(Metric metric) throws MetricReportingException {
+        LOGGER.debug(String.format("Reporting new metric: %s", metric));
         MetricConverter metricConverter = new MetricConverter();
         try {
             metricConverter.add(metric);
@@ -123,11 +119,10 @@ public class KairosDb implements ReportingInterface<Metric> {
      * @param metrics a collection of metrics.
      * @throws MetricReportingException if the metric could not be converted or sent to kairos.
      */
-    @Override
-    public void report(Collection<Metric> metrics) throws MetricReportingException {
+    @Override public void report(Collection<Metric> metrics) throws MetricReportingException {
         MetricConverter metricConverter = new MetricConverter();
         for (Metric metric : metrics) {
-            logger.debug(String.format("Reporting new metric: %s", metric));
+            LOGGER.debug(String.format("Reporting new metric: %s", metric));
             try {
                 metricConverter.add(metric);
             } catch (MetricConversionException e) {

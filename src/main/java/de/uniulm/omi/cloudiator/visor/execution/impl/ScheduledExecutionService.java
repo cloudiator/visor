@@ -39,7 +39,7 @@ import static com.google.common.base.Preconditions.*;
  */
 @Singleton public class ScheduledExecutionService implements ScheduledExecutionServiceInterface {
 
-    private static final Logger logger = LogManager.getLogger(ScheduledExecutionService.class);
+    private static final Logger LOGGER = LogManager.getLogger(ScheduledExecutionService.class);
 
     /**
      * The executor service used for scheduling the probe runs.
@@ -50,14 +50,14 @@ import static com.google.common.base.Preconditions.*;
 
     @Inject public ScheduledExecutionService(@Named("executionThreads") int executionThreads) {
         checkArgument(executionThreads >= 1, "Execution thread must be >= 1");
-        logger.debug(String.format("Starting execution service with %s threads", executionThreads));
+        LOGGER.debug(String.format("Starting execution service with %s threads", executionThreads));
         scheduledExecutorService = ExtendedScheduledThreadPoolExecutor.create(executionThreads);
         registeredSchedulables = new HashMap<>();
     }
 
     @Override public void schedule(Schedulable schedulable) {
         checkNotNull(schedulable);
-        logger.debug(
+        LOGGER.debug(
             "Scheduling " + schedulable.getClass().getName() + " with interval of " + schedulable
                 .getInterval());
         final ScheduledFuture<?> scheduledFuture = this.scheduledExecutorService
@@ -87,14 +87,14 @@ import static com.google.common.base.Preconditions.*;
 
     @Override public void shutdown(final int seconds) {
 
-        logger.debug(String.format("Shutting down execution service in %d seconds", seconds));
+        LOGGER.debug(String.format("Shutting down execution service in %d seconds", seconds));
 
         try {
             // Wait a while for existing tasks to terminate
             if (!this.scheduledExecutorService.awaitTermination(seconds, TimeUnit.SECONDS)) {
                 this.scheduledExecutorService.shutdownNow();
                 if (!this.scheduledExecutorService.awaitTermination(seconds, TimeUnit.SECONDS))
-                    logger.error("Execution pool did not terminate.");
+                    LOGGER.error("Execution pool did not terminate.");
             }
         } catch (InterruptedException ie) {
             this.scheduledExecutorService.shutdownNow();

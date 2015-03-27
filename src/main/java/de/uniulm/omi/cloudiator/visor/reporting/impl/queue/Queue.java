@@ -46,7 +46,7 @@ public class Queue<T> implements ReportingInterface<T> {
      * The queue storing the items.
      */
     private final BlockingQueue<T> queue;
-    private static final Logger logger = LogManager.getLogger(Queue.class);
+    private static final Logger LOGGER = LogManager.getLogger(Queue.class);
 
     @Inject
     public Queue(ScheduledExecutionService executionService, QueueWorkerFactoryInterface<T> queueWorkerFactory) {
@@ -61,7 +61,7 @@ public class Queue<T> implements ReportingInterface<T> {
         try {
             this.queue.put(item);
         } catch (InterruptedException e) {
-            logger.error(e);
+            LOGGER.error(e);
         }
     }
 

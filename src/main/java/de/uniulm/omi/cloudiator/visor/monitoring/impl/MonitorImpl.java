@@ -29,7 +29,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class MonitorImpl implements Monitor {
 
-    private static final Logger logger = LogManager.getLogger(Monitor.class);
+    private static final Logger LOGGER = LogManager.getLogger(Monitor.class);
     private final String metricName;
     private final Sensor sensor;
     private final MonitorContext monitorContext;
@@ -88,14 +88,14 @@ public class MonitorImpl implements Monitor {
 
         @Override public void run() {
             try {
-                logger.debug("Measuring Monitor " + this.monitor);
+                LOGGER.debug("Measuring Monitor " + this.monitor);
                 this.metricReportingInterface.report(MetricFactory
                     .from(monitor.getMetricName(), monitor.getSensor().getMeasurement(),
                         monitor.getMonitorContext()));
             } catch (MeasurementNotAvailableException e) {
-                logger.error("Could not retrieve metric", e);
+                LOGGER.error("Could not retrieve metric", e);
             } catch (ReportingException e) {
-                logger.error("Could not report metric", e);
+                LOGGER.error("Could not report metric", e);
             }
         }
     }
