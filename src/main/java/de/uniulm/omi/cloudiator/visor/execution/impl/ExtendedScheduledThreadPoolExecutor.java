@@ -56,7 +56,9 @@ public class ExtendedScheduledThreadPoolExecutor extends ScheduledThreadPoolExec
         super.afterExecute(r, t);
         if (t == null && r instanceof Future<?>) {
             try {
-                ((Future) r).get();
+                if (((Future) r).isDone()) {
+                    ((Future) r).get();
+                }
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             } catch (ExecutionException e) {
