@@ -30,6 +30,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.Properties;
 
 import org.hyperic.sigar.SigarException;
+import org.hyperic.sigar.cmd.Iostat;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -38,17 +39,16 @@ import de.uniulm.omi.executionware.agent.monitoring.sensors.FreeDiskSpaceProbe;
 import de.uniulm.omi.executionware.agent.monitoring.sensors.IOLoadProbe;
 import de.uniulm.omi.executionware.agent.monitoring.sensors.NFSStatusProbe;
 import de.uniulm.omi.executionware.agent.monitoring.sensors.NetworkStateProbe;
-import de.ustutt.test.test.SigarTest.Queue;
 
 public class SigarTest {
 	Properties properties;
-	protected static Queue queue;
+	//protected static Queue queue;
 	public SigarTest() throws IOException{
 		properties = new Properties();
 		String propFileName = "config.properties";
 		FileInputStream in = new FileInputStream(propFileName);
 		properties.load(in);
-		queue = new Queue(properties.getProperty("io_test_directory")+"foo.txt");
+		//queue = new Queue(properties.getProperty("io_test_directory")+"foo.txt");
 	}
 
 	//@Ignore
@@ -69,18 +69,21 @@ public class SigarTest {
 		System.out.println("Average receive rate is "+averageRxRate/1024 + " kBytes/sec");
 		System.out.println("Average transmit rate is "+averageTxRate/1024 + " kBytes/sec");
 	}
-	@Ignore
+	//@Ignore
 	@Test
 	public void testAverageNumberOfReads() throws SigarException, InterruptedException
 	{
 		IOLoadProbe ioMonitor = new IOLoadProbe(properties.getProperty("FS_ROOT"),Integer.valueOf(properties.getProperty("big_cycle")));
-		MyReader reader = new MyReader(queue);
-		MyWriter writer = new MyWriter(queue);
-		ioMonitor.start();
-		reader.start();
-		writer.start();
+		//MyReader reader = new MyReader(queue);
+		//MyWriter writer = new MyWriter(queue);
+		//ioMonitor.start();
+		//reader.start();
+		//writer.start();
 		// measure read write requests during 2 seconds
-		Thread.sleep(2000);
+		//Thread.sleep(2000);
+		System.out.println(ioMonitor.outputDisk(properties.getProperty("FS_ROOT")));
+		
+		//ss.outputFileSystem("2 "+ properties.getProperty("FS_ROOT"));
 	}
 	//@Ignore
 	@Test
@@ -108,7 +111,7 @@ public class SigarTest {
 	 * Object of this class is needed for synchronization of reader/writer threads
 	 *
 	 */
-	class Queue{
+/*	class Queue{
 		private int size = 0; 
 		String fileName;
 		public  Queue(String fileName){
@@ -179,13 +182,13 @@ public class SigarTest {
 			file.deleteOnExit();
 			System.out.println("File deleted");
 		}
-		}
+		}*/
 	}
 	/**
 	 * Write file to the disk asynchronously
 	 *
 	 */
-	class MyWriter extends Thread{
+/*	class MyWriter extends Thread{
 		
 
 		public MyWriter(Queue queue){
@@ -202,11 +205,11 @@ public class SigarTest {
 			
 		
 	}
-	}
-	/**
+	}*/
+/*	*//**
 	 * Read file from the disk asynchronously
 	 *
-	 */
+	 *//*
 	class MyReader extends Thread{
 		
 		public MyReader(Queue queue){
@@ -226,6 +229,6 @@ public class SigarTest {
 			}
 			
 	}
-}
+}*/
 	
 	

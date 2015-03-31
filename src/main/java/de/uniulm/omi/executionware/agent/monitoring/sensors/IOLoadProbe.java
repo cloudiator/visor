@@ -19,13 +19,17 @@
  */
 package de.uniulm.omi.executionware.agent.monitoring.sensors;
 
-import java.util.ArrayList;
 
-import org.hyperic.sigar.FileSystemUsage;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Properties;
+
+import org.hyperic.sigar.DiskUsage;
 import org.hyperic.sigar.Sigar;
 import org.hyperic.sigar.SigarException;
 import org.hyperic.sigar.SigarProxy;
 import org.hyperic.sigar.SigarProxyCache;
+import org.hyperic.sigar.cmd.Iostat;
 
 import com.google.common.base.Optional;
 
@@ -34,6 +38,7 @@ import de.uniulm.omi.executionware.agent.monitoring.api.Measurement;
 import de.uniulm.omi.executionware.agent.monitoring.api.MeasurementNotAvailableException;
 import de.uniulm.omi.executionware.agent.monitoring.api.Sensor;
 import de.uniulm.omi.executionware.agent.monitoring.api.SensorInitializationException;
+import de.uniulm.omi.executionware.agent.monitoring.impl.MeasurementImpl;
 import de.uniulm.omi.executionware.agent.monitoring.impl.MonitorContext;
 /**
  * Instance of this class will measure the IO load in the system. It is run in a separate thread.
@@ -46,26 +51,35 @@ public class IOLoadProbe extends Thread implements Sensor{
 	Sigar sigarImpl;
 	SigarProxy sigar;
 	int measurePeriod;
-	long averageNumberOfReads;
-	long averageNumberOfWrites;
+	long numberOfReads,numberOfBytesRead;
+	long numberOfWrites, numberOfBytesWrite;
 	String fsRoot;
-	ReadCalculator readCalculator;
-	WriteCalculator writeCalculator;
+	//ReadCalculator readCalculator;
+	//WriteCalculator writeCalculator;
 	/**
 	 * Shared synchronized queue to store results of the measurements
 	 */
-	protected static MeasurementQueue queue;
+	//protected static MeasurementQueue queue;
 	
 	public IOLoadProbe(String fsRoot,int measurePeriod){
 		this.sigarImpl = new Sigar();
 		this.sigar=SigarProxyCache.newInstance(sigarImpl);
 		this.fsRoot = fsRoot;
 		this.measurePeriod = measurePeriod;
-		queue = new MeasurementQueue(fsRoot);
+		//queue = new MeasurementQueue(fsRoot);
 		
 	}
 	
-	@Override
+	public String outputDisk(String name) throws SigarException {
+		 DiskUsage disk = this.sigar.getDiskUsage(name);
+		 //Iostat ss = new Iostat();
+		 //ss.outputDisk(fsRoot);
+		 return "Reads-bytes: " + Sigar.formatSize(disk.getReadBytes()) + " | Writes-bytes: " + Sigar.formatSize(disk.getWriteBytes()) 
+				 + " | Reads: " + disk.getReads() + " | Writes: " + disk.getWrites();
+	}
+	
+	
+/*	@Override
 	public void run() {
 		
 		// start two threads that measure number of read/write requests
@@ -92,7 +106,7 @@ public class IOLoadProbe extends Thread implements Sensor{
 			
 			
 		}
-	}
+	}*/
 
 	@Override
 	public void init() throws SensorInitializationException {
@@ -109,7 +123,18 @@ public class IOLoadProbe extends Thread implements Sensor{
 
 	@Override
 	public Measurement getMeasurement() throws MeasurementNotAvailableException {
-		return null;
+		String diskIO="";
+		try {
+			Properties properties = new Properties();
+			FileInputStream in = new FileInputStream("config.properties");
+			properties.load(in);
+			diskIO = outputDisk(properties.getProperty("FS_ROOT"));
+		} catch (IOException | SigarException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return new MeasurementImpl(System.currentTimeMillis(), diskIO);
+		
 	}
 }
 /**
@@ -117,7 +142,7 @@ public class IOLoadProbe extends Thread implements Sensor{
  * @author raskin
  *
  */
-class MeasurementQueue{
+/*class MeasurementQueue{
 	String fsRoot;
 	// maximal number of read/write measurements that can be stored in the queue
 	int maxMeasurements = 1;
@@ -171,14 +196,14 @@ class MeasurementQueue{
 	public String getFsRoot(){
 		return this.fsRoot;
 	}
-}
+}*/
 /**
  * Object of this class calculates the number of read requests
  * Runs in infinite loop until external interrupt occurs
  * @author raskin
  *
  */
-class ReadCalculator extends Thread{
+/*class ReadCalculator extends Thread{
 	Sigar sigarImpl;
 	SigarProxy sigar;
 	long averageNumberOfReads = 0;
@@ -219,13 +244,13 @@ class ReadCalculator extends Thread{
 		}
 		return totalNumberOfRequests/measurements.size();
 	}
-	/**
+	*//**
 	 * Measure number of read requests per one second
 	 * @param fsRoot
 	 * @return
 	 * @throws SigarException
 	 * @throws InterruptedException
-	 */
+	 *//*
 	private long getReadRequestsPerSecond(String fsRoot) throws SigarException, InterruptedException
 	{
 		int milis = 1000;
@@ -245,43 +270,14 @@ class ReadCalculator extends Thread{
 		}	
 		return readRequestsPerSecond;
 	}
-//	public double getAverageReadSpeed(String fsRoot) throws SigarException, InterruptedException
-//	{
-//		int measureInterval = 500;
-//		int counter = 0;
-//		ArrayList<Long> bytesOnEachInterval = new ArrayList<Long>();
-//		FileSystemUsage fsUsage = null;
-//		long initReadBytes = 0;
-//		long readBytes = 0;
-//		long speedChange = 0;
-//		
-//		fsUsage = sigar.getFileSystemUsage(fsRoot);
-//		initReadBytes = fsUsage.getDiskReadBytes();
-//		// save the number of read bytes over each measure interval
-//		for (int i = counter;i<=measurePeriod; i+=measureInterval){
-//			Thread.sleep(measureInterval);
-//			System.out.println("Measuring cycle...");
-//			this.sigar = SigarProxyCache.newInstance(sigarImpl);
-//			fsUsage = sigar.getFileSystemUsage(fsRoot);
-//			readBytes = fsUsage.getDiskReadBytes();
-//			if(readBytes > initReadBytes){
-//				speedChange = readBytes - initReadBytes;
-//				bytesOnEachInterval.add(speedChange);
-//				initReadBytes = readBytes;
-//				System.out.println("Speed change in the interval: " + speedChange);
-//			}
-//			counter+=measureInterval;
-//		}
-//		return this.getAverageSpeed(bytesOnEachInterval, measureInterval);
-//	}
-}
+}*/
 /**
  * Object of this class calculates the average number of write requests during 
  * measure period. Runs in infinite loop until interrupted externally
  * @author raskin
  *
  */
-class WriteCalculator extends Thread{
+/*class WriteCalculator extends Thread{
 	Sigar sigarImpl;
 	SigarProxy sigar;
 	long averageNumberOfReads = 0;
@@ -322,13 +318,13 @@ class WriteCalculator extends Thread{
 		}
 		return totalNumberOfRequests/measurements.size();
 	}
-	/**
+	*//**
 	 * Measure number of write requests per one second
 	 * @param fsRoot
 	 * @return
 	 * @throws SigarException
 	 * @throws InterruptedException
-	 */
+	 *//*
 	public long getWriteRequestsPerSecond(String fsRoot) throws SigarException, InterruptedException
 	{
 		int milis = 1000;
@@ -348,4 +344,4 @@ class WriteCalculator extends Thread{
 		}	
 		return writeRequestsPerSecond;
 	}
-}
+}*/
