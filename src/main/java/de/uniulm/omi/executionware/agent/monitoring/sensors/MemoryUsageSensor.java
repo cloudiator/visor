@@ -56,7 +56,7 @@ public class MemoryUsageSensor implements Sensor {
         //memory usage
         double totalPhysicalMemory = osBean.getTotalPhysicalMemorySize();
         double freePhysicalMemory = osBean.getFreePhysicalMemorySize();
-
+        
         if (totalPhysicalMemory < 0 || freePhysicalMemory < 0) {
             throw new MeasurementNotAvailableException("Received negative value for total or free physical memory size");
         }

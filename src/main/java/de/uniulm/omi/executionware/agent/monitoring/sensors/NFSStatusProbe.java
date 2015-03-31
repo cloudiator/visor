@@ -20,7 +20,9 @@
 package de.uniulm.omi.executionware.agent.monitoring.sensors;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Properties;
 
 import org.hyperic.sigar.NfsClientV2;
 import org.hyperic.sigar.NfsClientV3;
@@ -29,7 +31,18 @@ import org.hyperic.sigar.SigarException;
 import org.hyperic.sigar.SigarProxy;
 import org.hyperic.sigar.SigarProxyCache;
 
-public class NFSStatusProbe {
+import com.google.common.base.Optional;
+
+import de.uniulm.omi.executionware.agent.monitoring.api.InvalidMonitorContextException;
+import de.uniulm.omi.executionware.agent.monitoring.api.Measurement;
+import de.uniulm.omi.executionware.agent.monitoring.api.MeasurementNotAvailableException;
+import de.uniulm.omi.executionware.agent.monitoring.api.Sensor;
+import de.uniulm.omi.executionware.agent.monitoring.api.SensorInitializationException;
+import de.uniulm.omi.executionware.agent.monitoring.impl.MeasurementImpl;
+import de.uniulm.omi.executionware.agent.monitoring.impl.MonitorContext;
+
+public class NFSStatusProbe implements Sensor{
+	private static String FILE_NAME_TEST="/file_that_do_not_exist.txt";
 	Sigar sigarImpl;
 	SigarProxy sigar;
 	public NFSStatusProbe(){
@@ -54,7 +67,7 @@ public class NFSStatusProbe {
 			nfsClient = sigar.getNfsClientV3();
 			numberOfCreates = nfsClient.getCreate();
 			// file name should not conflict with any of already existing files in nfs directory
-			File file = new File(nfsMountPoint+"/file_that_do_not_exist.txt");
+			File file = new File(nfsMountPoint+FILE_NAME_TEST);
 			file.createNewFile();
 			file.delete();
 			this.sigar = SigarProxyCache.newInstance(sigarImpl);
@@ -89,7 +102,7 @@ public class NFSStatusProbe {
 			nfsClient = sigar.getNfsClientV2();
 			numberOfCreates = nfsClient.getCreate();
 			// file name should not conflict with any of already existing files in nfs directory
-			File file = new File(nfsMountPoint+"/file_that_do_not_exist.txt");
+			File file = new File(nfsMountPoint+ FILE_NAME_TEST);
 			file.createNewFile();
 			file.delete();
 			this.sigar = SigarProxyCache.newInstance(sigarImpl);
@@ -103,6 +116,36 @@ public class NFSStatusProbe {
 		catch(SigarException e){
 			return false;
 		}
+	}
+	@Override
+	public void init() throws SensorInitializationException {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void setMonitorContext(Optional<MonitorContext> monitorContext)
+			throws InvalidMonitorContextException {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public Measurement getMeasurement() throws MeasurementNotAvailableException {		
+		Properties properties;
+		FileInputStream in;
+		boolean isNFS = false;
+		try {
+			properties = new Properties();
+			in = new FileInputStream("config.properties");
+			properties.load(in);
+			isNFS = isNFSV3Available(properties.getProperty("NFS_MOUNT_POINT"));
+		} catch (IOException | SigarException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if (!isNFS) {
+	        throw new MeasurementNotAvailableException("NFS is not available");
+	    }
+		return new MeasurementImpl(System.currentTimeMillis(), isNFS);
 	}
 }
 	

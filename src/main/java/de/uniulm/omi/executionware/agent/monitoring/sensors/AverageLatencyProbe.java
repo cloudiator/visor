@@ -19,19 +19,30 @@
  */
 package de.uniulm.omi.executionware.agent.monitoring.sensors;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
+import java.util.Properties;
+
+import com.google.common.base.Optional;
+
+import de.uniulm.omi.executionware.agent.monitoring.api.InvalidMonitorContextException;
+import de.uniulm.omi.executionware.agent.monitoring.api.Measurement;
+import de.uniulm.omi.executionware.agent.monitoring.api.MeasurementNotAvailableException;
+import de.uniulm.omi.executionware.agent.monitoring.api.Sensor;
+import de.uniulm.omi.executionware.agent.monitoring.api.SensorInitializationException;
+import de.uniulm.omi.executionware.agent.monitoring.impl.MeasurementImpl;
+import de.uniulm.omi.executionware.agent.monitoring.impl.MonitorContext;
 
 /**
  * Return latency when connecting to the given host in milliseconds
  */
-public class AverageLatencyProbe {
-	public double getAverageLatence(String ip, int port) throws IOException{
+public class AverageLatencyProbe implements Sensor{
+	public double getAverageLatence(String ip, int port, int loopPeriod) throws IOException{
 		long latency = 0;
-		int loopPeriod = 5;
 		long startTime;
 		long endTime;
 		InetAddress address = InetAddress.getByName(ip); 
@@ -49,4 +60,34 @@ public class AverageLatencyProbe {
 		return latency/loopPeriod;
 	}
 
+	@Override
+	public void init() throws SensorInitializationException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setMonitorContext(Optional<MonitorContext> monitorContext)
+			throws InvalidMonitorContextException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Measurement getMeasurement() throws MeasurementNotAvailableException {
+		double val = 0;
+		 try {
+			Properties properties = new Properties();
+			FileInputStream in = new FileInputStream("config.properties");
+			properties.load(in);
+			val = getAverageLatence(properties.getProperty("PING_IP"), Integer.valueOf(properties.getProperty("PING_PORT")), Integer.valueOf(properties.getProperty("PING_LOOP")));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if (val <= 0) {
+	        throw new MeasurementNotAvailableException("Latency Calculation isn´t available");
+	    }
+		return new MeasurementImpl(System.currentTimeMillis(), val);
+	}
 }

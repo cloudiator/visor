@@ -33,12 +33,12 @@ import org.hyperic.sigar.SigarException;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import de.uni_stuttgart.test.test.SigarTest.Queue;
 import de.uniulm.omi.executionware.agent.monitoring.sensors.AverageLatencyProbe;
 import de.uniulm.omi.executionware.agent.monitoring.sensors.FreeDiskSpaceProbe;
 import de.uniulm.omi.executionware.agent.monitoring.sensors.IOLoadProbe;
 import de.uniulm.omi.executionware.agent.monitoring.sensors.NFSStatusProbe;
 import de.uniulm.omi.executionware.agent.monitoring.sensors.NetworkStateProbe;
+import de.ustutt.test.test.SigarTest.Queue;
 
 public class SigarTest {
 	Properties properties;
@@ -56,7 +56,7 @@ public class SigarTest {
 	public void testFreeSpace() throws SigarException
 	{
 		FreeDiskSpaceProbe diskprobe = new FreeDiskSpaceProbe();
-		System.out.println("Free disk space is: "+diskprobe.getFreeDiskSpace(properties.getProperty("fs_root")));
+		System.out.println("Free disk space is: "+diskprobe.getFreeDiskSpace(properties.getProperty("FS_ROOT")));
 	}
 	//@Ignore
 	@Test
@@ -69,11 +69,11 @@ public class SigarTest {
 		System.out.println("Average receive rate is "+averageRxRate/1024 + " kBytes/sec");
 		System.out.println("Average transmit rate is "+averageTxRate/1024 + " kBytes/sec");
 	}
-	//@Ignore
+	@Ignore
 	@Test
 	public void testAverageNumberOfReads() throws SigarException, InterruptedException
 	{
-		IOLoadProbe ioMonitor = new IOLoadProbe(properties.getProperty("fs_root"),Integer.valueOf(properties.getProperty("big_cycle")));
+		IOLoadProbe ioMonitor = new IOLoadProbe(properties.getProperty("FS_ROOT"),Integer.valueOf(properties.getProperty("big_cycle")));
 		MyReader reader = new MyReader(queue);
 		MyWriter writer = new MyWriter(queue);
 		ioMonitor.start();
@@ -85,10 +85,11 @@ public class SigarTest {
 	//@Ignore
 	@Test
 	public void testAverageLatency() throws IOException{
-		String ip = "google.com";
-		int port = 80;
+		String ip = properties.getProperty("PING_IP");
+		int port = Integer.parseInt(properties.getProperty("PING_PORT"));
+		int loopPeriod = Integer.parseInt(properties.getProperty("PING_LOOP")); 
 		AverageLatencyProbe latency = new AverageLatencyProbe();
-		System.out.println("Latency to "+ip+": "+ latency.getAverageLatence(ip, port) + "ms");
+		System.out.println("Latency to "+ip+": "+ latency.getAverageLatence(ip, port, loopPeriod) + "ms");
 	}
 	//@Ignore
 	@Test
@@ -101,7 +102,7 @@ public class SigarTest {
 	@Test
 	public void testNFSStatus() throws SigarException, IOException {
 		NFSStatusProbe nfsStatus = new NFSStatusProbe();
-		System.out.println("NFS availability: " + nfsStatus.isNFSV3Available(properties.getProperty("nfs_mount_point")));
+		System.out.println("NFS availability: " + nfsStatus.isNFSV3Available(properties.getProperty("NFS_MOUNT_POINT")));
 	}
 	/**
 	 * Object of this class is needed for synchronization of reader/writer threads

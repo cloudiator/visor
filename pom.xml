@@ -92,9 +92,9 @@
 
 <!-- Dependency for test unit monitoring probes I/O, network and disk -->
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
+      <groupId>org.fusesource</groupId>
+      <artifactId>sigar</artifactId>
+      <version>1.6.4</version>
       <scope>test</scope>
     </dependency>
 

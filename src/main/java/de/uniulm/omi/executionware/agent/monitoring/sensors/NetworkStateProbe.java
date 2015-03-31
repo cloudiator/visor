@@ -27,8 +27,20 @@ import org.hyperic.sigar.SigarException;
 import org.hyperic.sigar.SigarProxy;
 import org.hyperic.sigar.SigarProxyCache;
 
-public class NetworkStateProbe {
+import com.google.common.base.Optional;
+
+import de.uniulm.omi.executionware.agent.monitoring.api.InvalidMonitorContextException;
+import de.uniulm.omi.executionware.agent.monitoring.api.Measurement;
+import de.uniulm.omi.executionware.agent.monitoring.api.MeasurementNotAvailableException;
+import de.uniulm.omi.executionware.agent.monitoring.api.Sensor;
+import de.uniulm.omi.executionware.agent.monitoring.api.SensorInitializationException;
+import de.uniulm.omi.executionware.agent.monitoring.impl.MeasurementImpl;
+import de.uniulm.omi.executionware.agent.monitoring.impl.MonitorContext;
+
+public class NetworkStateProbe implements Sensor{
 	
+	private static int SMALL_CYCLE= 1000, BIG_CYCLE= 5000, BINARY_NUMBER= 1024, THOUSAND= 1000, EIGHT=8;
+	private static double PERCENTAGE= 100.0;
 	Sigar sigarImpl;
 	SigarProxy sigar;
 	public NetworkStateProbe(){
@@ -44,15 +56,15 @@ public class NetworkStateProbe {
 	 * @throws SigarException 
 	 */
 	public double getAverageUsedDownloadBandwidth(int channelWidth) throws SigarException, InterruptedException{
-		double percentage = 100.0;
+		double percentage = PERCENTAGE;
 		// make both values of the same scope, KBytes/s
-		double channelWidthInKBytesPerSecond = ((channelWidth/8)*1024);
-		double rxRateInKBytesPerSecond = this.getAverageRxRate()/1024;
+		double channelWidthInKBytesPerSecond = ((channelWidth/EIGHT)*BINARY_NUMBER);
+		double rxRateInKBytesPerSecond = this.getAverageRxRate()/BINARY_NUMBER;
 		percentage = (rxRateInKBytesPerSecond*percentage)/channelWidthInKBytesPerSecond;
 		
 		// round to 3 symbols after the dot
-		int roundedValue = (int) (percentage*1000); 
-		percentage = (double) roundedValue/1000;
+		int roundedValue = (int) (percentage*THOUSAND); 
+		percentage = (double) roundedValue/THOUSAND;
 		return percentage;
 	}
 	/**
@@ -64,15 +76,15 @@ public class NetworkStateProbe {
 	 * @throws SigarException 
 	 */
 	public double getAverageUsedUploadBandwidth(int channelWidth) throws SigarException, InterruptedException{
-		double percentage = 100.0;
+		double percentage = PERCENTAGE;
 		// make both values of the same scope, KBytes/s
-		double channelWidthInKBytesPerSecond = ((channelWidth/8)*1024);
-		double rxRateInKBytesPerSecond = this.getAverageTxRate()/1024;
+		double channelWidthInKBytesPerSecond = ((channelWidth/EIGHT)*BINARY_NUMBER);
+		double rxRateInKBytesPerSecond = this.getAverageTxRate()/BINARY_NUMBER;
 		percentage = (rxRateInKBytesPerSecond*percentage)/channelWidthInKBytesPerSecond;
 		
 		// round to 3 symbols after the dot
-		int roundedValue = (int) (percentage*1000); 
-		percentage = (double) roundedValue/1000;
+		int roundedValue = (int) (percentage*THOUSAND); 
+		percentage = (double) roundedValue/THOUSAND;
 		return percentage;
 	}
 	/**
@@ -83,8 +95,8 @@ public class NetworkStateProbe {
 	 */
 	public double getAverageRxRate() throws SigarException, InterruptedException
 	{
-		int smallCycle = 1000;
-		int bigCycle = 5000;
+		int smallCycle = SMALL_CYCLE;
+		int bigCycle = BIG_CYCLE;
 		NetInterfaceStat netStat = null;
 		long rxBytesLastCycle = 0;
 		long rxBytesNewCycle = 0;
@@ -128,8 +140,8 @@ public class NetworkStateProbe {
 	 */
 	public double getAverageTxRate() throws SigarException, InterruptedException
 	{
-		int smallCycle = 1000;
-		int bigCycle = 5000;
+		int smallCycle = SMALL_CYCLE;
+		int bigCycle = BIG_CYCLE;
 		NetInterfaceStat netStat = null;
 		long txBytesLastCycle = 0;
 		long txBytesNewCycle = 0;
@@ -174,7 +186,34 @@ public class NetworkStateProbe {
 			result = result/measurements.size();
 		return result;
 	}
-	
+	@Override
+	public void init() throws SensorInitializationException {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void setMonitorContext(Optional<MonitorContext> monitorContext)
+			throws InvalidMonitorContextException {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public Measurement getMeasurement() throws MeasurementNotAvailableException {
+		double averageRxRate = 0, averageTxRate = 0;
+		try {
+			averageRxRate = getAverageRxRate();
+			averageTxRate = getAverageTxRate();
+		} catch (InterruptedException | SigarException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		if(averageRxRate <= 0 || averageTxRate <= 0) {
+	            throw new MeasurementNotAvailableException("Network metric rate isn´t available");
+	    }
+		
+		return new MeasurementImpl(System.currentTimeMillis(), ("Avg receive rate is "+averageRxRate/1024 + " kBytes/sec, " + 
+				"Avg transmit rate is "+averageTxRate/1024 + " kBytes/sec"));
+	}
+}
 
 

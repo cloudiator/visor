@@ -26,13 +26,22 @@ import org.hyperic.sigar.Sigar;
 import org.hyperic.sigar.SigarException;
 import org.hyperic.sigar.SigarProxy;
 import org.hyperic.sigar.SigarProxyCache;
+
+import com.google.common.base.Optional;
+
+import de.uniulm.omi.executionware.agent.monitoring.api.InvalidMonitorContextException;
+import de.uniulm.omi.executionware.agent.monitoring.api.Measurement;
+import de.uniulm.omi.executionware.agent.monitoring.api.MeasurementNotAvailableException;
+import de.uniulm.omi.executionware.agent.monitoring.api.Sensor;
+import de.uniulm.omi.executionware.agent.monitoring.api.SensorInitializationException;
+import de.uniulm.omi.executionware.agent.monitoring.impl.MonitorContext;
 /**
  * Instance of this class will measure the IO load in the system. It is run in a separate thread.
  * IO overhead is presented by read/write requests per second.
  * Do measurements in two subthreads
  *
  */
-public class IOLoadProbe extends Thread{
+public class IOLoadProbe extends Thread implements Sensor{
 
 	Sigar sigarImpl;
 	SigarProxy sigar;
@@ -83,6 +92,24 @@ public class IOLoadProbe extends Thread{
 			
 			
 		}
+	}
+
+	@Override
+	public void init() throws SensorInitializationException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setMonitorContext(Optional<MonitorContext> monitorContext)
+			throws InvalidMonitorContextException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Measurement getMeasurement() throws MeasurementNotAvailableException {
+		return null;
 	}
 }
 /**
