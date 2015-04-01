@@ -88,7 +88,7 @@ public class NetworkStateProbe implements Sensor{
 		return percentage;
 	}
 	/**
-	 * Average rate of received bytes in bytes per second. Blocking method, execute it in a separate thread
+	 * Average rate of received bytes in bytes per second
 	 * @return
 	 * @throws SigarException
 	 * @throws InterruptedException
@@ -125,7 +125,7 @@ public class NetworkStateProbe implements Sensor{
 				rxBytesLastCycle = rxBytesNewCycle;
 			}
 			// sleep till the next measure cycle
-			Thread.sleep(smallCycle);
+			//Thread.sleep(smallCycle);
 		}
 		// get average value for all non zero measurements
 		averageBytesPerSecond = this.calculateAverageRate(rxBytesTotal);
@@ -133,7 +133,7 @@ public class NetworkStateProbe implements Sensor{
 		return averageBytesPerSecond;
 	}
 	/**
-	 * Average rate of transmitted bytes in bytes per second. Blocking method, execute it in a separate thread
+	 * Average rate of transmitted bytes in bytes per second
 	 * @return
 	 * @throws SigarException
 	 * @throws InterruptedException
@@ -170,7 +170,7 @@ public class NetworkStateProbe implements Sensor{
 				txBytesLastCycle = txBytesNewCycle;
 			}
 				
-			Thread.sleep(smallCycle);
+//			Thread.sleep(smallCycle);
 		}
 		// get average value for all non zero measurements
 		averageBytesPerSecond = this.calculateAverageRate(txBytesTotal);

@@ -39,11 +39,7 @@ import de.uniulm.omi.executionware.agent.monitoring.api.Sensor;
 import de.uniulm.omi.executionware.agent.monitoring.api.SensorInitializationException;
 import de.uniulm.omi.executionware.agent.monitoring.impl.MeasurementImpl;
 import de.uniulm.omi.executionware.agent.monitoring.impl.MonitorContext;
-/**
- * Instance of this class will measure the IO load in the system. It is run in a separate thread.
- * IO overhead is presented by read/write requests per second.
- * Do measurements in two subthreads
- */
+
 public class IOLoadProbe implements Sensor{
 
 	Sigar sigarImpl;
