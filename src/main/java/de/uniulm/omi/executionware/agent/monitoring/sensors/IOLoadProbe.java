@@ -44,13 +44,13 @@ import de.uniulm.omi.executionware.agent.monitoring.impl.MonitorContext;
  * IO overhead is presented by read/write requests per second.
  * Do measurements in two subthreads
  */
-public class IOLoadProbe extends Thread implements Sensor{
+public class IOLoadProbe implements Sensor{
 
 	Sigar sigarImpl;
 	SigarProxy sigar;
 	String fsRoot;
 	
-	public IOLoadProbe(String fsRoot,int measurePeriod){
+	public IOLoadProbe(String fsRoot){
 		this.sigarImpl = new Sigar();
 		this.sigar=SigarProxyCache.newInstance(sigarImpl);
 		this.fsRoot = fsRoot;
@@ -58,7 +58,7 @@ public class IOLoadProbe extends Thread implements Sensor{
 	}
 	
 	public String outputDisk(String name) throws SigarException {
-		 DiskUsage disk = this.sigar.getDiskUsage(name);
+		 DiskUsage disk = sigar.getDiskUsage(name);
 		 return "Reads-bytes: " + Sigar.formatSize(disk.getReadBytes()) + " | Writes-bytes: " + Sigar.formatSize(disk.getWriteBytes()) 
 				 + " | Reads: " + disk.getReads() + " | Writes: " + disk.getWrites();
 	}
@@ -88,9 +88,9 @@ public class IOLoadProbe extends Thread implements Sensor{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		if (diskIO.equals("")) {
-	        throw new MeasurementNotAvailableException("IODisk calculation wasn´t possible!");
-	    }
+		//if (diskIO.equals("")) {
+	      //  throw new MeasurementNotAvailableException("IODisk calculation wasn´t possible!");
+	    //}
 		return new MeasurementImpl(System.currentTimeMillis(), diskIO);
 		
 	}
