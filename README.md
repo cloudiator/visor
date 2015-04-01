@@ -53,6 +53,7 @@ For any details regarding the Junit tests structure, check the SigarTest class.
 **Required Libraries**
 
  - Sigar(Inside the lib folder)
+ 	- Copy all non-jar files from lib folder (of this branch) to .m2/repository/org/fusesource/sigar/1.6.4
  - Log4j(Inside the lib folder)
 
 **Installation**
@@ -76,7 +77,7 @@ For any details regarding the Junit tests structure, check the SigarTest class.
 
 **Communication**
 
-Email: Pavel Skvortsov[skvortsov@hlrs.de] or Vadim Raskin[raskinvadim@gmail.com] 
+Email: Yosandra Sandoval [sandoval@hlrs.de] or Pavel Skvortsov[skvortsov@hlrs.de]  
 
 
 
