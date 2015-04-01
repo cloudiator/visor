@@ -88,9 +88,9 @@ public class IOLoadProbe implements Sensor{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		//if (diskIO.equals("")) {
-	      //  throw new MeasurementNotAvailableException("IODisk calculation wasn´t possible!");
-	    //}
+		if (diskIO.equals(null)) {
+	        throw new MeasurementNotAvailableException("IODisk calculation wasn´t possible!");
+	    }
 		return new MeasurementImpl(System.currentTimeMillis(), diskIO);
 		
 	}

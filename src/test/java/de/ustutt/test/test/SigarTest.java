@@ -19,19 +19,11 @@
  */
 package de.ustutt.test.test;
 
-import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.util.Properties;
 
 import org.hyperic.sigar.SigarException;
-import org.hyperic.sigar.cmd.Iostat;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import de.uniulm.omi.executionware.agent.monitoring.sensors.AverageLatencyProbe;
@@ -49,7 +41,7 @@ public class SigarTest {
 		properties.load(in);
 	}
 
-	@Ignore
+	//@Ignore
 	@Test
 	public void testFreeSpace() throws SigarException
 	{
@@ -67,13 +59,13 @@ public class SigarTest {
 		System.out.println("Average receive rate is "+averageRxRate/1024 + " kBytes/sec");
 		System.out.println("Average transmit rate is "+averageTxRate/1024 + " kBytes/sec");
 	}
-	@Ignore
+	//@Ignore
 	@Test
 	public void testAverageNumberOfReads() throws SigarException{
 		IOLoadProbe ioMonitor = new IOLoadProbe(properties.getProperty("FS_ROOT"));
 		System.out.println(ioMonitor.outputDisk(properties.getProperty("FS_ROOT")));
 	}
-	@Ignore
+	//@Ignore
 	@Test
 	public void testAverageLatency() throws IOException{
 		String ip = properties.getProperty("PING_IP");
@@ -82,14 +74,14 @@ public class SigarTest {
 		AverageLatencyProbe latency = new AverageLatencyProbe();
 		System.out.println("Latency to "+ip+": "+ latency.getAverageLatence(ip, port, loopPeriod) + "ms");
 	}
-	@Ignore
+	//@Ignore
 	@Test
 	public void testUsedBandwidth() throws SigarException, InterruptedException{
 		NetworkStateProbe networkState = new NetworkStateProbe();
 		System.out.println("Average used download bandwidth is "+networkState.getAverageUsedDownloadBandwidth(100) +"%");
 		System.out.println("Average used upload bandwidth is "+networkState.getAverageUsedUploadBandwidth(100) +"%");
 	}
-	@Ignore
+	//@Ignore
 	@Test
 	public void testNFSStatus() throws SigarException, IOException {
 		NFSStatusProbe nfsStatus = new NFSStatusProbe();
