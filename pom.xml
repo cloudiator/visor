@@ -1,93 +1,111 @@
 <!--
-  ~ /*
-  ~  * Copyright (c) 2014 University of Ulm
-  ~  *
-  ~  * See the NOTICE file distributed with this work for additional information
-  ~  * regarding copyright ownership.  Licensed under the Apache License, Version 2.0 (the
-  ~  * "License"); you may not use this file except in compliance
-  ~  * with the License.  You may obtain a copy of the License at
-  ~  *
-  ~  *   http://www.apache.org/licenses/LICENSE-2.0
-  ~  *
-  ~  * Unless required by applicable law or agreed to in writing,
-  ~  * software distributed under the License is distributed on an
-  ~  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-  ~  * KIND, either express or implied.  See the License for the
-  ~  * specific language governing permissions and limitations
-  ~  * under the License.
-  ~  */
+  ~ Copyright (c) 2014-2015 University of Ulm
+  ~
+  ~ See the NOTICE file distributed with this work for additional information
+  ~ regarding copyright ownership.  Licensed under the Apache License, Version 2.0 (the
+  ~ "License"); you may not use this file except in compliance
+  ~ with the License.  You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied.  See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>de.uniulm.omi.executionware</groupId>
-    <artifactId>agent</artifactId>
+
+    <parent>
+        <groupId>de.uniulm.omi.cloudiator</groupId>
+        <artifactId>cloudiator-pom</artifactId>
+        <version>0.1.2-RELEASE</version>
+    </parent>
+    <artifactId>visor</artifactId>
     <packaging>jar</packaging>
     <version>1.2.0-SNAPSHOT</version>
-    <name>agent</name>
-    <url>http://maven.apache.org</url>
 
-    <repositories>
-        <repository>
-            <id>omi</id>
-            <name>OMI Releases</name>
-            <url>http://eladron.e-technik.uni-ulm.de:8081/nexus/content/repositories/releases</url>
-        </repository>
-    </repositories>
+    <name>visor</name>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <kairos.version>2.0</kairos.version>
+        <commons-cli.version>1.2</commons-cli.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.kairosdb</groupId>
+                <artifactId>client</artifactId>
+                <version>${kairos.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-cli</groupId>
+                <artifactId>commons-cli</artifactId>
+                <version>${commons-cli.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.drizzle.jdbc</groupId>
+                <artifactId>drizzle-jdbc</artifactId>
+                <version>1.2</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.11</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.kairosdb</groupId>
             <artifactId>client</artifactId>
-            <version>2.0</version>
         </dependency>
         <dependency>
             <groupId>commons-cli</groupId>
             <artifactId>commons-cli</artifactId>
-            <version>1.2</version>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-api</artifactId>
-            <version>2.0.2</version>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
-            <version>2.0.2</version>
         </dependency>
         <dependency>
             <groupId>com.google.inject</groupId>
             <artifactId>guice</artifactId>
-            <version>3.0</version>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>18.0</version>
         </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-all</artifactId>
-            <version>1.3</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.containers</groupId>
             <artifactId>jersey-container-grizzly2-servlet</artifactId>
-            <version>2.13</version>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.connectors</groupId>
             <artifactId>jersey-grizzly-connector</artifactId>
-            <version>2.13</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-moxy</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.drizzle.jdbc</groupId>
+            <artifactId>drizzle-jdbc</artifactId>
         </dependency>
 
 <!-- Dependency for test unit monitoring probes I/O, network and disk -->
@@ -99,42 +117,15 @@
 
     </dependencies>
 
-    <distributionManagement>
-        <repository>
-            <id>omi</id>
-            <name>OMI Releases</name>
-            <url>http://eladron.e-technik.uni-ulm.de:8081/nexus/content/repositories/releases</url>
-        </repository>
-        <snapshotRepository>
-            <id>omi-snapshots</id>
-            <name>OMI Snapshots</name>
-            <url>http://eladron.e-technik.uni-ulm.de:8081/nexus/content/repositories/snapshots</url>
-        </snapshotRepository>
-    </distributionManagement>
-
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.2</version>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>2.4</version>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -153,7 +144,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>de.uniulm.omi.executionware.agent.MonitoringAgent</mainClass>
+                            <mainClass>de.uniulm.omi.cloudiator.visor.MonitoringAgent</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -169,18 +160,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.10.1</version>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                        <configuration>
-                            <additionalparam>-Xdoclint:none</additionalparam>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>
