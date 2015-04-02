@@ -55,6 +55,11 @@
                 <artifactId>drizzle-jdbc</artifactId>
                 <version>1.2</version>
             </dependency>
+            <dependency>
+                <groupId>org.fusesource</groupId>
+                <artifactId>sigar</artifactId>
+                <version>1.6.4</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -106,6 +111,10 @@
         <dependency>
             <groupId>org.drizzle.jdbc</groupId>
             <artifactId>drizzle-jdbc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.fusesource</groupId>
+            <artifactId>sigar</artifactId>
         </dependency>
     </dependencies>
 
