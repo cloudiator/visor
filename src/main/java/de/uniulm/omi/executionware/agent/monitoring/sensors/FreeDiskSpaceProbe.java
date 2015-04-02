@@ -20,9 +20,7 @@
 package de.uniulm.omi.executionware.agent.monitoring.sensors;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Properties;
+import java.lang.management.ManagementFactory;
 
 import org.hyperic.sigar.FileSystemUsage;
 import org.hyperic.sigar.Sigar;
@@ -31,6 +29,7 @@ import org.hyperic.sigar.SigarProxy;
 import org.hyperic.sigar.SigarProxyCache;
 
 import com.google.common.base.Optional;
+import com.sun.management.OperatingSystemMXBean;
 
 import de.uniulm.omi.executionware.agent.monitoring.api.InvalidMonitorContextException;
 import de.uniulm.omi.executionware.agent.monitoring.api.Measurement;
@@ -56,14 +55,16 @@ public class FreeDiskSpaceProbe implements Sensor{
 	 * @return
 	 * @throws SigarException
 	 */
-	public long getFreeDiskSpace(String fsRoot) throws SigarException
+	public long getFreeDiskSpace() throws SigarException
 	{
+		OperatingSystemMXBean osBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
+		String rootOS = osBean.getName().indexOf("win") >= 0 ? MonitorContext.FS_ROOT_WINDOWS:MonitorContext.FS_ROOT_LINUX; 
 		long freeSpace = 0;
 		long metricSigar = 0;
 		long metricJava = 0;
-		File file = new File(fsRoot);
+		File file = new File(rootOS);
 		FileSystemUsage fsUsage = null;
-		fsUsage = sigar.getFileSystemUsage(fsRoot);
+		fsUsage = sigar.getFileSystemUsage(rootOS);
 		metricSigar = fsUsage.getFree() / BINARY_NUMBER;
 		metricJava = file.getFreeSpace() / BINARY_NUMBER / BINARY_NUMBER;
 		// return the smallest value of both metrics if they differ
@@ -87,19 +88,16 @@ public class FreeDiskSpaceProbe implements Sensor{
 	}
 	@Override
 	public Measurement getMeasurement() throws MeasurementNotAvailableException {
-		long metric= 0;
+		long metric= 0; 
 		 try {
-			Properties properties = new Properties();
-			FileInputStream in = new FileInputStream("config.properties");
-			properties.load(in);
-			metric = getFreeDiskSpace(properties.getProperty("FS_ROOT"));
-		} catch (IOException | SigarException e) {
+			metric = getFreeDiskSpace();
+		} catch (SigarException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		if (metric <= 0) {
 		        throw new MeasurementNotAvailableException("Free Disk Space calculation not available");
 		}
-		return new MeasurementImpl(System.currentTimeMillis(), metric);
+		return new MeasurementImpl(System.currentTimeMillis(),  metric);
 	}
 }

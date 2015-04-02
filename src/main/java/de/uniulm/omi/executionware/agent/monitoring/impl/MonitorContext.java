@@ -29,7 +29,15 @@ import java.util.Map;
 public class MonitorContext {
 
     public static final String LOCAL_IP = "localIp";
-
+    public static final String FS_ROOT_LINUX = "/";
+    public static final String FS_ROOT_WINDOWS = "D:/";
+    public static final String NFS_MOUNT_POINT = "/home/raskin/Documents/hlrs_share";
+    public static final String PING_IP= "google.com";
+    public static final String PING_PORT = "80";
+    public static final String PING_LOOP = "5";
+    public static final String FILE_NAME_TEST="/file_that_do_not_exist.txt";    
+    public static final int CHANNEL_WIDTH=100; 
+    
     private final Map<String, String> context;
 
     public static MonitorContextBuilder builder() {

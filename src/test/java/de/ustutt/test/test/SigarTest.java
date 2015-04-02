@@ -18,27 +18,25 @@
  *
  */
 package de.ustutt.test.test;
-
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Properties;
-
 import org.hyperic.sigar.SigarException;
 import org.junit.Test;
 
+import de.uniulm.omi.executionware.agent.monitoring.impl.MonitorContext;
 import de.uniulm.omi.executionware.agent.monitoring.sensors.AverageLatencyProbe;
+import de.uniulm.omi.executionware.agent.monitoring.sensors.AvgReceivedBytesProbe;
+import de.uniulm.omi.executionware.agent.monitoring.sensors.AvgTransmittedBytesProbe;
 import de.uniulm.omi.executionware.agent.monitoring.sensors.FreeDiskSpaceProbe;
-import de.uniulm.omi.executionware.agent.monitoring.sensors.IOLoadProbe;
-import de.uniulm.omi.executionware.agent.monitoring.sensors.NFSStatusProbe;
-import de.uniulm.omi.executionware.agent.monitoring.sensors.NetworkStateProbe;
+import de.uniulm.omi.executionware.agent.monitoring.sensors.IOLoadReadsProbe;
+import de.uniulm.omi.executionware.agent.monitoring.sensors.IOLoadWritesProbe;
+import de.uniulm.omi.executionware.agent.monitoring.sensors.NFSV2Probe;
+import de.uniulm.omi.executionware.agent.monitoring.sensors.NFSV3Probe;
+import de.uniulm.omi.executionware.agent.monitoring.sensors.BandwithDownloadProbe;
+import de.uniulm.omi.executionware.agent.monitoring.sensors.BandwithUploadProbe;
 
 public class SigarTest {
-	Properties properties;
+	
 	public SigarTest() throws IOException{
-		properties = new Properties();
-		String propFileName = "config.properties";
-		FileInputStream in = new FileInputStream(propFileName);
-		properties.load(in);
 	}
 
 	//@Ignore
@@ -46,47 +44,74 @@ public class SigarTest {
 	public void testFreeSpace() throws SigarException
 	{
 		FreeDiskSpaceProbe diskprobe = new FreeDiskSpaceProbe();
-		System.out.println("Free disk space is: "+diskprobe.getFreeDiskSpace(properties.getProperty("FS_ROOT")));
+		System.out.println("Free disk space is: "+diskprobe.getFreeDiskSpace());
 	}
+	
 	//@Ignore
 	@Test
-	public void testNetworkState() throws IOException, SigarException, InterruptedException{
-		double averageRxRate;
+	public void testAvgTransmittedBytes() throws IOException, SigarException, InterruptedException{
 		double averageTxRate;
-		NetworkStateProbe networkState = new NetworkStateProbe();
-		averageRxRate = networkState.getAverageRxRate();
+		AvgTransmittedBytesProbe networkState = new AvgTransmittedBytesProbe();
 		averageTxRate = networkState.getAverageTxRate();
-		System.out.println("Average receive rate is "+averageRxRate/1024 + " kBytes/sec");
 		System.out.println("Average transmit rate is "+averageTxRate/1024 + " kBytes/sec");
 	}
+	
+	//@Ignore
+	@Test
+	public void testAvgReceivedBytes() throws IOException, SigarException, InterruptedException{
+		double averageRxRate;
+		AvgReceivedBytesProbe networkState = new AvgReceivedBytesProbe();
+		averageRxRate = networkState.getAverageRxRate();
+		System.out.println("Average received rate is "+averageRxRate/1024 + " kBytes/sec");
+	}
+	
+	
 	//@Ignore
 	@Test
 	public void testAverageNumberOfReads() throws SigarException{
-		IOLoadProbe ioMonitor = new IOLoadProbe(properties.getProperty("FS_ROOT"));
-		System.out.println(ioMonitor.outputDisk(properties.getProperty("FS_ROOT")));
+		IOLoadReadsProbe ioMonitor = new IOLoadReadsProbe();
+		System.out.println(ioMonitor.outputDisk());
+	}
+	//@Ignore
+	@Test
+	public void testAverageNumberOfWrites() throws SigarException{
+		IOLoadWritesProbe ioMonitor = new IOLoadWritesProbe();
+		System.out.println(ioMonitor.outputDisk());
 	}
 	//@Ignore
 	@Test
 	public void testAverageLatency() throws IOException{
-		String ip = properties.getProperty("PING_IP");
-		int port = Integer.parseInt(properties.getProperty("PING_PORT"));
-		int loopPeriod = Integer.parseInt(properties.getProperty("PING_LOOP")); 
 		AverageLatencyProbe latency = new AverageLatencyProbe();
-		System.out.println("Latency to "+ip+": "+ latency.getAverageLatence(ip, port, loopPeriod) + "ms");
+		System.out.println("Latency to "+MonitorContext.PING_IP+": "+ latency.getAverageLatence() + "ms");
+	}
+	
+	//@Ignore
+	@Test
+	public void testUsedUploadBandwidth() throws SigarException, InterruptedException{
+		BandwithUploadProbe networkStateUpload = new BandwithUploadProbe();
+		System.out.println("Average used upload bandwidth is "+networkStateUpload.getAverageUsedUploadBandwidth() +"%");
+	}
+	
+	//@Ignore
+	@Test
+	public void testUsedDownloadBandwidth() throws SigarException, InterruptedException{
+		BandwithDownloadProbe networkStateDownload = new BandwithDownloadProbe();
+		System.out.println("Average used download bandwidth is "+networkStateDownload.getAverageUsedDownloadBandwidth() +"%");
+	}
+		
+	//@Ignore
+	@Test
+	public void testNFSStatus2() throws SigarException, IOException {
+		NFSV2Probe nfs2 = new NFSV2Probe();
+		System.out.println("NFS V2 availability: " + nfs2.isNFSV2Available());
 	}
 	//@Ignore
 	@Test
-	public void testUsedBandwidth() throws SigarException, InterruptedException{
-		NetworkStateProbe networkState = new NetworkStateProbe();
-		System.out.println("Average used download bandwidth is "+networkState.getAverageUsedDownloadBandwidth(100) +"%");
-		System.out.println("Average used upload bandwidth is "+networkState.getAverageUsedUploadBandwidth(100) +"%");
+	public void testNFSStatus3() throws SigarException, IOException {
+		NFSV3Probe nfs3 = new NFSV3Probe();
+		System.out.println("NFS V3 availability: " + nfs3.isNFSV3Available());
 	}
-	//@Ignore
-	@Test
-	public void testNFSStatus() throws SigarException, IOException {
-		NFSStatusProbe nfsStatus = new NFSStatusProbe();
-		System.out.println("NFS availability: " + nfsStatus.isNFSV3Available(properties.getProperty("NFS_MOUNT_POINT")));
-	}
+	
 }
 	
 	
