@@ -19,8 +19,6 @@
 package de.uniulm.omi.cloudiator.visor.config;
 
 import com.google.inject.Inject;
-import de.uniulm.omi.cloudiator.visor.MonitoringAgent;
-import de.uniulm.omi.cloudiator.visor.config.api.CommandLinePropertiesAccessor;
 import org.apache.commons.cli.*;
 
 import javax.annotation.Nullable;
@@ -31,17 +29,15 @@ import static com.google.common.base.Preconditions.checkState;
 /**
  * Created by daniel on 24.09.14.
  */
-@SuppressWarnings("AccessStaticViaInstance")
-public class CommandLinePropertiesAccessorImpl implements CommandLinePropertiesAccessor {
+@SuppressWarnings("AccessStaticViaInstance") public class CommandLinePropertiesAccessorImpl
+    implements CommandLinePropertiesAccessor {
 
     private final Options options;
     private CommandLine commandLine;
     private final static BasicParser parser = new BasicParser();
     private final static HelpFormatter helpFormatter = new HelpFormatter();
 
-    @Inject
-    @Singleton
-    public CommandLinePropertiesAccessorImpl(String[] args) {
+    @Inject @Singleton public CommandLinePropertiesAccessorImpl(String[] args) {
         this.options = new Options();
         this.generateOptions(this.options);
 
@@ -55,27 +51,19 @@ public class CommandLinePropertiesAccessorImpl implements CommandLinePropertiesA
     }
 
     private void generateOptions(Options options) {
-        options.addOption(OptionBuilder
-                        .withLongOpt("localIp")
-                        .withDescription("IP of the local machine")
-                        .hasArg()
-                        .create("ip")
-        );
-        options.addOption(OptionBuilder
-                        .withLongOpt("configFile")
-                        .withDescription("Configuration file location.")
-                        .isRequired()
-                        .hasArg()
-                        .create("conf")
-        );
+        options.addOption(
+            OptionBuilder.withLongOpt("localIp").withDescription("IP of the local machine").hasArg()
+                .create("ip"));
+        options.addOption(
+            OptionBuilder.withLongOpt("configFile").withDescription("Configuration file location.")
+                .isRequired().hasArg().create("conf"));
     }
 
     public void printHelp() {
-        helpFormatter.printHelp(MonitoringAgent.class.getCanonicalName(), options);
+        helpFormatter.printHelp("java -jar [args] visor.jar", options);
     }
 
-    @Nullable
-    protected String getCommandLineOption(String name) {
+    @Nullable protected String getCommandLineOption(String name) {
         checkState(this.commandLine != null, "Command line not parsed.");
         if (!commandLine.hasOption(name)) {
             return null;
@@ -83,16 +71,13 @@ public class CommandLinePropertiesAccessorImpl implements CommandLinePropertiesA
         return commandLine.getOptionValue(name);
     }
 
-    @Override
-    public String getConfFileLocation() {
+    @Override public String getConfFileLocation() {
         String confFile = this.getCommandLineOption("conf");
         checkState(confFile != null, "No command line argument value for conf (configFile)");
         return confFile;
     }
 
-    @Override
-    @Nullable
-    public String getPublicIp() {
+    @Override @Nullable public String getPublicIp() {
         return getCommandLineOption("ip");
     }
 }

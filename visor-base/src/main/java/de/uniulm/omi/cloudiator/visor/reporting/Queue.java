@@ -20,10 +20,8 @@ package de.uniulm.omi.cloudiator.visor.reporting;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import de.uniulm.omi.cloudiator.visor.execution.impl.ScheduledExecutionService;
-import de.uniulm.omi.cloudiator.visor.monitoring.impl.DefaultInterval;
-import de.uniulm.omi.cloudiator.visor.reporting.api.ReportingInterface;
-import de.uniulm.omi.cloudiator.visor.reporting.impl.ReportingException;
+import de.uniulm.omi.cloudiator.visor.execution.ScheduledExecutionService;
+import de.uniulm.omi.cloudiator.visor.monitoring.DefaultInterval;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

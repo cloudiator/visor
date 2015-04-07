@@ -18,8 +18,8 @@
 
 package de.uniulm.omi.cloudiator.visor.monitoring;
 
-import de.uniulm.omi.cloudiator.visor.reporting.api.ReportingInterface;
-import de.uniulm.omi.cloudiator.visor.reporting.impl.ReportingException;
+import de.uniulm.omi.cloudiator.visor.reporting.ReportingException;
+import de.uniulm.omi.cloudiator.visor.reporting.ReportingInterface;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

@@ -23,7 +23,7 @@ Visor requires JRE 8.
 java -jar target/visor-{version}-jar-with-dependencies.jar
 ```
 ```
-usage: de.uniulm.omi.cloudiator.visor.MonitoringAgent
+usage: java -jar [args] visor.jar
  -conf,--configFile <arg>   Configuration file location.
  -ip,--localIp              IP of the local machine (optional)
 ```

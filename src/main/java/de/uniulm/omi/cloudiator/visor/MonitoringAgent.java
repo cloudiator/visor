@@ -18,9 +18,9 @@
 
 package de.uniulm.omi.cloudiator.visor;
 
-import de.uniulm.omi.cloudiator.visor.config.api.CommandLinePropertiesAccessor;
-import de.uniulm.omi.cloudiator.visor.config.impl.AwsIpWebService;
-import de.uniulm.omi.cloudiator.visor.config.impl.CommandLinePropertiesAccessorImpl;
+import de.uniulm.omi.cloudiator.visor.config.AwsIpWebService;
+import de.uniulm.omi.cloudiator.visor.config.CommandLinePropertiesAccessor;
+import de.uniulm.omi.cloudiator.visor.config.CommandLinePropertiesAccessorImpl;
 import org.apache.commons.cli.ParseException;
 
 
@@ -28,9 +28,13 @@ public class MonitoringAgent {
 
     public static void main(final String[] args) throws ParseException {
 
-        final CommandLinePropertiesAccessor commandLinePropertiesAccessor = new CommandLinePropertiesAccessorImpl(args);
+        final CommandLinePropertiesAccessor commandLinePropertiesAccessor =
+            new CommandLinePropertiesAccessorImpl(args);
 
-        MonitoringAgentServiceBuilder.createNew().confFilePath(commandLinePropertiesAccessor.getConfFileLocation()).addIpProvider(commandLinePropertiesAccessor).addIpProvider(new AwsIpWebService()).build().start();
+        MonitoringAgentServiceBuilder.createNew()
+            .confFilePath(commandLinePropertiesAccessor.getConfFileLocation())
+            .addIpProvider(commandLinePropertiesAccessor).addIpProvider(new AwsIpWebService())
+            .build().start();
 
     }
 

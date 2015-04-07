@@ -18,7 +18,7 @@
 
 package de.uniulm.omi.cloudiator.visor.server.impl;
 
-import de.uniulm.omi.cloudiator.visor.execution.api.ExecutionServiceInterface;
+import de.uniulm.omi.cloudiator.visor.execution.ExecutionServiceInterface;
 import de.uniulm.omi.cloudiator.visor.server.api.SocketWorkerFactoryInterface;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

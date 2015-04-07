@@ -57,6 +57,36 @@
                 <artifactId>visor-api</artifactId>
                 <version>${visor.version}</version>
             </dependency>
+            <dependency>
+                <groupId>de.uniulm.omi.cloudiator</groupId>
+                <artifactId>visor-base</artifactId>
+                <version>${visor.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.uniulm.omi.cloudiator</groupId>
+                <artifactId>visor-reporting-cli</artifactId>
+                <version>${visor.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.uniulm.omi.cloudiator</groupId>
+                <artifactId>visor-reporting-kairos</artifactId>
+                <version>${visor.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.uniulm.omi.cloudiator</groupId>
+                <artifactId>visor-rest</artifactId>
+                <version>${visor.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.uniulm.omi.cloudiator</groupId>
+                <artifactId>visor-sensors</artifactId>
+                <version>${visor.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.uniulm.omi.cloudiator</groupId>
+                <artifactId>visor-telnet</artifactId>
+                <version>${visor.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>commons-cli</groupId>

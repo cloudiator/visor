@@ -19,7 +19,7 @@
 package de.uniulm.omi.cloudiator.visor.server.impl;
 
 import com.google.inject.Inject;
-import de.uniulm.omi.cloudiator.visor.execution.api.ExecutionServiceInterface;
+import de.uniulm.omi.cloudiator.visor.execution.ExecutionServiceInterface;
 import de.uniulm.omi.cloudiator.visor.server.api.ServerListenerFactoryInterface;
 
 import java.net.ServerSocket;

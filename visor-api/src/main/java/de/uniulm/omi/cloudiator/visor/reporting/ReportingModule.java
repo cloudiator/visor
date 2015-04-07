@@ -20,11 +20,7 @@ package de.uniulm.omi.cloudiator.visor.reporting;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
-import de.uniulm.omi.cloudiator.visor.monitoring.api.Metric;
-import de.uniulm.omi.cloudiator.visor.reporting.api.ReportingInterface;
-import de.uniulm.omi.cloudiator.visor.reporting.impl.queue.MetricQueue;
-import de.uniulm.omi.cloudiator.visor.reporting.impl.queue.QueueWorkerFactoryInterface;
-import de.uniulm.omi.cloudiator.visor.reporting.impl.queue.MetricQueueWorkerFactory;
+import de.uniulm.omi.cloudiator.visor.monitoring.Metric;
 
 /**
  * Created by daniel on 10.12.14.
@@ -33,17 +29,8 @@ public abstract class ReportingModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(new TypeLiteral<QueueWorkerFactoryInterface<Metric>>() {
-        }).to(MetricQueueWorkerFactory.class);
-
         bind(new TypeLiteral<ReportingInterface<Metric>>() {
         }).to(this.getReportingInterface());
-
-        bind(new TypeLiteral<ReportingInterface<Metric>>() {
-        }).annotatedWith(QueuedReporting.class).to(MetricQueue.class);
-
-        //bind(new TypeLiteral<ReportingInterface<Metric>>() {
-        //}).annotatedWith(QueuedReporting.class).to(Queue.class);
 
     }
 

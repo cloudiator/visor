@@ -20,7 +20,7 @@ package de.uniulm.omi.cloudiator.visor.monitoring;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import de.uniulm.omi.cloudiator.visor.execution.api.ScheduledExecutionServiceInterface;
+import de.uniulm.omi.cloudiator.visor.execution.ScheduledExecutionServiceInterface;
 
 import java.util.Collection;
 import java.util.HashMap;

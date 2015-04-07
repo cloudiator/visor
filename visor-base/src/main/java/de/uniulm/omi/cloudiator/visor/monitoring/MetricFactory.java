@@ -18,9 +18,6 @@
 
 package de.uniulm.omi.cloudiator.visor.monitoring;
 
-import de.uniulm.omi.cloudiator.visor.monitoring.api.Metric;
-import de.uniulm.omi.cloudiator.visor.monitoring.api.Measurement;
-
 /**
  * Created by daniel on 06.02.15.
  */
@@ -30,8 +27,10 @@ public class MetricFactory {
 
     }
 
-    public static Metric from(String metricName, Measurement measurement, MonitorContext monitorContext) {
-        return MetricBuilder.newBuilder().name(metricName).value(measurement.getValue()).timestamp(measurement.getTimestamp()).addTags(monitorContext.getContext()).build();
+    public static Metric from(String metricName, Measurement measurement,
+        MonitorContext monitorContext) {
+        return MetricBuilder.newBuilder().name(metricName).value(measurement.getValue())
+            .timestamp(measurement.getTimestamp()).addTags(monitorContext.getContext()).build();
     }
 
 }

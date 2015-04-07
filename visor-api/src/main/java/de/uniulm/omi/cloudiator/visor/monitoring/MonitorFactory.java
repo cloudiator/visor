@@ -18,16 +18,12 @@
 
 package de.uniulm.omi.cloudiator.visor.monitoring;
 
-import com.google.inject.ImplementedBy;
-import de.uniulm.omi.cloudiator.visor.monitoring.impl.Interval;
-import de.uniulm.omi.cloudiator.visor.monitoring.impl.MonitorFactoryImpl;
-
 import java.util.Map;
 
 /**
  * Created by daniel on 15.01.15.
  */
-@ImplementedBy(MonitorFactoryImpl.class)
 public interface MonitorFactory {
-    public Monitor create(String metricName, Sensor sensor, Interval interval, Map<String,String> context) throws InvalidMonitorContextException;
+    public Monitor create(String metricName, Sensor sensor, Interval interval,
+        Map<String, String> context) throws InvalidMonitorContextException;
 }

@@ -20,8 +20,8 @@ package de.uniulm.omi.cloudiator.visor.monitoring;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import de.uniulm.omi.cloudiator.visor.reporting.api.ReportingInterface;
-import de.uniulm.omi.cloudiator.visor.reporting.modules.api.QueuedReporting;
+import de.uniulm.omi.cloudiator.visor.reporting.QueuedReporting;
+import de.uniulm.omi.cloudiator.visor.reporting.ReportingInterface;
 
 import java.util.Map;
 

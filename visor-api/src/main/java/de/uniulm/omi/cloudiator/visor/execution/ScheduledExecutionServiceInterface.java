@@ -18,13 +18,10 @@
 
 package de.uniulm.omi.cloudiator.visor.execution;
 
-import com.google.inject.ImplementedBy;
-import de.uniulm.omi.cloudiator.visor.execution.impl.ScheduledExecutionService;
 
 /**
  * Created by daniel on 11.12.14.
  */
-@ImplementedBy(ScheduledExecutionService.class)
 public interface ScheduledExecutionServiceInterface extends ExecutionServiceInterface {
 
     public void schedule(Schedulable schedulable);

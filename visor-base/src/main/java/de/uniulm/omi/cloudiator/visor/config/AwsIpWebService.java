@@ -19,9 +19,9 @@
 package de.uniulm.omi.cloudiator.visor.config;
 
 import com.google.inject.Singleton;
-import de.uniulm.omi.cloudiator.visor.config.api.IpProvider;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 
 import javax.annotation.Nullable;
 import java.io.BufferedReader;

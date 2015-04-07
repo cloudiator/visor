@@ -29,5 +29,16 @@
 
     <artifactId>visor-base</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>de.uniulm.omi.cloudiator</groupId>
+            <artifactId>visor-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+        </dependency>
+
+    </dependencies>
 
 </project>

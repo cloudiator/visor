@@ -18,8 +18,6 @@
 
 package de.uniulm.omi.cloudiator.visor.monitoring;
 
-import de.uniulm.omi.cloudiator.visor.monitoring.impl.MonitorContext;
-
 public interface Sensor {
 
     /**

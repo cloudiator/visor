@@ -18,7 +18,8 @@
 
 package de.uniulm.omi.cloudiator.visor.rest.resources;
 
-import de.uniulm.omi.cloudiator.visor.monitoring.impl.MonitorContext;
+
+import de.uniulm.omi.cloudiator.visor.monitoring.MonitorContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,8 +38,7 @@ public class Monitor {
 
     private List<Context> contexts;
 
-    @SuppressWarnings("UnusedDeclaration")
-    Monitor() {
+    @SuppressWarnings("UnusedDeclaration") Monitor() {
     }
 
     Monitor(String metricName, String sensorClassName, Interval interval, List<Context> contexts) {
@@ -60,8 +60,7 @@ public class Monitor {
         return sensorClassName;
     }
 
-    @SuppressWarnings("UnusedDeclaration")
-    public void setSensorClassName(String sensorClassName) {
+    @SuppressWarnings("UnusedDeclaration") public void setSensorClassName(String sensorClassName) {
         this.sensorClassName = sensorClassName;
     }
 
@@ -77,8 +76,7 @@ public class Monitor {
         return contexts;
     }
 
-    @SuppressWarnings("UnusedDeclaration")
-    public void setContexts(List<Context> contexts) {
+    @SuppressWarnings("UnusedDeclaration") public void setContexts(List<Context> contexts) {
         this.contexts = contexts;
     }
 
@@ -108,7 +106,8 @@ public class Monitor {
             return this;
         }
 
-        public MonitorBuilder interval(final de.uniulm.omi.cloudiator.visor.monitoring.impl.Interval interval) {
+        public MonitorBuilder interval(
+            final de.uniulm.omi.cloudiator.visor.monitoring.Interval interval) {
             this.period = interval.getPeriod();
             this.timeUnit = interval.getTimeUnit().toString();
             return this;
@@ -123,7 +122,8 @@ public class Monitor {
         }
 
         public Monitor build() {
-            return new Monitor(metricName, sensorClassName, new Interval(period, timeUnit), contexts);
+            return new Monitor(metricName, sensorClassName, new Interval(period, timeUnit),
+                contexts);
         }
 
     }

@@ -19,7 +19,6 @@
 package de.uniulm.omi.cloudiator.visor.execution;
 
 import com.google.inject.Inject;
-import de.uniulm.omi.cloudiator.visor.execution.api.ExecutionServiceInterface;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -32,13 +31,11 @@ public class ShutdownHook extends Thread {
 
     private final ExecutionServiceInterface executionService;
 
-    @Inject
-    public ShutdownHook(ExecutionServiceInterface executionService) {
+    @Inject public ShutdownHook(ExecutionServiceInterface executionService) {
         this.executionService = executionService;
     }
 
-    @Override
-    public void run() {
+    @Override public void run() {
         logger.debug("Running shutdown hook.");
         this.executionService.shutdown(60);
     }

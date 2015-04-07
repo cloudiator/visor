@@ -19,9 +19,9 @@
 package de.uniulm.omi.cloudiator.visor.server.impl;
 
 import com.google.inject.Inject;
-import de.uniulm.omi.cloudiator.visor.monitoring.api.Metric;
-import de.uniulm.omi.cloudiator.visor.reporting.api.ReportingInterface;
-import de.uniulm.omi.cloudiator.visor.reporting.modules.api.QueuedReporting;
+import de.uniulm.omi.cloudiator.visor.monitoring.Metric;
+import de.uniulm.omi.cloudiator.visor.reporting.QueuedReporting;
+import de.uniulm.omi.cloudiator.visor.reporting.ReportingInterface;
 import de.uniulm.omi.cloudiator.visor.server.api.RequestParsingInterface;
 import de.uniulm.omi.cloudiator.visor.server.api.SocketWorkerFactoryInterface;
 
@@ -36,14 +36,13 @@ public class SocketWorkerFactory implements SocketWorkerFactoryInterface {
     private final ReportingInterface<Metric> metricReporting;
     private final RequestParsingInterface<String, Metric> requestParser;
 
-    @Inject
-    public SocketWorkerFactory(@QueuedReporting ReportingInterface<Metric> metricReporting, RequestParsingInterface<String, Metric> requestParser) {
+    @Inject public SocketWorkerFactory(@QueuedReporting ReportingInterface<Metric> metricReporting,
+        RequestParsingInterface<String, Metric> requestParser) {
         this.metricReporting = metricReporting;
         this.requestParser = requestParser;
     }
 
-    @Override
-    public SocketWorker create(Socket socket) {
+    @Override public SocketWorker create(Socket socket) {
         return new SocketWorker(socket, metricReporting, requestParser);
     }
 }

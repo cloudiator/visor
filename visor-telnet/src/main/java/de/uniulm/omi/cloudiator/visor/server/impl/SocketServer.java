@@ -20,7 +20,7 @@ package de.uniulm.omi.cloudiator.visor.server.impl;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import de.uniulm.omi.cloudiator.visor.execution.api.ExecutionServiceInterface;
+import de.uniulm.omi.cloudiator.visor.execution.ExecutionServiceInterface;
 import de.uniulm.omi.cloudiator.visor.server.api.ServerListenerFactoryInterface;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -38,7 +38,8 @@ public class SocketServer {
     private static final Logger LOGGER = LogManager.getLogger(SocketServer.class);
 
     @Inject
-    public SocketServer(@Named("telnetPort") int port, ExecutionServiceInterface executionService, ServerListenerFactoryInterface serverListenerFactory) {
+    public SocketServer(@Named("telnetPort") int port, ExecutionServiceInterface executionService,
+        ServerListenerFactoryInterface serverListenerFactory) {
         checkArgument(port > 0, "Argument port must be > 0");
         if (port < 1024) {
             LOGGER.warn(

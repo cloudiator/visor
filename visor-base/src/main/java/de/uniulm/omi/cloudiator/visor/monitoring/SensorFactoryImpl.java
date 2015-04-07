@@ -18,11 +18,6 @@
 
 package de.uniulm.omi.cloudiator.visor.monitoring;
 
-import de.uniulm.omi.cloudiator.visor.monitoring.api.Sensor;
-import de.uniulm.omi.cloudiator.visor.monitoring.api.SensorInitializationException;
-import de.uniulm.omi.cloudiator.visor.monitoring.api.SensorFactory;
-import de.uniulm.omi.cloudiator.visor.monitoring.api.SensorNotFoundException;
-
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 

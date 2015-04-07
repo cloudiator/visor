@@ -20,7 +20,7 @@ package de.uniulm.omi.cloudiator.visor.rest;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import de.uniulm.omi.cloudiator.visor.monitoring.api.MonitoringService;
+import de.uniulm.omi.cloudiator.visor.monitoring.MonitoringService;
 import de.uniulm.omi.cloudiator.visor.rest.controllers.MonitorController;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

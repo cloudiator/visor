@@ -18,10 +18,8 @@
 
 package de.uniulm.omi.cloudiator.visor.reporting;
 
-import de.uniulm.omi.cloudiator.visor.execution.api.Schedulable;
-import de.uniulm.omi.cloudiator.visor.monitoring.impl.Interval;
-import de.uniulm.omi.cloudiator.visor.reporting.api.ReportingInterface;
-import de.uniulm.omi.cloudiator.visor.reporting.impl.ReportingException;
+import de.uniulm.omi.cloudiator.visor.execution.Schedulable;
+import de.uniulm.omi.cloudiator.visor.monitoring.Interval;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

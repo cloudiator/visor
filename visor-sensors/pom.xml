@@ -29,5 +29,16 @@
 
     <artifactId>visor-sensors</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>de.uniulm.omi.cloudiator</groupId>
+            <artifactId>visor-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.uniulm.omi.cloudiator</groupId>
+            <artifactId>visor-base</artifactId>
+        </dependency>
+    </dependencies>
+
 
 </project>

@@ -19,14 +19,11 @@
 package de.uniulm.omi.cloudiator.visor.config;
 
 import javax.annotation.Nullable;
-import java.io.IOException;
-import java.util.List;
 
 /**
  * Created by daniel on 10.02.15.
  */
 public interface IpProvider {
 
-    @Nullable
-    public String getPublicIp();
+    @Nullable public String getPublicIp();
 }

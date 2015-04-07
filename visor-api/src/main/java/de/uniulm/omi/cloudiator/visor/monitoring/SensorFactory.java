@@ -18,13 +18,10 @@
 
 package de.uniulm.omi.cloudiator.visor.monitoring;
 
-import com.google.inject.ImplementedBy;
-import de.uniulm.omi.cloudiator.visor.monitoring.impl.SensorFactoryImpl;
-
 /**
  * Created by daniel on 15.01.15.
  */
-@ImplementedBy(SensorFactoryImpl.class)
 public interface SensorFactory {
-    public Sensor from(String className) throws SensorNotFoundException, SensorInitializationException;
+    public Sensor from(String className)
+        throws SensorNotFoundException, SensorInitializationException;
 }

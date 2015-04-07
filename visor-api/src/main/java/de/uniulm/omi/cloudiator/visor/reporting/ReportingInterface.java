@@ -18,8 +18,6 @@
 
 package de.uniulm.omi.cloudiator.visor.reporting;
 
-import de.uniulm.omi.cloudiator.visor.reporting.impl.ReportingException;
-
 import java.util.Collection;
 
 /**

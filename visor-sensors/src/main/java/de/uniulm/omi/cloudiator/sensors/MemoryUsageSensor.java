@@ -19,17 +19,13 @@
 package de.uniulm.omi.cloudiator.sensors;
 
 import com.sun.management.OperatingSystemMXBean;
-import de.uniulm.omi.cloudiator.visor.monitoring.api.Measurement;
-import de.uniulm.omi.cloudiator.visor.monitoring.api.MeasurementNotAvailableException;
-import de.uniulm.omi.cloudiator.visor.monitoring.api.SensorInitializationException;
-import de.uniulm.omi.cloudiator.visor.monitoring.impl.MeasurementImpl;
-import de.uniulm.omi.cloudiator.visor.monitoring.impl.MonitorContext;
+import de.uniulm.omi.cloudiator.visor.monitoring.*;
 
 import java.lang.management.ManagementFactory;
 
 /**
  * The MemoryUsageProbe class.
- * <p/>
+ * <p>
  * Measures the current
  * ly used memory by the operating system in percentage.
  */

@@ -19,7 +19,6 @@
 package de.uniulm.omi.cloudiator.visor.monitoring;
 
 import com.google.common.collect.ImmutableMap;
-import de.uniulm.omi.cloudiator.visor.monitoring.api.Metric;
 
 import java.util.HashMap;
 import java.util.Map;

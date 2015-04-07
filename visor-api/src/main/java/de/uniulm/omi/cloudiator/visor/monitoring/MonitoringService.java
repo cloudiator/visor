@@ -18,9 +18,6 @@
 
 package de.uniulm.omi.cloudiator.visor.monitoring;
 
-import com.google.inject.ImplementedBy;
-import de.uniulm.omi.cloudiator.visor.monitoring.impl.Interval;
-import de.uniulm.omi.cloudiator.visor.monitoring.impl.MonitoringServiceImpl;
 
 import java.util.Collection;
 import java.util.Map;
@@ -28,11 +25,12 @@ import java.util.Map;
 /**
  * Created by daniel on 11.12.14.
  */
-@ImplementedBy(MonitoringServiceImpl.class)
 public interface MonitoringService {
 
-
-    public void startMonitoring(String metricName, String sensorClassName, Interval interval, Map<String, String> monitorContext) throws SensorNotFoundException, SensorInitializationException, InvalidMonitorContextException;
+    public void startMonitoring(String metricName, String sensorClassName, Interval interval,
+        Map<String, String> monitorContext)
+        throws SensorNotFoundException, SensorInitializationException,
+        InvalidMonitorContextException;
 
     public void stopMonitoring(String metricName);
 

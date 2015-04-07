@@ -18,7 +18,6 @@
 
 package de.uniulm.omi.cloudiator.visor.monitoring;
 
-import de.uniulm.omi.cloudiator.visor.monitoring.api.Measurement;
 
 /**
  * Created by daniel on 18.12.14.

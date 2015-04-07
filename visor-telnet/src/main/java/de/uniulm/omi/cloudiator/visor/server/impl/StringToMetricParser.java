@@ -20,9 +20,9 @@ package de.uniulm.omi.cloudiator.visor.server.impl;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import de.uniulm.omi.cloudiator.visor.monitoring.api.Metric;
-import de.uniulm.omi.cloudiator.visor.monitoring.impl.MetricBuilder;
-import de.uniulm.omi.cloudiator.visor.monitoring.impl.DefaultMonitorContext;
+import de.uniulm.omi.cloudiator.visor.monitoring.DefaultMonitorContext;
+import de.uniulm.omi.cloudiator.visor.monitoring.Metric;
+import de.uniulm.omi.cloudiator.visor.monitoring.MetricBuilder;
 import de.uniulm.omi.cloudiator.visor.server.api.ParsingException;
 import de.uniulm.omi.cloudiator.visor.server.api.RequestParsingInterface;
 
@@ -57,7 +57,7 @@ public class StringToMetricParser implements RequestParsingInterface<String, Met
         }
 
         return MetricBuilder.newBuilder().name(metricName).value(value).timestamp(timestamp)
-            .addTag("application", applicationName).addTag(DefaultMonitorContext.LOCAL_IP, this.localIp)
-            .build();
+            .addTag("application", applicationName)
+            .addTag(DefaultMonitorContext.LOCAL_IP, this.localIp).build();
     }
 }

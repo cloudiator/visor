@@ -19,10 +19,8 @@
 package de.uniulm.omi.cloudiator.visor;
 
 import com.google.inject.Module;
-import de.uniulm.omi.cloudiator.visor.config.api.IpProvider;
-import de.uniulm.omi.cloudiator.visor.config.impl.BaseConfigurationModule;
-import de.uniulm.omi.cloudiator.visor.config.impl.FileConfigurationAccessor;
-import de.uniulm.omi.cloudiator.visor.server.config.ServerModule;
+import de.uniulm.omi.cloudiator.visor.config.FileConfigurationAccessor;
+import de.uniulm.omi.cloudiator.visor.config.IpProvider;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -84,9 +82,6 @@ public class MonitoringAgentServiceBuilder {
     public MonitoringAgentService build() {
         try {
             this.loadReportingModuleBasedOnPropertiesFile();
-            this.modules.add(new ServerModule());
-            this.modules.add(new BaseConfigurationModule(this.fileConfigurationAccessor,
-                this.resolvePublicIpAddress()));
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | IllegalStateException e) {
             LOGGER.fatal(e);
             System.exit(1);

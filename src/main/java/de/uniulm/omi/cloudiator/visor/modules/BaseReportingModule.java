@@ -16,21 +16,22 @@
  * under the License.
  */
 
-package de.uniulm.omi.cloudiator.visor.reporting;
+package de.uniulm.omi.cloudiator.visor.modules;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-import de.uniulm.omi.cloudiator.visor.execution.ScheduledExecutionService;
+import com.google.inject.AbstractModule;
+import com.google.inject.TypeLiteral;
 import de.uniulm.omi.cloudiator.visor.monitoring.Metric;
+import de.uniulm.omi.cloudiator.visor.reporting.*;
 
 /**
- * Created by daniel on 15.12.14.
+ * Created by daniel on 07.04.15.
  */
-@Singleton
-public class MetricQueue extends Queue<Metric> {
+public class BaseReportingModule extends AbstractModule {
+    @Override protected void configure() {
+        bind(new TypeLiteral<QueueWorkerFactoryInterface<Metric>>() {
+        }).to(MetricQueueWorkerFactory.class);
 
-    @Inject
-    public MetricQueue(ScheduledExecutionService executionService, QueueWorkerFactoryInterface<Metric> queueWorkerFactory) {
-        super(executionService, queueWorkerFactory);
+        bind(new TypeLiteral<ReportingInterface<Metric>>() {
+        }).annotatedWith(QueuedReporting.class).to(MetricQueue.class);
     }
 }

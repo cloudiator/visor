@@ -21,8 +21,6 @@ package de.uniulm.omi.cloudiator.visor.execution;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
-import de.uniulm.omi.cloudiator.visor.execution.api.Schedulable;
-import de.uniulm.omi.cloudiator.visor.execution.api.ScheduledExecutionServiceInterface;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

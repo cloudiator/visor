@@ -28,6 +28,7 @@ import java.util.Map;
  */
 public class DefaultMonitorContext implements MonitorContext {
 
+    public static final String LOCAL_IP = "local_ip";
     private final Map<String, String> context;
 
     public static MonitorContextBuilder builder() {

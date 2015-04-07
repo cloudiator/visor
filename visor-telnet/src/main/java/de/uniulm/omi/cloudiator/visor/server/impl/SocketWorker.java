@@ -18,10 +18,9 @@
 
 package de.uniulm.omi.cloudiator.visor.server.impl;
 
-
-import de.uniulm.omi.cloudiator.visor.monitoring.api.Metric;
-import de.uniulm.omi.cloudiator.visor.reporting.api.ReportingInterface;
-import de.uniulm.omi.cloudiator.visor.reporting.impl.ReportingException;
+import de.uniulm.omi.cloudiator.visor.monitoring.Metric;
+import de.uniulm.omi.cloudiator.visor.reporting.ReportingException;
+import de.uniulm.omi.cloudiator.visor.reporting.ReportingInterface;
 import de.uniulm.omi.cloudiator.visor.server.api.ParsingException;
 import de.uniulm.omi.cloudiator.visor.server.api.RequestParsingInterface;
 import org.apache.logging.log4j.LogManager;

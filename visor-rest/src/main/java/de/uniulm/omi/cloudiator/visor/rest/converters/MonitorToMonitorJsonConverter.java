@@ -24,16 +24,12 @@ import de.uniulm.omi.cloudiator.visor.rest.resources.Monitor;
 /**
  * Created by daniel on 09.02.15.
  */
-public class MonitorToMonitorJsonConverter implements OneWayConverter<de.uniulm.omi.cloudiator.visor.monitoring.api.Monitor, Monitor> {
+public class MonitorToMonitorJsonConverter
+    implements OneWayConverter<de.uniulm.omi.cloudiator.visor.monitoring.Monitor, Monitor> {
 
-    @Override
-    public Monitor apply(de.uniulm.omi.cloudiator.visor.monitoring.api.Monitor input) {
-        return Monitor
-                .builder()
-                .metricName(input.getMetricName())
-                .sensorClassName(input.getSensor().getClass().getCanonicalName())
-                .interval(input.getInterval())
-                .context(input.getMonitorContext())
-                .build();
+    @Override public Monitor apply(de.uniulm.omi.cloudiator.visor.monitoring.Monitor input) {
+        return Monitor.builder().metricName(input.getMetricName())
+            .sensorClassName(input.getSensor().getClass().getCanonicalName())
+            .interval(input.getInterval()).context(input.getMonitorContext()).build();
     }
 }

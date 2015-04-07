@@ -20,17 +20,16 @@ package de.uniulm.omi.cloudiator.visor.server.config;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
+import de.uniulm.omi.cloudiator.visor.monitoring.Metric;
 import de.uniulm.omi.cloudiator.visor.server.api.RequestParsingInterface;
 import de.uniulm.omi.cloudiator.visor.server.impl.StringToMetricParser;
-import de.uniulm.omi.cloudiator.visor.monitoring.api.Metric;
 
 /**
  * Created by daniel on 16.12.14.
  */
 public class ServerModule extends AbstractModule {
 
-    @Override
-    protected void configure() {
+    @Override protected void configure() {
         bind(new TypeLiteral<RequestParsingInterface<String, Metric>>() {
         }).to(StringToMetricParser.class);
     }

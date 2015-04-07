@@ -18,8 +18,6 @@
 
 package de.uniulm.omi.cloudiator.visor.monitoring;
 
-import de.uniulm.omi.cloudiator.visor.monitoring.api.Metric;
-
 import java.util.Map;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -27,14 +25,14 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * A basic metric for the system.
- * <p/>
+ * <p>
  * A metric always consists of:
  * - a name: the name of the metric
  * - a value: a value for this metric.
  * - a timestamp: the unix timestamp when this metric was taken.
  * - a map of key value tags
- * <p/>
- * <p/>
+ * <p>
+ * <p>
  * Use MetricFactory to create metrics.
  *
  * @see MetricFactory

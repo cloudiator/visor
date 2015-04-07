@@ -19,8 +19,7 @@
 package de.uniulm.omi.cloudiator.visor.reporting;
 
 import com.google.inject.Inject;
-import de.uniulm.omi.cloudiator.visor.monitoring.impl.Interval;
-import de.uniulm.omi.cloudiator.visor.reporting.api.ReportingInterface;
+import de.uniulm.omi.cloudiator.visor.monitoring.Interval;
 
 import java.util.concurrent.BlockingQueue;
 

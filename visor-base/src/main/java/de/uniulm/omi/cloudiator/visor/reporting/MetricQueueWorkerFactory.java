@@ -19,8 +19,7 @@
 package de.uniulm.omi.cloudiator.visor.reporting;
 
 import com.google.inject.Inject;
-import de.uniulm.omi.cloudiator.visor.monitoring.api.Metric;
-import de.uniulm.omi.cloudiator.visor.reporting.api.ReportingInterface;
+import de.uniulm.omi.cloudiator.visor.monitoring.Metric;
 
 /**
  * Created by daniel on 15.12.14.
