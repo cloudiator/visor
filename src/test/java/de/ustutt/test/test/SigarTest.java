@@ -31,8 +31,8 @@ import de.ustutt.cloudiator.visor.monitoring.sensors.IOLoadReadsProbe;
 import de.ustutt.cloudiator.visor.monitoring.sensors.IOLoadWritesProbe;
 import de.ustutt.cloudiator.visor.monitoring.sensors.NFSV2Probe;
 import de.ustutt.cloudiator.visor.monitoring.sensors.NFSV3Probe;
-import de.ustutt.cloudiator.visor.monitoring.sensors.BandwithDownloadProbe;
-import de.ustutt.cloudiator.visor.monitoring.sensors.BandwithUploadProbe;
+import de.ustutt.cloudiator.visor.monitoring.sensors.BandwidthDownloadProbe;
+import de.ustutt.cloudiator.visor.monitoring.sensors.BandwidthUploadProbe;
 
 public class SigarTest {
 	
@@ -82,20 +82,20 @@ public class SigarTest {
 	@Test
 	public void testAverageLatency() throws IOException{
 		AverageLatencyProbe latency = new AverageLatencyProbe();
-		System.out.println("Latency to "+MonitorContext.PING_IP+": "+ latency.getAverageLatence() + "ms");
+		System.out.println("Latency to "+MonitorContext.PING_IP+": "+ latency.getAverageLatency() + "ms");
 	}
 	
 	//@Ignore
 	@Test
 	public void testUsedUploadBandwidth() throws SigarException, InterruptedException{
-		BandwithUploadProbe networkStateUpload = new BandwithUploadProbe();
+		BandwidthUploadProbe networkStateUpload = new BandwidthUploadProbe();
 		System.out.println("Average used upload bandwidth is "+networkStateUpload.getAverageUsedUploadBandwidth() +"%");
 	}
 	
 	//@Ignore
 	@Test
 	public void testUsedDownloadBandwidth() throws SigarException, InterruptedException{
-		BandwithDownloadProbe networkStateDownload = new BandwithDownloadProbe();
+		BandwidthDownloadProbe networkStateDownload = new BandwidthDownloadProbe();
 		System.out.println("Average used download bandwidth is "+networkStateDownload.getAverageUsedDownloadBandwidth() +"%");
 	}
 		

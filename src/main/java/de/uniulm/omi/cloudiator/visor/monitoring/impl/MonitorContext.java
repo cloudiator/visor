@@ -28,16 +28,6 @@ import java.util.Map;
  */
 public class MonitorContext {
 
-    public static final String LOCAL_IP = "localIp";
-    public static final String FS_ROOT_LINUX = "/";
-    public static final String FS_ROOT_WINDOWS = "D:/";
-    public static final String NFS_MOUNT_POINT = "/home/raskin/Documents/hlrs_share";
-    public static final String PING_IP= "google.com";
-    public static final String PING_PORT = "80";
-    public static final String PING_LOOP = "5";
-    public static final String FILE_NAME_TEST="/file_that_do_not_exist.txt";    
-    public static final int CHANNEL_WIDTH=100; 
-    
     private final Map<String, String> context;
 
     public static MonitorContextBuilder builder() {
@@ -52,12 +42,19 @@ public class MonitorContext {
         return this.context.get(context);
     }
 
+    public boolean hasValue(String context) {
+        return this.context.containsKey(context);
+    }
+
+    public String getOrDefault(String context, String defaultValue) {
+        return this.context.getOrDefault(context, defaultValue);
+    }
+
     public Map<String, String> getContext() {
         return context;
     }
 
-    @Override
-    public String toString() {
+    @Override public String toString() {
         StringBuilder contextString = new StringBuilder("[");
         for (Map.Entry<String, String> mapEntry : this.getContext().entrySet()) {
             contextString.append(mapEntry.getKey());

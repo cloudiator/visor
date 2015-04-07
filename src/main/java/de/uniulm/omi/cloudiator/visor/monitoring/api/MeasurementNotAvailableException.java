@@ -27,6 +27,13 @@ public class MeasurementNotAvailableException extends Exception {
     /**
      * @see java.lang.Exception
      */
+    public MeasurementNotAvailableException(Throwable cause) {
+        super(cause);
+    }
+
+    /**
+     * @see java.lang.Exception
+     */
     public MeasurementNotAvailableException(String message) {
         super(message);
     }

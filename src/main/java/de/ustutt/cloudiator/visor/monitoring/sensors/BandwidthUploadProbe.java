@@ -19,7 +19,6 @@
 /**
  * This file was modified by University of Ulm.
  */
-
 package de.ustutt.cloudiator.visor.monitoring.sensors;
 
 import de.uniulm.omi.cloudiator.visor.monitoring.api.*;
@@ -29,13 +28,42 @@ import org.hyperic.sigar.*;
 
 import java.util.ArrayList;
 
-public class AvgTransmittedBytesProbe implements Sensor {
+public class BandwidthUploadProbe implements Sensor {
 
     private static final int SMALL_CYCLE = 1000;
     private static final int BIG_CYCLE = 5000;
-
     Sigar sigarImpl;
     SigarProxy sigar;
+
+    public BandwidthUploadProbe() {
+        this.sigarImpl = new Sigar();
+
+    }
+
+    /**
+     * Provide channel width in Mbit/sec, retrieve used bandwidth in percentage from this value.
+     * Transmitter bandwidth is considered here
+     *
+     * @return
+     * @throws InterruptedException
+     * @throws SigarException
+     */
+    public double getAverageUsedUploadBandwidth() throws SigarException, InterruptedException {
+        double percentage = 100.0;
+        // make both values of the same scope, KBytes/s
+        int eight = 8;
+        int binaryNumber = 1024;
+        double channelWidthInKBytesPerSecond =
+            ((MonitorContext.CHANNEL_WIDTH / eight) * binaryNumber);
+        double rxRateInKBytesPerSecond = this.getAverageTxRate() / binaryNumber;
+        percentage = (rxRateInKBytesPerSecond * percentage) / channelWidthInKBytesPerSecond;
+
+        // round to 3 symbols after the dot
+        int THOUSAND = 1000;
+        int roundedValue = (int) (percentage * THOUSAND);
+        percentage = (double) roundedValue / THOUSAND;
+        return percentage;
+    }
 
     /**
      * Average rate of transmitted bytes in bytes per second. Blocking method, execute it in a separate thread
@@ -90,10 +118,7 @@ public class AvgTransmittedBytesProbe implements Sensor {
         return result;
     }
 
-    public AvgTransmittedBytesProbe() {
-        this.sigarImpl = new Sigar();
 
-    }
 
     @Override public void init() throws SensorInitializationException {
         // TODO Auto-generated method stub
@@ -107,13 +132,18 @@ public class AvgTransmittedBytesProbe implements Sensor {
     }
 
     @Override public Measurement getMeasurement() throws MeasurementNotAvailableException {
-        //"kBytes/sec"
+        //in %
         double averageTxRate = 0;
         try {
-            averageTxRate = getAverageTxRate() / 1024;
-        } catch (SigarException | InterruptedException e) {
+            averageTxRate = getAverageUsedUploadBandwidth();
+        } catch (InterruptedException | SigarException e) {
             throw new MeasurementNotAvailableException(e);
         }
+        if (averageTxRate <= 0) {
+            throw new MeasurementNotAvailableException(
+                "Network metric Upload rate isn´t available");
+        }
+
         return new MeasurementImpl(System.currentTimeMillis(), averageTxRate);
     }
 

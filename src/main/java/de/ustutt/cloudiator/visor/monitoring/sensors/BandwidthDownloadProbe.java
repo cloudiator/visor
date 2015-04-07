@@ -19,7 +19,6 @@
 /**
  * This file was modified by University of Ulm.
  */
-
 package de.ustutt.cloudiator.visor.monitoring.sensors;
 
 import de.uniulm.omi.cloudiator.visor.monitoring.api.*;
@@ -30,15 +29,42 @@ import org.hyperic.sigar.*;
 import java.util.ArrayList;
 
 
-public class AvgReceivedBytesProbe implements Sensor {
 
-    private final static int SMALL_CYCLE = 1000;
-    private final static int BIG_CYCLE = 5000;
-    private Sigar sigarImpl;
+public class BandwidthDownloadProbe implements Sensor {
 
-    public AvgReceivedBytesProbe() {
+    private static final int SMALL_CYCLE = 1000;
+    private static final int BIG_CYCLE = 5000;
+    Sigar sigarImpl;
+    SigarProxy sigar;
+
+    public BandwidthDownloadProbe() {
         this.sigarImpl = new Sigar();
 
+    }
+
+    /**
+     * Provide channel width in Mbit/sec, retrieve used bandwidth in percentage from this value.
+     * Receiver bandwidth is considered here
+     *
+     * @return
+     * @throws InterruptedException
+     * @throws SigarException
+     */
+    public double getAverageUsedDownloadBandwidth() throws SigarException, InterruptedException {
+        double percentage = 100.0;
+        // make both values of the same scope, KBytes/s
+        int EIGHT = 8;
+        int BINARY_NUMBER = 1024;
+        double channelWidthInKBytesPerSecond =
+            ((MonitorContext.CHANNEL_WIDTH / EIGHT) * BINARY_NUMBER);
+        double rxRateInKBytesPerSecond = this.getAverageRxRate() / BINARY_NUMBER;
+        percentage = (rxRateInKBytesPerSecond * percentage) / channelWidthInKBytesPerSecond;
+
+        // round to 3 symbols after the dot
+        int THOUSAND = 1000;
+        int roundedValue = (int) (percentage * THOUSAND);
+        percentage = (double) roundedValue / THOUSAND;
+        return percentage;
     }
 
     /**
@@ -60,11 +86,11 @@ public class AvgReceivedBytesProbe implements Sensor {
         // measure received bytes n times, where n is bigCycle/smallCycle
         for (int i = 0; i <= bigCycle; i += smallCycle) {
             rxBytesNewCycle = 0;
-            SigarProxy sigar = SigarProxyCache.newInstance(sigarImpl);
+            this.sigar = SigarProxyCache.newInstance(sigarImpl);
 
             // measure the number of received bytes on all network interfaces
             for (String ni : sigar.getNetInterfaceList()) {
-                netStat = sigar.getNetInterfaceStat(ni);
+                netStat = this.sigar.getNetInterfaceStat(ni);
                 if (i == 0)
                     rxBytesLastCycle += netStat.getRxBytes();
                 else
@@ -97,23 +123,26 @@ public class AvgReceivedBytesProbe implements Sensor {
 
     @Override public void init() throws SensorInitializationException {
         // TODO Auto-generated method stub
-
     }
 
     @Override public void setMonitorContext(MonitorContext monitorContext)
         throws InvalidMonitorContextException {
         // TODO Auto-generated method stub
-
     }
 
     @Override public Measurement getMeasurement() throws MeasurementNotAvailableException {
-        //KBytes|sec
+        //in %
         double averageRxRate = 0;
         try {
-            averageRxRate = getAverageRxRate() / 1024;
-        } catch (SigarException | InterruptedException e) {
+            averageRxRate = getAverageUsedDownloadBandwidth();
+        } catch (InterruptedException | SigarException e) {
             throw new MeasurementNotAvailableException(e);
         }
+        if (averageRxRate <= 0) {
+            throw new MeasurementNotAvailableException(
+                "Network metric Download rate isn´t available");
+        }
+
         return new MeasurementImpl(System.currentTimeMillis(), averageRxRate);
     }
 

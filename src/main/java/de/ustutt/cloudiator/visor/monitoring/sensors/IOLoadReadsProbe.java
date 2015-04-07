@@ -1,68 +1,76 @@
+/*
+ * Copyright (c) 2015 University of Stuttgart
+ *
+ * See the NOTICE file distributed with this work for additional information
+ * regarding copyright ownership.  Licensed under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+/**
+ * This file was modified by University of Ulm.
+ */
+
 package de.ustutt.cloudiator.visor.monitoring.sensors;
+
+import com.sun.management.OperatingSystemMXBean;
+import de.uniulm.omi.cloudiator.visor.monitoring.api.*;
+import de.uniulm.omi.cloudiator.visor.monitoring.impl.MeasurementImpl;
+import de.uniulm.omi.cloudiator.visor.monitoring.impl.MonitorContext;
+import org.hyperic.sigar.*;
 
 import java.lang.management.ManagementFactory;
 
-import org.hyperic.sigar.DiskUsage;
-import org.hyperic.sigar.Sigar;
-import org.hyperic.sigar.SigarException;
-import org.hyperic.sigar.SigarProxy;
-import org.hyperic.sigar.SigarProxyCache;
 
-import com.google.common.base.Optional;
-import com.sun.management.OperatingSystemMXBean;
+public class IOLoadReadsProbe implements Sensor {
 
-import de.uniulm.omi.executionware.agent.monitoring.api.InvalidMonitorContextException;
-import de.uniulm.omi.executionware.agent.monitoring.api.Measurement;
-import de.uniulm.omi.executionware.agent.monitoring.api.MeasurementNotAvailableException;
-import de.uniulm.omi.executionware.agent.monitoring.api.Sensor;
-import de.uniulm.omi.executionware.agent.monitoring.api.SensorInitializationException;
-import de.uniulm.omi.executionware.agent.monitoring.impl.MeasurementImpl;
-import de.uniulm.omi.executionware.agent.monitoring.impl.MonitorContext;
+    private final static String DEFAULT_FS_ROOT_WINDOWS = "/";
+    private final static String DEFAULT_FS_ROOT_LINUX = "C:/";
 
-public class IOLoadReadsProbe implements Sensor{
-	
-	Sigar sigarImpl;
-	SigarProxy sigar;
-	
-	public IOLoadReadsProbe(){
-		this.sigarImpl = new Sigar();
-		this.sigar=SigarProxyCache.newInstance(sigarImpl);
-	}
-	
-	public String outputDisk() throws SigarException {
-		 OperatingSystemMXBean osBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
-		 String rootOS = osBean.getName().indexOf("win") >= 0 ? MonitorContext.FS_ROOT_WINDOWS:MonitorContext.FS_ROOT_LINUX; 
-		 DiskUsage disk = sigar.getDiskUsage(rootOS); 
-		 //return "Reads-bytes in Disk: " + Sigar.formatSize(disk.getReadBytes()) + " | Reads in Disk: " + disk.getReads() ;
-		 return "Reads in Disk: " + disk.getReads() ;
-	}
+    private final static String FS_ROOT_MONITOR_CONTEXT = "fs_root";
 
-	@Override
-	public void init() throws SensorInitializationException {
-		// TODO Auto-generated method stub
-		
-	}
+    private String fsRoot;
 
-	@Override
-	public void setMonitorContext(Optional<MonitorContext> monitorContext)
-			throws InvalidMonitorContextException {
-		// TODO Auto-generated method stub
-		
-	}
+    private SigarProxy sigar;
 
-	@Override
-	public Measurement getMeasurement() throws MeasurementNotAvailableException {
-		String diskIO = "";
-		try {			
-			diskIO = outputDisk();			
-		} catch (SigarException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		if (diskIO.equals(null)) {
-	        throw new MeasurementNotAvailableException("IODisk calculation wasn´t possible!");
-	    }
-		return new MeasurementImpl(System.currentTimeMillis(), diskIO);
-	}
+    public long outputDisk() throws SigarException {
+        DiskUsage disk = sigar.getDiskUsage(fsRoot);
+        return disk.getReads();
+    }
+
+    @Override public void init() throws SensorInitializationException {
+        Sigar sigarImpl = new Sigar();
+        this.sigar = SigarProxyCache.newInstance(sigarImpl);
+    }
+
+    @Override public void setMonitorContext(MonitorContext monitorContext)
+        throws InvalidMonitorContextException {
+        if (monitorContext.hasValue(FS_ROOT_MONITOR_CONTEXT)) {
+            this.fsRoot = monitorContext.getValue(FS_ROOT_MONITOR_CONTEXT);
+        } else {
+            OperatingSystemMXBean osBean =
+                ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
+            fsRoot =
+                osBean.getName().contains("win") ? DEFAULT_FS_ROOT_WINDOWS : DEFAULT_FS_ROOT_LINUX;
+        }
+    }
+
+    @Override public Measurement getMeasurement() throws MeasurementNotAvailableException {
+        try {
+            long diskIO = outputDisk();
+            return new MeasurementImpl(System.currentTimeMillis(), diskIO);
+        } catch (SigarException e) {
+            throw new MeasurementNotAvailableException(e);
+        }
+    }
 
 }
