@@ -29,12 +29,5 @@
 
     <artifactId>visor-api</artifactId>
 
-    <dependencies>
-        <dependency>
-            <groupId>com.google.code.findbugs</groupId>
-            <artifactId>jsr305</artifactId>
-        </dependency>
-    </dependencies>
-
 
 </project>

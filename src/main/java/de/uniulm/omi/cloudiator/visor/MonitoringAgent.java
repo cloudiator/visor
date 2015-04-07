@@ -18,9 +18,6 @@
 
 package de.uniulm.omi.cloudiator.visor;
 
-import de.uniulm.omi.cloudiator.visor.config.AwsIpWebService;
-import de.uniulm.omi.cloudiator.visor.config.CommandLinePropertiesAccessor;
-import de.uniulm.omi.cloudiator.visor.config.CommandLinePropertiesAccessorImpl;
 import org.apache.commons.cli.ParseException;
 
 

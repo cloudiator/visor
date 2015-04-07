@@ -27,13 +27,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>visor-base</artifactId>
+    <artifactId>visor-service</artifactId>
 
-    <dependencies>
-        <dependency>
-            <groupId>de.uniulm.omi.cloudiator</groupId>
-            <artifactId>visor-api</artifactId>
-        </dependency>
-    </dependencies>
 
 </project>
