@@ -32,13 +32,13 @@ import java.util.Map;
 public interface MonitoringService {
 
 
-    public void startMonitoring(String metricName, String sensorClassName, Interval interval, Map<String, String> monitorContext) throws SensorNotFoundException, SensorInitializationException, InvalidMonitorContextException;
+    public void startMonitoring(String uuid, String metricName, String sensorClassName, Interval interval, Map<String, String> monitorContext) throws SensorNotFoundException, SensorInitializationException, InvalidMonitorContextException;
 
-    public void stopMonitoring(String metricName);
+    public void stopMonitoring(String uuid);
 
     public Collection<Monitor> getMonitors();
 
-    public Monitor getMonitor(String metricName);
+    public Monitor getMonitor(String uuid);
 
-    public boolean isMonitoring(String metricName);
+    public boolean isMonitoring(String uuid);
 }

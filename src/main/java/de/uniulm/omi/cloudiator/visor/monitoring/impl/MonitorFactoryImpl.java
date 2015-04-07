@@ -43,9 +43,9 @@ public class
     }
 
     @Override
-    public Monitor create(String metricName, Sensor sensor, Interval interval, Map<String, String> context) throws
+    public Monitor create(String uuid, String metricName, Sensor sensor, Interval interval, Map<String, String> context) throws
         InvalidMonitorContextException {
         MonitorContext monitorContext = MonitorContext.builder().addContext(MonitorContext.LOCAL_IP, localIp).addContext(context).build();
-        return new MonitorImpl(metricName, sensor, interval, monitorContext, metricReportingInterface);
+        return new MonitorImpl(uuid, metricName, sensor, interval, monitorContext, metricReportingInterface);
     }
 }

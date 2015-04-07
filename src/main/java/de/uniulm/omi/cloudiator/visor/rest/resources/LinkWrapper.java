@@ -18,25 +18,29 @@
 
 package de.uniulm.omi.cloudiator.visor.rest.resources;
 
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
+
+import java.util.Set;
 
 /**
  * Created by daniel on 07.04.15.
  */
-public interface Monitor {
-    String getMetricName();
+public class LinkWrapper<T> {
 
-    void setMetricName(String metricName);
+    protected T wrappedEntity;
+    private final Set<Link> links;
 
-    String getSensorClassName();
+    public LinkWrapper(T wrappedEntity, Set<Link> links) {
+        this.wrappedEntity = wrappedEntity;
+        this.links = links;
+    }
 
-    @SuppressWarnings("UnusedDeclaration") void setSensorClassName(String sensorClassName);
+    @JsonUnwrapped public T getEntity() {
+        return wrappedEntity;
+    }
 
-    Interval getInterval();
+    public Set<Link> getLinks() {
+        return links;
+    }
 
-    void setInterval(Interval interval);
-
-    List<Context> getContexts();
-
-    @SuppressWarnings("UnusedDeclaration") void setContexts(List<Context> contexts);
 }

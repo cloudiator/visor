@@ -18,25 +18,20 @@
 
 package de.uniulm.omi.cloudiator.visor.rest.resources;
 
-import java.util.List;
-
 /**
  * Created by daniel on 07.04.15.
  */
-public interface Monitor {
-    String getMetricName();
+public enum Rel {
 
-    void setMetricName(String metricName);
+    SELF("self");
 
-    String getSensorClassName();
+    private final String text;
 
-    @SuppressWarnings("UnusedDeclaration") void setSensorClassName(String sensorClassName);
+    private Rel(final String text) {
+        this.text = text;
+    }
 
-    Interval getInterval();
-
-    void setInterval(Interval interval);
-
-    List<Context> getContexts();
-
-    @SuppressWarnings("UnusedDeclaration") void setContexts(List<Context> contexts);
+    @Override public String toString() {
+        return text;
+    }
 }

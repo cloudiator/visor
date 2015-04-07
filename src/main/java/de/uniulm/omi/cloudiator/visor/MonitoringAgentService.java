@@ -51,6 +51,7 @@ import de.uniulm.omi.cloudiator.visor.monitoring.api.MonitoringService;
 
 import java.util.Collections;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -67,8 +68,8 @@ public class MonitoringAgentService {
     public void start() {
         final Injector injector = Guice.createInjector(this.modules);
         try {
-            injector.getInstance(MonitoringService.class).startMonitoring("cpu_usage", "de.uniulm.omi.cloudiator.visor.monitoring.sensors.CpuUsageSensor", new Interval(1, TimeUnit.SECONDS), Collections.<String, String>emptyMap());
-            injector.getInstance(MonitoringService.class).startMonitoring("memory_usage", "de.uniulm.omi.cloudiator.visor.monitoring.sensors.MemoryUsageSensor", new Interval(1, TimeUnit.SECONDS), Collections.<String, String>emptyMap());
+            injector.getInstance(MonitoringService.class).startMonitoring(UUID.randomUUID().toString(),"cpu_usage", "de.uniulm.omi.cloudiator.visor.monitoring.sensors.CpuUsageSensor", new Interval(1, TimeUnit.SECONDS), Collections.<String, String>emptyMap());
+            injector.getInstance(MonitoringService.class).startMonitoring(UUID.randomUUID().toString(), "memory_usage", "de.uniulm.omi.cloudiator.visor.monitoring.sensors.MemoryUsageSensor", new Interval(1, TimeUnit.SECONDS), Collections.<String, String>emptyMap());
             
             //MYSQL sensors
             //injector.getInstance(MonitoringService.class).startMonitoring("mysql_nb_failed_connections", "de.uniulm.omi.cloudiator.visor.monitoring.sensors.mysqlsensors.NbFailedConnectionsMySQLSensor", new Interval(1, TimeUnit.SECONDS), Collections.<String, String>emptyMap());

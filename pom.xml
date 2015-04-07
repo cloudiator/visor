@@ -24,7 +24,7 @@
     <parent>
         <groupId>de.uniulm.omi.cloudiator</groupId>
         <artifactId>cloudiator-pom</artifactId>
-        <version>0.1.2-RELEASE</version>
+        <version>0.1.5-RELEASE</version>
     </parent>
     <artifactId>visor</artifactId>
     <packaging>jar</packaging>
@@ -101,7 +101,7 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
-            <artifactId>jersey-media-moxy</artifactId>
+            <artifactId>jersey-media-json-jackson</artifactId>
         </dependency>
         <dependency>
             <groupId>org.drizzle.jdbc</groupId>
