@@ -16,27 +16,31 @@
  * under the License.
  */
 
-package de.uniulm.omi.cloudiator.visor.monitoring;
+package de.uniulm.omi.cloudiator.visor.rest.resources;
 
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 
-import java.util.Collection;
-import java.util.Map;
+import java.util.Set;
 
 /**
- * Created by daniel on 11.12.14.
+ * Created by daniel on 07.04.15.
  */
-public interface MonitoringService {
+public class LinkWrapper<T> {
 
-    public void startMonitoring(String uuid, String metricName, String sensorClassName,
-        Interval interval, Map<String, String> monitorContext)
-        throws SensorNotFoundException, SensorInitializationException,
-        InvalidMonitorContextException;
+    protected T wrappedEntity;
+    private final Set<Link> links;
 
-    public void stopMonitoring(String uuid);
+    public LinkWrapper(T wrappedEntity, Set<Link> links) {
+        this.wrappedEntity = wrappedEntity;
+        this.links = links;
+    }
 
-    public Collection<Monitor> getMonitors();
+    @JsonUnwrapped public T getEntity() {
+        return wrappedEntity;
+    }
 
-    public Monitor getMonitor(String uuid);
+    public Set<Link> getLinks() {
+        return links;
+    }
 
-    public boolean isMonitoring(String uuid);
 }

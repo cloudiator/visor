@@ -24,6 +24,6 @@ import java.util.Map;
  * Created by daniel on 15.01.15.
  */
 public interface MonitorFactory {
-    public Monitor create(String metricName, Sensor sensor, Interval interval,
+    public Monitor create(String uuid, String metricName, Sensor sensor, Interval interval,
         Map<String, String> context) throws InvalidMonitorContextException;
 }

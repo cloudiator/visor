@@ -18,20 +18,16 @@
 
 package de.uniulm.omi.cloudiator.visor.rest.resources;
 
-<<<<<<< HEAD:visor-rest/src/main/java/de/uniulm/omi/cloudiator/visor/rest/resources/Monitor.java
-
-import de.uniulm.omi.cloudiator.visor.monitoring.MonitorContext;
+import de.uniulm.omi.cloudiator.visor.monitoring.impl.MonitorContext;
 
 import java.util.ArrayList;
-=======
->>>>>>> PS-57 added uuid for monitors, changed POST/PUT/GET accordingly:src/main/java/de/uniulm/omi/cloudiator/visor/rest/resources/Monitor.java
 import java.util.List;
+import java.util.Map;
 
 /**
- * Created by daniel on 07.04.15.
+ * Created by daniel on 09.02.15.
  */
-<<<<<<< HEAD:visor-rest/src/main/java/de/uniulm/omi/cloudiator/visor/rest/resources/Monitor.java
-public class Monitor {
+public class BaseMonitor implements Monitor {
 
     private String metricName;
 
@@ -41,10 +37,11 @@ public class Monitor {
 
     private List<Context> contexts;
 
-    @SuppressWarnings("UnusedDeclaration") Monitor() {
+    @SuppressWarnings("UnusedDeclaration") BaseMonitor() {
     }
 
-    Monitor(String metricName, String sensorClassName, Interval interval, List<Context> contexts) {
+    BaseMonitor(String metricName, String sensorClassName, Interval interval,
+        List<Context> contexts) {
         this.metricName = metricName;
         this.sensorClassName = sensorClassName;
         this.interval = interval;
@@ -98,38 +95,37 @@ public class Monitor {
         public MonitorBuilder() {
             this.contexts = new ArrayList<>();
         }
-=======
-public interface Monitor {
-    String getMetricName();
->>>>>>> PS-57 added uuid for monitors, changed POST/PUT/GET accordingly:src/main/java/de/uniulm/omi/cloudiator/visor/rest/resources/Monitor.java
 
-    void setMetricName(String metricName);
+        public MonitorBuilder metricName(final String metricName) {
+            this.metricName = metricName;
+            return this;
+        }
 
-    String getSensorClassName();
+        public MonitorBuilder sensorClassName(final String sensorClassName) {
+            this.sensorClassName = sensorClassName;
+            return this;
+        }
 
-<<<<<<< HEAD:visor-rest/src/main/java/de/uniulm/omi/cloudiator/visor/rest/resources/Monitor.java
         public MonitorBuilder interval(
-            final de.uniulm.omi.cloudiator.visor.monitoring.Interval interval) {
+            final de.uniulm.omi.cloudiator.visor.monitoring.impl.Interval interval) {
             this.period = interval.getPeriod();
             this.timeUnit = interval.getTimeUnit().toString();
             return this;
         }
-=======
-    @SuppressWarnings("UnusedDeclaration") void setSensorClassName(String sensorClassName);
->>>>>>> PS-57 added uuid for monitors, changed POST/PUT/GET accordingly:src/main/java/de/uniulm/omi/cloudiator/visor/rest/resources/Monitor.java
 
-    Interval getInterval();
+        public MonitorBuilder context(final MonitorContext monitorContext) {
+            //noinspection Convert2streamapi
+            for (final Map.Entry<String, String> entry : monitorContext.getContext().entrySet()) {
+                this.contexts.add(new Context(entry.getKey(), entry.getValue()));
+            }
+            return this;
+        }
 
-<<<<<<< HEAD:visor-rest/src/main/java/de/uniulm/omi/cloudiator/visor/rest/resources/Monitor.java
-        public Monitor build() {
-            return new Monitor(metricName, sensorClassName, new Interval(period, timeUnit),
+        public BaseMonitor build() {
+            return new BaseMonitor(metricName, sensorClassName, new Interval(period, timeUnit),
                 contexts);
         }
-=======
-    void setInterval(Interval interval);
->>>>>>> PS-57 added uuid for monitors, changed POST/PUT/GET accordingly:src/main/java/de/uniulm/omi/cloudiator/visor/rest/resources/Monitor.java
 
-    List<Context> getContexts();
+    }
 
-    @SuppressWarnings("UnusedDeclaration") void setContexts(List<Context> contexts);
 }

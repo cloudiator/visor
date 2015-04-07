@@ -16,27 +16,22 @@
  * under the License.
  */
 
-package de.uniulm.omi.cloudiator.visor.monitoring;
-
-
-import java.util.Collection;
-import java.util.Map;
+package de.uniulm.omi.cloudiator.visor.rest.resources;
 
 /**
- * Created by daniel on 11.12.14.
+ * Created by daniel on 07.04.15.
  */
-public interface MonitoringService {
+public enum Rel {
 
-    public void startMonitoring(String uuid, String metricName, String sensorClassName,
-        Interval interval, Map<String, String> monitorContext)
-        throws SensorNotFoundException, SensorInitializationException,
-        InvalidMonitorContextException;
+    SELF("self");
 
-    public void stopMonitoring(String uuid);
+    private final String text;
 
-    public Collection<Monitor> getMonitors();
+    private Rel(final String text) {
+        this.text = text;
+    }
 
-    public Monitor getMonitor(String uuid);
-
-    public boolean isMonitoring(String uuid);
+    @Override public String toString() {
+        return text;
+    }
 }

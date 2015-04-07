@@ -49,10 +49,14 @@ import static com.google.common.base.Preconditions.checkNotNull;
     }
 
     @Override
-    public void startMonitoring(String metricName, String sensorClassName, Interval interval,
-        Map<String, String> monitorContext)
+
+    public void startMonitoring(String uuid, String metricName, String sensorClassName,
+        Interval interval, Map<String, String> monitorContext)
         throws SensorNotFoundException, SensorInitializationException,
         InvalidMonitorContextException {
+
+        checkNotNull(uuid);
+        checkArgument(!uuid.isEmpty());
 
         checkNotNull(metricName);
         checkArgument(!metricName.isEmpty());
@@ -66,26 +70,26 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
         final Sensor sensor = this.sensorFactory.from(sensorClassName);
         final Monitor monitor =
-            this.monitorFactory.create(metricName, sensor, interval, monitorContext);
-        this.monitorRegistry.put(metricName, monitor);
+            this.monitorFactory.create(uuid, metricName, sensor, interval, monitorContext);
+        this.monitorRegistry.put(uuid, monitor);
         this.scheduler.schedule(monitor);
     }
 
-    @Override public void stopMonitoring(String metricName) {
-        checkArgument(isMonitoring(metricName));
-        this.scheduler.remove(this.monitorRegistry.get(metricName));
-        this.monitorRegistry.remove(metricName);
+    @Override public void stopMonitoring(String uuid) {
+        checkArgument(isMonitoring(uuid));
+        this.scheduler.remove(this.monitorRegistry.get(uuid));
+        this.monitorRegistry.remove(uuid);
     }
 
     @Override public Collection<Monitor> getMonitors() {
         return this.monitorRegistry.values();
     }
 
-    @Override public Monitor getMonitor(String metricName) {
-        return this.monitorRegistry.get(metricName);
+    @Override public Monitor getMonitor(String uuid) {
+        return this.monitorRegistry.get(uuid);
     }
 
-    @Override public boolean isMonitoring(String metricName) {
-        return this.monitorRegistry.containsKey(metricName);
+    @Override public boolean isMonitoring(String uuid) {
+        return this.monitorRegistry.containsKey(uuid);
     }
 }

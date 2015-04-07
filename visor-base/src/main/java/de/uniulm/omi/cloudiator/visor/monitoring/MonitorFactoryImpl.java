@@ -28,24 +28,24 @@ import java.util.Map;
 /**
  * Created by daniel on 15.01.15.
  */
-public class
-        MonitorFactoryImpl implements MonitorFactory {
+public class MonitorFactoryImpl implements MonitorFactory {
 
     private final String localIp;
     private final ReportingInterface<Metric> metricReportingInterface;
 
-    @Inject
-    public MonitorFactoryImpl(@Named("localIp") String localIp, @QueuedReporting
-    ReportingInterface<Metric> metricReportingInterface) {
+    @Inject public MonitorFactoryImpl(@Named("localIp") String localIp,
+        @QueuedReporting ReportingInterface<Metric> metricReportingInterface) {
         this.localIp = localIp;
         this.metricReportingInterface = metricReportingInterface;
     }
 
     @Override
-    public Monitor create(String metricName, Sensor sensor, Interval interval, Map<String, String> context) throws
-        InvalidMonitorContextException {
-        MonitorContext monitorContext = DefaultMonitorContext
-            .builder().addContext(DefaultMonitorContext.LOCAL_IP, localIp).addContext(context).build();
-        return new MonitorImpl(metricName, sensor, interval, monitorContext, metricReportingInterface);
+    public Monitor create(String uuid, String metricName, Sensor sensor, Interval interval,
+        Map<String, String> context) throws InvalidMonitorContextException {
+        MonitorContext monitorContext =
+            DefaultMonitorContext.builder().addContext(DefaultMonitorContext.LOCAL_IP, localIp)
+                .addContext(context).build();
+        return new MonitorImpl(uuid, metricName, sensor, interval, monitorContext,
+            metricReportingInterface);
     }
 }

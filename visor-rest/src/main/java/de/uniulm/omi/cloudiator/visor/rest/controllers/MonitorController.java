@@ -21,12 +21,12 @@ package de.uniulm.omi.cloudiator.visor.rest.controllers;
 import com.google.common.collect.Collections2;
 import de.uniulm.omi.cloudiator.visor.monitoring.*;
 import de.uniulm.omi.cloudiator.visor.rest.converters.MonitorToMonitorJsonConverter;
-import de.uniulm.omi.cloudiator.visor.rest.resources.Context;
-import de.uniulm.omi.cloudiator.visor.rest.resources.Monitor;
+import de.uniulm.omi.cloudiator.visor.rest.resources.*;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.Collection;
+import java.util.UUID;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -43,38 +43,71 @@ import static com.google.common.base.Preconditions.checkNotNull;
     }
 
     @GET @Produces(MediaType.APPLICATION_JSON) @Path("/monitors")
-    public Collection<Monitor> getMonitors() {
+    public Collection<MonitorEntity> getMonitors() {
         return Collections2
             .transform(monitoringService.getMonitors(), new MonitorToMonitorJsonConverter());
     }
 
-    @GET @Produces(MediaType.APPLICATION_JSON) @Path("/monitors/{metricName}")
-    public Monitor getMonitor(@PathParam("metricName") String metricName) {
-        return new MonitorToMonitorJsonConverter().apply(monitoringService.getMonitor(metricName));
+    @GET @Produces(MediaType.APPLICATION_JSON) @Path("/monitors/{uuid}")
+    public MonitorEntity getMonitor(@PathParam("uuid") String uuid) {
+
+        if(this.monitoringService.getMonitor(uuid) == null) {
+            throw new NotFoundException();
+        }
+
+        return new MonitorWithLinks(
+            new MonitorToMonitorJsonConverter().apply(monitoringService.getMonitor(uuid)),
+            Links.selfLink("/monitors/" + uuid));
     }
 
-    @POST @Consumes(MediaType.APPLICATION_JSON) @Produces(MediaType.APPLICATION_JSON)
-    @Path("/monitors") public Monitor createMonitor(Monitor monitor) {
-
+<<<<<<< HEAD:visor-rest/src/main/java/de/uniulm/omi/cloudiator/visor/rest/controllers/MonitorController.java
         DefaultMonitorContext.MonitorContextBuilder builder = DefaultMonitorContext.builder();
+=======
+    @PUT @Consumes(MediaType.APPLICATION_JSON) @Produces(MediaType.APPLICATION_JSON)
+    @Path("/monitors/{uuid}")
+    public MonitorEntity putMonitor(@PathParam("uuid") String uuid, Monitor monitor) {
+        MonitorContext.MonitorContextBuilder builder = MonitorContext.builder();
+>>>>>>> PS-57 added uuid for monitors, changed POST/PUT/GET accordingly:src/main/java/de/uniulm/omi/cloudiator/visor/rest/controllers/MonitorController.java
         for (Context context : monitor.getContexts()) {
             builder.addContext(context.getKey(), context.getValue());
         }
+
+        //if we are already monitoring, we restart
+        if (this.monitoringService.isMonitoring(uuid)) {
+            this.monitoringService.stopMonitoring(uuid);
+        }
+
         try {
             this.monitoringService
+<<<<<<< HEAD:visor-rest/src/main/java/de/uniulm/omi/cloudiator/visor/rest/controllers/MonitorController.java
                 .startMonitoring(monitor.getMetricName(), monitor.getSensorClassName(),
                     new DefaultInterval(monitor.getInterval().getPeriod(),
+=======
+                .startMonitoring(uuid, monitor.getMetricName(), monitor.getSensorClassName(),
+                    new Interval(monitor.getInterval().getPeriod(),
+>>>>>>> PS-57 added uuid for monitors, changed POST/PUT/GET accordingly:src/main/java/de/uniulm/omi/cloudiator/visor/rest/controllers/MonitorController.java
                         monitor.getInterval().getTimeUnit()), builder.build().getContext());
         } catch (SensorNotFoundException | SensorInitializationException | InvalidMonitorContextException e) {
             throw new BadRequestException(e);
         }
+
         return new MonitorToMonitorJsonConverter()
             .apply(this.monitoringService.getMonitor(monitor.getMetricName()));
     }
 
-    @DELETE @Produces(MediaType.APPLICATION_JSON) @Path("/monitors/{metricName}")
-    public void deleteMonitor(@PathParam("metricName") String metricName) {
-        this.monitoringService.stopMonitoring(metricName);
+    @POST @Consumes(MediaType.APPLICATION_JSON) @Produces(MediaType.APPLICATION_JSON)
+    @Path("/monitors") public MonitorEntity postMonitor(Monitor monitor) {
+
+        //generate a random name for the monitor
+        final UUID uuid = UUID.randomUUID();
+
+        return this.putMonitor(uuid.toString(), monitor);
+
+    }
+
+    @DELETE @Produces(MediaType.APPLICATION_JSON) @Path("/monitors/{uuid}")
+    public void deleteMonitor(@PathParam("uuid") String uuid) {
+        this.monitoringService.stopMonitoring(uuid);
     }
 
 }
