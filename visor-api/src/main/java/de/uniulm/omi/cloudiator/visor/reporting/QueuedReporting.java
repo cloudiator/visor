@@ -29,8 +29,6 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 /**
  * Created by daniel on 12.12.14.
  */
-@BindingAnnotation
-@Target({FIELD, PARAMETER, METHOD})
-@Retention(RUNTIME)
+@BindingAnnotation @Target({FIELD, PARAMETER, METHOD}) @Retention(RUNTIME)
 public @interface QueuedReporting {
 }

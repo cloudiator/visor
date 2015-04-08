@@ -20,6 +20,7 @@ package de.uniulm.omi.cloudiator.visor.rest.controllers;
 
 import com.google.common.collect.Collections2;
 import de.uniulm.omi.cloudiator.visor.monitoring.*;
+import de.uniulm.omi.cloudiator.visor.monitoring.Monitor;
 import de.uniulm.omi.cloudiator.visor.rest.converters.MonitorToMonitorJsonConverter;
 import de.uniulm.omi.cloudiator.visor.rest.resources.*;
 
@@ -51,7 +52,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
     @GET @Produces(MediaType.APPLICATION_JSON) @Path("/monitors/{uuid}")
     public MonitorEntity getMonitor(@PathParam("uuid") String uuid) {
 
-        if(this.monitoringService.getMonitor(uuid) == null) {
+        if (this.monitoringService.getMonitor(uuid) == null) {
             throw new NotFoundException();
         }
 
@@ -60,14 +61,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
             Links.selfLink("/monitors/" + uuid));
     }
 
-<<<<<<< HEAD:visor-rest/src/main/java/de/uniulm/omi/cloudiator/visor/rest/controllers/MonitorController.java
-        DefaultMonitorContext.MonitorContextBuilder builder = DefaultMonitorContext.builder();
-=======
+
     @PUT @Consumes(MediaType.APPLICATION_JSON) @Produces(MediaType.APPLICATION_JSON)
     @Path("/monitors/{uuid}")
-    public MonitorEntity putMonitor(@PathParam("uuid") String uuid, Monitor monitor) {
-        MonitorContext.MonitorContextBuilder builder = MonitorContext.builder();
->>>>>>> PS-57 added uuid for monitors, changed POST/PUT/GET accordingly:src/main/java/de/uniulm/omi/cloudiator/visor/rest/controllers/MonitorController.java
+    public MonitorEntity putMonitor(@PathParam("uuid") String uuid, BaseMonitor monitor) {
+        DefaultMonitorContext.MonitorContextBuilder builder = DefaultMonitorContext.builder();
         for (Context context : monitor.getContexts()) {
             builder.addContext(context.getKey(), context.getValue());
         }
@@ -79,24 +77,18 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
         try {
             this.monitoringService
-<<<<<<< HEAD:visor-rest/src/main/java/de/uniulm/omi/cloudiator/visor/rest/controllers/MonitorController.java
-                .startMonitoring(monitor.getMetricName(), monitor.getSensorClassName(),
-                    new DefaultInterval(monitor.getInterval().getPeriod(),
-=======
                 .startMonitoring(uuid, monitor.getMetricName(), monitor.getSensorClassName(),
-                    new Interval(monitor.getInterval().getPeriod(),
->>>>>>> PS-57 added uuid for monitors, changed POST/PUT/GET accordingly:src/main/java/de/uniulm/omi/cloudiator/visor/rest/controllers/MonitorController.java
+                    new DefaultInterval(monitor.getInterval().getPeriod(),
                         monitor.getInterval().getTimeUnit()), builder.build().getContext());
         } catch (SensorNotFoundException | SensorInitializationException | InvalidMonitorContextException e) {
             throw new BadRequestException(e);
         }
 
-        return new MonitorToMonitorJsonConverter()
-            .apply(this.monitoringService.getMonitor(monitor.getMetricName()));
+        return new MonitorToMonitorJsonConverter().apply(this.monitoringService.getMonitor(uuid));
     }
 
     @POST @Consumes(MediaType.APPLICATION_JSON) @Produces(MediaType.APPLICATION_JSON)
-    @Path("/monitors") public MonitorEntity postMonitor(Monitor monitor) {
+    @Path("/monitors") public MonitorEntity postMonitor(BaseMonitor monitor) {
 
         //generate a random name for the monitor
         final UUID uuid = UUID.randomUUID();
@@ -108,6 +100,13 @@ import static com.google.common.base.Preconditions.checkNotNull;
     @DELETE @Produces(MediaType.APPLICATION_JSON) @Path("/monitors/{uuid}")
     public void deleteMonitor(@PathParam("uuid") String uuid) {
         this.monitoringService.stopMonitoring(uuid);
+    }
+
+    @DELETE @Produces(MediaType.APPLICATION_JSON) @Path("/monitors")
+    public void deleteAllMonitors() {
+        for (Monitor monitor : this.monitoringService.getMonitors()) {
+            this.monitoringService.stopMonitoring(monitor.getUuid());
+        }
     }
 
 }

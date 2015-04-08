@@ -27,11 +27,9 @@ import de.uniulm.omi.cloudiator.visor.monitoring.Metric;
  */
 public abstract class ReportingModule extends AbstractModule {
 
-    @Override
-    protected void configure() {
+    @Override protected void configure() {
         bind(new TypeLiteral<ReportingInterface<Metric>>() {
-        }).to(this.getReportingInterface());
-
+        }).annotatedWith(ExternalReporting.class).to(this.getReportingInterface());
     }
 
     protected abstract Class<? extends ReportingInterface<Metric>> getReportingInterface();

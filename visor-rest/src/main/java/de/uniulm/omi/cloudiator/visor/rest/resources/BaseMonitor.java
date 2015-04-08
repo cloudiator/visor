@@ -18,9 +18,11 @@
 
 package de.uniulm.omi.cloudiator.visor.rest.resources;
 
-import de.uniulm.omi.cloudiator.visor.monitoring.impl.MonitorContext;
+import de.uniulm.omi.cloudiator.visor.monitoring.MonitorContext;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -35,13 +37,13 @@ public class BaseMonitor implements Monitor {
 
     private Interval interval;
 
-    private List<Context> contexts;
+    @Nullable private List<Context> contexts;
 
     @SuppressWarnings("UnusedDeclaration") BaseMonitor() {
     }
 
     BaseMonitor(String metricName, String sensorClassName, Interval interval,
-        List<Context> contexts) {
+        @Nullable List<Context> contexts) {
         this.metricName = metricName;
         this.sensorClassName = sensorClassName;
         this.interval = interval;
@@ -73,10 +75,14 @@ public class BaseMonitor implements Monitor {
     }
 
     public List<Context> getContexts() {
+        if (this.contexts == null) {
+            return Collections.emptyList();
+        }
         return contexts;
     }
 
-    @SuppressWarnings("UnusedDeclaration") public void setContexts(List<Context> contexts) {
+    @SuppressWarnings("UnusedDeclaration")
+    public void setContexts(@Nullable List<Context> contexts) {
         this.contexts = contexts;
     }
 
@@ -107,7 +113,7 @@ public class BaseMonitor implements Monitor {
         }
 
         public MonitorBuilder interval(
-            final de.uniulm.omi.cloudiator.visor.monitoring.impl.Interval interval) {
+            final de.uniulm.omi.cloudiator.visor.monitoring.Interval interval) {
             this.period = interval.getPeriod();
             this.timeUnit = interval.getTimeUnit().toString();
             return this;

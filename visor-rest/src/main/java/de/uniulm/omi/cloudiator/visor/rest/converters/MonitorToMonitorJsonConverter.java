@@ -19,17 +19,21 @@
 package de.uniulm.omi.cloudiator.visor.rest.converters;
 
 
-import de.uniulm.omi.cloudiator.visor.rest.resources.Monitor;
+import de.uniulm.omi.cloudiator.visor.rest.resources.BaseMonitor;
+import de.uniulm.omi.cloudiator.visor.rest.resources.Links;
+import de.uniulm.omi.cloudiator.visor.rest.resources.MonitorEntity;
+import de.uniulm.omi.cloudiator.visor.rest.resources.MonitorWithLinks;
 
 /**
  * Created by daniel on 09.02.15.
  */
 public class MonitorToMonitorJsonConverter
-    implements OneWayConverter<de.uniulm.omi.cloudiator.visor.monitoring.Monitor, Monitor> {
+    implements OneWayConverter<de.uniulm.omi.cloudiator.visor.monitoring.Monitor, MonitorEntity> {
 
-    @Override public Monitor apply(de.uniulm.omi.cloudiator.visor.monitoring.Monitor input) {
-        return Monitor.builder().metricName(input.getMetricName())
+    @Override public MonitorEntity apply(de.uniulm.omi.cloudiator.visor.monitoring.Monitor input) {
+        return new MonitorWithLinks(BaseMonitor.builder().metricName(input.getMetricName())
             .sensorClassName(input.getSensor().getClass().getCanonicalName())
-            .interval(input.getInterval()).context(input.getMonitorContext()).build();
+            .interval(input.getInterval()).context(input.getMonitorContext()).build(),
+            Links.selfLink("/monitors/" + input.getUuid()));
     }
 }

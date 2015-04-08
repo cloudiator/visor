@@ -16,22 +16,19 @@
  * under the License.
  */
 
-package de.uniulm.omi.cloudiator.visor.modules;
+package de.uniulm.omi.cloudiator.visor.reporting;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.TypeLiteral;
-import de.uniulm.omi.cloudiator.visor.monitoring.Metric;
-import de.uniulm.omi.cloudiator.visor.reporting.*;
+import com.google.inject.BindingAnnotation;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
+
+import static java.lang.annotation.ElementType.*;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * Created by daniel on 07.04.15.
+ * Created by daniel on 08.04.15.
  */
-public class BaseReportingModule extends AbstractModule {
-    @Override protected void configure() {
-        bind(new TypeLiteral<QueueWorkerFactoryInterface<Metric>>() {
-        }).to(MetricQueueWorkerFactory.class);
-
-        bind(new TypeLiteral<ReportingInterface<Metric>>() {
-        }).annotatedWith(QueuedReporting.class).to(MetricQueue.class);
-    }
+@BindingAnnotation @Target({FIELD, PARAMETER, METHOD}) @Retention(RUNTIME)
+public @interface ExternalReporting {
 }

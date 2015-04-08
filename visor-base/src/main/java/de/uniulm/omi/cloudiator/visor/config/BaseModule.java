@@ -24,8 +24,7 @@ import de.uniulm.omi.cloudiator.visor.execution.DefaultScheduledExecutionService
 import de.uniulm.omi.cloudiator.visor.execution.ExecutionService;
 import de.uniulm.omi.cloudiator.visor.execution.ScheduledExecutionService;
 import de.uniulm.omi.cloudiator.visor.monitoring.*;
-import de.uniulm.omi.cloudiator.visor.reporting.QueuedReporting;
-import de.uniulm.omi.cloudiator.visor.reporting.ReportingInterface;
+import de.uniulm.omi.cloudiator.visor.reporting.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -50,7 +49,10 @@ public class BaseModule extends AbstractModule {
         install(new IpModule());
         bind(ExecutionService.class).to(DefaultScheduledExecutionService.class);
         bind(new TypeLiteral<ReportingInterface<Metric>>() {
-        }).annotatedWith(QueuedReporting.class).to(new TypeLiteral<ReportingInterface<Metric>>() {
+        }).annotatedWith(QueuedReporting.class).to(new TypeLiteral<Queue<Metric>>() {
+        });
+        bind(new TypeLiteral<QueueWorkerFactoryInterface<Metric>>() {
+        }).to(new TypeLiteral<QueueWorkerFactory<Metric>>() {
         });
         bind(MonitoringService.class).to(MonitoringServiceImpl.class);
         bind(ScheduledExecutionService.class).to(DefaultScheduledExecutionService.class);

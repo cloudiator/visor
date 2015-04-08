@@ -73,10 +73,12 @@ public class MonitorImpl implements Monitor {
     }
 
     @Override public String toString() {
-        return "Monitor{" +
-            "metricName='" + metricName + '\'' +
+        return "MonitorImpl{" +
+            "uuid='" + uuid + '\'' +
+            ", metricName='" + metricName + '\'' +
             ", sensor=" + sensor +
             ", monitorContext=" + monitorContext +
+            ", monitorWorker=" + monitorWorker +
             ", interval=" + interval +
             '}';
     }

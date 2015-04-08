@@ -30,13 +30,11 @@ public class QueueWorkerFactory<T> implements QueueWorkerFactoryInterface<T> {
 
     private final ReportingInterface<T> reportingInterface;
 
-    @Inject
-    public QueueWorkerFactory(ReportingInterface<T> reportingInterface) {
+    @Inject public QueueWorkerFactory(@ExternalReporting ReportingInterface<T> reportingInterface) {
         this.reportingInterface = reportingInterface;
     }
 
-    @Override
-    public QueueWorker<T> create(BlockingQueue<T> queue, Interval interval) {
+    @Override public QueueWorker<T> create(BlockingQueue<T> queue, Interval interval) {
         return new QueueWorker<>(queue, this.reportingInterface, interval);
     }
 }

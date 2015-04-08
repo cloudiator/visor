@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package de.uniulm.omi.cloudiator.sensors;
+package de.uniulm.omi.cloudiator.visor.sensors;
 
 import com.sun.management.OperatingSystemMXBean;
 import de.uniulm.omi.cloudiator.visor.monitoring.*;
@@ -24,23 +24,28 @@ import de.uniulm.omi.cloudiator.visor.monitoring.*;
 import java.lang.management.ManagementFactory;
 
 /**
- * A probe for measuring the CPU usage in % on the given machine.
+ * The MemoryUsageProbe class.
+ * <p>
+ * Measures the current
+ * ly used memory by the operating system in percentage.
  */
-public class CpuUsageSensor extends AbstractSensor {
+public class MemoryUsageSensor extends AbstractSensor {
 
     private OperatingSystemMXBean osBean;
 
     @Override protected Measurement getMeasurement(MonitorContext monitorContext)
         throws MeasurementNotAvailableException {
+        //memory usage
+        double totalPhysicalMemory = osBean.getTotalPhysicalMemorySize();
+        double freePhysicalMemory = osBean.getFreePhysicalMemorySize();
 
-        double systemCpuLoad = osBean.getSystemCpuLoad();
-        double systemCpuLoadPercentage = systemCpuLoad * 100;
-
-        if (systemCpuLoad < 0) {
-            throw new MeasurementNotAvailableException("Received negative value");
+        if (totalPhysicalMemory < 0 || freePhysicalMemory < 0) {
+            throw new MeasurementNotAvailableException(
+                "Received negative value for total or free physical memory size");
         }
 
-        return new MeasurementImpl(System.currentTimeMillis(), systemCpuLoadPercentage);
+        return new MeasurementImpl(System.currentTimeMillis(),
+            100 - ((freePhysicalMemory / totalPhysicalMemory) * 100));
     }
 
     @Override protected void initialize() throws SensorInitializationException {
