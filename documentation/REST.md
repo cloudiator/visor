@@ -115,7 +115,7 @@ POST /monitors
     "timeUnit":"SECONDS"
   },
   "metricName":"memory_usage",
-  "sensorClassName":"de.uniulm.omi.cloudiator.visor.monitoring.sensors.MemoryUsageSensor",
+  "sensorClassName":"de.uniulm.omi.cloudiator.visor.sensors.MemoryUsageSensor"
 }
 ```
 
@@ -148,7 +148,7 @@ PUT /monitors/c7a98598-e64a-4f1f-8f28-054eb743ccf3
     "timeUnit":"SECONDS"
   },
   "metricName":"memory_usage",
-  "sensorClassName":"de.uniulm.omi.cloudiator.visor.monitoring.sensors.MemoryUsageSensor",
+  "sensorClassName":"de.uniulm.omi.cloudiator.visor.sensors.MemoryUsageSensor"
 }
 ```
 
