@@ -58,7 +58,6 @@ public class RestServer {
         ResourceConfig config = new ResourceConfig();
         config.register(new MonitorController(monitoringService));
         config.register(JacksonFeature.class);
-
         executionService.execute(new GrizzlyServer(baseUri, config));
     }
 

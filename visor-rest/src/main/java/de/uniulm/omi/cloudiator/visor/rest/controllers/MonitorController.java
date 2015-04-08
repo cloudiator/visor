@@ -52,6 +52,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
     @GET @Produces(MediaType.APPLICATION_JSON) @Path("/monitors/{uuid}")
     public MonitorEntity getMonitor(@PathParam("uuid") String uuid) {
 
+
         if (this.monitoringService.getMonitor(uuid) == null) {
             throw new NotFoundException();
         }
@@ -65,6 +66,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
     @PUT @Consumes(MediaType.APPLICATION_JSON) @Produces(MediaType.APPLICATION_JSON)
     @Path("/monitors/{uuid}")
     public MonitorEntity putMonitor(@PathParam("uuid") String uuid, BaseMonitor monitor) {
+
         DefaultMonitorContext.MonitorContextBuilder builder = DefaultMonitorContext.builder();
         for (Context context : monitor.getContexts()) {
             builder.addContext(context.getKey(), context.getValue());
@@ -74,16 +76,16 @@ import static com.google.common.base.Preconditions.checkNotNull;
         if (this.monitoringService.isMonitoring(uuid)) {
             this.monitoringService.stopMonitoring(uuid);
         }
-
         try {
             this.monitoringService
                 .startMonitoring(uuid, monitor.getMetricName(), monitor.getSensorClassName(),
                     new DefaultInterval(monitor.getInterval().getPeriod(),
                         monitor.getInterval().getTimeUnit()), builder.build().getContext());
-        } catch (SensorNotFoundException | SensorInitializationException | InvalidMonitorContextException e) {
+        } catch (SensorNotFoundException | SensorInitializationException |
+            InvalidMonitorContextException e)
+        {
             throw new BadRequestException(e);
         }
-
         return new MonitorToMonitorJsonConverter().apply(this.monitoringService.getMonitor(uuid));
     }
 

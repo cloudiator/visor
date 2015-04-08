@@ -48,12 +48,13 @@ import static com.google.common.base.Preconditions.checkNotNull;
         monitorRegistry = new HashMap<>();
     }
 
-    @Override
-
-    public void startMonitoring(String uuid, String metricName, String sensorClassName,
+    @Override public void startMonitoring(String uuid, String metricName, String sensorClassName,
         Interval interval, Map<String, String> monitorContext)
         throws SensorNotFoundException, SensorInitializationException,
         InvalidMonitorContextException {
+
+        checkNotNull(uuid);
+        checkArgument(!uuid.isEmpty());
 
         checkNotNull(uuid);
         checkArgument(!uuid.isEmpty());

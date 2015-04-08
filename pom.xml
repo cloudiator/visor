@@ -34,7 +34,11 @@
     <parent>
         <groupId>de.uniulm.omi.cloudiator</groupId>
         <artifactId>cloudiator-pom</artifactId>
+<<<<<<< HEAD
         <version>0.1.6-RELEASE</version>
+=======
+        <version>0.1.5-RELEASE</version>
+>>>>>>> 44db74c13555099f589ff10d72ed499b0447631a
     </parent>
     <artifactId>visor</artifactId>
     <packaging>pom</packaging>
@@ -138,6 +142,13 @@
         <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-json-jackson</artifactId>
+<<<<<<< HEAD
+=======
+        </dependency>
+        <dependency>
+            <groupId>org.drizzle.jdbc</groupId>
+            <artifactId>drizzle-jdbc</artifactId>
+>>>>>>> 44db74c13555099f589ff10d72ed499b0447631a
         </dependency>
     </dependencies>
 
