@@ -32,7 +32,7 @@ public class Links {
 
     public static Set<Link> selfLink(String href) {
         Link link = new Link(href,Rel.SELF);
-        HashSet<Link> links = new HashSet<>();
+        Set<Link> links = new HashSet<>();
         links.add(link);
         return links;
     }

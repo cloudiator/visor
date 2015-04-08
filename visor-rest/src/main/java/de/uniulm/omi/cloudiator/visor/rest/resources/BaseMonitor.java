@@ -50,38 +50,39 @@ public class BaseMonitor implements Monitor {
         this.contexts = contexts;
     }
 
-    public String getMetricName() {
+    @Override public String getMetricName() {
         return metricName;
     }
 
-    public void setMetricName(String metricName) {
+    @Override public void setMetricName(String metricName) {
         this.metricName = metricName;
     }
 
-    public String getSensorClassName() {
+    @Override public String getSensorClassName() {
         return sensorClassName;
     }
 
-    @SuppressWarnings("UnusedDeclaration") public void setSensorClassName(String sensorClassName) {
+    @Override @SuppressWarnings("UnusedDeclaration")
+    public void setSensorClassName(String sensorClassName) {
         this.sensorClassName = sensorClassName;
     }
 
-    public Interval getInterval() {
+    @Override public Interval getInterval() {
         return interval;
     }
 
-    public void setInterval(Interval interval) {
+    @Override public void setInterval(Interval interval) {
         this.interval = interval;
     }
 
-    public List<Context> getContexts() {
+    @Override public List<Context> getContexts() {
         if (this.contexts == null) {
             return Collections.emptyList();
         }
         return contexts;
     }
 
-    @SuppressWarnings("UnusedDeclaration")
+    @SuppressWarnings("UnusedDeclaration") @Override
     public void setContexts(@Nullable List<Context> contexts) {
         this.contexts = contexts;
     }

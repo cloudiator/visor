@@ -47,7 +47,7 @@ import java.util.Properties;
         return this.properties.getProperty(key);
     }
 
-    public Properties getProperties() {
+    @Override public Properties getProperties() {
         return this.properties;
     }
 }

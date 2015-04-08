@@ -20,6 +20,7 @@ package de.uniulm.omi.cloudiator.visor.telnet;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+import de.uniulm.omi.cloudiator.visor.config.ConfigurationException;
 import de.uniulm.omi.cloudiator.visor.execution.ExecutionService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -36,8 +37,7 @@ public class SocketServer {
 
     private static final Logger LOGGER = LogManager.getLogger(SocketServer.class);
 
-    @Inject
-    public SocketServer(@Named("telnetPort") int port, ExecutionService executionService,
+    @Inject public SocketServer(@Named("telnetPort") int port, ExecutionService executionService,
         ServerListenerFactoryInterface serverListenerFactory) {
         checkArgument(port > 0, "Argument port must be > 0");
         if (port < 1024) {
@@ -49,8 +49,7 @@ public class SocketServer {
             ServerSocket serverSocket = new ServerSocket(port);
             executionService.execute(serverListenerFactory.create(serverSocket));
         } catch (IOException e) {
-            LOGGER.fatal("Server crashed.", e);
-            System.exit(1);
+            throw new ConfigurationException(e);
         }
     }
 }

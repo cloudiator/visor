@@ -20,6 +20,7 @@ package de.uniulm.omi.cloudiator.visor.reporting.kairos;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+import de.uniulm.omi.cloudiator.visor.config.ConfigurationException;
 import de.uniulm.omi.cloudiator.visor.monitoring.Metric;
 import de.uniulm.omi.cloudiator.visor.reporting.ReportingException;
 import de.uniulm.omi.cloudiator.visor.reporting.ReportingInterface;
@@ -86,8 +87,7 @@ public class KairosDb implements ReportingInterface<Metric> {
             }
             client.shutdown();
         } catch (MalformedURLException | URISyntaxException e) {
-            LOGGER.fatal("KairosDB URL is invalid.", e);
-            System.exit(1);
+            throw new ConfigurationException(e);
         } catch (IOException e) {
             LOGGER.error("Could not request KairosDB.", e);
             throw new ReportingException(e);
