@@ -20,7 +20,7 @@ package de.uniulm.omi.cloudiator.visor.monitoring;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import de.uniulm.omi.cloudiator.visor.execution.ScheduledExecutionServiceInterface;
+import de.uniulm.omi.cloudiator.visor.execution.ScheduledExecutionService;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -32,16 +32,16 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Created by daniel on 11.12.14.
  */
-@Singleton
-public class MonitoringServiceImpl implements MonitoringService {
+@Singleton public class MonitoringServiceImpl implements MonitoringService {
 
     private final Map<String, Monitor> monitorRegistry;
-    private final ScheduledExecutionServiceInterface scheduler;
+    private final ScheduledExecutionService scheduler;
     private final SensorFactory sensorFactory;
     private final MonitorFactory monitorFactory;
 
     @Inject
-    public MonitoringServiceImpl(ScheduledExecutionServiceInterface scheduler, SensorFactory sensorFactory, MonitorFactory monitorFactory) {
+    public MonitoringServiceImpl(ScheduledExecutionService scheduler, SensorFactory sensorFactory,
+        MonitorFactory monitorFactory) {
         this.scheduler = scheduler;
         this.sensorFactory = sensorFactory;
         this.monitorFactory = monitorFactory;
@@ -49,8 +49,10 @@ public class MonitoringServiceImpl implements MonitoringService {
     }
 
     @Override
-    public void startMonitoring(String metricName, String sensorClassName, Interval interval, Map<String, String> monitorContext) throws
-        SensorNotFoundException, SensorInitializationException, InvalidMonitorContextException {
+    public void startMonitoring(String metricName, String sensorClassName, Interval interval,
+        Map<String, String> monitorContext)
+        throws SensorNotFoundException, SensorInitializationException,
+        InvalidMonitorContextException {
 
         checkNotNull(metricName);
         checkArgument(!metricName.isEmpty());
@@ -63,30 +65,27 @@ public class MonitoringServiceImpl implements MonitoringService {
         checkNotNull(monitorContext);
 
         final Sensor sensor = this.sensorFactory.from(sensorClassName);
-        final Monitor monitor = this.monitorFactory.create(metricName, sensor, interval, monitorContext);
+        final Monitor monitor =
+            this.monitorFactory.create(metricName, sensor, interval, monitorContext);
         this.monitorRegistry.put(metricName, monitor);
         this.scheduler.schedule(monitor);
     }
 
-    @Override
-    public void stopMonitoring(String metricName) {
+    @Override public void stopMonitoring(String metricName) {
         checkArgument(isMonitoring(metricName));
         this.scheduler.remove(this.monitorRegistry.get(metricName));
         this.monitorRegistry.remove(metricName);
     }
 
-    @Override
-    public Collection<Monitor> getMonitors() {
+    @Override public Collection<Monitor> getMonitors() {
         return this.monitorRegistry.values();
     }
 
-    @Override
-    public Monitor getMonitor(String metricName) {
+    @Override public Monitor getMonitor(String metricName) {
         return this.monitorRegistry.get(metricName);
     }
 
-    @Override
-    public boolean isMonitoring(String metricName) {
+    @Override public boolean isMonitoring(String metricName) {
         return this.monitorRegistry.containsKey(metricName);
     }
 }

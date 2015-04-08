@@ -16,27 +16,15 @@
  * under the License.
  */
 
-package de.uniulm.omi.cloudiator.visor.execution;
+package de.uniulm.omi.cloudiator.visor;
 
-import com.google.inject.Inject;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.commons.cli.ParseException;
 
-/**
- * Created by daniel on 15.12.14.
- */
-public class ShutdownHook extends Thread {
 
-    private static final Logger logger = LogManager.getLogger(ShutdownHook.class);
+public class Visor {
 
-    private final ExecutionService executionService;
-
-    @Inject public ShutdownHook(ExecutionService executionService) {
-        this.executionService = executionService;
+    public static void main(final String[] args) throws ParseException {
+        VisorServiceBuilder.create().args(args).build().start();
     }
 
-    @Override public void run() {
-        logger.debug("Running shutdown hook.");
-        this.executionService.shutdown(60);
-    }
 }

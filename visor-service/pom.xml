@@ -27,7 +27,60 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
+    <dependencies>
+        <dependency>
+            <groupId>de.uniulm.omi.cloudiator</groupId>
+            <artifactId>visor-base</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.uniulm.omi.cloudiator</groupId>
+            <artifactId>visor-rest</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.uniulm.omi.cloudiator</groupId>
+            <artifactId>visor-telnet</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.uniulm.omi.cloudiator</groupId>
+            <artifactId>visor-reporting-cli</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.uniulm.omi.cloudiator</groupId>
+            <artifactId>visor-reporting-kairos</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.uniulm.omi.cloudiator</groupId>
+            <artifactId>visor-sensors</artifactId>
+        </dependency>
+    </dependencies>
+
     <artifactId>visor-service</artifactId>
-
-
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.5.2</version>
+                <configuration>
+                    <descriptor>src/assembly/dep.xml</descriptor>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <archive>
+                        <manifest>
+                            <mainClass>de.uniulm.omi.cloudiator.visor.Visor</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

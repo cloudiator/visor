@@ -28,7 +28,7 @@ import java.util.Properties;
 /**
  * Created by daniel on 15.12.14.
  */
-@Singleton public class FileConfigurationAccessor {
+@Singleton public class FileConfigurationAccessor implements ConfigurationAccess {
 
     private final Properties properties;
 
@@ -39,7 +39,7 @@ import java.util.Properties;
                 fileInputStream)) {
             properties.load(bufferedInputStream);
         } catch (IOException e) {
-            throw new IllegalStateException("Could not read properties file.", e);
+            throw new ConfigurationException("Could not read properties file.", e);
         }
     }
 

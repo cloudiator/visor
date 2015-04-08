@@ -16,27 +16,32 @@
  * under the License.
  */
 
-package de.uniulm.omi.cloudiator.visor.execution;
-
-import com.google.inject.Inject;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+package de.uniulm.omi.cloudiator.visor.config;
 
 /**
- * Created by daniel on 15.12.14.
+ * Created by daniel on 08.04.15.
  */
-public class ShutdownHook extends Thread {
+public class ConfigurationException extends RuntimeException {
 
-    private static final Logger logger = LogManager.getLogger(ShutdownHook.class);
-
-    private final ExecutionService executionService;
-
-    @Inject public ShutdownHook(ExecutionService executionService) {
-        this.executionService = executionService;
+    public ConfigurationException() {
     }
 
-    @Override public void run() {
-        logger.debug("Running shutdown hook.");
-        this.executionService.shutdown(60);
+    public ConfigurationException(String message) {
+        super(message);
+    }
+
+    public ConfigurationException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public ConfigurationException(Throwable cause) {
+        super(cause);
+    }
+
+    public ConfigurationException(String message, Throwable cause, boolean enableSuppression,
+        boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
     }
 }
+
+

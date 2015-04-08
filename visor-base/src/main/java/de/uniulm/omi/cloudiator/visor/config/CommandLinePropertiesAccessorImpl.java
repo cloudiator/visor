@@ -45,8 +45,7 @@ import static com.google.common.base.Preconditions.checkState;
             this.commandLine = this.parser.parse(options, args);
         } catch (ParseException e) {
             this.commandLine = null;
-            this.printHelp();
-            System.exit(1);
+            throw new ConfigurationException(e);
         }
     }
 

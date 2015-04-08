@@ -18,25 +18,11 @@
 
 package de.uniulm.omi.cloudiator.visor.execution;
 
-import com.google.inject.Inject;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 /**
- * Created by daniel on 15.12.14.
+ * Created by daniel on 12.12.14.
  */
-public class ShutdownHook extends Thread {
+public interface ExecutionService {
+    public void execute(Runnable runnable);
 
-    private static final Logger logger = LogManager.getLogger(ShutdownHook.class);
-
-    private final ExecutionService executionService;
-
-    @Inject public ShutdownHook(ExecutionService executionService) {
-        this.executionService = executionService;
-    }
-
-    @Override public void run() {
-        logger.debug("Running shutdown hook.");
-        this.executionService.shutdown(60);
-    }
+    public void shutdown(int seconds);
 }

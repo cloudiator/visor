@@ -16,27 +16,29 @@
  * under the License.
  */
 
-package de.uniulm.omi.cloudiator.visor.execution;
+package de.uniulm.omi.cloudiator.visor.telnet;
 
 import com.google.inject.Inject;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import de.uniulm.omi.cloudiator.visor.execution.ExecutionService;
+
+import java.net.ServerSocket;
 
 /**
- * Created by daniel on 15.12.14.
+ * Created by daniel on 16.12.14.
  */
-public class ShutdownHook extends Thread {
+public class ServerListenerFactory implements ServerListenerFactoryInterface {
 
-    private static final Logger logger = LogManager.getLogger(ShutdownHook.class);
-
+    private final SocketWorkerFactory socketWorkerFactory;
     private final ExecutionService executionService;
 
-    @Inject public ShutdownHook(ExecutionService executionService) {
+    @Inject
+    public ServerListenerFactory(ExecutionService executionService, SocketWorkerFactory socketWorkerFactory) {
         this.executionService = executionService;
+        this.socketWorkerFactory = socketWorkerFactory;
     }
 
-    @Override public void run() {
-        logger.debug("Running shutdown hook.");
-        this.executionService.shutdown(60);
+    @Override
+    public ServerListener create(ServerSocket serverSocket) {
+        return new ServerListener(serverSocket, this.executionService, this.socketWorkerFactory);
     }
 }

@@ -16,27 +16,11 @@
  * under the License.
  */
 
-package de.uniulm.omi.cloudiator.visor.execution;
-
-import com.google.inject.Inject;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+package de.uniulm.omi.cloudiator.visor.telnet;
 
 /**
- * Created by daniel on 15.12.14.
+ * Created by daniel on 16.12.14.
  */
-public class ShutdownHook extends Thread {
-
-    private static final Logger logger = LogManager.getLogger(ShutdownHook.class);
-
-    private final ExecutionService executionService;
-
-    @Inject public ShutdownHook(ExecutionService executionService) {
-        this.executionService = executionService;
-    }
-
-    @Override public void run() {
-        logger.debug("Running shutdown hook.");
-        this.executionService.shutdown(60);
-    }
+public interface RequestParsingInterface<T, S> {
+    public S parse(T t) throws ParsingException;
 }
