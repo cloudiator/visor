@@ -104,12 +104,24 @@ POST /monitors
 ```
 ```
 {  
+  "contexts":[  
+    {  
+      "key":"localIp",
+      "value":"134.60.30.150"
+    }
+  ],
   "interval":{  
     "period":1,
     "timeUnit":"SECONDS"
   },
   "metricName":"memory_usage",
-  "sensorClassName":"de.uniulm.omi.cloudiator.visor.monitoring.sensors.MemoryUsageSensor"
+  "sensorClassName":"de.uniulm.omi.cloudiator.visor.monitoring.sensors.MemoryUsageSensor",
+  "links":[  
+         {  
+            "href":"/monitors/c7a98598-e64a-4f1f-8f28-054eb743ccf3",
+            "rel":"self"
+         }
+      ]
 }
 ```
 
@@ -131,12 +143,24 @@ PUT /monitors/c7a98598-e64a-4f1f-8f28-054eb743ccf3
 ```
 ```
 {  
+  "contexts":[  
+    {  
+      "key":"localIp",
+      "value":"134.60.30.150"
+    }
+  ],
   "interval":{  
     "period":1,
     "timeUnit":"SECONDS"
   },
   "metricName":"memory_usage",
-  "sensorClassName":"de.uniulm.omi.cloudiator.visor.monitoring.sensors.MemoryUsageSensor"
+  "sensorClassName":"de.uniulm.omi.cloudiator.visor.monitoring.sensors.MemoryUsageSensor",
+  "links":[  
+         {  
+            "href":"/monitors/c7a98598-e64a-4f1f-8f28-054eb743ccf3",
+            "rel":"self"
+         }
+      ]
 }
 ```
 
