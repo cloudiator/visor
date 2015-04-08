@@ -25,4 +25,6 @@ public interface ExecutionService {
     public void execute(Runnable runnable);
 
     public void shutdown(int seconds);
+
+    public void kill();
 }

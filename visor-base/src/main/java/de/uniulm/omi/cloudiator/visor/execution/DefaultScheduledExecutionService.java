@@ -46,7 +46,8 @@ import static com.google.common.base.Preconditions.*;
 
     private final Map<Schedulable, ScheduledFuture> registeredSchedulables;
 
-    @Inject public DefaultScheduledExecutionService(@Named("executionThreads") int executionThreads) {
+    @Inject
+    public DefaultScheduledExecutionService(@Named("executionThreads") int executionThreads) {
         checkArgument(executionThreads >= 1, "Execution thread must be >= 1");
         LOGGER.debug(String.format("Starting execution service with %s threads", executionThreads));
         scheduledExecutorService = ExtendedScheduledThreadPoolExecutor.create(executionThreads);
@@ -98,5 +99,9 @@ import static com.google.common.base.Preconditions.*;
             this.scheduledExecutorService.shutdownNow();
             Thread.currentThread().interrupt();
         }
+    }
+
+    @Override public void kill() {
+        this.scheduledExecutorService.shutdownNow();
     }
 }

@@ -20,6 +20,8 @@ package de.uniulm.omi.cloudiator.visor.rest;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+import de.uniulm.omi.cloudiator.visor.config.ConfigurationException;
+import de.uniulm.omi.cloudiator.visor.execution.ExecutionService;
 import de.uniulm.omi.cloudiator.visor.monitoring.MonitoringService;
 import de.uniulm.omi.cloudiator.visor.rest.controllers.MonitorController;
 import org.apache.logging.log4j.LogManager;
@@ -43,13 +45,12 @@ public class RestServer {
     private static final Logger LOGGER = LogManager.getLogger(RestServer.class);
 
     @Inject public RestServer(@Named("restPort") int restPort, @Named("restHost") String restHost,
-        MonitoringService monitoringService) {
+        MonitoringService monitoringService, ExecutionService executionService) {
         checkArgument(restPort > 0);
 
         if (restPort <= 1024) {
             LOGGER.warn("You try to open a port below 1024. This is usual not a good idea...");
         }
-
         checkNotNull(restHost);
         checkArgument(!restHost.isEmpty());
 
@@ -57,11 +58,26 @@ public class RestServer {
         ResourceConfig config = new ResourceConfig();
         config.register(new MonitorController(monitoringService));
         config.register(MoxyJsonFeature.class);
-        try {
-            GrizzlyHttpServerFactory.createHttpServer(baseUri, config).start();
-        } catch (IOException e) {
-            LOGGER.fatal("Could not start rest server.", e);
-            System.exit(1);
+
+        executionService.execute(new GrizzlyServer(baseUri, config));
+    }
+
+    public static class GrizzlyServer implements Runnable {
+
+        private final URI baseUri;
+        private final ResourceConfig config;
+
+        private GrizzlyServer(URI baseUri, ResourceConfig config) {
+            this.baseUri = baseUri;
+            this.config = config;
+        }
+
+        @Override public void run() {
+            try {
+                GrizzlyHttpServerFactory.createHttpServer(baseUri, config).start();
+            } catch (IOException e) {
+                throw new ConfigurationException(e);
+            }
         }
     }
 }

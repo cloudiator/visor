@@ -19,6 +19,7 @@
 package de.uniulm.omi.cloudiator.visor.execution;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -30,13 +31,17 @@ public class ShutdownHook extends Thread {
     private static final Logger logger = LogManager.getLogger(ShutdownHook.class);
 
     private final ExecutionService executionService;
+    private final int reportingInterval;
 
-    @Inject public ShutdownHook(ExecutionService executionService) {
+    @Inject public ShutdownHook(ExecutionService executionService,
+        @Named("reportingInterval") int reportingInterval) {
         this.executionService = executionService;
+        this.reportingInterval = reportingInterval;
     }
 
     @Override public void run() {
-        logger.debug("Running shutdown hook.");
-        this.executionService.shutdown(60);
+        logger.debug("Running shutdown hook. Using reporting Interval*2 (" + reportingInterval * 2
+            + ") as timeout for the execution.");
+        this.executionService.shutdown(reportingInterval * 2);
     }
 }

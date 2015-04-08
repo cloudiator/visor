@@ -20,6 +20,7 @@ package de.uniulm.omi.cloudiator.visor.reporting;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 import de.uniulm.omi.cloudiator.visor.execution.ScheduledExecutionService;
 import de.uniulm.omi.cloudiator.visor.monitoring.DefaultInterval;
 import org.apache.logging.log4j.LogManager;
@@ -46,10 +47,11 @@ import java.util.concurrent.TimeUnit;
     private static final Logger LOGGER = LogManager.getLogger(Queue.class);
 
     @Inject public Queue(ScheduledExecutionService executionService,
-        QueueWorkerFactoryInterface<T> queueWorkerFactory) {
+        QueueWorkerFactoryInterface<T> queueWorkerFactory,
+        @Named("reportingInterval") int reportingInterval) {
         this.queueDelegate = new LinkedBlockingQueue<>();
-        executionService
-            .schedule(queueWorkerFactory.create(this.queueDelegate, new DefaultInterval(20, TimeUnit.SECONDS)));
+        executionService.schedule(queueWorkerFactory
+            .create(this.queueDelegate, new DefaultInterval(reportingInterval, TimeUnit.SECONDS)));
     }
 
     @Override public void report(T item) throws ReportingException {
