@@ -21,35 +21,35 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>visor</artifactId>
-        <groupId>de.uniulm.omi.cloudiator</groupId>
-        <version>1.2.0-SNAPSHOT</version>
+        <artifactId>project</artifactId>
+        <groupId>io.github.cloudiator.visor</groupId>
+        <version>1.0.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <dependencies>
         <dependency>
-            <groupId>de.uniulm.omi.cloudiator</groupId>
+            <groupId>io.github.cloudiator.visor</groupId>
             <artifactId>visor-base</artifactId>
         </dependency>
         <dependency>
-            <groupId>de.uniulm.omi.cloudiator</groupId>
+            <groupId>io.github.cloudiator.visor</groupId>
             <artifactId>visor-rest</artifactId>
         </dependency>
         <dependency>
-            <groupId>de.uniulm.omi.cloudiator</groupId>
+            <groupId>io.github.cloudiator.visor</groupId>
             <artifactId>visor-telnet</artifactId>
         </dependency>
         <dependency>
-            <groupId>de.uniulm.omi.cloudiator</groupId>
+            <groupId>io.github.cloudiator.visor</groupId>
             <artifactId>visor-reporting-cli</artifactId>
         </dependency>
         <dependency>
-            <groupId>de.uniulm.omi.cloudiator</groupId>
+            <groupId>io.github.cloudiator.visor</groupId>
             <artifactId>visor-reporting-kairos</artifactId>
         </dependency>
         <dependency>
-            <groupId>de.uniulm.omi.cloudiator</groupId>
+            <groupId>io.github.cloudiator.visor</groupId>
             <artifactId>visor-sensors</artifactId>
         </dependency>
     </dependencies>
