@@ -18,6 +18,8 @@
 
 package de.uniulm.omi.cloudiator.visor.telnet;
 
+import de.uniulm.omi.cloudiator.visor.monitoring.MonitorContext;
+
 /**
  * Parses an object of type T into an object of type S.
  *
@@ -33,5 +35,12 @@ public interface RequestParsingInterface<T, S> {
      * @return the resulting object
      * @throws ParsingException if the object is not parsable.
      */
-    public S parse(T t) throws ParsingException;
+    S parse(T t) throws ParsingException;
+
+    /**
+     * @return the context of the request parser.
+     */
+    MonitorContext monitorContext();
+
+
 }

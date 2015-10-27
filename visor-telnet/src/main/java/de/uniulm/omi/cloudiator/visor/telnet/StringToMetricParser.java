@@ -57,4 +57,8 @@ public class StringToMetricParser implements RequestParsingInterface<String, Met
         return MetricFactory
             .from(metricName, new MeasurementImpl(timestamp, value), monitorContext);
     }
+
+    @Override public MonitorContext monitorContext() {
+        return monitorContext;
+    }
 }

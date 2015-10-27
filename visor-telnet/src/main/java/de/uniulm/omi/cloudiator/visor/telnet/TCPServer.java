@@ -21,6 +21,7 @@ package de.uniulm.omi.cloudiator.visor.telnet;
 import de.uniulm.omi.cloudiator.visor.config.ConfigurationException;
 import de.uniulm.omi.cloudiator.visor.execution.ExecutionService;
 import de.uniulm.omi.cloudiator.visor.monitoring.Metric;
+import de.uniulm.omi.cloudiator.visor.monitoring.MonitorContext;
 import de.uniulm.omi.cloudiator.visor.reporting.ReportingException;
 import de.uniulm.omi.cloudiator.visor.reporting.ReportingInterface;
 import de.uniulm.omi.cloudiator.visor.server.Server;
@@ -70,6 +71,10 @@ public class TCPServer implements Server {
         return this.port;
     }
 
+    @Override public MonitorContext getMonitorContext() {
+        return requestParser.monitorContext();
+    }
+
     @Override public void run() {
         listener.run();
     }
@@ -99,6 +104,7 @@ public class TCPServer implements Server {
             }
         }
     }
+
 
     private class TCPSocketWorker implements Runnable {
 

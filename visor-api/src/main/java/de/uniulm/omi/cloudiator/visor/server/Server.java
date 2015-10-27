@@ -18,6 +18,8 @@
 
 package de.uniulm.omi.cloudiator.visor.server;
 
+import de.uniulm.omi.cloudiator.visor.monitoring.MonitorContext;
+
 /**
  * Created by daniel on 23.10.15.
  */
@@ -28,6 +30,8 @@ public interface Server extends Runnable {
      */
     int port();
 
-
-
+    /**
+     * @return the monitor context used for the server.
+     */
+    MonitorContext getMonitorContext();
 }
