@@ -2,8 +2,8 @@
 ***
 ## Description
 ***
-## Configuration
-The port of the telnet interface can be configured via the "telnetPort" configuration option in the [*.properties](../conf/default.properties) file.
+## Deployment
+A new telnet server can be started using the RESTful interface. See [REST](rest/REST.md).
 ***
 ## Usage
 The communication with the telnet interface is line based, where a line represents exactly one metric:
