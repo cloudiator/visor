@@ -16,27 +16,31 @@
  * under the License.
  */
 
-package de.uniulm.omi.cloudiator.visor.server;
+package de.uniulm.omi.cloudiator.visor.rest.controllers;
 
-import de.uniulm.omi.cloudiator.visor.monitoring.MonitorContext;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
+import de.uniulm.omi.cloudiator.visor.rest.entities.Link;
+
+import java.util.Collection;
 
 /**
- * Created by daniel on 23.10.15.
+ * Created by daniel on 27.10.15.
  */
-public interface Server extends Runnable {
+public class ResponseWrapper<T> {
 
-    /**
-     * @return unique identifier of the server.
-     */
-    String uuid();
+    @JsonUnwrapped private final T entity;
+    private final Collection<Link> links;
 
-    /**
-     * @return the port the server is running on.
-     */
-    int port();
+    public ResponseWrapper(T entity, Collection<Link> links) {
+        this.entity = entity;
+        this.links = links;
+    }
 
-    /**
-     * @return the monitor context used for the server.
-     */
-    MonitorContext getMonitorContext();
+    public T getEntity() {
+        return entity;
+    }
+
+    public Collection<Link> getLinks() {
+        return links;
+    }
 }

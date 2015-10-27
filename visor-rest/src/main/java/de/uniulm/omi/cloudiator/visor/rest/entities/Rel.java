@@ -16,27 +16,22 @@
  * under the License.
  */
 
-package de.uniulm.omi.cloudiator.visor.server;
-
-import de.uniulm.omi.cloudiator.visor.monitoring.MonitorContext;
+package de.uniulm.omi.cloudiator.visor.rest.entities;
 
 /**
- * Created by daniel on 23.10.15.
+ * Created by daniel on 27.10.15.
  */
-public interface Server extends Runnable {
+public enum Rel {
 
-    /**
-     * @return unique identifier of the server.
-     */
-    String uuid();
+    SELF("self");
 
-    /**
-     * @return the port the server is running on.
-     */
-    int port();
+    private final String text;
 
-    /**
-     * @return the monitor context used for the server.
-     */
-    MonitorContext getMonitorContext();
+    private Rel(final String text) {
+        this.text = text;
+    }
+
+    @Override public String toString() {
+        return text;
+    }
 }

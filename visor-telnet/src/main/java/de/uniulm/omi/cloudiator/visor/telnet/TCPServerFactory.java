@@ -43,9 +43,9 @@ public class TCPServerFactory extends AbstractServerFactory {
         this.metricReporting = metricReporting;
     }
 
-    @Override public Server createServer(int port, MonitorContext monitorContext)
+    @Override public Server createServer(String uuid, int port, MonitorContext monitorContext)
         throws IOException {
         return new TCPServer(executionService, metricReporting,
-            new StringToMetricParser(monitorContext), port);
+            new StringToMetricParser(monitorContext), port, uuid);
     }
 }

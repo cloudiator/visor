@@ -21,6 +21,7 @@ package de.uniulm.omi.cloudiator.visor.rest.controllers;
 import de.uniulm.omi.cloudiator.visor.monitoring.*;
 import de.uniulm.omi.cloudiator.visor.rest.converters.MonitorConverter;
 import de.uniulm.omi.cloudiator.visor.rest.entities.MonitorDto;
+import de.uniulm.omi.cloudiator.visor.rest.entities.Rel;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -43,28 +44,30 @@ import static com.google.common.base.Preconditions.checkNotNull;
         this.monitoringService = monitoringService;
     }
 
-    @GET @Produces(MediaType.APPLICATION_JSON) public Collection<MonitorDto> getMonitors() {
+    @GET @Produces(MediaType.APPLICATION_JSON)
+    public Collection<ResponseWrapper<MonitorDto>> getMonitors() {
 
         return monitoringService.getMonitors().stream()
-            .map(monitor -> new MonitorConverter().apply(monitor)).collect(Collectors.toList());
+            .map(monitor -> getMonitor(monitor.getUuid())).collect(Collectors.toList());
 
     }
 
     @GET @Produces(MediaType.APPLICATION_JSON) @Path("/{uuid}")
-    public MonitorDto getMonitor(@PathParam("uuid") String uuid) {
-
+    public ResponseWrapper<MonitorDto> getMonitor(@PathParam("uuid") String uuid) {
 
         if (this.monitoringService.getMonitor(uuid) == null) {
             throw new NotFoundException();
         }
 
-        return new MonitorConverter().apply(this.monitoringService.getMonitor(uuid));
+        return ResponseBuilder.newBuilder(MonitorDto.class)
+            .entity(new MonitorConverter().apply(this.monitoringService.getMonitor(uuid)))
+            .addLink(String.format("/monitors/%s", uuid), Rel.SELF).build();
     }
 
 
     @PUT @Consumes(MediaType.APPLICATION_JSON) @Produces(MediaType.APPLICATION_JSON)
-    @Path("/{uuid}")
-    public MonitorDto putMonitor(@PathParam("uuid") String uuid, MonitorDto monitor) {
+    @Path("/{uuid}") public ResponseWrapper<MonitorDto> putMonitor(@PathParam("uuid") String uuid,
+        MonitorDto monitor) {
 
         if (this.monitoringService.isMonitoring(uuid)) {
             this.monitoringService.stopMonitor(uuid);
@@ -83,7 +86,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
     }
 
     @POST @Consumes(MediaType.APPLICATION_JSON) @Produces(MediaType.APPLICATION_JSON)
-    public MonitorDto postMonitor(MonitorDto monitor) {
+    public ResponseWrapper<MonitorDto> postMonitor(MonitorDto monitor) {
 
         //generate a random uuid for the monitor
         final UUID uuid = UUID.randomUUID();

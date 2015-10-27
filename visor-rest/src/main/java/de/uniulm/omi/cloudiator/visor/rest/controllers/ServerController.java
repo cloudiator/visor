@@ -21,6 +21,7 @@ package de.uniulm.omi.cloudiator.visor.rest.controllers;
 import com.google.inject.Inject;
 import de.uniulm.omi.cloudiator.visor.monitoring.MonitoringService;
 import de.uniulm.omi.cloudiator.visor.rest.converters.ServerConverter;
+import de.uniulm.omi.cloudiator.visor.rest.entities.Rel;
 import de.uniulm.omi.cloudiator.visor.rest.entities.ServerDto;
 
 import javax.ws.rs.*;
@@ -44,26 +45,31 @@ import static com.google.common.base.Preconditions.checkNotNull;
         this.monitoringService = monitoringService;
     }
 
-    @GET @Produces(MediaType.APPLICATION_JSON) public Collection<ServerDto> getServers() {
+    @GET @Produces(MediaType.APPLICATION_JSON)
+    public Collection<ResponseWrapper<ServerDto>> getServers() {
 
-        return monitoringService.getServers().stream()
-            .map(server -> new ServerConverter().apply(server)).collect(Collectors.toList());
+        return monitoringService.getServers().stream().map(server -> getServer(server.uuid()))
+            .collect(Collectors.toList());
+
     }
 
     @GET @Produces(MediaType.APPLICATION_JSON) @Path("/{uuid}")
-    public ServerDto getMonitor(@PathParam("uuid") String uuid) {
+    public ResponseWrapper<ServerDto> getServer(@PathParam("uuid") String uuid) {
 
 
         if (this.monitoringService.getServer(uuid) == null) {
             throw new NotFoundException();
         }
 
-        return new ServerConverter().apply(this.monitoringService.getServer(uuid));
+        return ResponseBuilder.newBuilder(ServerDto.class)
+            .entity(new ServerConverter().apply(this.monitoringService.getServer(uuid)))
+            .addLink(String.format("/servers/%s", uuid), Rel.SELF).build();
     }
 
 
     @PUT @Consumes(MediaType.APPLICATION_JSON) @Produces(MediaType.APPLICATION_JSON)
-    @Path("/{uuid}") public ServerDto putServer(@PathParam("uuid") String uuid, ServerDto server) {
+    @Path("/{uuid}")
+    public ResponseWrapper<ServerDto> putServer(@PathParam("uuid") String uuid, ServerDto server) {
 
         if (this.monitoringService.getServer(uuid) != null) {
             this.monitoringService.stopServer(uuid);
@@ -76,11 +82,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
         }
 
 
-        return getMonitor(uuid);
+        return getServer(uuid);
     }
 
     @POST @Consumes(MediaType.APPLICATION_JSON) @Produces(MediaType.APPLICATION_JSON)
-    public ServerDto postServer(ServerDto server) {
+    public ResponseWrapper<ServerDto> postServer(ServerDto server) {
 
         //generate a random uuid for the monitor
         final UUID uuid = UUID.randomUUID();

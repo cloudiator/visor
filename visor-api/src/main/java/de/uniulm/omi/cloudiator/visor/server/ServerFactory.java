@@ -30,17 +30,19 @@ public interface ServerFactory {
     /**
      * Starts a new server on the given port.
      *
+     * @param uuid           the unique identifier for the server
      * @param port           the port used by the server.
      * @param monitorContext the monitor context for the server.
      * @return the created server
      * @throws IOException if an I/O error occurs while opening the socket.
      * @see java.net.ServerSocket
      */
-    Server createServer(int port, MonitorContext monitorContext) throws IOException;
+    Server createServer(String uuid, int port, MonitorContext monitorContext) throws IOException;
 
     /**
      * Starts a new server using a free port from the given port range.
      *
+     * @param uuid           the unique identifier for the server
      * @param lower          lower boundary of the port range (included)
      * @param upper          upper boundary of the port range (included)
      * @param monitorContext the monitor context for the server
@@ -48,6 +50,7 @@ public interface ServerFactory {
      * @throws IOException if no empty port could be found on the given port range.
      * @see java.net.ServerSocket
      */
-    Server createServer(int lower, int upper, MonitorContext monitorContext) throws IOException;
+    Server createServer(String uuid, int lower, int upper, MonitorContext monitorContext)
+        throws IOException;
 
 }

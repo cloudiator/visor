@@ -29,11 +29,12 @@ import java.net.ServerSocket;
  */
 public abstract class AbstractServerFactory implements ServerFactory {
 
-    @Override public abstract Server createServer(int port, MonitorContext monitorContext)
+    @Override
+    public abstract Server createServer(String uuid, int port, MonitorContext monitorContext)
         throws IOException;
 
-    @Override public final Server createServer(int lower, int upper, MonitorContext monitorContext)
-        throws IOException {
+    @Override public final Server createServer(String uuid, int lower, int upper,
+        MonitorContext monitorContext) throws IOException {
         for (int i = lower; i <= upper; i++) {
             try (ServerSocket serverSocket = new ServerSocket(i);
                 DatagramSocket datagramSocket = new DatagramSocket(i)) {
@@ -41,7 +42,7 @@ public abstract class AbstractServerFactory implements ServerFactory {
                 datagramSocket.setReuseAddress(true);
                 serverSocket.close();
                 datagramSocket.close();
-                return createServer(i, monitorContext);
+                return createServer(uuid, i, monitorContext);
             } catch (IOException ignored) {
             }
         }

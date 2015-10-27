@@ -102,11 +102,11 @@ import static com.google.common.base.Preconditions.*;
         checkNotNull(monitorContext);
         Server server;
         if (port == null) {
-            server = this.serverFactory.createServer(LOWER_PORT_BOUNDARY, UPPER_PORT_BOUNDARY,
+            server = this.serverFactory.createServer(uuid, LOWER_PORT_BOUNDARY, UPPER_PORT_BOUNDARY,
                 monitorContextFactory.create(monitorContext));
         } else {
-            server =
-                this.serverFactory.createServer(port, monitorContextFactory.create(monitorContext));
+            server = this.serverFactory
+                .createServer(uuid, port, monitorContextFactory.create(monitorContext));
         }
         this.serverRegistry.put(uuid, server);
         this.scheduler.execute(server);

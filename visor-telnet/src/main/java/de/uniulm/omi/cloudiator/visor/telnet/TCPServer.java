@@ -34,12 +34,14 @@ import java.net.Socket;
 import java.util.Scanner;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Created by daniel on 15.12.14.
  */
 public class TCPServer implements Server {
 
+    private final String uuid;
     private static final Logger LOGGER = LogManager.getLogger(TCPServer.class);
     private final ExecutionService executionService;
     private final ReportingInterface<Metric> metricReporting;
@@ -48,13 +50,16 @@ public class TCPServer implements Server {
     private final TCPServerListener listener;
 
     public TCPServer(ExecutionService executionService, ReportingInterface<Metric> metricReporting,
-        RequestParsingInterface<String, Metric> requestParser, int port) {
+        RequestParsingInterface<String, Metric> requestParser, int port, String uuid) {
 
         checkArgument(port > 0, "Port must be > 0");
         if (port < 1024) {
             LOGGER.warn(
                 "You are running the telnet server on a port < 1024. This is usually not a good idea.");
         }
+        checkNotNull(uuid);
+        checkArgument(!uuid.isEmpty());
+        this.uuid = uuid;
         this.port = port;
         this.executionService = executionService;
         this.metricReporting = metricReporting;
@@ -65,6 +70,10 @@ public class TCPServer implements Server {
         } catch (IOException e) {
             throw new ConfigurationException(e);
         }
+    }
+
+    @Override public String uuid() {
+        return uuid;
     }
 
     @Override public int port() {
