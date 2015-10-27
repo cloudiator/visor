@@ -3,7 +3,7 @@
 ## Description
 ***
 ## Deployment
-A new telnet server can be started using the RESTful interface. See [REST](rest/REST.md).
+A new telnet server can be started using the RESTful interface. See [Servers](rest/Servers.md).
 ***
 ## Usage
 The communication with the telnet interface is line based, where a line represents exactly one metric:
