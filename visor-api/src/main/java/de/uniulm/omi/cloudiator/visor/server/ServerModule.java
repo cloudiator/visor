@@ -16,24 +16,18 @@
  * under the License.
  */
 
-package de.uniulm.omi.cloudiator.visor.rest.resources;
+package de.uniulm.omi.cloudiator.visor.server;
 
-import java.util.HashSet;
-import java.util.Set;
+import com.google.inject.AbstractModule;
 
 /**
- * Created by daniel on 07.04.15.
+ * Created by daniel on 23.10.15.
  */
-public class Links {
+public abstract class ServerModule extends AbstractModule {
 
-    private Links() {
-
+    @Override protected void configure() {
+        bind(ServerFactory.class).to(metricServerFactory());
     }
 
-    public static Set<Link> selfLink(String href) {
-        Link link = new Link(href,Rel.SELF);
-        HashSet<Link> links = new HashSet<>();
-        links.add(link);
-        return links;
-    }
+    protected abstract Class<? extends ServerFactory> metricServerFactory();
 }

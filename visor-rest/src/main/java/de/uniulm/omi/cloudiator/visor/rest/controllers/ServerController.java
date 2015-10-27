@@ -18,12 +18,14 @@
 
 package de.uniulm.omi.cloudiator.visor.rest.controllers;
 
-import de.uniulm.omi.cloudiator.visor.monitoring.*;
-import de.uniulm.omi.cloudiator.visor.rest.converters.MonitorConverter;
-import de.uniulm.omi.cloudiator.visor.rest.entities.MonitorDto;
+import com.google.inject.Inject;
+import de.uniulm.omi.cloudiator.visor.monitoring.MonitoringService;
+import de.uniulm.omi.cloudiator.visor.rest.converters.ServerConverter;
+import de.uniulm.omi.cloudiator.visor.rest.entities.ServerDto;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -31,76 +33,69 @@ import java.util.stream.Collectors;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Created by daniel on 06.02.15.
+ * Created by daniel on 23.10.15.
  */
-@Path("/monitors") public class MonitorController {
+@Path("/servers") public class ServerController {
 
     private final MonitoringService monitoringService;
 
-    public MonitorController(final MonitoringService monitoringService) {
-
+    @Inject public ServerController(MonitoringService monitoringService) {
         checkNotNull(monitoringService);
         this.monitoringService = monitoringService;
     }
 
-    @GET @Produces(MediaType.APPLICATION_JSON) public Collection<MonitorDto> getMonitors() {
+    @GET @Produces(MediaType.APPLICATION_JSON) public Collection<ServerDto> getServers() {
 
-        return monitoringService.getMonitors().stream()
-            .map(monitor -> new MonitorConverter().apply(monitor)).collect(Collectors.toList());
-
+        return monitoringService.getServers().stream()
+            .map(server -> new ServerConverter().apply(server)).collect(Collectors.toList());
     }
 
     @GET @Produces(MediaType.APPLICATION_JSON) @Path("/{uuid}")
-    public MonitorDto getMonitor(@PathParam("uuid") String uuid) {
+    public ServerDto getMonitor(@PathParam("uuid") String uuid) {
 
 
-        if (this.monitoringService.getMonitor(uuid) == null) {
+        if (this.monitoringService.getServer(uuid) == null) {
             throw new NotFoundException();
         }
 
-        return new MonitorConverter().apply(this.monitoringService.getMonitor(uuid));
+        return new ServerConverter().apply(this.monitoringService.getServer(uuid));
     }
 
 
     @PUT @Consumes(MediaType.APPLICATION_JSON) @Produces(MediaType.APPLICATION_JSON)
-    @Path("/{uuid}")
-    public MonitorDto putMonitor(@PathParam("uuid") String uuid, MonitorDto monitor) {
+    @Path("/{uuid}") public ServerDto putServer(@PathParam("uuid") String uuid, ServerDto server) {
 
-        if (this.monitoringService.isMonitoring(uuid)) {
-            this.monitoringService.stopMonitor(uuid);
+        if (this.monitoringService.getServer(uuid) != null) {
+            this.monitoringService.stopServer(uuid);
         }
-
 
         try {
-            this.monitoringService
-                .startMonitor(uuid, monitor.getMetricName(), monitor.getSensorClassName(),
-                    monitor.getInterval(), monitor.getMonitorContext());
-        } catch (SensorNotFoundException | SensorInitializationException | InvalidMonitorContextException e) {
+            this.monitoringService.startServer(uuid, server.getMonitorContext(), server.getPort());
+        } catch (IOException e) {
             throw new BadRequestException(e);
         }
+
 
         return getMonitor(uuid);
     }
 
     @POST @Consumes(MediaType.APPLICATION_JSON) @Produces(MediaType.APPLICATION_JSON)
-    public MonitorDto postMonitor(MonitorDto monitor) {
+    public ServerDto postServer(ServerDto server) {
 
         //generate a random uuid for the monitor
         final UUID uuid = UUID.randomUUID();
 
-        return this.putMonitor(uuid.toString(), monitor);
+        return this.putServer(uuid.toString(), server);
 
     }
 
     @DELETE @Produces(MediaType.APPLICATION_JSON) @Path("/{uuid}")
-    public void deleteMonitor(@PathParam("uuid") String uuid) {
-        this.monitoringService.stopMonitor(uuid);
+    public void deleteServer(@PathParam("uuid") String uuid) {
+        this.monitoringService.stopServer(uuid);
     }
 
     @DELETE @Produces(MediaType.APPLICATION_JSON) public void deleteAllMonitors() {
-        for (Monitor monitor : this.monitoringService.getMonitors()) {
-            this.monitoringService.stopMonitor(monitor.getUuid());
-        }
+        throw new UnsupportedOperationException("Not yet implemented.");
     }
 
 }

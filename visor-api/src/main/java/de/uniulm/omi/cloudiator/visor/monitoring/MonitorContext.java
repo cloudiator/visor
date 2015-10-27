@@ -25,6 +25,7 @@ import java.util.Map;
  */
 public interface MonitorContext {
 
+
     String getValue(String context);
 
     boolean hasValue(String context);

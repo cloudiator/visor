@@ -24,9 +24,19 @@ package de.uniulm.omi.cloudiator.visor.execution;
  */
 public interface ScheduledExecutionService extends ExecutionService {
 
-    public void schedule(Schedulable schedulable);
+    /**
+     * Schedules the schedulable within the execution service.
+     *
+     * @param schedulable the schedulable to schedule.
+     */
+    void schedule(Schedulable schedulable);
 
-    public void remove(Schedulable schedulable);
-
-    public void reschedule(Schedulable schedulable);
+    /**
+     * Reschedules the schedulable.
+     * <p/>
+     * Can be used if the scheduling interval should be changed.
+     *
+     * @param schedulable the schedulable to be rescheduled.
+     */
+    void reschedule(Schedulable schedulable);
 }

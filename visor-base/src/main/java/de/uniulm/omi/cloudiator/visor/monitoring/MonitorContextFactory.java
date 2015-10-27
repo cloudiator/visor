@@ -16,29 +16,17 @@
  * under the License.
  */
 
-package de.uniulm.omi.cloudiator.visor.rest.resources;
+package de.uniulm.omi.cloudiator.visor.monitoring;
 
-import java.util.List;
+import com.google.inject.ImplementedBy;
+
+import java.util.Map;
 
 /**
- * Created by daniel on 07.04.15.
+ * Created by daniel on 23.10.15.
  */
+@ImplementedBy(DefaultMonitorContextFactory.class) public interface MonitorContextFactory {
 
-public interface Monitor {
+    MonitorContext create(Map<String, String> context);
 
-    String getMetricName();
-
-    void setMetricName(String metricName);
-
-    String getSensorClassName();
-
-    @SuppressWarnings("UnusedDeclaration") void setSensorClassName(String sensorClassName);
-
-    Interval getInterval();
-
-    void setInterval(Interval interval);
-
-    List<Context> getContexts();
-
-    @SuppressWarnings("UnusedDeclaration") void setContexts(List<Context> contexts);
 }

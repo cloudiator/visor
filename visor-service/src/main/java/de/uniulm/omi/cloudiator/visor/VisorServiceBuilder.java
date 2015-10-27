@@ -20,7 +20,7 @@ package de.uniulm.omi.cloudiator.visor;
 
 import com.google.inject.Module;
 import de.uniulm.omi.cloudiator.visor.config.*;
-import de.uniulm.omi.cloudiator.visor.telnet.ServerModule;
+import de.uniulm.omi.cloudiator.visor.telnet.TelnetServiceModule;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -73,7 +73,7 @@ public class VisorServiceBuilder {
         ConfigurationAccess configurationAccess =
             new FileConfigurationAccessor(commandLinePropertiesAccessor.getConfFileLocation());
         this.modules.add(new BaseModule(configurationAccess, commandLinePropertiesAccessor));
-        this.modules.add(new ServerModule());
+        this.modules.add(new TelnetServiceModule());
         this.loadModulesBasedOnConfiguration(configurationAccess);
         return new VisorService(this.modules);
     }

@@ -19,8 +19,19 @@
 package de.uniulm.omi.cloudiator.visor.telnet;
 
 /**
- * Created by daniel on 16.12.14.
+ * Parses an object of type T into an object of type S.
+ *
+ * @param <T> Type of the input.
+ * @param <S> Type of the output.
  */
 public interface RequestParsingInterface<T, S> {
+
+    /**
+     * Executes the parsing action.
+     *
+     * @param t the object to parse.
+     * @return the resulting object
+     * @throws ParsingException if the object is not parsable.
+     */
     public S parse(T t) throws ParsingException;
 }

@@ -16,40 +16,25 @@
  * under the License.
  */
 
-package de.uniulm.omi.cloudiator.visor.rest.resources;
+package de.uniulm.omi.cloudiator.visor.rest.entities;
 
-/**
- * Created by daniel on 09.02.15.
- */
-public class Interval {
+import java.util.Map;
 
-    private String timeUnit;
+public class ServerDtoBuilder {
+    private Map<String, String> monitorContext;
+    private int port;
 
-    private long period;
-
-    Interval() {
+    public ServerDtoBuilder monitorContext(Map<String, String> monitorContext) {
+        this.monitorContext = monitorContext;
+        return this;
     }
 
-    Interval(long period, String timeUnit) {
-        this.period = period;
-        this.timeUnit = timeUnit;
+    public ServerDtoBuilder port(int port) {
+        this.port = port;
+        return this;
     }
 
-    public String getTimeUnit() {
-        return timeUnit;
-    }
-
-    @SuppressWarnings("UnusedDeclaration")
-    public void setTimeUnit(String timeUnit) {
-        this.timeUnit = timeUnit;
-    }
-
-    public long getPeriod() {
-        return period;
-    }
-
-    @SuppressWarnings("UnusedDeclaration")
-    public void setPeriod(long period) {
-        this.period = period;
+    public ServerDto build() {
+        return new ServerDto(monitorContext, port);
     }
 }

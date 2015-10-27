@@ -18,17 +18,17 @@
 
 package de.uniulm.omi.cloudiator.visor.telnet;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.TypeLiteral;
-import de.uniulm.omi.cloudiator.visor.monitoring.Metric;
+import de.uniulm.omi.cloudiator.visor.server.ServerFactory;
+import de.uniulm.omi.cloudiator.visor.server.ServerModule;
 
 /**
  * Created by daniel on 16.12.14.
  */
-public class ServerModule extends AbstractModule {
+public class TelnetServiceModule extends ServerModule {
 
-    @Override protected void configure() {
-        bind(new TypeLiteral<RequestParsingInterface<String, Metric>>() {
-        }).to(StringToMetricParser.class);
+    @Override protected Class<? extends ServerFactory> metricServerFactory() {
+        return TCPServerFactory.class;
     }
+
+
 }

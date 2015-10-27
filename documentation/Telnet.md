@@ -8,11 +8,10 @@ The port of the telnet interface can be configured via the "telnetPort" configur
 ## Usage
 The communication with the telnet interface is line based, where a line represents exactly one metric:
 ```
-applicationName metricName value timestamp\n
+metricName value timestamp\n
 ```
 Value           | Description
 --------------- | -----------
-applicationName | The name of the application reporting the metric.
 metricName      | The name of the metric that is reported.
 value           | The value of the metric.
 timestamp       | The unix timestamp when this metric value occured.

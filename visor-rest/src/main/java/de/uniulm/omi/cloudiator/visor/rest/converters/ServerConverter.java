@@ -16,31 +16,20 @@
  * under the License.
  */
 
-package de.uniulm.omi.cloudiator.visor.rest.resources;
+package de.uniulm.omi.cloudiator.visor.rest.converters;
 
-import com.fasterxml.jackson.annotation.JsonUnwrapped;
+import de.uniulm.omi.cloudiator.visor.rest.entities.ServerDto;
+import de.uniulm.omi.cloudiator.visor.rest.entities.ServerDtoBuilder;
+import de.uniulm.omi.cloudiator.visor.server.Server;
 
-import java.util.Set;
+import java.util.function.Function;
 
 /**
- * Created by daniel on 07.04.15.
+ * Created by daniel on 27.10.15.
  */
-public class LinkWrapper<T> {
+public class ServerConverter implements Function<Server, ServerDto> {
 
-    protected T wrappedEntity;
-    private final Set<Link> links;
-
-    public LinkWrapper(T wrappedEntity, Set<Link> links) {
-        this.wrappedEntity = wrappedEntity;
-        this.links = links;
+    @Override public ServerDto apply(Server server) {
+        return new ServerDtoBuilder().monitorContext(null).port(server.port()).build();
     }
-
-    @JsonUnwrapped public T getEntity() {
-        return wrappedEntity;
-    }
-
-    public Set<Link> getLinks() {
-        return links;
-    }
-
 }

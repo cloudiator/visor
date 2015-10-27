@@ -16,10 +16,28 @@
  * under the License.
  */
 
-package de.uniulm.omi.cloudiator.visor.rest.resources;
+package de.uniulm.omi.cloudiator.visor.monitoring;
+
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+
+import java.util.Map;
 
 /**
- * Created by daniel on 07.04.15.
+ * Created by daniel on 23.10.15.
  */
-public interface MonitorEntity extends Monitor,Entity {
+public class DefaultMonitorContextFactory implements MonitorContextFactory {
+
+    private final String localIp;
+
+    @Inject DefaultMonitorContextFactory(@Named("localIp") String localIp) {
+
+        this.localIp = localIp;
+    }
+
+    @Override public MonitorContext create(Map<String, String> context) {
+        return new DefaultMonitorContext(context, localIp);
+    }
+
+
 }

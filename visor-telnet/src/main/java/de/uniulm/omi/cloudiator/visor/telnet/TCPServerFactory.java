@@ -20,25 +20,32 @@ package de.uniulm.omi.cloudiator.visor.telnet;
 
 import com.google.inject.Inject;
 import de.uniulm.omi.cloudiator.visor.execution.ExecutionService;
+import de.uniulm.omi.cloudiator.visor.monitoring.Metric;
+import de.uniulm.omi.cloudiator.visor.monitoring.MonitorContext;
+import de.uniulm.omi.cloudiator.visor.reporting.QueuedReporting;
+import de.uniulm.omi.cloudiator.visor.reporting.ReportingInterface;
+import de.uniulm.omi.cloudiator.visor.server.AbstractServerFactory;
+import de.uniulm.omi.cloudiator.visor.server.Server;
 
-import java.net.ServerSocket;
+import java.io.IOException;
 
 /**
- * Created by daniel on 16.12.14.
+ * Created by daniel on 23.10.15.
  */
-public class ServerListenerFactory implements ServerListenerFactoryInterface {
+public class TCPServerFactory extends AbstractServerFactory {
 
-    private final SocketWorkerFactory socketWorkerFactory;
     private final ExecutionService executionService;
+    private final ReportingInterface<Metric> metricReporting;
 
-    @Inject
-    public ServerListenerFactory(ExecutionService executionService, SocketWorkerFactory socketWorkerFactory) {
+    @Inject public TCPServerFactory(ExecutionService executionService,
+        @QueuedReporting ReportingInterface<Metric> metricReporting) {
         this.executionService = executionService;
-        this.socketWorkerFactory = socketWorkerFactory;
+        this.metricReporting = metricReporting;
     }
 
-    @Override
-    public ServerListener create(ServerSocket serverSocket) {
-        return new ServerListener(serverSocket, this.executionService, this.socketWorkerFactory);
+    @Override public Server createServer(int port, MonitorContext monitorContext)
+        throws IOException {
+        return new TCPServer(executionService, metricReporting,
+            new StringToMetricParser(monitorContext), port);
     }
 }

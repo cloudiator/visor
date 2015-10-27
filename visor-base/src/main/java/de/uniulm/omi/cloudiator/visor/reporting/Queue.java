@@ -22,7 +22,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import de.uniulm.omi.cloudiator.visor.execution.ScheduledExecutionService;
-import de.uniulm.omi.cloudiator.visor.monitoring.DefaultInterval;
+import de.uniulm.omi.cloudiator.visor.monitoring.Intervals;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -51,7 +51,7 @@ import java.util.concurrent.TimeUnit;
         @Named("reportingInterval") int reportingInterval) {
         this.queueDelegate = new LinkedBlockingQueue<>();
         executionService.schedule(queueWorkerFactory
-            .create(this.queueDelegate, new DefaultInterval(reportingInterval, TimeUnit.SECONDS)));
+            .create(this.queueDelegate, Intervals.of(reportingInterval, TimeUnit.SECONDS)));
     }
 
     @Override public void report(T item) throws ReportingException {

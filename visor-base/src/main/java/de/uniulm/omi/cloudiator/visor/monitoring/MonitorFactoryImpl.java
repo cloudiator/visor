@@ -19,32 +19,24 @@
 package de.uniulm.omi.cloudiator.visor.monitoring;
 
 import com.google.inject.Inject;
-import com.google.inject.name.Named;
 import de.uniulm.omi.cloudiator.visor.reporting.QueuedReporting;
 import de.uniulm.omi.cloudiator.visor.reporting.ReportingInterface;
-
-import java.util.Map;
 
 /**
  * Created by daniel on 15.01.15.
  */
 public class MonitorFactoryImpl implements MonitorFactory {
 
-    private final String localIp;
     private final ReportingInterface<Metric> metricReportingInterface;
 
-    @Inject public MonitorFactoryImpl(@Named("localIp") String localIp,
+    @Inject public MonitorFactoryImpl(
         @QueuedReporting ReportingInterface<Metric> metricReportingInterface) {
-        this.localIp = localIp;
         this.metricReportingInterface = metricReportingInterface;
     }
 
     @Override
     public Monitor create(String uuid, String metricName, Sensor sensor, Interval interval,
-        Map<String, String> context) throws InvalidMonitorContextException {
-        MonitorContext monitorContext =
-            DefaultMonitorContext.builder().addContext(DefaultMonitorContext.LOCAL_IP, localIp)
-                .addContext(context).build();
+        MonitorContext monitorContext) throws InvalidMonitorContextException {
         return new MonitorImpl(uuid, metricName, sensor, interval, monitorContext,
             metricReportingInterface);
     }

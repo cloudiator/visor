@@ -16,38 +16,40 @@
  * under the License.
  */
 
-package de.uniulm.omi.cloudiator.visor.rest.resources;
+package de.uniulm.omi.cloudiator.visor.rest.entities;
+
+import java.util.Collections;
+import java.util.Map;
 
 /**
- * Created by daniel on 09.02.15.
+ * Created by daniel on 27.10.15.
  */
-public class Context {
-    private String key;
-    private String value;
+public class ServerDto {
 
-    @SuppressWarnings("UnusedDeclaration")
-    Context() {
+    private Map<String, String> monitorContext;
+    private Integer port;
+
+    private ServerDto() {
     }
 
-    Context(String key, String value) {
-        this.key = key;
-        this.value = value;
+    public ServerDto(Map<String, String> monitorContext, int port) {
+        this.monitorContext = monitorContext;
+        this.port = port;
     }
 
-    public String getKey() {
-        return key;
+    public Integer getPort() {
+        return port;
     }
 
-    public String getValue() {
-        return value;
+    public Map<String, String> getMonitorContext() {
+        if (monitorContext == null) {
+            return Collections.emptyMap();
+        }
+        return monitorContext;
     }
 
-    @SuppressWarnings("UnusedDeclaration")
-    public void setKey(String key) {
-        this.key = key;
+    public void setMonitorContext(Map<String, String> monitorContext) {
+        this.monitorContext = monitorContext;
     }
 
-    public void setValue(String value) {
-        this.value = value;
-    }
 }

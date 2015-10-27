@@ -68,10 +68,6 @@ public class MonitorImpl implements Monitor {
         return this.interval;
     }
 
-    @Override public Runnable getRunnable() {
-        return this.monitorWorker;
-    }
-
     @Override public String toString() {
         return "MonitorImpl{" +
             "uuid='" + uuid + '\'' +
@@ -81,6 +77,10 @@ public class MonitorImpl implements Monitor {
             ", monitorWorker=" + monitorWorker +
             ", interval=" + interval +
             '}';
+    }
+
+    @Override public void run() {
+        this.monitorWorker.run();
     }
 
     private static class MonitorWorker implements Runnable {

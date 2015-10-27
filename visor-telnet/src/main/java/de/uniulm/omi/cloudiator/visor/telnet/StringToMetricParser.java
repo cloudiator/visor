@@ -18,46 +18,43 @@
 
 package de.uniulm.omi.cloudiator.visor.telnet;
 
-import com.google.inject.Inject;
-import com.google.inject.name.Named;
-import de.uniulm.omi.cloudiator.visor.monitoring.DefaultMonitorContext;
+import de.uniulm.omi.cloudiator.visor.monitoring.MeasurementImpl;
 import de.uniulm.omi.cloudiator.visor.monitoring.Metric;
-import de.uniulm.omi.cloudiator.visor.monitoring.MetricBuilder;
-import de.uniulm.omi.cloudiator.visor.telnet.ParsingException;
-import de.uniulm.omi.cloudiator.visor.telnet.RequestParsingInterface;
+import de.uniulm.omi.cloudiator.visor.monitoring.MetricFactory;
+import de.uniulm.omi.cloudiator.visor.monitoring.MonitorContext;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Created by daniel on 16.12.14.
+ * Parses a line request into a metric.
+ * <p/>
+ * Expects the line to be of the format metricName, value, timestamp
  */
 public class StringToMetricParser implements RequestParsingInterface<String, Metric> {
 
-    private final String localIp;
+    private final MonitorContext monitorContext;
 
-    @Inject public StringToMetricParser(@Named("localIp") String localIp) {
-        this.localIp = localIp;
+    public StringToMetricParser(MonitorContext monitorContext) {
+        this.monitorContext = monitorContext;
     }
 
     @Override public Metric parse(String s) throws ParsingException {
         checkNotNull(s);
 
         final String[] parts = s.split(" ");
-        if (parts.length != 4) {
-            throw new ParsingException("Expected 4 strings, got " + parts.length);
+        if (parts.length != 3) {
+            throw new ParsingException("Expected 3 strings, got " + parts.length);
         }
-        final String applicationName = parts[0];
-        final String metricName = parts[1];
-        final String value = parts[2];
+        final String metricName = parts[0];
+        final String value = parts[1];
         long timestamp;
         try {
-            timestamp = Long.parseLong(parts[3]);
+            timestamp = Long.parseLong(parts[2]);
         } catch (NumberFormatException e) {
-            throw new ParsingException("Could not convert 4th string to long.");
+            throw new ParsingException("Could not convert third string to long.");
         }
 
-        return MetricBuilder.newBuilder().name(metricName).value(value).timestamp(timestamp)
-            .addTag("application", applicationName)
-            .addTag(DefaultMonitorContext.LOCAL_IP, this.localIp).build();
+        return MetricFactory
+            .from(metricName, new MeasurementImpl(timestamp, value), monitorContext);
     }
 }

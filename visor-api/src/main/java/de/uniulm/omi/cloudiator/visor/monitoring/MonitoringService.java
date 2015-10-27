@@ -19,6 +19,10 @@
 package de.uniulm.omi.cloudiator.visor.monitoring;
 
 
+import de.uniulm.omi.cloudiator.visor.server.Server;
+
+import javax.annotation.Nullable;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
 
@@ -27,16 +31,25 @@ import java.util.Map;
  */
 public interface MonitoringService {
 
-    public void startMonitoring(String uuid, String metricName, String sensorClassName,
-        Interval interval, Map<String, String> monitorContext)
+    void startMonitor(String uuid, String metricName, String sensorClassName, Interval interval,
+        Map<String, String> monitorContext)
         throws SensorNotFoundException, SensorInitializationException,
         InvalidMonitorContextException;
 
-    public void stopMonitoring(String uuid);
+    void stopMonitor(String uuid);
 
-    public Collection<Monitor> getMonitors();
+    void startServer(String uuid, Map<String, String> monitorContext, @Nullable Integer port)
+        throws IOException;
 
-    public Monitor getMonitor(String uuid);
+    void stopServer(String uuid);
 
-    public boolean isMonitoring(String uuid);
+    Collection<Monitor> getMonitors();
+
+    Collection<Server> getServers();
+
+    Monitor getMonitor(String uuid);
+
+    Server getServer(String uuid);
+
+    boolean isMonitoring(String uuid);
 }

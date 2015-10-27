@@ -16,13 +16,18 @@
  * under the License.
  */
 
-package de.uniulm.omi.cloudiator.visor.rest.converters;
-
-import com.google.common.base.Function;
+package de.uniulm.omi.cloudiator.visor.server;
 
 /**
- * Created by daniel on 09.02.15.
+ * Created by daniel on 23.10.15.
  */
-public interface OneWayConverter<F, T> extends Function<F, T> {
+public interface Server extends Runnable {
+
+    /**
+     * @return the port the server is running on.
+     */
+    int port();
+
+
 
 }

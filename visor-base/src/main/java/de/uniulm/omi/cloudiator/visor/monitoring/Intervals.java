@@ -16,22 +16,21 @@
  * under the License.
  */
 
-package de.uniulm.omi.cloudiator.visor.rest.resources;
+package de.uniulm.omi.cloudiator.visor.monitoring;
+
+import java.util.concurrent.TimeUnit;
 
 /**
- * Created by daniel on 07.04.15.
+ * Created by daniel on 27.10.15.
  */
-public enum Rel {
+public class Intervals {
 
-    SELF("self");
+    private Intervals() {
 
-    private final String text;
-
-    private Rel(final String text) {
-        this.text = text;
     }
 
-    @Override public String toString() {
-        return text;
+    public static Interval of(long period, TimeUnit timeUnit) {
+        return new DefaultInterval(period, timeUnit);
     }
+
 }
