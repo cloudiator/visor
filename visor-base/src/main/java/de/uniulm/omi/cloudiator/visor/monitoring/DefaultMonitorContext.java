@@ -20,6 +20,7 @@ package de.uniulm.omi.cloudiator.visor.monitoring;
 
 import com.google.common.collect.ImmutableMap;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -51,8 +52,13 @@ class DefaultMonitorContext extends BaseMonitorContext {
     }
 
     @Override public Map<String, String> getContext() {
-        return ImmutableMap.<String, String>builder().putAll(super.context).putAll(defaultContext)
-            .build();
+
+        //temporary map two filter duplicates as they are not allowed by the immutable map builder
+        Map<String, String> temp = new HashMap<>(defaultContext.size() + super.getContext().size());
+        temp.putAll(super.getContext());
+        temp.putAll(defaultContext);
+
+        return ImmutableMap.copyOf(temp);
     }
 
 

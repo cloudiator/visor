@@ -28,7 +28,7 @@ import java.util.Map;
  */
 public class BaseMonitorContext implements MonitorContext {
 
-    protected final Map<String, String> context;
+    private final Map<String, String> context;
 
     BaseMonitorContext(Map<String, String> context) {
         this.context = ImmutableMap.copyOf(context);
