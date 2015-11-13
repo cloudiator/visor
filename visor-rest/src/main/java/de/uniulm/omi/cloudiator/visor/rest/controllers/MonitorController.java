@@ -18,14 +18,20 @@
 
 package de.uniulm.omi.cloudiator.visor.rest.controllers;
 
-import de.uniulm.omi.cloudiator.visor.monitoring.*;
-import de.uniulm.omi.cloudiator.visor.rest.converters.MonitorConverter;
+import de.uniulm.omi.cloudiator.visor.exceptions.MonitorException;
+import de.uniulm.omi.cloudiator.visor.execution.ScheduledExecutionService;
+import de.uniulm.omi.cloudiator.visor.monitoring.Monitor;
+import de.uniulm.omi.cloudiator.visor.monitoring.MonitoringService;
+import de.uniulm.omi.cloudiator.visor.rest.converters.MonitorConverters;
 import de.uniulm.omi.cloudiator.visor.rest.entities.MonitorDto;
 import de.uniulm.omi.cloudiator.visor.rest.entities.Rel;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -37,6 +43,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @Path("/monitors") public class MonitorController {
 
     private final MonitoringService monitoringService;
+    private static final Logger LOGGER = LogManager.getLogger(MonitorController.class);
 
     public MonitorController(final MonitoringService monitoringService) {
 
@@ -46,21 +53,21 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
     @GET @Produces(MediaType.APPLICATION_JSON)
     public Collection<ResponseWrapper<MonitorDto>> getMonitors() {
-
-        return monitoringService.getMonitors().stream()
-            .map(monitor -> getMonitor(monitor.getUuid())).collect(Collectors.toList());
-
+        return monitoringService.getMonitors().stream().map(monitor -> getMonitor(monitor.uuid()))
+            .collect(Collectors.toList());
     }
 
     @GET @Produces(MediaType.APPLICATION_JSON) @Path("/{uuid}")
     public ResponseWrapper<MonitorDto> getMonitor(@PathParam("uuid") String uuid) {
 
-        if (this.monitoringService.getMonitor(uuid) == null) {
+        Optional<Monitor> monitor = monitoringService.getMonitor(uuid);
+
+        if (!monitor.isPresent()) {
             throw new NotFoundException();
         }
 
         return ResponseBuilder.newBuilder(MonitorDto.class)
-            .entity(new MonitorConverter().apply(this.monitoringService.getMonitor(uuid)))
+            .entity(MonitorConverters.getConverter(monitor.get().getClass()).apply(monitor.get()))
             .addLink(String.format("/monitors/%s", uuid), Rel.SELF).build();
     }
 
@@ -73,12 +80,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
             this.monitoringService.stopMonitor(uuid);
         }
 
-
         try {
-            this.monitoringService
-                .startMonitor(uuid, monitor.getMetricName(), monitor.getSensorClassName(),
-                    monitor.getInterval(), monitor.getMonitorContext());
-        } catch (SensorNotFoundException | SensorInitializationException | InvalidMonitorContextException e) {
+            monitor.start(uuid, monitoringService);
+        } catch (MonitorException e) {
+            LOGGER.error(e);
             throw new BadRequestException(e);
         }
 
@@ -102,7 +107,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
     @DELETE @Produces(MediaType.APPLICATION_JSON) public void deleteAllMonitors() {
         for (Monitor monitor : this.monitoringService.getMonitors()) {
-            this.monitoringService.stopMonitor(monitor.getUuid());
+            this.monitoringService.stopMonitor(monitor.uuid());
         }
     }
 

@@ -18,6 +18,9 @@
 
 package de.uniulm.omi.cloudiator.visor.monitoring;
 
+import de.uniulm.omi.cloudiator.visor.exceptions.SensorInitializationException;
+import de.uniulm.omi.cloudiator.visor.exceptions.SensorNotFoundException;
+
 /**
  * Created by daniel on 15.01.15.
  */

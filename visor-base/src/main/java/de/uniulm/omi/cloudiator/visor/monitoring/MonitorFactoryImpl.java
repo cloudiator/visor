@@ -19,8 +19,18 @@
 package de.uniulm.omi.cloudiator.visor.monitoring;
 
 import com.google.inject.Inject;
+import de.uniulm.omi.cloudiator.visor.exceptions.InvalidMonitorContextException;
+import de.uniulm.omi.cloudiator.visor.exceptions.MonitorException;
+import de.uniulm.omi.cloudiator.visor.exceptions.SensorInitializationException;
+import de.uniulm.omi.cloudiator.visor.exceptions.SensorNotFoundException;
+import de.uniulm.omi.cloudiator.visor.execution.ExecutionService;
+import de.uniulm.omi.cloudiator.visor.execution.ScheduledExecutionService;
 import de.uniulm.omi.cloudiator.visor.reporting.QueuedReporting;
 import de.uniulm.omi.cloudiator.visor.reporting.ReportingInterface;
+import de.uniulm.omi.cloudiator.visor.server.ServerRegistry;
+
+import java.io.IOException;
+import java.util.Map;
 
 /**
  * Created by daniel on 15.01.15.
@@ -28,16 +38,44 @@ import de.uniulm.omi.cloudiator.visor.reporting.ReportingInterface;
 public class MonitorFactoryImpl implements MonitorFactory {
 
     private final ReportingInterface<Metric> metricReportingInterface;
+    private final SensorFactory sensorFactory;
+    private final MonitorContextFactory monitorContextFactory;
+    private final ServerRegistry serverRegistry;
+    private final ScheduledExecutionService executionService;
 
-    @Inject public MonitorFactoryImpl(
-        @QueuedReporting ReportingInterface<Metric> metricReportingInterface) {
+    @Inject public MonitorFactoryImpl(ServerRegistry serverRegistry,
+        MonitorContextFactory monitorContextFactory, SensorFactory sensorFactory,
+        @QueuedReporting ReportingInterface<Metric> metricReportingInterface,
+        ScheduledExecutionService executionService) {
+        this.serverRegistry = serverRegistry;
+        this.monitorContextFactory = monitorContextFactory;
+        this.sensorFactory = sensorFactory;
         this.metricReportingInterface = metricReportingInterface;
+        this.executionService = executionService;
     }
 
-    @Override
-    public Monitor create(String uuid, String metricName, Sensor sensor, Interval interval,
-        MonitorContext monitorContext) throws InvalidMonitorContextException {
-        return new MonitorImpl(uuid, metricName, sensor, interval, monitorContext,
-            metricReportingInterface);
+    @Override public SensorMonitor create(String uuid, String metricName, String componentId,
+        Map<String, String> monitorContext, String sensorClassName, Interval interval)
+        throws MonitorException {
+        try {
+            return new SensorMonitorImpl(uuid, metricName, componentId,
+                sensorFactory.from(sensorClassName), interval,
+                monitorContextFactory.create(monitorContext), metricReportingInterface,
+                executionService);
+        } catch (InvalidMonitorContextException | SensorInitializationException | SensorNotFoundException e) {
+            throw new MonitorException("Unable to create monitor.", e);
+        }
+    }
+
+    @Override public PushMonitor create(String uuid, String metricName, String componentId,
+        Map<String, String> monitorContext) throws MonitorException {
+
+        try {
+            MonitorContext context = monitorContextFactory.create(monitorContext);
+            return new PushMonitorImpl(serverRegistry.getServer(componentId), uuid, metricName,
+                componentId, context);
+        } catch (IOException e) {
+            throw new MonitorException("Unable to create monitor.", e);
+        }
     }
 }

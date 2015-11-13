@@ -18,38 +18,36 @@
 
 package de.uniulm.omi.cloudiator.visor.rest.entities;
 
-import java.util.Collections;
 import java.util.Map;
 
-/**
- * Created by daniel on 27.10.15.
- */
-public class ServerDto {
+public class PushMonitorDtoBuilder {
 
+    private String metricName;
+    private String componentId;
     private Map<String, String> monitorContext;
-    private Integer port;
+    private int port;
 
-    private ServerDto() {
+    public PushMonitorDtoBuilder metricName(String metricName) {
+        this.metricName = metricName;
+        return this;
     }
 
-    public ServerDto(Map<String, String> monitorContext, int port) {
+    public PushMonitorDtoBuilder componentId(String componentId) {
+        this.componentId = componentId;
+        return this;
+    }
+
+    public PushMonitorDtoBuilder monitorContext(Map<String, String> monitorContext) {
         this.monitorContext = monitorContext;
+        return this;
+    }
+
+    public PushMonitorDtoBuilder port(int port) {
         this.port = port;
+        return this;
     }
 
-    public Integer getPort() {
-        return port;
+    public PushMonitorDto build() {
+        return new PushMonitorDto(metricName, componentId, monitorContext, port);
     }
-
-    public Map<String, String> getMonitorContext() {
-        if (monitorContext == null) {
-            return Collections.emptyMap();
-        }
-        return monitorContext;
-    }
-
-    public void setMonitorContext(Map<String, String> monitorContext) {
-        this.monitorContext = monitorContext;
-    }
-
 }

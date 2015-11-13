@@ -21,7 +21,6 @@ package de.uniulm.omi.cloudiator.visor.telnet;
 import com.google.inject.Inject;
 import de.uniulm.omi.cloudiator.visor.execution.ExecutionService;
 import de.uniulm.omi.cloudiator.visor.monitoring.Metric;
-import de.uniulm.omi.cloudiator.visor.monitoring.MonitorContext;
 import de.uniulm.omi.cloudiator.visor.reporting.QueuedReporting;
 import de.uniulm.omi.cloudiator.visor.reporting.ReportingInterface;
 import de.uniulm.omi.cloudiator.visor.server.AbstractServerFactory;
@@ -43,9 +42,9 @@ public class TCPServerFactory extends AbstractServerFactory {
         this.metricReporting = metricReporting;
     }
 
-    @Override public Server createServer(String uuid, int port, MonitorContext monitorContext)
-        throws IOException {
-        return new TCPServer(executionService, metricReporting,
-            new StringToMetricParser(monitorContext), port, uuid);
+    @Override public Server createServer(int port) throws IOException {
+
+        return TCPServerBuilder.newBuilder().executionService(executionService)
+            .reportingInterface(metricReporting).port(port).build();
     }
 }

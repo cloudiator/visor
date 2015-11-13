@@ -16,32 +16,29 @@
  * under the License.
  */
 
-package de.uniulm.omi.cloudiator.visor.monitoring;
+package de.uniulm.omi.cloudiator.visor.exceptions;
 
 /**
- * This exception is thrown if a probe could not execute its measurement, and
- * the metric is therefore not available.
+ * Created by daniel on 11.11.15.
  */
-public class MeasurementNotAvailableException extends Exception {
-
-    /**
-     * @see java.lang.Exception
-     */
-    public MeasurementNotAvailableException(Throwable cause) {
-        super(cause);
+public class MonitorException extends Exception {
+    public MonitorException() {
     }
 
-    /**
-     * @see java.lang.Exception
-     */
-    public MeasurementNotAvailableException(String message) {
+    public MonitorException(String message) {
         super(message);
     }
 
-    /**
-     * @see java.lang.Exception
-     */
-    public MeasurementNotAvailableException(String message, Throwable cause) {
+    public MonitorException(String message, Throwable cause) {
         super(message, cause);
+    }
+
+    public MonitorException(Throwable cause) {
+        super(cause);
+    }
+
+    public MonitorException(String message, Throwable cause, boolean enableSuppression,
+        boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
     }
 }

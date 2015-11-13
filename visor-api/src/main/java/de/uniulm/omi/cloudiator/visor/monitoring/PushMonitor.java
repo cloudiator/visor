@@ -16,31 +16,13 @@
  * under the License.
  */
 
-package de.uniulm.omi.cloudiator.visor.telnet;
-
-import de.uniulm.omi.cloudiator.visor.monitoring.MonitorContext;
+package de.uniulm.omi.cloudiator.visor.monitoring;
 
 /**
- * Parses an object of type T into an object of type S.
- *
- * @param <T> Type of the input.
- * @param <S> Type of the output.
+ * Created by daniel on 11.11.15.
  */
-public interface RequestParsingInterface<T, S> {
+public interface PushMonitor extends Monitor {
 
-    /**
-     * Executes the parsing action.
-     *
-     * @param t the object to parse.
-     * @return the resulting object
-     * @throws ParsingException if the object is not parsable.
-     */
-    S parse(T t) throws ParsingException;
-
-    /**
-     * @return the context of the request parser.
-     */
-    MonitorContext monitorContext();
-
+    int port();
 
 }

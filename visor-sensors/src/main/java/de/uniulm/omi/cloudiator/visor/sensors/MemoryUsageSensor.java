@@ -19,6 +19,8 @@
 package de.uniulm.omi.cloudiator.visor.sensors;
 
 import com.sun.management.OperatingSystemMXBean;
+import de.uniulm.omi.cloudiator.visor.exceptions.MeasurementNotAvailableException;
+import de.uniulm.omi.cloudiator.visor.exceptions.SensorInitializationException;
 import de.uniulm.omi.cloudiator.visor.monitoring.*;
 
 import java.lang.management.ManagementFactory;

@@ -16,29 +16,25 @@
  * under the License.
  */
 
-package de.uniulm.omi.cloudiator.visor.monitoring;
+package de.uniulm.omi.cloudiator.visor.server;
+
+import java.io.IOException;
 
 /**
- * Created by daniel on 06.02.15.
+ * Created by daniel on 11.11.15.
  */
-public class SensorInitializationException extends Exception {
+public interface ServerRegistry {
 
-    public SensorInitializationException() {
-    }
+    /**
+     * Returns the server for this component instance id.
+     * <p/>
+     * If such a server does not exist, it will be automatically created by the
+     * registry.
+     *
+     * @param componentInstanceId the component instance to measure
+     * @return a new server or an existing one.
+     * @throws IOException if the creating of the new server fails.
+     */
+    Server getServer(String componentInstanceId) throws IOException;
 
-    public SensorInitializationException(String message) {
-        super(message);
-    }
-
-    public SensorInitializationException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public SensorInitializationException(Throwable cause) {
-        super(cause);
-    }
-
-    public SensorInitializationException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
-    }
 }

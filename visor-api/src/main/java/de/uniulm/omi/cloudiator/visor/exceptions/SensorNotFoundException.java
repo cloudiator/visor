@@ -16,30 +16,14 @@
  * under the License.
  */
 
-package de.uniulm.omi.cloudiator.visor.monitoring;
+package de.uniulm.omi.cloudiator.visor.exceptions;
 
 /**
- * Created by daniel on 06.02.15.
+ * Created by daniel on 15.01.15.
  */
-public class InvalidMonitorContextException extends Exception {
+public class SensorNotFoundException extends Exception {
 
-    public InvalidMonitorContextException() {
-    }
-
-    public InvalidMonitorContextException(String message) {
-        super(message);
-    }
-
-    public InvalidMonitorContextException(String message, Throwable cause) {
+    public SensorNotFoundException(String message, Throwable cause) {
         super(message, cause);
-    }
-
-    public InvalidMonitorContextException(Throwable cause) {
-        super(cause);
-    }
-
-    public InvalidMonitorContextException(String message, Throwable cause,
-        boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
     }
 }

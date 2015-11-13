@@ -20,15 +20,12 @@ package de.uniulm.omi.cloudiator.visor.server;
 
 import de.uniulm.omi.cloudiator.visor.monitoring.MonitorContext;
 
+import java.util.Map;
+
 /**
  * Created by daniel on 23.10.15.
  */
 public interface Server extends Runnable {
-
-    /**
-     * @return unique identifier of the server.
-     */
-    String uuid();
 
     /**
      * @return the port the server is running on.
@@ -36,7 +33,29 @@ public interface Server extends Runnable {
     int port();
 
     /**
-     * @return the monitor context used for the server.
+     * Registers a new metric with this server.
+     *
+     * @param metricName     the name of the metric
+     * @param monitorContext the context for this metric.
      */
-    MonitorContext getMonitorContext();
+    void registerMetric(String metricName, MonitorContext monitorContext);
+
+    /**
+     * Unregisters a new metric.
+     *
+     * @param metricName the name of the metric.
+     */
+    void unregisterMetric(String metricName);
+
+    /**
+     * The context objects this server uses for its metrics.
+     * <p/>
+     * Note:
+     * <p/>
+     * immutable, use registerMetric and unregisterMetric methods
+     * for modification.
+     *
+     * @return the context the server uses for the metrics
+     */
+    Map<String, MonitorContext> metricContext();
 }

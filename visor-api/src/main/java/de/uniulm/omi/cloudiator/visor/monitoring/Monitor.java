@@ -20,18 +20,20 @@ package de.uniulm.omi.cloudiator.visor.monitoring;
 
 
 
-import de.uniulm.omi.cloudiator.visor.execution.Schedulable;
-
 /**
  * Created by daniel on 18.12.14.
  */
-public interface Monitor extends Schedulable {
+public interface Monitor {
 
-    String getUuid();
+    void start();
 
-    String getMetricName();
+    void stop();
 
-    Sensor getSensor();
+    String uuid();
 
-    MonitorContext getMonitorContext();
+    String metricName();
+
+    String componentId();
+
+    MonitorContext monitorContext();
 }

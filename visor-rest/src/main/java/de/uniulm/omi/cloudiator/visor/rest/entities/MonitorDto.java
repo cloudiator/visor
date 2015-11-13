@@ -18,10 +18,11 @@
 
 package de.uniulm.omi.cloudiator.visor.rest.entities;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import de.uniulm.omi.cloudiator.visor.monitoring.DefaultInterval;
-import de.uniulm.omi.cloudiator.visor.monitoring.Interval;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import de.uniulm.omi.cloudiator.visor.exceptions.MonitorException;
+import de.uniulm.omi.cloudiator.visor.monitoring.Monitor;
+import de.uniulm.omi.cloudiator.visor.monitoring.MonitoringService;
 
 import javax.validation.constraints.NotNull;
 import java.util.Collections;
@@ -30,25 +31,27 @@ import java.util.Map;
 /**
  * Created by daniel on 26.10.15.
  */
-public class MonitorDto {
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY)
+@JsonSubTypes({@JsonSubTypes.Type(value = PushMonitorDto.class, name = "push"),
+    @JsonSubTypes.Type(value = SensorMonitorDto.class, name = "sensor")})
+public abstract class MonitorDto {
 
     @NotNull private String metricName;
-    @NotNull private String sensorClassName;
+    @NotNull private String componentId;
     private Map<String, String> monitorContext;
-    @NotNull @JsonSerialize(as = DefaultInterval.class) @JsonDeserialize(as = DefaultInterval.class)
-    private Interval interval;
 
     protected MonitorDto() {
 
     }
 
-    public MonitorDto(String metricName, String sensorClassName, Map<String, String> monitorContext,
-        Interval interval) {
+    public MonitorDto(String metricName, String componentId, Map<String, String> monitorContext) {
         this.metricName = metricName;
-        this.sensorClassName = sensorClassName;
+        this.componentId = componentId;
         this.monitorContext = monitorContext;
-        this.interval = interval;
     }
+
+    public abstract Monitor start(String uuid, MonitoringService monitoringService)
+        throws MonitorException;
 
     public String getMetricName() {
         return metricName;
@@ -56,14 +59,6 @@ public class MonitorDto {
 
     public void setMetricName(String metricName) {
         this.metricName = metricName;
-    }
-
-    public String getSensorClassName() {
-        return sensorClassName;
-    }
-
-    public void setSensorClassName(String sensorClassName) {
-        this.sensorClassName = sensorClassName;
     }
 
     public Map<String, String> getMonitorContext() {
@@ -77,11 +72,11 @@ public class MonitorDto {
         this.monitorContext = monitorContext;
     }
 
-    public Interval getInterval() {
-        return interval;
+    public String getComponentId() {
+        return componentId;
     }
 
-    public void setInterval(Interval interval) {
-        this.interval = interval;
+    public void setComponentId(String componentId) {
+        this.componentId = componentId;
     }
 }

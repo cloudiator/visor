@@ -16,30 +16,23 @@
  * under the License.
  */
 
-package de.uniulm.omi.cloudiator.visor.rest.controllers;
+package de.uniulm.omi.cloudiator.visor.rest.converters;
 
-import de.uniulm.omi.cloudiator.visor.rest.entities.Link;
+import de.uniulm.omi.cloudiator.visor.monitoring.PushMonitor;
+import de.uniulm.omi.cloudiator.visor.rest.entities.PushMonitorDto;
+import de.uniulm.omi.cloudiator.visor.rest.entities.PushMonitorDtoBuilder;
 
-import java.util.Collection;
+import javax.annotation.Nullable;
+import java.util.function.Function;
 
 /**
  * Created by daniel on 27.10.15.
  */
-public class ResponseWrapper<T> {
+public class PushMonitorConverter implements Function<PushMonitor, PushMonitorDto> {
 
-    private final T entity;
-    private final Collection<Link> links;
-
-    public ResponseWrapper(T entity, Collection<Link> links) {
-        this.entity = entity;
-        this.links = links;
-    }
-
-    public T getEntity() {
-        return entity;
-    }
-
-    public Collection<Link> getLinks() {
-        return links;
+    @Nullable @Override public PushMonitorDto apply(PushMonitor monitor) {
+        return new PushMonitorDtoBuilder().componentId(monitor.componentId())
+            .metricName(monitor.metricName()).monitorContext(monitor.monitorContext().getContext())
+            .port(monitor.port()).build();
     }
 }

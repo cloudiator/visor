@@ -18,8 +18,6 @@
 
 package de.uniulm.omi.cloudiator.visor.server;
 
-import de.uniulm.omi.cloudiator.visor.monitoring.MonitorContext;
-
 import java.io.IOException;
 import java.net.DatagramSocket;
 import java.net.ServerSocket;
@@ -29,12 +27,8 @@ import java.net.ServerSocket;
  */
 public abstract class AbstractServerFactory implements ServerFactory {
 
-    @Override
-    public abstract Server createServer(String uuid, int port, MonitorContext monitorContext)
-        throws IOException;
-
-    @Override public final Server createServer(String uuid, int lower, int upper,
-        MonitorContext monitorContext) throws IOException {
+    @Override public synchronized final Server createServer(int lower, int upper)
+        throws IOException {
         for (int i = lower; i <= upper; i++) {
             try (ServerSocket serverSocket = new ServerSocket(i);
                 DatagramSocket datagramSocket = new DatagramSocket(i)) {
@@ -42,7 +36,7 @@ public abstract class AbstractServerFactory implements ServerFactory {
                 datagramSocket.setReuseAddress(true);
                 serverSocket.close();
                 datagramSocket.close();
-                return createServer(uuid, i, monitorContext);
+                return createServer(i);
             } catch (IOException ignored) {
             }
         }

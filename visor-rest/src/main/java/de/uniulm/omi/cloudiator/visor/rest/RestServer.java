@@ -25,7 +25,6 @@ import de.uniulm.omi.cloudiator.visor.execution.ExecutionService;
 import de.uniulm.omi.cloudiator.visor.monitoring.MonitorContextFactory;
 import de.uniulm.omi.cloudiator.visor.monitoring.MonitoringService;
 import de.uniulm.omi.cloudiator.visor.rest.controllers.MonitorController;
-import de.uniulm.omi.cloudiator.visor.rest.controllers.ServerController;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
@@ -60,7 +59,6 @@ public class RestServer {
         URI baseUri = UriBuilder.fromUri(restHost).port(restPort).build();
         ResourceConfig config = new ResourceConfig();
         config.register(new MonitorController(monitoringService));
-        config.register(new ServerController(monitoringService));
         config.register(JacksonFeature.class);
         executionService.execute(new GrizzlyServer(baseUri, config));
     }

@@ -16,25 +16,32 @@
  * under the License.
  */
 
-package de.uniulm.omi.cloudiator.visor.rest.entities;
+package de.uniulm.omi.cloudiator.visor.exceptions;
 
-import java.util.Map;
+/**
+ * This exception is thrown if a probe could not execute its measurement, and
+ * the metric is therefore not available.
+ */
+public class MeasurementNotAvailableException extends Exception {
 
-public class ServerDtoBuilder {
-    private Map<String, String> monitorContext;
-    private int port;
-
-    public ServerDtoBuilder monitorContext(Map<String, String> monitorContext) {
-        this.monitorContext = monitorContext;
-        return this;
+    /**
+     * @see java.lang.Exception
+     */
+    public MeasurementNotAvailableException(Throwable cause) {
+        super(cause);
     }
 
-    public ServerDtoBuilder port(int port) {
-        this.port = port;
-        return this;
+    /**
+     * @see java.lang.Exception
+     */
+    public MeasurementNotAvailableException(String message) {
+        super(message);
     }
 
-    public ServerDto build() {
-        return new ServerDto(monitorContext, port);
+    /**
+     * @see java.lang.Exception
+     */
+    public MeasurementNotAvailableException(String message, Throwable cause) {
+        super(message, cause);
     }
 }

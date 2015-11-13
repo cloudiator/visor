@@ -16,30 +16,29 @@
  * under the License.
  */
 
-package de.uniulm.omi.cloudiator.visor.rest.controllers;
-
-import de.uniulm.omi.cloudiator.visor.rest.entities.Link;
-
-import java.util.Collection;
+package de.uniulm.omi.cloudiator.visor.exceptions;
 
 /**
- * Created by daniel on 27.10.15.
+ * Created by daniel on 06.02.15.
  */
-public class ResponseWrapper<T> {
+public class SensorInitializationException extends Exception {
 
-    private final T entity;
-    private final Collection<Link> links;
-
-    public ResponseWrapper(T entity, Collection<Link> links) {
-        this.entity = entity;
-        this.links = links;
+    public SensorInitializationException() {
     }
 
-    public T getEntity() {
-        return entity;
+    public SensorInitializationException(String message) {
+        super(message);
     }
 
-    public Collection<Link> getLinks() {
-        return links;
+    public SensorInitializationException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public SensorInitializationException(Throwable cause) {
+        super(cause);
+    }
+
+    public SensorInitializationException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
     }
 }

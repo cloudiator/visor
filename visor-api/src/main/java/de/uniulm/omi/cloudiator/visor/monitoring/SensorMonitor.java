@@ -16,30 +16,15 @@
  * under the License.
  */
 
-package de.uniulm.omi.cloudiator.visor.rest.controllers;
+package de.uniulm.omi.cloudiator.visor.monitoring;
 
-import de.uniulm.omi.cloudiator.visor.rest.entities.Link;
-
-import java.util.Collection;
+import de.uniulm.omi.cloudiator.visor.execution.Schedulable;
 
 /**
- * Created by daniel on 27.10.15.
+ * Created by daniel on 11.11.15.
  */
-public class ResponseWrapper<T> {
+public interface SensorMonitor extends Monitor, Schedulable {
 
-    private final T entity;
-    private final Collection<Link> links;
+    Class<? extends Sensor> sensorClass();
 
-    public ResponseWrapper(T entity, Collection<Link> links) {
-        this.entity = entity;
-        this.links = links;
-    }
-
-    public T getEntity() {
-        return entity;
-    }
-
-    public Collection<Link> getLinks() {
-        return links;
-    }
 }

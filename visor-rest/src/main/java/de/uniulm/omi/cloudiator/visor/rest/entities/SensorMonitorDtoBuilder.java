@@ -22,33 +22,41 @@ import de.uniulm.omi.cloudiator.visor.monitoring.Interval;
 
 import java.util.Map;
 
-public class MonitorDtoBuilder {
+public class SensorMonitorDtoBuilder {
+
     private String metricName;
-    private String sensorClassName;
+    private String componentId;
     private Map<String, String> monitorContext;
+    private String sensorClassName;
     private Interval interval;
 
-    public MonitorDtoBuilder metricName(String metricName) {
+    public SensorMonitorDtoBuilder metricName(String metricName) {
         this.metricName = metricName;
         return this;
     }
 
-    public MonitorDtoBuilder sensorClassName(String sensorClassName) {
-        this.sensorClassName = sensorClassName;
+    public SensorMonitorDtoBuilder componentId(String componentId) {
+        this.componentId = componentId;
         return this;
     }
 
-    public MonitorDtoBuilder monitorContext(Map<String, String> monitorContext) {
+    public SensorMonitorDtoBuilder monitorContext(Map<String, String> monitorContext) {
         this.monitorContext = monitorContext;
         return this;
     }
 
-    public MonitorDtoBuilder interval(Interval interval) {
+    public SensorMonitorDtoBuilder sensorClassName(String sensorClassName) {
+        this.sensorClassName = sensorClassName;
+        return this;
+    }
+
+    public SensorMonitorDtoBuilder interval(Interval interval) {
         this.interval = interval;
         return this;
     }
 
-    public MonitorDto build() {
-        return new MonitorDto(metricName, sensorClassName, monitorContext, interval);
+    public SensorMonitorDto build() {
+        return new SensorMonitorDto(metricName, componentId, monitorContext, sensorClassName,
+            interval);
     }
 }

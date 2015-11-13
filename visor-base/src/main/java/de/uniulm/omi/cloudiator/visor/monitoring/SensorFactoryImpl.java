@@ -18,6 +18,9 @@
 
 package de.uniulm.omi.cloudiator.visor.monitoring;
 
+import de.uniulm.omi.cloudiator.visor.exceptions.SensorInitializationException;
+import de.uniulm.omi.cloudiator.visor.exceptions.SensorNotFoundException;
+
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -27,7 +30,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class SensorFactoryImpl implements SensorFactory {
 
     @Override
-    public Sensor from(String className) throws SensorNotFoundException, SensorInitializationException {
+    public Sensor from(String className) throws SensorNotFoundException,
+        SensorInitializationException {
         checkNotNull(className);
         checkArgument(!className.isEmpty());
         return this.loadAndInitializeSensor(className);

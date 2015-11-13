@@ -20,123 +20,75 @@ package de.uniulm.omi.cloudiator.visor.monitoring;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import de.uniulm.omi.cloudiator.visor.execution.ScheduledExecutionService;
-import de.uniulm.omi.cloudiator.visor.server.Server;
-import de.uniulm.omi.cloudiator.visor.server.ServerFactory;
+import de.uniulm.omi.cloudiator.visor.exceptions.MonitorException;
 
-import javax.annotation.Nullable;
-import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
-import static com.google.common.base.Preconditions.*;
+import static com.google.common.base.Preconditions.checkArgument;
 
 /**
  * Created by daniel on 11.12.14.
  */
 @Singleton public class MonitoringServiceImpl implements MonitoringService {
 
-    public static final int LOWER_PORT_BOUNDARY = 49152;
-    public static final int UPPER_PORT_BOUNDARY = 65535;
     private final Map<String, Monitor> monitorRegistry;
-    private final Map<String, Server> serverRegistry;
-    private final ScheduledExecutionService scheduler;
-    private final SensorFactory sensorFactory;
     private final MonitorFactory monitorFactory;
-    private final ServerFactory serverFactory;
-    private final MonitorContextFactory monitorContextFactory;
 
-    @Inject
-    public MonitoringServiceImpl(ScheduledExecutionService scheduler, SensorFactory sensorFactory,
-        MonitorFactory monitorFactory, ServerFactory serverFactory,
-        MonitorContextFactory monitorContextFactory) {
-        this.scheduler = scheduler;
-        this.sensorFactory = sensorFactory;
+    @Inject public MonitoringServiceImpl(MonitorFactory monitorFactory) {
         this.monitorFactory = monitorFactory;
-        this.serverFactory = serverFactory;
-        this.monitorContextFactory = monitorContextFactory;
         monitorRegistry = new HashMap<>();
-        serverRegistry = new HashMap<>();
     }
 
-    @Override public void startMonitor(String uuid, String metricName, String sensorClassName,
-        Interval interval, Map<String, String> monitorContext)
-        throws SensorNotFoundException, SensorInitializationException,
-        InvalidMonitorContextException {
+    @Override public SensorMonitor startMonitor(String uuid, String componentId, String metricName,
+        String sensorClassName, Interval interval, Map<String, String> monitorContext)
+        throws MonitorException {
 
-        checkNotNull(uuid);
-        checkArgument(!uuid.isEmpty());
+        checkArgument(!monitorRegistry.containsKey(uuid),
+            String.format("A monitor with the given uuid %s is already registered.", uuid));
 
-        checkNotNull(uuid);
-        checkArgument(!uuid.isEmpty());
+        final SensorMonitor sensorMonitor = this.monitorFactory
+            .create(uuid, metricName, componentId, monitorContext, sensorClassName, interval);
 
-        checkNotNull(metricName);
-        checkArgument(!metricName.isEmpty());
-
-        checkNotNull(sensorClassName);
-        checkArgument(!sensorClassName.isEmpty());
-
-        checkNotNull(interval);
-
-        checkNotNull(monitorContext);
-
-        final Sensor sensor = this.sensorFactory.from(sensorClassName);
-        final Monitor monitor = this.monitorFactory.create(uuid, metricName, sensor, interval,
-            this.monitorContextFactory.create(monitorContext));
-        this.monitorRegistry.put(uuid, monitor);
-        this.scheduler.schedule(monitor);
+        this.monitorRegistry.put(uuid, sensorMonitor);
+        sensorMonitor.start();
+        return sensorMonitor;
     }
 
-    @Override public void stopMonitor(String uuid) {
-        checkArgument(isMonitoring(uuid));
-        this.scheduler.remove(this.monitorRegistry.get(uuid), false);
-        this.monitorRegistry.remove(uuid);
-    }
+    @Override public Monitor startMonitor(String uuid, String componentId, String metricName,
+        Map<String, String> monitorContext) throws MonitorException {
 
-    @Override
-    public void startServer(String uuid, Map<String, String> monitorContext, @Nullable Integer port)
-        throws IOException {
-        checkNotNull(uuid);
-        checkArgument(!uuid.isEmpty());
-        checkNotNull(monitorContext);
-        Server server;
-        if (port == null) {
-            server = this.serverFactory.createServer(uuid, LOWER_PORT_BOUNDARY, UPPER_PORT_BOUNDARY,
-                monitorContextFactory.create(monitorContext));
-        } else {
-            server = this.serverFactory
-                .createServer(uuid, port, monitorContextFactory.create(monitorContext));
-        }
-        this.serverRegistry.put(uuid, server);
-        this.scheduler.execute(server);
-    }
+        checkArgument(!monitorRegistry.containsKey(uuid),
+            String.format("A monitor with the given uuid %s is already registered.", uuid));
 
-    @Override public void stopServer(String uuid) {
-        checkNotNull(uuid);
-        checkArgument(!uuid.isEmpty());
-        checkState(serverRegistry.containsKey(uuid));
-        this.scheduler.remove(serverRegistry.get(uuid), true);
+        final PushMonitor pushMonitor =
+            monitorFactory.create(uuid, metricName, componentId, monitorContext);
+        monitorRegistry.put(uuid, pushMonitor);
 
+        this.monitorRegistry.put(uuid, pushMonitor);
+
+        pushMonitor.start();
+
+        return pushMonitor;
     }
 
     @Override public Collection<Monitor> getMonitors() {
         return this.monitorRegistry.values();
     }
 
-    @Override public Collection<Server> getServers() {
-        return this.serverRegistry.values();
-    }
-
-    @Override public Monitor getMonitor(String uuid) {
-        return this.monitorRegistry.get(uuid);
-    }
-
-    @Override public Server getServer(String uuid) {
-        return this.serverRegistry.get(uuid);
+    @Override public Optional<Monitor> getMonitor(String uuid) {
+        return Optional.ofNullable(this.monitorRegistry.get(uuid));
     }
 
     @Override public boolean isMonitoring(String uuid) {
         return this.monitorRegistry.containsKey(uuid);
+    }
+
+    @Override public void stopMonitor(String uuid) {
+        checkArgument(monitorRegistry.containsKey(uuid),
+            String.format("No monitor with id %s was registered", uuid));
+        monitorRegistry.get(uuid).stop();
     }
 }

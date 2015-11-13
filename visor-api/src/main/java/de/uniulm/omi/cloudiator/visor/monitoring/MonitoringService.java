@@ -19,37 +19,28 @@
 package de.uniulm.omi.cloudiator.visor.monitoring;
 
 
-import de.uniulm.omi.cloudiator.visor.server.Server;
+import de.uniulm.omi.cloudiator.visor.exceptions.MonitorException;
 
-import javax.annotation.Nullable;
-import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Created by daniel on 11.12.14.
  */
 public interface MonitoringService {
 
-    void startMonitor(String uuid, String metricName, String sensorClassName, Interval interval,
-        Map<String, String> monitorContext)
-        throws SensorNotFoundException, SensorInitializationException,
-        InvalidMonitorContextException;
+    Monitor startMonitor(String uuid, String componentId, String metricName, String sensorClassName,
+        Interval interval, Map<String, String> monitorContext) throws MonitorException;
 
-    void stopMonitor(String uuid);
-
-    void startServer(String uuid, Map<String, String> monitorContext, @Nullable Integer port)
-        throws IOException;
-
-    void stopServer(String uuid);
+    Monitor startMonitor(String uuid, String componentId, String metricName,
+        Map<String, String> monitorContext) throws MonitorException;
 
     Collection<Monitor> getMonitors();
 
-    Collection<Server> getServers();
-
-    Monitor getMonitor(String uuid);
-
-    Server getServer(String uuid);
+    Optional<Monitor> getMonitor(String uuid);
 
     boolean isMonitoring(String uuid);
+
+    void stopMonitor(String uuid);
 }

@@ -18,6 +18,8 @@
 
 package de.uniulm.omi.cloudiator.visor.monitoring;
 
+import com.google.common.base.MoreObjects;
+
 import java.util.concurrent.TimeUnit;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -42,6 +44,8 @@ public class DefaultInterval implements Interval {
 
     /**
      * Constructor for the interval
+     * <p/>
+     * Use {@link Intervals} instead.
      *
      * @param period   the period of the interval, must be larger then 0.
      * @param timeUnit the time unit of the interval.
@@ -57,6 +61,11 @@ public class DefaultInterval implements Interval {
         this(period, TimeUnit.valueOf(timeUnit));
     }
 
+    /**
+     * Empty constructor for Deserialization.
+     * <p/>
+     * Use {@link Intervals} instead.
+     */
     private DefaultInterval() {
     }
 
@@ -79,6 +88,7 @@ public class DefaultInterval implements Interval {
     }
 
     @Override public String toString() {
-        return String.format("Interval{period=%d, timeUnit=%s}", period, timeUnit);
+        return MoreObjects.toStringHelper(this).add("period", period).add("timeUnit", timeUnit)
+            .toString();
     }
 }

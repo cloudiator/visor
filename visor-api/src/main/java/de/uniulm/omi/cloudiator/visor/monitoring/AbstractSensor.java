@@ -19,6 +19,9 @@
 package de.uniulm.omi.cloudiator.visor.monitoring;
 
 import com.google.common.base.Preconditions;
+import de.uniulm.omi.cloudiator.visor.exceptions.InvalidMonitorContextException;
+import de.uniulm.omi.cloudiator.visor.exceptions.MeasurementNotAvailableException;
+import de.uniulm.omi.cloudiator.visor.exceptions.SensorInitializationException;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;

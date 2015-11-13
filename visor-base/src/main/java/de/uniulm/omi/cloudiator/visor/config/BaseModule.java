@@ -25,6 +25,7 @@ import de.uniulm.omi.cloudiator.visor.execution.ExecutionService;
 import de.uniulm.omi.cloudiator.visor.execution.ScheduledExecutionService;
 import de.uniulm.omi.cloudiator.visor.monitoring.*;
 import de.uniulm.omi.cloudiator.visor.reporting.*;
+import de.uniulm.omi.cloudiator.visor.server.ServerRegistry;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -58,6 +59,7 @@ public class BaseModule extends AbstractModule {
         bind(ScheduledExecutionService.class).to(DefaultScheduledExecutionService.class);
         bind(MonitorFactory.class).to(MonitorFactoryImpl.class);
         bind(SensorFactory.class).to(SensorFactoryImpl.class);
+        bind(ServerRegistry.class).to(ServerRegistryImpl.class);
     }
 
 
