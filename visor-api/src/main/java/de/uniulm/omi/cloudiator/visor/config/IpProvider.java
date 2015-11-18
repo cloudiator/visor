@@ -25,5 +25,5 @@ import javax.annotation.Nullable;
  */
 public interface IpProvider {
 
-    @Nullable public String getPublicIp();
+    @Nullable String getPublicIp();
 }

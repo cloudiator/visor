@@ -20,6 +20,7 @@ package de.uniulm.omi.cloudiator.visor;
 
 import com.google.inject.Module;
 import de.uniulm.omi.cloudiator.visor.config.*;
+import de.uniulm.omi.cloudiator.visor.exceptions.ConfigurationException;
 import de.uniulm.omi.cloudiator.visor.telnet.TelnetServiceModule;
 
 import java.util.Arrays;

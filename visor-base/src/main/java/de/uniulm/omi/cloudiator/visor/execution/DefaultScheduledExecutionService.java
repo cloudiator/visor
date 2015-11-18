@@ -45,14 +45,14 @@ import static com.google.common.base.Preconditions.*;
      */
     private final ScheduledExecutorService scheduledExecutorService;
 
-    private final Map<Runnable, Future> registeredRunnables;
+    private final Map<Schedulable, Future> registeredSchedulables;
 
     @Inject
     public DefaultScheduledExecutionService(@Named("executionThreads") int executionThreads) {
         checkArgument(executionThreads >= 1, "Execution thread must be >= 1");
         LOGGER.debug(String.format("Starting execution service with %s threads", executionThreads));
         scheduledExecutorService = ExtendedScheduledThreadPoolExecutor.create(executionThreads);
-        registeredRunnables = new HashMap<>();
+        registeredSchedulables = new HashMap<>();
     }
 
     @Override public void schedule(Schedulable schedulable) {
@@ -63,7 +63,7 @@ import static com.google.common.base.Preconditions.*;
         final ScheduledFuture<?> scheduledFuture = this.scheduledExecutorService
             .scheduleAtFixedRate(schedulable, 0, schedulable.getInterval().getPeriod(),
                 schedulable.getInterval().getTimeUnit());
-        this.registeredRunnables.put(schedulable, scheduledFuture);
+        this.registeredSchedulables.put(schedulable, scheduledFuture);
     }
 
     @Override public void reschedule(Schedulable schedulable) {
@@ -77,12 +77,12 @@ import static com.google.common.base.Preconditions.*;
         this.scheduledExecutorService.execute(runnable);
     }
 
-    @Override public void remove(Runnable runnable, boolean force) {
-        checkNotNull(runnable);
-        checkState(this.registeredRunnables.containsKey(runnable),
-            runnable + " was never registered.");
-        this.registeredRunnables.get(runnable).cancel(force);
-        this.registeredRunnables.remove(runnable);
+    @Override public void remove(Schedulable schedulable, boolean force) {
+        checkNotNull(schedulable);
+        checkState(this.registeredSchedulables.containsKey(schedulable),
+            schedulable + " was never registered.");
+        this.registeredSchedulables.get(schedulable).cancel(force);
+        this.registeredSchedulables.remove(schedulable);
     }
 
     @Override public void shutdown(final int seconds) {

@@ -21,6 +21,9 @@ package de.uniulm.omi.cloudiator.visor.telnet;
 import de.uniulm.omi.cloudiator.visor.execution.ExecutionService;
 import de.uniulm.omi.cloudiator.visor.monitoring.Metric;
 import de.uniulm.omi.cloudiator.visor.reporting.ReportingInterface;
+import de.uniulm.omi.cloudiator.visor.server.ServerRegistry;
+
+import java.io.IOException;
 
 /**
  * Created by daniel on 11.11.15.
@@ -30,6 +33,7 @@ public class TCPServerBuilder {
     private int port;
     private ExecutionService executionService;
     private ReportingInterface<Metric> metricReporting;
+    private ServerRegistry serverRegistry;
 
     public static TCPServerBuilder newBuilder() {
         return new TCPServerBuilder();
@@ -66,8 +70,17 @@ public class TCPServerBuilder {
         return this;
     }
 
-    public TCPServer build() {
-        return new TCPServer(executionService, metricReporting, port);
+    /**
+     * @param serverRegistry the registry where the server is registered.
+     * @return fluent interface
+     */
+    public TCPServerBuilder registry(ServerRegistry serverRegistry) {
+        this.serverRegistry = serverRegistry;
+        return this;
+    }
+
+    public TCPServer build() throws IOException {
+        return new TCPServer(executionService, metricReporting, port, serverRegistry);
     }
 
 

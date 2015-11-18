@@ -20,8 +20,6 @@ package de.uniulm.omi.cloudiator.visor.server;
 
 import de.uniulm.omi.cloudiator.visor.monitoring.MonitorContext;
 
-import java.util.Map;
-
 /**
  * Created by daniel on 23.10.15.
  */
@@ -46,16 +44,4 @@ public interface Server extends Runnable {
      * @param metricName the name of the metric.
      */
     void unregisterMetric(String metricName);
-
-    /**
-     * The context objects this server uses for its metrics.
-     * <p/>
-     * Note:
-     * <p/>
-     * immutable, use registerMetric and unregisterMetric methods
-     * for modification.
-     *
-     * @return the context the server uses for the metrics
-     */
-    Map<String, MonitorContext> metricContext();
 }

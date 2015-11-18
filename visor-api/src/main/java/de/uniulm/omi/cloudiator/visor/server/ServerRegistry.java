@@ -27,7 +27,7 @@ public interface ServerRegistry {
 
     /**
      * Returns the server for this component instance id.
-     * <p/>
+     * <p>
      * If such a server does not exist, it will be automatically created by the
      * registry.
      *
@@ -36,5 +36,12 @@ public interface ServerRegistry {
      * @throws IOException if the creating of the new server fails.
      */
     Server getServer(String componentInstanceId) throws IOException;
+
+    /**
+     * Unregisters a server at this registry.
+     *
+     * @param server the server to unregister.
+     */
+    void unregister(Server server);
 
 }

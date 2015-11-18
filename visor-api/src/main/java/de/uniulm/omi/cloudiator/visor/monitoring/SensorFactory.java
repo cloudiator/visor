@@ -25,6 +25,6 @@ import de.uniulm.omi.cloudiator.visor.exceptions.SensorNotFoundException;
  * Created by daniel on 15.01.15.
  */
 public interface SensorFactory {
-    public Sensor from(String className)
+    Sensor from(String className)
         throws SensorNotFoundException, SensorInitializationException;
 }

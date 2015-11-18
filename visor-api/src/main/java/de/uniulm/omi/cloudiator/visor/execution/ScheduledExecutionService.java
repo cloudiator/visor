@@ -33,10 +33,18 @@ public interface ScheduledExecutionService extends ExecutionService {
 
     /**
      * Reschedules the schedulable.
-     * <p/>
+     * <p>
      * Can be used if the scheduling interval should be changed.
      *
      * @param schedulable the schedulable to be rescheduled.
      */
     void reschedule(Schedulable schedulable);
+
+    /**
+     * Stops the execution of the given runnable.
+     *
+     * @param schedulable the runnable to stop
+     * @param force       if the execution of the runnable should be force quit (true), or allowed to finish execution (false)
+     */
+    void remove(Schedulable schedulable, boolean force);
 }

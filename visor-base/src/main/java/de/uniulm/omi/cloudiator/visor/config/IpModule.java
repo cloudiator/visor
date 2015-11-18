@@ -21,6 +21,7 @@ package de.uniulm.omi.cloudiator.visor.config;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.name.Named;
+import de.uniulm.omi.cloudiator.visor.exceptions.ConfigurationException;
 
 import java.util.Set;
 

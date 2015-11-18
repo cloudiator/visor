@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package de.uniulm.omi.cloudiator.visor.config;
+package de.uniulm.omi.cloudiator.visor.exceptions;
 
 /**
  * Created by daniel on 08.04.15.

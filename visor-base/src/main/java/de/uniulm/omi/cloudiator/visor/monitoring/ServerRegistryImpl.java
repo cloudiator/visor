@@ -18,6 +18,9 @@
 
 package de.uniulm.omi.cloudiator.visor.monitoring;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
+import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import de.uniulm.omi.cloudiator.visor.server.Server;
@@ -25,8 +28,7 @@ import de.uniulm.omi.cloudiator.visor.server.ServerFactory;
 import de.uniulm.omi.cloudiator.visor.server.ServerRegistry;
 
 import java.io.IOException;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.HashMap;
 
 /**
  * Created by daniel on 11.11.15.
@@ -38,18 +40,22 @@ import java.util.concurrent.ConcurrentHashMap;
 
 
     private final ServerFactory serverFactory;
-    private final Map<String, Server> servers;
+    private final BiMap<String, Server> servers;
 
     @Inject public ServerRegistryImpl(ServerFactory serverFactory) {
         this.serverFactory = serverFactory;
-        this.servers = new ConcurrentHashMap<>();
+        servers = Maps.synchronizedBiMap(HashBiMap.create(new HashMap<>()));
     }
 
     @Override public Server getServer(String componentId) throws IOException {
         if (!servers.containsKey(componentId)) {
-            return serverFactory.createServer(LOWER_PORT_BOUNDARY, UPPER_PORT_BOUNDARY);
-        } else {
-            return servers.get(componentId);
+            Server server = serverFactory.createServer(LOWER_PORT_BOUNDARY, UPPER_PORT_BOUNDARY);
+            servers.put(componentId, server);
         }
+        return servers.get(componentId);
+    }
+
+    @Override public void unregister(Server server) {
+        this.servers.inverse().remove(server);
     }
 }

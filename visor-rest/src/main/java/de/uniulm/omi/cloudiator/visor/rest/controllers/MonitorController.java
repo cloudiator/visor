@@ -19,7 +19,6 @@
 package de.uniulm.omi.cloudiator.visor.rest.controllers;
 
 import de.uniulm.omi.cloudiator.visor.exceptions.MonitorException;
-import de.uniulm.omi.cloudiator.visor.execution.ScheduledExecutionService;
 import de.uniulm.omi.cloudiator.visor.monitoring.Monitor;
 import de.uniulm.omi.cloudiator.visor.monitoring.MonitoringService;
 import de.uniulm.omi.cloudiator.visor.rest.converters.MonitorConverters;
@@ -102,6 +101,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
     @DELETE @Produces(MediaType.APPLICATION_JSON) @Path("/{uuid}")
     public void deleteMonitor(@PathParam("uuid") String uuid) {
+        if (!monitoringService.isMonitoring(uuid)) {
+            throw new BadRequestException();
+        }
         this.monitoringService.stopMonitor(uuid);
     }
 

@@ -29,6 +29,7 @@ import java.util.Map;
  */
 public class PushMonitorDto extends MonitorDto {
 
+
     private Integer port;
 
     public PushMonitorDto(String metricName, String componentId, Map<String, String> monitorContext,

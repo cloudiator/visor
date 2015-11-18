@@ -25,6 +25,7 @@ import de.uniulm.omi.cloudiator.visor.reporting.QueuedReporting;
 import de.uniulm.omi.cloudiator.visor.reporting.ReportingInterface;
 import de.uniulm.omi.cloudiator.visor.server.AbstractServerFactory;
 import de.uniulm.omi.cloudiator.visor.server.Server;
+import de.uniulm.omi.cloudiator.visor.server.ServerRegistry;
 
 import java.io.IOException;
 
@@ -35,16 +36,19 @@ public class TCPServerFactory extends AbstractServerFactory {
 
     private final ExecutionService executionService;
     private final ReportingInterface<Metric> metricReporting;
+    private final ServerRegistry serverRegistry;
 
     @Inject public TCPServerFactory(ExecutionService executionService,
-        @QueuedReporting ReportingInterface<Metric> metricReporting) {
+        @QueuedReporting ReportingInterface<Metric> metricReporting,
+        ServerRegistry serverRegistry) {
         this.executionService = executionService;
         this.metricReporting = metricReporting;
+        this.serverRegistry = serverRegistry;
     }
 
     @Override public Server createServer(int port) throws IOException {
 
         return TCPServerBuilder.newBuilder().executionService(executionService)
-            .reportingInterface(metricReporting).port(port).build();
+            .reportingInterface(metricReporting).port(port).registry(serverRegistry).build();
     }
 }

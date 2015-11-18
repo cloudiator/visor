@@ -31,14 +31,6 @@ public interface ExecutionService {
     void execute(Runnable runnable);
 
     /**
-     * Stops the execution of the given runnable.
-     *
-     * @param runnable the runnable to stop
-     * @param force    if the execution of the runnable should be force quit (true), or allowed to finish execution (false)
-     */
-    void remove(Runnable runnable, boolean force);
-
-    /**
      * Gracefully shutdowns the execution service.
      * <p/>
      * Waits for the completion of the runnables until the timeout

@@ -20,9 +20,8 @@ package de.uniulm.omi.cloudiator.visor.rest;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import de.uniulm.omi.cloudiator.visor.config.ConfigurationException;
+import de.uniulm.omi.cloudiator.visor.exceptions.ConfigurationException;
 import de.uniulm.omi.cloudiator.visor.execution.ExecutionService;
-import de.uniulm.omi.cloudiator.visor.monitoring.MonitorContextFactory;
 import de.uniulm.omi.cloudiator.visor.monitoring.MonitoringService;
 import de.uniulm.omi.cloudiator.visor.rest.controllers.MonitorController;
 import org.apache.logging.log4j.LogManager;
@@ -46,8 +45,7 @@ public class RestServer {
     private static final Logger LOGGER = LogManager.getLogger(RestServer.class);
 
     @Inject public RestServer(@Named("restPort") int restPort, @Named("restHost") String restHost,
-        MonitoringService monitoringService, ExecutionService executionService,
-        MonitorContextFactory monitorContextFactory) {
+        MonitoringService monitoringService, ExecutionService executionService) {
         checkArgument(restPort > 0);
 
         if (restPort <= 1024) {
