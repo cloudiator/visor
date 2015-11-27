@@ -18,6 +18,8 @@
 
 package de.uniulm.omi.cloudiator.visor.monitoring;
 
+import de.uniulm.omi.cloudiator.visor.reporting.ReportingInterface;
+
 public interface Sensor {
 
     /**
@@ -29,7 +31,7 @@ public interface Sensor {
      *
      * @throws SensorInitializationException for problems during the initialization
      */
-    public void init() throws SensorInitializationException;
+    void init() throws SensorInitializationException;
 
     /**
      * Sets the monitor context for the sensor.
@@ -40,7 +42,7 @@ public interface Sensor {
      *
      * @throws InvalidMonitorContextException if the monitor context is not valid.
      */
-    public void setMonitorContext(MonitorContext monitorContext) throws InvalidMonitorContextException;
+    void setMonitorContext(MonitorContext monitorContext) throws InvalidMonitorContextException;
 
     /**
      * Called to retrieve a measurement from this probe.
@@ -49,5 +51,7 @@ public interface Sensor {
      *
      * @throws MeasurementNotAvailableException
      */
-    public Measurement getMeasurement() throws MeasurementNotAvailableException;
+    Measurement getMeasurement() throws MeasurementNotAvailableException;
+
+    void setBuffer(ReportingInterface<Metric> reportingInterface);
 }

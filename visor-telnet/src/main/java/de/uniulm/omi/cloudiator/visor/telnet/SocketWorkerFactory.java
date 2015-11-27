@@ -20,8 +20,8 @@ package de.uniulm.omi.cloudiator.visor.telnet;
 
 import com.google.inject.Inject;
 import de.uniulm.omi.cloudiator.visor.monitoring.Metric;
-import de.uniulm.omi.cloudiator.visor.reporting.QueuedReporting;
 import de.uniulm.omi.cloudiator.visor.reporting.ReportingInterface;
+import de.uniulm.omi.cloudiator.visor.reporting.TelnetReporting;
 
 import java.net.Socket;
 
@@ -34,7 +34,7 @@ public class SocketWorkerFactory implements SocketWorkerFactoryInterface {
     private final ReportingInterface<Metric> metricReporting;
     private final RequestParsingInterface<String, Metric> requestParser;
 
-    @Inject public SocketWorkerFactory(@QueuedReporting ReportingInterface<Metric> metricReporting,
+    @Inject public SocketWorkerFactory(@TelnetReporting ReportingInterface<Metric> metricReporting,
         RequestParsingInterface<String, Metric> requestParser) {
         this.metricReporting = metricReporting;
         this.requestParser = requestParser;

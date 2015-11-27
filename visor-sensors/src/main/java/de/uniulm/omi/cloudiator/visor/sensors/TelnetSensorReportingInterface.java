@@ -16,24 +16,36 @@
  * under the License.
  */
 
-package de.uniulm.omi.cloudiator.visor.telnet;
+package de.uniulm.omi.cloudiator.visor.sensors;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.TypeLiteral;
+import com.google.inject.Singleton;
 import de.uniulm.omi.cloudiator.visor.monitoring.Metric;
+import de.uniulm.omi.cloudiator.visor.reporting.ReportingException;
 import de.uniulm.omi.cloudiator.visor.reporting.ReportingInterface;
-import de.uniulm.omi.cloudiator.visor.reporting.TelnetReporting;
-import de.uniulm.omi.cloudiator.visor.sensors.TelnetSensorReportingInterface;
+
+import java.util.Collection;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
- * Created by daniel on 16.12.14.
+ * Created by daniel on 24.11.15.
  */
-public class ServerModule extends AbstractModule {
+@Singleton public class TelnetSensorReportingInterface implements ReportingInterface<Metric> {
 
-    @Override protected void configure() {
-        bind(new TypeLiteral<RequestParsingInterface<String, Metric>>() {
-        }).to(StringToMetricParser.class);
-        bind(new TypeLiteral<ReportingInterface<Metric>>() {
-        }).annotatedWith(TelnetReporting.class).to(TelnetSensorReportingInterface.class);
+    private final LinkedBlockingQueue<Metric> buffer;
+
+    public TelnetSensorReportingInterface() {
+        buffer = new LinkedBlockingQueue<>();
+    }
+
+    @Override public void report(Metric item) throws ReportingException {
+        this.buffer.add(item);
+    }
+
+    @Override public void report(Collection<Metric> items) throws ReportingException {
+        this.buffer.addAll(items);
+    }
+
+    LinkedBlockingQueue<Metric> getBuffer() {
+        return buffer;
     }
 }

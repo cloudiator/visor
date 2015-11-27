@@ -19,6 +19,7 @@
 package de.uniulm.omi.cloudiator.visor.monitoring;
 
 import com.google.common.base.Preconditions;
+import de.uniulm.omi.cloudiator.visor.reporting.ReportingInterface;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
@@ -31,6 +32,9 @@ public abstract class AbstractSensor implements Sensor {
     private MonitorContext monitorContext;
     private boolean isInitialized = false;
 
+    @Override public void setBuffer(ReportingInterface<Metric> reportingInterface) {
+        //empty
+    }
 
     @Override public void init() throws SensorInitializationException {
         this.initialize();

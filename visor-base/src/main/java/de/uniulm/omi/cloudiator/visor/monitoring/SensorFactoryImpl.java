@@ -18,6 +18,10 @@
 
 package de.uniulm.omi.cloudiator.visor.monitoring;
 
+import com.google.inject.Inject;
+import de.uniulm.omi.cloudiator.visor.reporting.ReportingInterface;
+import de.uniulm.omi.cloudiator.visor.reporting.TelnetReporting;
+
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -26,16 +30,25 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class SensorFactoryImpl implements SensorFactory {
 
-    @Override
-    public Sensor from(String className) throws SensorNotFoundException, SensorInitializationException {
+    private final ReportingInterface<Metric> buffer;
+
+    @Inject
+    public SensorFactoryImpl(@TelnetReporting ReportingInterface<Metric> reportingInterface) {
+        this.buffer = reportingInterface;
+    }
+
+    @Override public Sensor from(String className)
+        throws SensorNotFoundException, SensorInitializationException {
         checkNotNull(className);
         checkArgument(!className.isEmpty());
         return this.loadAndInitializeSensor(className);
     }
 
-    protected Sensor loadAndInitializeSensor(String className) throws SensorNotFoundException, SensorInitializationException {
+    protected Sensor loadAndInitializeSensor(String className)
+        throws SensorNotFoundException, SensorInitializationException {
         try {
             Sensor sensor = (Sensor) Class.forName(className).newInstance();
+            sensor.setBuffer(buffer);
             sensor.init();
             return sensor;
         } catch (ClassCastException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {
