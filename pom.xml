@@ -69,7 +69,6 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <visor.version>0.1.0-SNAPSHOT</visor.version>
         <commons-cli.version>1.2</commons-cli.version>
     </properties>
 
@@ -79,37 +78,37 @@
             <dependency>
                 <groupId>io.github.cloudiator.visor</groupId>
                 <artifactId>visor-api</artifactId>
-                <version>${visor.version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.github.cloudiator.visor</groupId>
                 <artifactId>visor-base</artifactId>
-                <version>${visor.version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.github.cloudiator.visor</groupId>
                 <artifactId>visor-reporting-cli</artifactId>
-                <version>${visor.version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.github.cloudiator.visor</groupId>
                 <artifactId>visor-reporting-kairos</artifactId>
-                <version>${visor.version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.github.cloudiator.visor</groupId>
                 <artifactId>visor-rest</artifactId>
-                <version>${visor.version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.github.cloudiator.visor</groupId>
                 <artifactId>visor-sensors</artifactId>
-                <version>${visor.version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.github.cloudiator.visor</groupId>
                 <artifactId>visor-telnet</artifactId>
-                <version>${visor.version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>commons-cli</groupId>
