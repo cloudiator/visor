@@ -61,9 +61,10 @@
     <url>https://github.com/cloudiator</url>
 
     <scm>
-        <connection>scm:git@github.com:cloudiator/visor.git</connection>
-        <developerConnection>scm:git@github.com:cloudiator/visor.git</developerConnection>
-        <url>git@github.com:cloudiator/visor.git</url>
+        <connection>scm:git:https://github.com/cloudiator/visor.git</connection>
+        <developerConnection>scm:git:git@github.com:cloudiator/visor.git</developerConnection>
+        <url>https://github.com/cloudiator/visor/</url>
+        <tag>HEAD</tag>
     </scm>
 
     <properties>
