@@ -49,7 +49,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
     }
 
     @Override public void startMonitoring(String uuid, String metricName, String sensorClassName,
-        Interval interval, Map<String, String> monitorContext)
+        String sensorSourceUri, Interval interval, Map<String, String> monitorContext)
         throws SensorNotFoundException, SensorInitializationException,
         InvalidMonitorContextException {
 
@@ -69,7 +69,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
         checkNotNull(monitorContext);
 
-        final Sensor sensor = this.sensorFactory.from(sensorClassName);
+        final Sensor sensor = (sensorSourceUri == null ? 
+        							this.sensorFactory.from(sensorClassName) :
+        							this.sensorFactory.fromUriSource(sensorSourceUri, sensorClassName));
         final Monitor monitor =
             this.monitorFactory.create(uuid, metricName, sensor, interval, monitorContext);
         this.monitorRegistry.put(uuid, monitor);

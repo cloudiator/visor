@@ -28,7 +28,7 @@ import java.util.Map;
 public interface MonitoringService {
 
     public void startMonitoring(String uuid, String metricName, String sensorClassName,
-        Interval interval, Map<String, String> monitorContext)
+    		 String sensorSourceUri, Interval interval, Map<String, String> monitorContext)
         throws SensorNotFoundException, SensorInitializationException,
         InvalidMonitorContextException;
 
