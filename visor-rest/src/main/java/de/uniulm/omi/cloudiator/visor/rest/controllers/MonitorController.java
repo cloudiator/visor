@@ -79,7 +79,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
         try {
             this.monitoringService
                 .startMonitoring(uuid, monitor.getMetricName(), monitor.getSensorClassName(),
-                    new DefaultInterval(monitor.getInterval().getPeriod(),
+                		monitor.getSensorSourceUri(), new DefaultInterval(monitor.getInterval().getPeriod(),
                         monitor.getInterval().getTimeUnit()), builder.build().getContext());
         } catch (SensorNotFoundException | SensorInitializationException |
             InvalidMonitorContextException e)
