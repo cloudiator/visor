@@ -73,7 +73,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
         							this.sensorFactory.from(sensorClassName) :
         							this.sensorFactory.fromUriSource(sensorSourceUri, sensorClassName));
         final Monitor monitor =
-            this.monitorFactory.create(uuid, metricName, sensor, interval, monitorContext);
+            this.monitorFactory.create(uuid, sensorSourceUri, metricName, sensor, interval, monitorContext);
         this.monitorRegistry.put(uuid, monitor);
         this.scheduler.schedule(monitor);
     }

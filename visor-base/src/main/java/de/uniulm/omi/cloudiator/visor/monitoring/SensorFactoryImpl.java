@@ -38,7 +38,7 @@ public class SensorFactoryImpl implements SensorFactory {
 	public final Sensor fromUriSource(String remoteURI, String className) throws SensorNotFoundException, SensorInitializationException {
 		checkNotNull(remoteURI);
         checkArgument(!remoteURI.isEmpty());
-		return fromAnySource(remoteURI, remoteURI);
+		return fromAnySource(remoteURI, className);
 	}
 	
     @Override
@@ -58,7 +58,7 @@ public class SensorFactoryImpl implements SensorFactory {
 
     protected final Sensor loadAndInitializeSensor(String className, ClassLoader loader) throws SensorNotFoundException, SensorInitializationException {
         try {
-            Sensor sensor = (Sensor) Class.forName(className).newInstance();
+            Sensor sensor = (Sensor) loader.loadClass(className).newInstance();
             sensor.init();
             return sensor;
         } catch (ClassCastException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {

@@ -65,7 +65,7 @@ public class MonitorWithLinks extends LinkWrapper<Monitor> implements MonitorEnt
 
 	@Override
 	public String getSensorSourceUri() {
-		return getSensorSourceUri();
+		return this.wrappedEntity.getSensorSourceUri();
 	}
 
 	@Override

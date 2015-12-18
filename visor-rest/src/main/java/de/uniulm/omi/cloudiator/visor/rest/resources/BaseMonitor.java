@@ -44,8 +44,9 @@ public class BaseMonitor implements Monitor {
     @SuppressWarnings("UnusedDeclaration") BaseMonitor() {
     }
 
-    BaseMonitor(String metricName, String sensorClassName, Interval interval,
+    BaseMonitor(String sensorSourceUri, String metricName, String sensorClassName, Interval interval,
         @Nullable List<Context> contexts) {
+        this.sensorSourceUri = sensorSourceUri;
         this.metricName = metricName;
         this.sensorClassName = sensorClassName;
         this.interval = interval;
@@ -105,6 +106,7 @@ public class BaseMonitor implements Monitor {
 
     public static class MonitorBuilder {
 
+        private String sensorSourceUri;
         private String metricName;
         private String sensorClassName;
         private long period;
@@ -113,6 +115,11 @@ public class BaseMonitor implements Monitor {
 
         public MonitorBuilder() {
             this.contexts = new ArrayList<>();
+        }
+
+        public MonitorBuilder sensorSourceUri(String sensorSourceUri){
+            this.sensorSourceUri = sensorSourceUri;
+            return this;
         }
 
         public MonitorBuilder metricName(final String metricName) {
@@ -141,7 +148,7 @@ public class BaseMonitor implements Monitor {
         }
 
         public BaseMonitor build() {
-            return new BaseMonitor(metricName, sensorClassName, new Interval(period, timeUnit),
+            return new BaseMonitor(sensorSourceUri, metricName, sensorClassName, new Interval(period, timeUnit),
                 contexts);
         }
 

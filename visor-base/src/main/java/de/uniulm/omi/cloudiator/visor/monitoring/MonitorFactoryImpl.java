@@ -40,12 +40,12 @@ public class MonitorFactoryImpl implements MonitorFactory {
     }
 
     @Override
-    public Monitor create(String uuid, String metricName, Sensor sensor, Interval interval,
+    public Monitor create(String uuid, String sensorSourceUri, String metricName, Sensor sensor, Interval interval,
         Map<String, String> context) throws InvalidMonitorContextException {
         MonitorContext monitorContext =
             DefaultMonitorContext.builder().addContext(DefaultMonitorContext.LOCAL_IP, localIp)
                 .addContext(context).build();
-        return new MonitorImpl(uuid, metricName, sensor, interval, monitorContext,
+        return new MonitorImpl(uuid, sensorSourceUri, metricName, sensor, interval, monitorContext,
             metricReportingInterface);
     }
 }

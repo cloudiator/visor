@@ -32,6 +32,7 @@ public class MonitorToMonitorJsonConverter
 
     @Override public MonitorEntity apply(de.uniulm.omi.cloudiator.visor.monitoring.Monitor input) {
         return new MonitorWithLinks(BaseMonitor.builder().metricName(input.getMetricName())
+            .sensorSourceUri(input.getSensorSourceUri())
             .sensorClassName(input.getSensor().getClass().getCanonicalName())
             .interval(input.getInterval()).context(input.getMonitorContext()).build(),
             Links.selfLink("/monitors/" + input.getUuid()));

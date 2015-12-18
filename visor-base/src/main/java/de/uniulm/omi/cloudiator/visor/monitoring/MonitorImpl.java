@@ -30,16 +30,18 @@ public class MonitorImpl implements Monitor {
 
     private static final Logger LOGGER = LogManager.getLogger(Monitor.class);
     private final String uuid;
+    private final String sensorSourceUri;
     private final String metricName;
     private final Sensor sensor;
     private final MonitorContext monitorContext;
     private final MonitorWorker monitorWorker;
     private final Interval interval;
 
-    public MonitorImpl(String uuid, String metricName, Sensor sensor, Interval interval,
+    public MonitorImpl(String uuid, String sensorSourceUri, String metricName, Sensor sensor, Interval interval,
         MonitorContext monitorContext, ReportingInterface<Metric> metricReportingInterface)
         throws InvalidMonitorContextException {
         this.uuid = uuid;
+        this.sensorSourceUri = sensorSourceUri;
         this.metricName = metricName;
         this.sensor = sensor;
         this.monitorContext = monitorContext;
@@ -72,9 +74,15 @@ public class MonitorImpl implements Monitor {
         return this.monitorWorker;
     }
 
+    @Override
+    public String getSensorSourceUri() {
+        return this.sensorSourceUri;
+    }
+
     @Override public String toString() {
         return "MonitorImpl{" +
             "uuid='" + uuid + '\'' +
+            ", sensorSourceUri='" + sensorSourceUri + '\'' +
             ", metricName='" + metricName + '\'' +
             ", sensor=" + sensor +
             ", monitorContext=" + monitorContext +

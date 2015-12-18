@@ -27,6 +27,8 @@ import de.uniulm.omi.cloudiator.visor.execution.Schedulable;
  */
 public interface Monitor extends Schedulable {
 
+    public String getSensorSourceUri();
+
     public String getUuid();
 
     public String getMetricName();
