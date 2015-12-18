@@ -22,6 +22,9 @@ package de.uniulm.omi.cloudiator.visor.monitoring;
  * Created by daniel on 15.01.15.
  */
 public interface SensorFactory {
+	public Sensor fromUriSource(String remoteURI, String className)
+	        throws SensorNotFoundException, SensorInitializationException;
+	
     public Sensor from(String className)
         throws SensorNotFoundException, SensorInitializationException;
 }
