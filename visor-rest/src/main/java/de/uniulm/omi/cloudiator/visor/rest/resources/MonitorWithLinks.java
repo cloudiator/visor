@@ -62,4 +62,14 @@ public class MonitorWithLinks extends LinkWrapper<Monitor> implements MonitorEnt
     @Override public void setContexts(List<Context> contexts) {
         this.wrappedEntity.setContexts(contexts);
     }
+
+	@Override
+	public String getSensorSourceUri() {
+		return getSensorSourceUri();
+	}
+
+	@Override
+	public void setSensorSourceUri(String sensorSourceUri) {
+		this.wrappedEntity.setSensorSourceUri(sensorSourceUri);
+	}
 }

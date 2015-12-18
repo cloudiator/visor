@@ -34,6 +34,10 @@ public interface Monitor {
 
     @SuppressWarnings("UnusedDeclaration") void setSensorClassName(String sensorClassName);
 
+    String getSensorSourceUri();
+
+    @SuppressWarnings("UnusedDeclaration") void setSensorSourceUri(String sensorSourceUri);
+    
     Interval getInterval();
 
     void setInterval(Interval interval);

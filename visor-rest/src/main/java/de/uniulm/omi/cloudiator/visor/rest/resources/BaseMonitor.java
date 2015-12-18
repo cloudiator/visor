@@ -31,6 +31,8 @@ import java.util.Map;
  */
 public class BaseMonitor implements Monitor {
 
+	private String sensorSourceUri;
+	
     private String metricName;
 
     private String sensorClassName;
@@ -81,6 +83,16 @@ public class BaseMonitor implements Monitor {
         }
         return contexts;
     }
+    
+	@Override
+	public String getSensorSourceUri() {
+		return sensorSourceUri;
+	}
+
+	@Override
+	public void setSensorSourceUri(String sensorSourceUri) {
+		this.sensorSourceUri = sensorSourceUri;
+	}
 
     @SuppressWarnings("UnusedDeclaration") @Override
     public void setContexts(@Nullable List<Context> contexts) {
@@ -134,5 +146,4 @@ public class BaseMonitor implements Monitor {
         }
 
     }
-
 }
