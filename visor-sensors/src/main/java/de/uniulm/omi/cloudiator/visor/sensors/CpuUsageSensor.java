@@ -45,8 +45,9 @@ public class CpuUsageSensor extends AbstractSensor {
         return new MeasurementImpl(System.currentTimeMillis(), systemCpuLoadPercentage);
     }
 
-    @Override protected void initialize() throws SensorInitializationException {
-        super.initialize();
+    @Override protected void initialize(SensorConfiguration sensorConfiguration)
+        throws SensorInitializationException {
+        super.initialize(sensorConfiguration);
         osBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
     }
 }

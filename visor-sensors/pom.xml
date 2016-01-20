@@ -36,6 +36,11 @@
             <groupId>io.github.cloudiator.visor</groupId>
             <artifactId>visor-base</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-csv</artifactId>
+            <version>1.2</version>
+        </dependency>
     </dependencies>
 
 

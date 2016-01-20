@@ -50,8 +50,9 @@ public class MemoryUsageSensor extends AbstractSensor {
             100 - ((freePhysicalMemory / totalPhysicalMemory) * 100));
     }
 
-    @Override protected void initialize() throws SensorInitializationException {
-        super.initialize();
+    @Override protected void initialize(SensorConfiguration sensorConfiguration)
+        throws SensorInitializationException {
+        super.initialize(sensorConfiguration);
         osBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
     }
 }

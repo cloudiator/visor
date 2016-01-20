@@ -37,7 +37,7 @@ public abstract class AbstractSensor implements Sensor {
 
     @Override public void init(SensorConfiguration sensorConfiguration)
         throws SensorInitializationException {
-        this.initialize();
+        this.initialize(sensorConfiguration);
         this.isInitialized = true;
     }
 
@@ -62,7 +62,8 @@ public abstract class AbstractSensor implements Sensor {
         return true;
     }
 
-    protected void initialize() throws SensorInitializationException {
+    protected void initialize(SensorConfiguration sensorConfiguration)
+        throws SensorInitializationException {
         // intentionally left empty
     }
 
