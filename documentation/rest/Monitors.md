@@ -74,25 +74,17 @@ port | int | port of the started server (only on response)
 ##### Response
 ```
 {
-    "entity":{
-        "@type":"push",
-        "metricName":"MyMetricName",
-        "componentId":"d1d63337-51bb-497d-8752-8d242974bd56",
-        "monitorContext":{
-            "local.ip":"134.60.241.111",
-            "os.name":"Mac OS X",
-            "java.version":"1.8.0_40",
-            "os.arch":"x86_64",
-            "os.version":"10.11.1"
-        },
-        "port":49154
+    "@type":"push",
+    "metricName":"MyMetricName",
+    "componentId":"d1d63337-51bb-497d-8752-8d242974bd56",
+    "monitorContext":{
+        "local.ip":"134.60.241.111",
+        "os.name":"Mac OS X",
+        "java.version":"1.8.0_40",
+        "os.arch":"x86_64",
+        "os.version":"10.11.1"
     },
-    "links":[
-        {
-            "href":"/monitors/924db1bd-464f-4f41-bf0c-66b55b3abfc4",
-            "rel":"self"
-        }
-    ]
+    "port":49154
 }
 ```
 
@@ -129,28 +121,20 @@ interval | Object | period: the period for sampling, timeUnit: the TimeUnit of s
 ##### Response
 ```
 {
-    "entity":{
-        "@type":"sensor",
-        "metricName":"MyMetricName",
-        "componentId":"d1d63337-51bb-497d-8752-8d242974bd56",
-        "monitorContext":{
-            "local.ip":"128.93.160.239",
-            "os.name":"Mac OS X",
-            "java.version":"1.8.0_40",
-            "os.arch":"x86_64",
-            "os.version":"10.11.1"
-        },
-        "sensorClassName":"de.uniulm.omi.cloudiator.visor.sensors.CpuUsageSensor",
-        "interval":{
-            "period":1,
-            "timeUnit":"SECONDS"
-        }
+    "@type":"sensor",
+    "metricName":"MyMetricName",
+    "componentId":"d1d63337-51bb-497d-8752-8d242974bd56",
+    "monitorContext":{
+        "local.ip":"128.93.160.239",
+        "os.name":"Mac OS X",
+        "java.version":"1.8.0_40",
+        "os.arch":"x86_64",
+        "os.version":"10.11.1"
     },
-    "links":[
-        {
-            "href":"/monitors/b1af8355-2b7b-4902-a60f-034c5edda37a",
-            "rel":"self"
-        }
-    ]
+    "sensorClassName":"de.uniulm.omi.cloudiator.visor.sensors.CpuUsageSensor",
+    "interval":{
+        "period":1,
+        "timeUnit":"SECONDS"
+    }
 }
 ```
