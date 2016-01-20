@@ -56,7 +56,7 @@ public class VisorServiceBuilder {
         this.modules.addAll(Arrays.asList(modules));
         return this;
     }
-
+    
     private void loadModulesBasedOnConfiguration(ConfigurationAccess configurationAccess) {
         try {
             this.modules.add((Module) Class
