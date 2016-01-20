@@ -28,8 +28,8 @@ import java.util.Map;
 public interface MonitorFactory {
 
     SensorMonitor create(String uuid, String metricName, String componentId,
-        Map<String, String> monitorContext, String sensorClassName, Interval interval)
-        throws MonitorException;
+        Map<String, String> monitorContext, String sensorClassName, Interval interval,
+        SensorConfiguration sensorConfiguration) throws MonitorException;
 
     PushMonitor create(String uuid, String metricName, String componentId,
         Map<String, String> monitorContext) throws MonitorException;

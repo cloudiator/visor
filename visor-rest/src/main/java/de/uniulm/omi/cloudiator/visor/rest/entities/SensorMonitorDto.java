@@ -21,12 +21,10 @@ package de.uniulm.omi.cloudiator.visor.rest.entities;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import de.uniulm.omi.cloudiator.visor.exceptions.MonitorException;
-import de.uniulm.omi.cloudiator.visor.monitoring.DefaultInterval;
-import de.uniulm.omi.cloudiator.visor.monitoring.Interval;
-import de.uniulm.omi.cloudiator.visor.monitoring.Monitor;
-import de.uniulm.omi.cloudiator.visor.monitoring.MonitoringService;
+import de.uniulm.omi.cloudiator.visor.monitoring.*;
 
 import javax.validation.constraints.NotNull;
+import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -37,10 +35,11 @@ public class SensorMonitorDto extends MonitorDto {
     @NotNull private String sensorClassName;
     @NotNull @JsonSerialize(as = DefaultInterval.class) @JsonDeserialize(as = DefaultInterval.class)
     private Interval interval;
+    private Map<String, String> sensorConfiguration;
 
-    public SensorMonitorDto(String metricName, String componentId,
+    public SensorMonitorDto(String uuid, String metricName, String componentId,
         Map<String, String> monitorContext, String sensorClassName, Interval interval) {
-        super(metricName, componentId, monitorContext);
+        super(uuid, metricName, componentId, monitorContext);
         this.sensorClassName = sensorClassName;
         this.interval = interval;
     }
@@ -53,7 +52,9 @@ public class SensorMonitorDto extends MonitorDto {
         throws MonitorException {
         return monitoringService
             .startMonitor(uuid, getComponentId(), getMetricName(), getSensorClassName(),
-                getInterval(), getMonitorContext());
+                getInterval(), getMonitorContext(),
+                SensorConfigurationBuilder.newBuilder().addValues(getSensorConfiguration())
+                    .build());
     }
 
 
@@ -71,5 +72,12 @@ public class SensorMonitorDto extends MonitorDto {
 
     public void setInterval(Interval interval) {
         this.interval = interval;
+    }
+
+    public Map<String, String> getSensorConfiguration() {
+        if (sensorConfiguration == null) {
+            return Collections.emptyMap();
+        }
+        return sensorConfiguration;
     }
 }

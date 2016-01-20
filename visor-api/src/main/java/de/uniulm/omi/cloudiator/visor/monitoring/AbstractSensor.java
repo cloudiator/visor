@@ -35,7 +35,8 @@ public abstract class AbstractSensor implements Sensor {
     private boolean isInitialized = false;
 
 
-    @Override public void init() throws SensorInitializationException {
+    @Override public void init(SensorConfiguration sensorConfiguration)
+        throws SensorInitializationException {
         this.initialize();
         this.isInitialized = true;
     }

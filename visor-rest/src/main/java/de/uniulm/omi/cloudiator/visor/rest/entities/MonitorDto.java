@@ -18,6 +18,8 @@
 
 package de.uniulm.omi.cloudiator.visor.rest.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import de.uniulm.omi.cloudiator.visor.exceptions.MonitorException;
@@ -36,6 +38,7 @@ import java.util.Map;
     @JsonSubTypes.Type(value = SensorMonitorDto.class, name = "sensor")})
 public abstract class MonitorDto {
 
+    @JsonIgnore private String uuid;
     @NotNull private String metricName;
     @NotNull private String componentId;
     private Map<String, String> monitorContext;
@@ -44,7 +47,9 @@ public abstract class MonitorDto {
 
     }
 
-    public MonitorDto(String metricName, String componentId, Map<String, String> monitorContext) {
+    public MonitorDto(String uuid, String metricName, String componentId,
+        Map<String, String> monitorContext) {
+        this.uuid = uuid;
         this.metricName = metricName;
         this.componentId = componentId;
         this.monitorContext = monitorContext;
@@ -78,5 +83,13 @@ public abstract class MonitorDto {
 
     public void setComponentId(String componentId) {
         this.componentId = componentId;
+    }
+
+    @JsonProperty("uuid") public String getUuid() {
+        return uuid;
+    }
+
+    @JsonIgnore public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 }

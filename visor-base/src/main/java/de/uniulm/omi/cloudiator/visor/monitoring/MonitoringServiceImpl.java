@@ -43,14 +43,15 @@ import static com.google.common.base.Preconditions.checkArgument;
     }
 
     @Override public SensorMonitor startMonitor(String uuid, String componentId, String metricName,
-        String sensorClassName, Interval interval, Map<String, String> monitorContext)
-        throws MonitorException {
+        String sensorClassName, Interval interval, Map<String, String> monitorContext,
+        SensorConfiguration sensorConfiguration) throws MonitorException {
 
         checkArgument(!monitorRegistry.containsKey(uuid),
             String.format("A monitor with the given uuid %s is already registered.", uuid));
 
         final SensorMonitor sensorMonitor = this.monitorFactory
-            .create(uuid, metricName, componentId, monitorContext, sensorClassName, interval);
+            .create(uuid, metricName, componentId, monitorContext, sensorClassName, interval,
+                sensorConfiguration);
 
         this.monitorRegistry.put(uuid, sensorMonitor);
         sensorMonitor.start();

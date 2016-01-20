@@ -31,7 +31,8 @@ import java.util.Optional;
 public interface MonitoringService {
 
     Monitor startMonitor(String uuid, String componentId, String metricName, String sensorClassName,
-        Interval interval, Map<String, String> monitorContext) throws MonitorException;
+        Interval interval, Map<String, String> monitorContext,
+        SensorConfiguration sensorConfiguration) throws MonitorException;
 
     Monitor startMonitor(String uuid, String componentId, String metricName,
         Map<String, String> monitorContext) throws MonitorException;

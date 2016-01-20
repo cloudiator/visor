@@ -27,13 +27,14 @@ public interface Sensor {
     /**
      * Initializes the sensor.
      * <p>
-     * This e.g. allows the sensor to install dependencies for the operating
-     * system, or allows the sensor to configure itself for the current
-     * environment.
+     * The configuration for the sensor is passed using the configuration parameter.
+     * <p>
+     * Also allows the sensor to e.g. install dependencies.
      *
+     * @param configuration the configuration for the sensor.
      * @throws SensorInitializationException for problems during the initialization
      */
-    void init() throws SensorInitializationException;
+    void init(SensorConfiguration configuration) throws SensorInitializationException;
 
     /**
      * Sets the monitor context for the sensor.
@@ -41,7 +42,6 @@ public interface Sensor {
      * Tells the sensor the context in which it is running.
      *
      * @param monitorContext context of the sensor.
-     *
      * @throws InvalidMonitorContextException if the monitor context is not valid.
      */
     void setMonitorContext(MonitorContext monitorContext) throws InvalidMonitorContextException;
@@ -50,7 +50,6 @@ public interface Sensor {
      * Called to retrieve a measurement from this probe.
      *
      * @return the current measurement for this probe.
-     *
      * @throws MeasurementNotAvailableException
      */
     Measurement getMeasurement() throws MeasurementNotAvailableException;

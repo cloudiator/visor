@@ -22,10 +22,16 @@ import java.util.Map;
 
 public class PushMonitorDtoBuilder {
 
+    private String uuid;
     private String metricName;
     private String componentId;
     private Map<String, String> monitorContext;
     private int port;
+
+    public PushMonitorDtoBuilder uuid(String uuid) {
+        this.uuid = uuid;
+        return this;
+    }
 
     public PushMonitorDtoBuilder metricName(String metricName) {
         this.metricName = metricName;
@@ -48,6 +54,6 @@ public class PushMonitorDtoBuilder {
     }
 
     public PushMonitorDto build() {
-        return new PushMonitorDto(metricName, componentId, monitorContext, port);
+        return new PushMonitorDto(uuid, metricName, componentId, monitorContext, port);
     }
 }

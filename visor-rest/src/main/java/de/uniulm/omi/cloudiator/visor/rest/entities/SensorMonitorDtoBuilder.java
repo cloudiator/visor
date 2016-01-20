@@ -24,11 +24,17 @@ import java.util.Map;
 
 public class SensorMonitorDtoBuilder {
 
+    private String uuid;
     private String metricName;
     private String componentId;
     private Map<String, String> monitorContext;
     private String sensorClassName;
     private Interval interval;
+
+    public SensorMonitorDtoBuilder uuid(String uuid) {
+        this.uuid = uuid;
+        return this;
+    }
 
     public SensorMonitorDtoBuilder metricName(String metricName) {
         this.metricName = metricName;
@@ -56,7 +62,7 @@ public class SensorMonitorDtoBuilder {
     }
 
     public SensorMonitorDto build() {
-        return new SensorMonitorDto(metricName, componentId, monitorContext, sensorClassName,
+        return new SensorMonitorDto(uuid, metricName, componentId, monitorContext, sensorClassName,
             interval);
     }
 }

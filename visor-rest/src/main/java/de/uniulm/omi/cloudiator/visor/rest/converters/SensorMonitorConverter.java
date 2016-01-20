@@ -31,7 +31,7 @@ import java.util.function.Function;
 public class SensorMonitorConverter implements Function<SensorMonitor, SensorMonitorDto> {
 
     @Nullable @Override public SensorMonitorDto apply(SensorMonitor monitor) {
-        return new SensorMonitorDtoBuilder().componentId(monitor.componentId())
+        return new SensorMonitorDtoBuilder().uuid(monitor.uuid()).componentId(monitor.componentId())
             .interval(monitor.getInterval()).metricName(monitor.metricName())
             .monitorContext(monitor.monitorContext().getContext())
             .sensorClassName(monitor.sensorClass().getName()).build();

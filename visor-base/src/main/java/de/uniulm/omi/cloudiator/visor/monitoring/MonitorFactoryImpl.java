@@ -23,7 +23,6 @@ import de.uniulm.omi.cloudiator.visor.exceptions.InvalidMonitorContextException;
 import de.uniulm.omi.cloudiator.visor.exceptions.MonitorException;
 import de.uniulm.omi.cloudiator.visor.exceptions.SensorInitializationException;
 import de.uniulm.omi.cloudiator.visor.exceptions.SensorNotFoundException;
-import de.uniulm.omi.cloudiator.visor.execution.ExecutionService;
 import de.uniulm.omi.cloudiator.visor.execution.ScheduledExecutionService;
 import de.uniulm.omi.cloudiator.visor.reporting.QueuedReporting;
 import de.uniulm.omi.cloudiator.visor.reporting.ReportingInterface;
@@ -55,11 +54,11 @@ public class MonitorFactoryImpl implements MonitorFactory {
     }
 
     @Override public SensorMonitor create(String uuid, String metricName, String componentId,
-        Map<String, String> monitorContext, String sensorClassName, Interval interval)
-        throws MonitorException {
+        Map<String, String> monitorContext, String sensorClassName, Interval interval,
+        SensorConfiguration sensorConfiguration) throws MonitorException {
         try {
             return new SensorMonitorImpl(uuid, metricName, componentId,
-                sensorFactory.from(sensorClassName), interval,
+                sensorFactory.from(sensorClassName, sensorConfiguration), interval,
                 monitorContextFactory.create(monitorContext), metricReportingInterface,
                 executionService);
         } catch (InvalidMonitorContextException | SensorInitializationException | SensorNotFoundException e) {
