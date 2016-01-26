@@ -35,13 +35,13 @@ public abstract class AbstractSensor implements Sensor {
     private boolean isInitialized = false;
 
 
-    @Override public void init(SensorConfiguration sensorConfiguration)
+    @Override public final void init(SensorConfiguration sensorConfiguration)
         throws SensorInitializationException {
         this.initialize(sensorConfiguration);
         this.isInitialized = true;
     }
 
-    @Override public void setMonitorContext(MonitorContext monitorContext)
+    @Override public final void setMonitorContext(MonitorContext monitorContext)
         throws InvalidMonitorContextException {
         Preconditions.checkNotNull(monitorContext);
         checkState(isInitialized);
@@ -77,7 +77,7 @@ public abstract class AbstractSensor implements Sensor {
     protected abstract Measurement getMeasurement(MonitorContext monitorContext)
         throws MeasurementNotAvailableException;
 
-    @Override public String toString() {
+    @Override public final String toString() {
         return this.getClass().getCanonicalName();
     }
 }
