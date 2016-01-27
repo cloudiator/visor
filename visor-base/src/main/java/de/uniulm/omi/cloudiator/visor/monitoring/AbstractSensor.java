@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2015 University of Ulm
+ * Copyright (c) 2014-2016 University of Ulm
  *
  * See the NOTICE file distributed with this work for additional information
  * regarding copyright ownership.  Licensed under the Apache License, Version 2.0 (the
@@ -18,12 +18,9 @@
 
 package de.uniulm.omi.cloudiator.visor.monitoring;
 
-import com.google.common.base.Preconditions;
-import de.uniulm.omi.cloudiator.visor.exceptions.InvalidMonitorContextException;
 import de.uniulm.omi.cloudiator.visor.exceptions.MeasurementNotAvailableException;
 import de.uniulm.omi.cloudiator.visor.exceptions.SensorInitializationException;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
 /**
@@ -31,51 +28,48 @@ import static com.google.common.base.Preconditions.checkState;
  */
 public abstract class AbstractSensor implements Sensor {
 
-    private MonitorContext monitorContext;
     private boolean isInitialized = false;
 
-
-    @Override public final void init(SensorConfiguration sensorConfiguration)
+    @Override
+    public final void init(MonitorContext monitorContext, SensorConfiguration sensorConfiguration)
         throws SensorInitializationException {
-        this.initialize(sensorConfiguration);
+        this.initialize(monitorContext, sensorConfiguration);
         this.isInitialized = true;
     }
 
-    @Override public final void setMonitorContext(MonitorContext monitorContext)
-        throws InvalidMonitorContextException {
-        Preconditions.checkNotNull(monitorContext);
-        checkState(isInitialized);
-        if (!validateMonitorContext(monitorContext)) {
-            throw new InvalidMonitorContextException();
-        }
-        this.monitorContext = monitorContext;
-    }
-
-    @Override public Measurement getMeasurement() throws MeasurementNotAvailableException {
+    @Override public final Measurement getMeasurement() throws MeasurementNotAvailableException {
         checkState(isInitialized, "Measurement method was called before initialization.");
-        checkNotNull(monitorContext != null,
-            "Measurement method was called, before monitoring context was set.");
-        return this.getMeasurement(this.monitorContext);
+        return measure();
     }
 
-    protected boolean validateMonitorContext(MonitorContext monitorContext) {
-        return true;
-    }
-
-    protected void initialize(SensorConfiguration sensorConfiguration)
-        throws SensorInitializationException {
+    /**
+     * Provides the possibility to initialize the sensor.
+     *
+     * @param monitorContext      the context of the sensor
+     * @param sensorConfiguration the configuration of the sensor
+     * @throws SensorInitializationException if it was not possible to init the sensor
+     */
+    protected void initialize(MonitorContext monitorContext,
+        SensorConfiguration sensorConfiguration) throws SensorInitializationException {
         // intentionally left empty
     }
 
     /**
      * Returns a single measurement object.
      *
-     * @param monitorContext the context for the measurement.
      * @return a measurement taken by this sensor.
      * @throws MeasurementNotAvailableException
      */
-    protected abstract Measurement getMeasurement(MonitorContext monitorContext)
-        throws MeasurementNotAvailableException;
+    protected abstract Measurement measure() throws MeasurementNotAvailableException;
+
+    /**
+     * Provides a new measurement builder.
+     *
+     * @return a measurement builder
+     */
+    protected final MeasurementBuilder measureMentBuilder() {
+        return MeasurementBuilder.newBuilder();
+    }
 
     @Override public final String toString() {
         return this.getClass().getCanonicalName();

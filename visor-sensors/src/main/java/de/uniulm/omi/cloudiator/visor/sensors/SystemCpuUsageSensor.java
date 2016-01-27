@@ -21,38 +21,35 @@ package de.uniulm.omi.cloudiator.visor.sensors;
 import com.sun.management.OperatingSystemMXBean;
 import de.uniulm.omi.cloudiator.visor.exceptions.MeasurementNotAvailableException;
 import de.uniulm.omi.cloudiator.visor.exceptions.SensorInitializationException;
-import de.uniulm.omi.cloudiator.visor.monitoring.*;
+import de.uniulm.omi.cloudiator.visor.monitoring.AbstractSensor;
+import de.uniulm.omi.cloudiator.visor.monitoring.Measurement;
+import de.uniulm.omi.cloudiator.visor.monitoring.MonitorContext;
+import de.uniulm.omi.cloudiator.visor.monitoring.SensorConfiguration;
 
 import java.lang.management.ManagementFactory;
 
 /**
- * The MemoryUsageProbe class.
- * <p>
- * Measures the current
- * ly used memory by the operating system in percentage.
+ * A probe for measuring the CPU usage in % on the given machine.
  */
-public class MemoryUsageSensor extends AbstractSensor {
+public class SystemCpuUsageSensor extends AbstractSensor {
 
     private OperatingSystemMXBean osBean;
 
-    @Override protected Measurement getMeasurement(MonitorContext monitorContext)
-        throws MeasurementNotAvailableException {
-        //memory usage
-        double totalPhysicalMemory = osBean.getTotalPhysicalMemorySize();
-        double freePhysicalMemory = osBean.getFreePhysicalMemorySize();
+    @Override protected Measurement measure() throws MeasurementNotAvailableException {
 
-        if (totalPhysicalMemory < 0 || freePhysicalMemory < 0) {
-            throw new MeasurementNotAvailableException(
-                "Received negative value for total or free physical memory size");
+        double systemCpuLoad = osBean.getSystemCpuLoad();
+        double systemCpuLoadPercentage = systemCpuLoad * 100;
+
+        if (systemCpuLoad < 0) {
+            throw new MeasurementNotAvailableException("Received negative value");
         }
 
-        return new MeasurementImpl(System.currentTimeMillis(),
-            100 - ((freePhysicalMemory / totalPhysicalMemory) * 100));
+        return measureMentBuilder().now().value(systemCpuLoadPercentage).build();
     }
 
-    @Override protected void initialize(SensorConfiguration sensorConfiguration)
-        throws SensorInitializationException {
-        super.initialize(sensorConfiguration);
+    @Override protected void initialize(MonitorContext monitorContext,
+        SensorConfiguration sensorConfiguration) throws SensorInitializationException {
+        super.initialize(monitorContext, sensorConfiguration);
         osBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
     }
 }

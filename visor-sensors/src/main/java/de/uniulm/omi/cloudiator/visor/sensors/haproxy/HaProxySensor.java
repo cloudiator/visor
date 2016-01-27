@@ -20,7 +20,10 @@ package de.uniulm.omi.cloudiator.visor.sensors.haproxy;
 
 import de.uniulm.omi.cloudiator.visor.exceptions.MeasurementNotAvailableException;
 import de.uniulm.omi.cloudiator.visor.exceptions.SensorInitializationException;
-import de.uniulm.omi.cloudiator.visor.monitoring.*;
+import de.uniulm.omi.cloudiator.visor.monitoring.AbstractSensor;
+import de.uniulm.omi.cloudiator.visor.monitoring.Measurement;
+import de.uniulm.omi.cloudiator.visor.monitoring.MonitorContext;
+import de.uniulm.omi.cloudiator.visor.monitoring.SensorConfiguration;
 import org.apache.commons.csv.CSVFormat;
 
 import java.io.BufferedReader;
@@ -44,9 +47,9 @@ public class HaProxySensor extends AbstractSensor {
     private URL haProxyStatsUrl;
     private Optional<String> authentication;
 
-    @Override protected void initialize(SensorConfiguration sensorConfiguration)
-        throws SensorInitializationException {
-        super.initialize(sensorConfiguration);
+    @Override protected void initialize(MonitorContext monitorContext,
+        SensorConfiguration sensorConfiguration) throws SensorInitializationException {
+        super.initialize(monitorContext, sensorConfiguration);
 
         try {
             this.haProxyStatsUrl = new URL(sensorConfiguration.getValue(HAPROXY_STATS_URL_CONFIG)
@@ -77,8 +80,7 @@ public class HaProxySensor extends AbstractSensor {
 
     }
 
-    @Override protected Measurement getMeasurement(MonitorContext monitorContext)
-        throws MeasurementNotAvailableException {
+    @Override protected Measurement measure() throws MeasurementNotAvailableException {
 
         try {
             URLConnection urlConnection = haProxyStatsUrl.openConnection();
@@ -93,8 +95,7 @@ public class HaProxySensor extends AbstractSensor {
             throw new MeasurementNotAvailableException(e);
         }
 
-        return new MeasurementImpl(System.currentTimeMillis(), 0L);
-
+        return measureMentBuilder().now().value(0L).build();
     }
 
 }

@@ -18,8 +18,17 @@
 
 package de.uniulm.omi.cloudiator.visor.sensors.sigar;
 
+import de.uniulm.omi.cloudiator.visor.monitoring.AbstractSensor;
+import org.hyperic.sigar.Sigar;
+
 /**
  * Created by daniel on 26.01.16.
  */
-public class AbstractSigarSensor {
+public abstract class AbstractSigarSensor extends AbstractSensor {
+
+    private final static Sigar SIGAR = new Sigar();
+
+    protected Sigar sigar() {
+        return SIGAR;
+    }
 }

@@ -57,10 +57,10 @@ public class MonitorFactoryImpl implements MonitorFactory {
         Map<String, String> monitorContext, String sensorClassName, Interval interval,
         SensorConfiguration sensorConfiguration) throws MonitorException {
         try {
+            final MonitorContext context = monitorContextFactory.create(monitorContext);
             return new SensorMonitorImpl(uuid, metricName, componentId,
-                sensorFactory.from(sensorClassName, sensorConfiguration), interval,
-                monitorContextFactory.create(monitorContext), metricReportingInterface,
-                executionService);
+                sensorFactory.from(sensorClassName, sensorConfiguration, context), interval,
+                context, metricReportingInterface, executionService);
         } catch (InvalidMonitorContextException | SensorInitializationException | SensorNotFoundException e) {
             throw new MonitorException("Unable to create monitor.", e);
         }

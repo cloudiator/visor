@@ -64,5 +64,12 @@
                 <include>default.properties</include>
             </includes>
         </fileSet>
+        <fileSet>
+            <directory>${project.build.directory}/native-libs</directory>
+            <outputDirectory>/lib/sigar</outputDirectory>
+            <includes>
+                <include>*</include>
+            </includes>
+        </fileSet>
     </fileSets>
 </assembly>

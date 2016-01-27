@@ -39,6 +39,7 @@
             <artifactId>sigar</artifactId>
             <version>${sigar.version}</version>
         </dependency>
+
         <dependency>
             <groupId>io.github.cloudiator.visor</groupId>
             <artifactId>visor-api</artifactId>
@@ -53,6 +54,4 @@
             <version>1.2</version>
         </dependency>
     </dependencies>
-
-
 </project>

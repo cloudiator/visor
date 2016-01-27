@@ -51,7 +51,6 @@ public class SensorMonitorImpl implements SensorMonitor {
         this.componentId = componentId;
         this.sensor = sensor;
         this.monitorContext = monitorContext;
-        this.sensor.setMonitorContext(monitorContext);
         this.sensorMonitorWorker = new SensorMonitorWorker(this, metricReportingInterface);
         this.interval = interval;
         this.executionService = executionService;

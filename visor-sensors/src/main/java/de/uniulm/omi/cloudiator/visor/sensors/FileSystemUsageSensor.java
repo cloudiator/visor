@@ -20,7 +20,10 @@ package de.uniulm.omi.cloudiator.visor.sensors;
 
 import de.uniulm.omi.cloudiator.visor.exceptions.MeasurementNotAvailableException;
 import de.uniulm.omi.cloudiator.visor.exceptions.SensorInitializationException;
-import de.uniulm.omi.cloudiator.visor.monitoring.*;
+import de.uniulm.omi.cloudiator.visor.monitoring.AbstractSensor;
+import de.uniulm.omi.cloudiator.visor.monitoring.Measurement;
+import de.uniulm.omi.cloudiator.visor.monitoring.MonitorContext;
+import de.uniulm.omi.cloudiator.visor.monitoring.SensorConfiguration;
 
 import java.io.IOException;
 import java.nio.file.FileStore;
@@ -39,9 +42,9 @@ public class FileSystemUsageSensor extends AbstractSensor {
     private final static String DEFAULT_FILE_PATH = "/";
     private FileStore fileStore;
 
-    @Override protected void initialize(SensorConfiguration sensorConfiguration)
-        throws SensorInitializationException {
-        super.initialize(sensorConfiguration);
+    @Override protected void initialize(MonitorContext monitorContext,
+        SensorConfiguration sensorConfiguration) throws SensorInitializationException {
+        super.initialize(monitorContext, sensorConfiguration);
 
         final Path path =
             Paths.get(sensorConfiguration.getValue(FILE_PATH).orElse(DEFAULT_FILE_PATH));
@@ -54,15 +57,14 @@ public class FileSystemUsageSensor extends AbstractSensor {
         }
     }
 
-    @Override protected Measurement getMeasurement(MonitorContext monitorContext)
-        throws MeasurementNotAvailableException {
+    @Override protected Measurement measure() throws MeasurementNotAvailableException {
 
         checkState(fileStore != null, "file store was not correctly initialized");
 
         try {
             final double usage =
                 100 - (((double) fileStore.getUsableSpace() / fileStore.getTotalSpace()) * 100);
-            return new MeasurementImpl(System.currentTimeMillis(), usage);
+            return measureMentBuilder().now().value(usage).build();
         } catch (IOException e) {
             throw new MeasurementNotAvailableException(e);
         }
