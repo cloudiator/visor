@@ -91,5 +91,6 @@ import static com.google.common.base.Preconditions.checkArgument;
         checkArgument(monitorRegistry.containsKey(uuid),
             String.format("No monitor with id %s was registered", uuid));
         monitorRegistry.get(uuid).stop();
+        monitorRegistry.remove(uuid);
     }
 }
