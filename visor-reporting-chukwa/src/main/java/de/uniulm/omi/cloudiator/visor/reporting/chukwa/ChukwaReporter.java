@@ -24,11 +24,15 @@ import de.uniulm.omi.cloudiator.visor.exceptions.ConfigurationException;
 import de.uniulm.omi.cloudiator.visor.monitoring.Metric;
 import de.uniulm.omi.cloudiator.visor.reporting.ReportingException;
 import de.uniulm.omi.cloudiator.visor.reporting.ReportingInterface;
+import org.apache.http.HttpResponse;
 import org.apache.http.entity.ContentType;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.impl.nio.client.HttpAsyncClients;
 import org.apache.http.nio.client.methods.HttpAsyncMethods;
+import org.apache.http.nio.protocol.BasicAsyncResponseConsumer;
 import org.apache.http.nio.protocol.HttpAsyncRequestProducer;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
@@ -48,6 +52,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class ChukwaReporter implements ReportingInterface<Metric> {
 
+    private static final Logger LOGGER = LogManager.getLogger(ChukwaReporter.class);
+    private static final int DEFAULT_PROTOCOL_VERSION = 1;
+
     private final URI chukwaUri;
     private final String vmID;
 
@@ -64,14 +71,20 @@ public class ChukwaReporter implements ReportingInterface<Metric> {
     }
 
     @Override public void report(Metric item) throws ReportingException {
-        ChukwaClient chukwaClient = new ChukwaClient(chukwaUri);
-        ChukwaRequest chukwaRequest = ChukwaRequestBuilder.newBuilder().build();
 
-        chukwaClient.post(chukwaRequest);
+        try (ChukwaClient chukwaClient = new ChukwaClient(chukwaUri)) {
 
-        try {
-            chukwaClient.close();
-        } catch (IOException ignored) {
+            ChukwaRequest chukwaRequest = ChukwaRequestBuilder.newBuilder().numberOfEvents(1)
+                .protocolVersion(DEFAULT_PROTOCOL_VERSION).sequenceId(1).source("Visor").tags("")
+                .streamName("Visor Monitoring Information").dataType("VisorMetric")
+                .debuggingInfo("").numberOfRecords(1).data(new MetricToChukwa("MyVMID").apply(item))
+                .build();
+
+            final HttpResponse post = chukwaClient.post(chukwaRequest);
+            LOGGER.debug("Chukwa response " + post.getStatusLine().toString());
+
+        } catch (IOException e) {
+            throw new ReportingException(e);
         }
     }
 
@@ -91,15 +104,16 @@ public class ChukwaReporter implements ReportingInterface<Metric> {
             this.uri = uri;
         }
 
-        public void post(ChukwaRequest chukwaRequest) {
+        public HttpResponse post(ChukwaRequest chukwaRequest) throws IOException {
             httpClient.start();
             final HttpAsyncRequestProducer post = HttpAsyncMethods
                 .createPost(uri, chukwaRequest.toByteArray(), ContentType.APPLICATION_OCTET_STREAM);
-            final Future<Object> execute = httpClient.execute(post, null, null);
+            final Future<HttpResponse> execute =
+                httpClient.execute(post, new BasicAsyncResponseConsumer(), null);
             try {
-                execute.get();
+                return execute.get();
             } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
+                throw new IOException(e);
             }
         }
 
@@ -128,52 +142,52 @@ public class ChukwaReporter implements ReportingInterface<Metric> {
             return new ChukwaRequestBuilder();
         }
 
-        public ChukwaRequestBuilder setNumberOfEvents(int numberOfEvents) {
+        public ChukwaRequestBuilder numberOfEvents(int numberOfEvents) {
             this.numberOfEvents = numberOfEvents;
             return this;
         }
 
-        public ChukwaRequestBuilder setProtocolVersion(int protocolVersion) {
+        public ChukwaRequestBuilder protocolVersion(int protocolVersion) {
             this.protocolVersion = protocolVersion;
             return this;
         }
 
-        public ChukwaRequestBuilder setSequenceId(long sequenceId) {
+        public ChukwaRequestBuilder sequenceId(long sequenceId) {
             this.sequenceId = sequenceId;
             return this;
         }
 
-        public ChukwaRequestBuilder setSource(String source) {
+        public ChukwaRequestBuilder source(String source) {
             this.source = source;
             return this;
         }
 
-        public ChukwaRequestBuilder setTags(String tags) {
+        public ChukwaRequestBuilder tags(String tags) {
             this.tags = tags;
             return this;
         }
 
-        public ChukwaRequestBuilder setStreamName(String streamName) {
+        public ChukwaRequestBuilder streamName(String streamName) {
             this.streamName = streamName;
             return this;
         }
 
-        public ChukwaRequestBuilder setDataType(String dataType) {
+        public ChukwaRequestBuilder dataType(String dataType) {
             this.dataType = dataType;
             return this;
         }
 
-        public ChukwaRequestBuilder setDebuggingInfo(String debuggingInfo) {
+        public ChukwaRequestBuilder debuggingInfo(String debuggingInfo) {
             this.debuggingInfo = debuggingInfo;
             return this;
         }
 
-        public ChukwaRequestBuilder setNumberOfRecords(int numberOfRecords) {
+        public ChukwaRequestBuilder numberOfRecords(int numberOfRecords) {
             this.numberOfRecords = numberOfRecords;
             return this;
         }
 
-        public ChukwaRequestBuilder setData(String data) {
+        public ChukwaRequestBuilder data(String data) {
             this.data = data;
             return this;
         }
