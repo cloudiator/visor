@@ -20,6 +20,8 @@ package de.uniulm.omi.cloudiator.visor.reporting.chukwa;
 
 import de.uniulm.omi.cloudiator.visor.monitoring.Metric;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.function.Function;
 
 /**
@@ -28,17 +30,21 @@ import java.util.function.Function;
 public class MetricToChukwa implements Function<Metric, String> {
 
     private final String vmUuid;
+    private static final SimpleDateFormat simpleDateFormat =
+        new SimpleDateFormat("yyyy-mm-dd H:m:s,S");
 
     public MetricToChukwa(String vmUuid) {
         this.vmUuid = vmUuid;
     }
 
     @Override public String apply(Metric metric) {
-        return "VMID" +
+
+
+        return simpleDateFormat.format(new Date(metric.getTimestamp())) + "VMID" +
             "\t" +
             metric.getName() +
             "\t" +
-            "timestamp" +
+            "capturedTimestamp" +
             "\n" +
             vmUuid +
             "\t" +

@@ -25,21 +25,19 @@ import de.uniulm.omi.cloudiator.visor.monitoring.Metric;
 import de.uniulm.omi.cloudiator.visor.reporting.ReportingException;
 import de.uniulm.omi.cloudiator.visor.reporting.ReportingInterface;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.impl.nio.client.HttpAsyncClients;
-import org.apache.http.nio.client.methods.HttpAsyncMethods;
-import org.apache.http.nio.protocol.BasicAsyncResponseConsumer;
-import org.apache.http.nio.protocol.HttpAsyncRequestProducer;
+import org.apache.http.nio.entity.NByteArrayEntity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.ByteArrayOutputStream;
-import java.io.Closeable;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -75,13 +73,13 @@ public class ChukwaReporter implements ReportingInterface<Metric> {
         try (ChukwaClient chukwaClient = new ChukwaClient(chukwaUri)) {
 
             ChukwaRequest chukwaRequest = ChukwaRequestBuilder.newBuilder().numberOfEvents(1)
-                .protocolVersion(DEFAULT_PROTOCOL_VERSION).sequenceId(1).source("Visor").tags("")
-                .streamName("Visor Monitoring Information").dataType("VisorMetric")
-                .debuggingInfo("").numberOfRecords(1).data(new MetricToChukwa("MyVMID").apply(item))
-                .build();
+                .protocolVersion(DEFAULT_PROTOCOL_VERSION).sequenceId(1L).source("Visor").tags("")
+                .streamName("Visor Monitoring Information").dataType("Visor").debuggingInfo("")
+                .numberOfRecords(1).stringData(new MetricToChukwa(vmID).apply(item)).build();
 
-            final HttpResponse post = chukwaClient.post(chukwaRequest);
-            LOGGER.debug("Chukwa response " + post.getStatusLine().toString());
+            final HttpResponse response = chukwaClient.post(chukwaRequest);
+
+            LOGGER.debug("Chukwa response " + response.getStatusLine().toString());
 
         } catch (IOException e) {
             throw new ReportingException(e);
@@ -105,11 +103,49 @@ public class ChukwaReporter implements ReportingInterface<Metric> {
         }
 
         public HttpResponse post(ChukwaRequest chukwaRequest) throws IOException {
+
+            /**
+             URL url = new URL(uri.toString());
+             final HttpURLConnection urlConnection = (HttpURLConnection)url.openConnection();
+             urlConnection.setRequestMethod("POST");
+             urlConnection.setRequestProperty("Content-Length",
+             String.valueOf(chukwaRequest.toByteArray().length));
+             urlConnection.setRequestProperty("Content-Type","application/octet-stream");
+             urlConnection.setRequestProperty("Host","134.60.64.143:8080");
+             urlConnection.setDoOutput(true);
+             urlConnection.setUseCaches(false);
+
+             DataOutputStream wr = new DataOutputStream(urlConnection.getOutputStream());
+             wr.write(chukwaRequest.toByteArray());
+             wr.close();
+
+             //Get Response
+             InputStream is = urlConnection.getInputStream();
+             BufferedReader rd = new BufferedReader(new InputStreamReader(is));
+             StringBuilder response = new StringBuilder();
+             String line;
+             while((line = rd.readLine()) != null) {
+             response.append(line);
+             response.append('\r');
+             }
+             rd.close();
+             System.out.println(response.toString());
+
+             urlConnection.disconnect();
+
+             **/
             httpClient.start();
-            final HttpAsyncRequestProducer post = HttpAsyncMethods
-                .createPost(uri, chukwaRequest.toByteArray(), ContentType.APPLICATION_OCTET_STREAM);
-            final Future<HttpResponse> execute =
-                httpClient.execute(post, new BasicAsyncResponseConsumer(), null);
+
+            byte[] payload = chukwaRequest.toByteArray();
+
+            //final HttpAsyncRequestProducer post = HttpAsyncMethods
+            //    .createPost(uri, payload, ContentType.APPLICATION_OCTET_STREAM);
+
+            final HttpPost httpPost = new HttpPost(uri);
+            final NByteArrayEntity nByteArrayEntity =
+                new NByteArrayEntity(payload, ContentType.APPLICATION_OCTET_STREAM);
+            httpPost.setEntity(nByteArrayEntity);
+            final Future<HttpResponse> execute = httpClient.execute(httpPost, null);
             try {
                 return execute.get();
             } catch (InterruptedException | ExecutionException e) {
@@ -133,7 +169,7 @@ public class ChukwaReporter implements ReportingInterface<Metric> {
         private String dataType;
         private String debuggingInfo;
         private int numberOfRecords;
-        private String data;
+        private byte[] data;
 
         private ChukwaRequestBuilder() {
         }
@@ -187,8 +223,8 @@ public class ChukwaReporter implements ReportingInterface<Metric> {
             return this;
         }
 
-        public ChukwaRequestBuilder data(String data) {
-            this.data = data;
+        public ChukwaRequestBuilder stringData(String data) {
+            this.data = data.getBytes(Charset.forName("UTF-8"));
             return this;
         }
 
@@ -210,11 +246,11 @@ public class ChukwaReporter implements ReportingInterface<Metric> {
         private final String dataType;
         private final String debuggingInfo;
         private final int numberOfRecords;
-        private final String data;
+        private final byte[] data;
 
         public ChukwaRequest(int numberOfEvents, int protocolVersion, long sequenceId,
             String source, String tags, String streamName, String dataType, String debuggingInfo,
-            int numberOfRecords, String data) {
+            int numberOfRecords, byte[] data) {
             this.numberOfEvents = numberOfEvents;
             this.protocolVersion = protocolVersion;
             this.sequenceId = sequenceId;
@@ -224,7 +260,7 @@ public class ChukwaReporter implements ReportingInterface<Metric> {
             this.dataType = dataType;
             this.debuggingInfo = debuggingInfo;
             this.numberOfRecords = numberOfRecords;
-            this.data = data;
+            this.data = data.clone();
         }
 
         public byte[] toByteArray() {
@@ -240,9 +276,11 @@ public class ChukwaReporter implements ReportingInterface<Metric> {
                 dataOutputStream.writeUTF(dataType);
                 dataOutputStream.writeUTF(debuggingInfo);
                 dataOutputStream.writeInt(numberOfRecords);
-                dataOutputStream.writeInt(data.getBytes().length);
-                dataOutputStream.writeUTF(data);
+                dataOutputStream.writeInt(data.length - 1);
+                dataOutputStream.write(data);
+
                 dataOutputStream.flush();
+                byteArrayOutputStream.flush();
 
                 return byteArrayOutputStream.toByteArray();
             } catch (IOException e) {
