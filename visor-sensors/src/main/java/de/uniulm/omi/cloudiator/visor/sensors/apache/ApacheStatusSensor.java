@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -68,8 +69,9 @@ public class ApacheStatusSensor extends AbstractSensor {
             throw new IllegalArgumentException("Could not find the metric " + string);
         }
 
-        @Override public Measurement measure(URL url) throws MeasurementNotAvailableException {
-            return measurableMetric.measure(url);
+        @Override public Measurement measure(Map<RawMetric, Measurement> currentMeasurements,
+            Map<RawMetric, Measurement> pastMeasurements) throws MeasurementNotAvailableException {
+            return measurableMetric.measure(currentMeasurements, pastMeasurements);
         }
     }
 
@@ -77,16 +79,18 @@ public class ApacheStatusSensor extends AbstractSensor {
     private enum DerivedMetric implements MeasurableMetric {
 
         CURRENT_REQ_PER_SEC {
-            @Override public Measurement measure(URL url) throws MeasurementNotAvailableException {
-                Measurement newAccess = RawMetric.TOTAL_ACCESS.measure(url);
+            @Override public Measurement measure(Map<RawMetric, Measurement> currentMeasurements,
+                Map<RawMetric, Measurement> pastMeasurements)
+                throws MeasurementNotAvailableException {
 
-                if (!oldMeasurements.containsKey(url) || !oldMeasurements.get(url)
-                    .containsKey(RawMetric.TOTAL_ACCESS)) {
+                Measurement newAccess = currentMeasurements.get(RawMetric.TOTAL_ACCESS);
+
+                if (!pastMeasurements.containsKey(RawMetric.TOTAL_ACCESS)) {
                     throw new MeasurementNotAvailableException(
                         "No old value available, skipping measurement for " + this);
                 }
 
-                Measurement oldAccess = oldMeasurements.get(url).get(RawMetric.TOTAL_ACCESS);
+                Measurement oldAccess = pastMeasurements.get(RawMetric.TOTAL_ACCESS);
                 long valueDifference =
                     ((Long) newAccess.getValue()) - ((Long) oldAccess.getValue());
                 long timeDifferenceInSec = TimeUnit.SECONDS
@@ -98,21 +102,26 @@ public class ApacheStatusSensor extends AbstractSensor {
             }
         },
         CURRENT_KB_PER_SEC {
-            @Override public Measurement measure(URL url) throws MeasurementNotAvailableException {
-                Measurement newKB = RawMetric.TOTAL_KB.measure(url);
+            @Override public Measurement measure(Map<RawMetric, Measurement> currentMeasurements,
+                Map<RawMetric, Measurement> pastMeasurements)
+                throws MeasurementNotAvailableException {
 
-                if (!oldMeasurements.containsKey(url) || !oldMeasurements.get(url)
-                    .containsKey(RawMetric.TOTAL_KB)) {
+                Measurement newAccess = currentMeasurements.get(RawMetric.TOTAL_KB);
+
+                if (!pastMeasurements.containsKey(RawMetric.TOTAL_KB)) {
                     throw new MeasurementNotAvailableException(
                         "No old value available, skipping measurement for " + this);
                 }
 
-                Measurement oldKB = oldMeasurements.get(url).get(RawMetric.TOTAL_KB);
-                long valueDifference = ((Long) newKB.getValue()) - ((Long) oldKB.getValue());
+                Measurement oldAccess = pastMeasurements.get(RawMetric.TOTAL_KB);
+                long valueDifference =
+                    ((Long) newAccess.getValue()) - ((Long) oldAccess.getValue());
                 long timeDifferenceInSec = TimeUnit.SECONDS
-                    .convert(newKB.getTimestamp() - oldKB.getTimestamp(), TimeUnit.MILLISECONDS);
-                return MeasurementBuilder.newBuilder().timestamp(newKB.getTimestamp())
+                    .convert(newAccess.getTimestamp() - oldAccess.getTimestamp(),
+                        TimeUnit.MILLISECONDS);
+                return MeasurementBuilder.newBuilder().timestamp(newAccess.getTimestamp())
                     .value((double) valueDifference / timeDifferenceInSec).build();
+
             }
         };
     }
@@ -216,12 +225,9 @@ public class ApacheStatusSensor extends AbstractSensor {
             }
         };
 
-        @Override public Measurement measure(URL url) throws MeasurementNotAvailableException {
-            try {
-                return rawMeasurementCache.get(url).get(this);
-            } catch (ExecutionException e) {
-                throw new MeasurementNotAvailableException(e);
-            }
+        @Override public Measurement measure(Map<RawMetric, Measurement> currentMeasurements,
+            Map<RawMetric, Measurement> pastMeasurements) throws MeasurementNotAvailableException {
+            return currentMeasurements.get(this);
         }
 
         static private RawMetric of(String statusString) {
@@ -245,7 +251,8 @@ public class ApacheStatusSensor extends AbstractSensor {
 
 
     private interface MeasurableMetric {
-        Measurement measure(URL url) throws MeasurementNotAvailableException;
+        Measurement measure(Map<RawMetric, Measurement> currentMeasurements,
+            Map<RawMetric, Measurement> pastMeasurement) throws MeasurementNotAvailableException;
     }
 
 
@@ -298,7 +305,15 @@ public class ApacheStatusSensor extends AbstractSensor {
     }
 
     @Override protected Measurement measure() throws MeasurementNotAvailableException {
-        return statusMetric.measure(url);
+        try {
+            Map<RawMetric, Measurement> pastMeasurements = oldMeasurements.get(url);
+            if (pastMeasurements == null) {
+                pastMeasurements = Collections.emptyMap();
+            }
+            return statusMetric.measure(rawMeasurementCache.get(url), pastMeasurements);
+        } catch (ExecutionException e) {
+            throw new MeasurementNotAvailableException(e);
+        }
     }
 
 

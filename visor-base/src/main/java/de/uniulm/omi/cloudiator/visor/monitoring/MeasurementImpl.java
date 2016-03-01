@@ -19,6 +19,8 @@
 package de.uniulm.omi.cloudiator.visor.monitoring;
 
 
+import com.google.common.base.MoreObjects;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -61,5 +63,9 @@ public class MeasurementImpl implements Measurement {
         int result = (int) (getTimestamp() ^ (getTimestamp() >>> 32));
         result = 31 * result + getValue().hashCode();
         return result;
+    }
+
+    @Override public String toString() {
+        return MoreObjects.toStringHelper(this).add("timestamp",timestamp).add("value",value).toString();
     }
 }
