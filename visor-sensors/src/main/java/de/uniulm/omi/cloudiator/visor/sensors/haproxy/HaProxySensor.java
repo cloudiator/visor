@@ -25,6 +25,8 @@ import de.uniulm.omi.cloudiator.visor.monitoring.Measurement;
 import de.uniulm.omi.cloudiator.visor.monitoring.MonitorContext;
 import de.uniulm.omi.cloudiator.visor.monitoring.SensorConfiguration;
 import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -43,8 +45,11 @@ public class HaProxySensor extends AbstractSensor {
     private final static String HAPROXY_STATS_URL_CONFIG = "haproxy.url";
     private final static String HAPROXY_STATS_AUTH_USERNAME = "haproxy.auth.username";
     private final static String HAPROXY_STATS_AUTH_PASSWORD = "haproxy.auth.password";
-    private final static CSVFormat csvFormat = CSVFormat.DEFAULT;
+    private final static String HAPROXY_STATS_GROUP = "haproxy.group";
+    private final static String HAPROXY_STATS_GROUP_DEFAULT = "http-in";
+    private final static CSVFormat csvFormat = CSVFormat.DEFAULT.withHeader();
     private URL haProxyStatsUrl;
+    private String haProxyGroup;
     private Optional<String> authentication;
 
     @Override protected void initialize(MonitorContext monitorContext,
@@ -77,6 +82,8 @@ public class HaProxySensor extends AbstractSensor {
             authentication = Optional.empty();
         }
 
+        haProxyGroup =
+            sensorConfiguration.getValue(HAPROXY_STATS_GROUP).orElse(HAPROXY_STATS_GROUP_DEFAULT);
 
     }
 
@@ -88,8 +95,11 @@ public class HaProxySensor extends AbstractSensor {
                 urlConnection.setRequestProperty("Authorization", authentication.get());
             }
 
-            csvFormat
+            CSVParser csvParser = csvFormat
                 .parse(new BufferedReader(new InputStreamReader(urlConnection.getInputStream())));
+            for (CSVRecord csvRecord : csvParser) {
+                String pxname = csvRecord.get("# pxname");
+            }
 
         } catch (IOException e) {
             throw new MeasurementNotAvailableException(e);
