@@ -41,7 +41,7 @@ import com.google.inject.Injector;
 import com.google.inject.Module;
 import de.uniulm.omi.cloudiator.visor.execution.ShutdownHook;
 import de.uniulm.omi.cloudiator.visor.rest.RestServer;
-import de.uniulm.omi.cloudiator.visor.telnet.SocketServer;
+import de.uniulm.omi.cloudiator.visor.telnet.TCPServer;
 
 import java.util.Set;
 
@@ -58,8 +58,6 @@ public class VisorService {
 
     public void start() {
         final Injector injector = Guice.createInjector(this.modules);
-
-        injector.getInstance(SocketServer.class);
         injector.getInstance(RestServer.class);
         Runtime.getRuntime().addShutdownHook(injector.getInstance(ShutdownHook.class));
     }

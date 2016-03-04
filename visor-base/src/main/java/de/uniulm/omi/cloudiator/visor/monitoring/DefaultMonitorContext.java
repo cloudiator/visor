@@ -23,71 +23,43 @@ import com.google.common.collect.ImmutableMap;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
- * Created by daniel on 21.01.15.
+ * Created by daniel on 23.10.15.
  */
-public class DefaultMonitorContext implements MonitorContext {
+class DefaultMonitorContext extends BaseMonitorContext {
 
-    public static final String LOCAL_IP = "local_ip";
-    private final Map<String, String> context;
+    private final Map<String, String> defaultContext;
 
-    public static MonitorContextBuilder builder() {
-        return new MonitorContextBuilder();
-    }
+    public static final String LOCAL_IP = "local.ip";
+    public static final String OS_NAME = "os.name";
+    public static final String OS_ARCH = "os.arch";
+    public static final String OS_VERS = "os.version";
+    public static final String JAVA_VERSION = "java.version";
 
-    private DefaultMonitorContext(Map<String, String> context) {
-        this.context = context;
-    }
+    DefaultMonitorContext(Map<String, String> context, String localIp) {
+        super(context);
 
-    @Override public String getValue(String context) {
-        return this.context.get(context);
-    }
+        checkNotNull(localIp);
+        checkArgument(!localIp.isEmpty());
 
-    @Override public boolean hasValue(String context) {
-        return this.context.containsKey(context);
-    }
-
-    @Override public String getOrDefault(String context, String defaultValue) {
-        return this.context.getOrDefault(context, defaultValue);
+        this.defaultContext = ImmutableMap
+            .of(LOCAL_IP, localIp, OS_NAME, System.getProperty(OS_NAME), OS_ARCH,
+                System.getProperty(OS_ARCH), OS_VERS, System.getProperty(OS_VERS), JAVA_VERSION,
+                System.getProperty(JAVA_VERSION));
     }
 
     @Override public Map<String, String> getContext() {
-        return context;
+
+        //temporary map two filter duplicates as they are not allowed by the immutable map builder
+        Map<String, String> temp = new HashMap<>(defaultContext.size() + super.getContext().size());
+        temp.putAll(super.getContext());
+        temp.putAll(defaultContext);
+
+        return ImmutableMap.copyOf(temp);
     }
 
-    @Override public String toString() {
-        StringBuilder contextString = new StringBuilder("[");
-        for (Map.Entry<String, String> mapEntry : this.getContext().entrySet()) {
-            contextString.append(mapEntry.getKey());
-            contextString.append(": ");
-            contextString.append(mapEntry.getValue());
-            contextString.append(",");
-        }
-        contextString.append("]");
-        return String.format("MonitorContext(Context: %s)", contextString.toString());
-    }
-
-    public static class MonitorContextBuilder {
-
-        private final Map<String, String> map;
-
-        public MonitorContextBuilder() {
-            map = new HashMap<>();
-        }
-
-        public MonitorContextBuilder addContext(String context, String value) {
-            this.map.put(context, value);
-            return this;
-        }
-
-        public MonitorContextBuilder addContext(Map<String, String> context) {
-            this.map.putAll(context);
-            return this;
-        }
-
-        public MonitorContext build() {
-            return new DefaultMonitorContext(ImmutableMap.copyOf(this.map));
-        }
-    }
 
 }

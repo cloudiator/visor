@@ -26,6 +26,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
@@ -44,7 +45,7 @@ import static com.google.common.base.Preconditions.*;
      */
     private final ScheduledExecutorService scheduledExecutorService;
 
-    private final Map<Schedulable, ScheduledFuture> registeredSchedulables;
+    private final Map<Schedulable, Future> registeredSchedulables;
 
     @Inject
     public DefaultScheduledExecutionService(@Named("executionThreads") int executionThreads) {
@@ -60,28 +61,28 @@ import static com.google.common.base.Preconditions.*;
             "Scheduling " + schedulable.getClass().getName() + " with interval of " + schedulable
                 .getInterval());
         final ScheduledFuture<?> scheduledFuture = this.scheduledExecutorService
-            .scheduleAtFixedRate(schedulable.getRunnable(), 0,
-                schedulable.getInterval().getPeriod(), schedulable.getInterval().getTimeUnit());
+            .scheduleAtFixedRate(schedulable, 0, schedulable.getInterval().getPeriod(),
+                schedulable.getInterval().getTimeUnit());
         this.registeredSchedulables.put(schedulable, scheduledFuture);
-    }
-
-    @Override public void remove(Schedulable schedulable) {
-        checkNotNull(schedulable);
-        checkState(this.registeredSchedulables.containsKey(schedulable),
-            "The schedulable " + schedulable + " was never registered with the scheduler.");
-        this.registeredSchedulables.get(schedulable).cancel(false);
-        this.registeredSchedulables.remove(schedulable);
     }
 
     @Override public void reschedule(Schedulable schedulable) {
         checkNotNull(schedulable);
-        this.remove(schedulable);
+        this.remove(schedulable, true);
         this.schedule(schedulable);
     }
 
     @Override public void execute(Runnable runnable) {
         checkNotNull(runnable);
         this.scheduledExecutorService.execute(runnable);
+    }
+
+    @Override public void remove(Schedulable schedulable, boolean force) {
+        checkNotNull(schedulable);
+        checkState(this.registeredSchedulables.containsKey(schedulable),
+            schedulable + " was never registered.");
+        this.registeredSchedulables.get(schedulable).cancel(force);
+        this.registeredSchedulables.remove(schedulable);
     }
 
     @Override public void shutdown(final int seconds) {

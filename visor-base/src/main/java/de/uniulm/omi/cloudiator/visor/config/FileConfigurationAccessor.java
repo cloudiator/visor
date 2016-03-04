@@ -19,6 +19,7 @@
 package de.uniulm.omi.cloudiator.visor.config;
 
 import com.google.inject.Singleton;
+import de.uniulm.omi.cloudiator.visor.exceptions.ConfigurationException;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;

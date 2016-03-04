@@ -20,7 +20,7 @@ package de.uniulm.omi.cloudiator.visor.rest;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import de.uniulm.omi.cloudiator.visor.config.ConfigurationException;
+import de.uniulm.omi.cloudiator.visor.exceptions.ConfigurationException;
 import de.uniulm.omi.cloudiator.visor.execution.ExecutionService;
 import de.uniulm.omi.cloudiator.visor.monitoring.MonitoringService;
 import de.uniulm.omi.cloudiator.visor.rest.controllers.MonitorController;

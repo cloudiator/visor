@@ -25,10 +25,6 @@ import de.uniulm.omi.cloudiator.visor.monitoring.Interval;
 /**
  * Created by daniel on 06.02.15.
  */
-public interface Schedulable {
-
-    public Interval getInterval();
-
-    public Runnable getRunnable();
-
+public interface Schedulable extends Runnable {
+    Interval getInterval();
 }

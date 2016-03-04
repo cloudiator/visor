@@ -20,7 +20,7 @@ package de.uniulm.omi.cloudiator.visor.reporting.kairos;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import de.uniulm.omi.cloudiator.visor.config.ConfigurationException;
+import de.uniulm.omi.cloudiator.visor.exceptions.ConfigurationException;
 import de.uniulm.omi.cloudiator.visor.monitoring.Metric;
 import de.uniulm.omi.cloudiator.visor.reporting.ReportingException;
 import de.uniulm.omi.cloudiator.visor.reporting.ReportingInterface;

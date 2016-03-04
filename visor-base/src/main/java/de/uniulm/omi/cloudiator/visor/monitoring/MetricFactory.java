@@ -18,6 +18,8 @@
 
 package de.uniulm.omi.cloudiator.visor.monitoring;
 
+import java.util.Map;
+
 /**
  * Created by daniel on 06.02.15.
  */
@@ -28,9 +30,9 @@ public class MetricFactory {
     }
 
     public static Metric from(String metricName, Measurement measurement,
-        MonitorContext monitorContext) {
+        Map<String, String> tags) {
         return MetricBuilder.newBuilder().name(metricName).value(measurement.getValue())
-            .timestamp(measurement.getTimestamp()).addTags(monitorContext.getContext()).build();
+            .timestamp(measurement.getTimestamp()).addTags(tags).build();
     }
 
 }

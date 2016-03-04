@@ -23,6 +23,6 @@ package de.uniulm.omi.cloudiator.visor.config;
  */
 public interface CommandLinePropertiesAccessor extends IpProvider {
 
-    public String getConfFileLocation();
+    String getConfFileLocation();
 
 }

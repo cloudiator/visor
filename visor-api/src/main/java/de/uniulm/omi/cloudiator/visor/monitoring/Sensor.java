@@ -18,36 +18,30 @@
 
 package de.uniulm.omi.cloudiator.visor.monitoring;
 
+import de.uniulm.omi.cloudiator.visor.exceptions.MeasurementNotAvailableException;
+import de.uniulm.omi.cloudiator.visor.exceptions.SensorInitializationException;
+
 public interface Sensor {
 
     /**
      * Initializes the sensor.
      * <p>
-     * This e.g. allows the sensor to install dependencies for the operating
-     * system, or allows the sensor to configure itself for the current
-     * environment.
+     * The configuration and the context for the sensor are passed using the configuration and context parameter.
+     * <p>
+     * Also allows the sensor to e.g. install dependencies.
      *
+     * @param configuration  the configuration for the sensor.
+     * @param monitorContext the monitor context
      * @throws SensorInitializationException for problems during the initialization
      */
-    public void init() throws SensorInitializationException;
-
-    /**
-     * Sets the monitor context for the sensor.
-     * <p>
-     * Tells the sensor the context in which it is running.
-     *
-     * @param monitorContext context of the sensor.
-     *
-     * @throws InvalidMonitorContextException if the monitor context is not valid.
-     */
-    public void setMonitorContext(MonitorContext monitorContext) throws InvalidMonitorContextException;
+    void init(MonitorContext monitorContext, SensorConfiguration configuration)
+        throws SensorInitializationException;
 
     /**
      * Called to retrieve a measurement from this probe.
      *
      * @return the current measurement for this probe.
-     *
      * @throws MeasurementNotAvailableException
      */
-    public Measurement getMeasurement() throws MeasurementNotAvailableException;
+    Measurement getMeasurement() throws MeasurementNotAvailableException;
 }

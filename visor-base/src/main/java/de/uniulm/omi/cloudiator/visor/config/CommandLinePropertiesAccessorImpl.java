@@ -19,6 +19,7 @@
 package de.uniulm.omi.cloudiator.visor.config;
 
 import com.google.inject.Inject;
+import de.uniulm.omi.cloudiator.visor.exceptions.ConfigurationException;
 import org.apache.commons.cli.*;
 
 import javax.annotation.Nullable;

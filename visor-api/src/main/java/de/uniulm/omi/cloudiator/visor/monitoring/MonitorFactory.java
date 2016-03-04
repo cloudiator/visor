@@ -18,12 +18,19 @@
 
 package de.uniulm.omi.cloudiator.visor.monitoring;
 
+import de.uniulm.omi.cloudiator.visor.exceptions.MonitorException;
+
 import java.util.Map;
 
 /**
  * Created by daniel on 15.01.15.
  */
 public interface MonitorFactory {
-    public Monitor create(String uuid, String metricName, Sensor sensor, Interval interval,
-        Map<String, String> context) throws InvalidMonitorContextException;
+
+    SensorMonitor create(String uuid, String metricName, String componentId,
+        Map<String, String> monitorContext, String sensorClassName, Interval interval,
+        SensorConfiguration sensorConfiguration) throws MonitorException;
+
+    PushMonitor create(String uuid, String metricName, String componentId,
+        Map<String, String> monitorContext) throws MonitorException;
 }

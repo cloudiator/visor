@@ -30,12 +30,12 @@ public interface Measurement {
      *
      * @return unix timestamp
      */
-    public long getTimestamp();
+    long getTimestamp();
 
     /**
      * The value for this measurement at the defined timestamp.
      *
-     * @return a object representing the value. manadatory
+     * @return a object representing the value. mandatory
      */
-    public Object getValue();
+    Object getValue();
 }

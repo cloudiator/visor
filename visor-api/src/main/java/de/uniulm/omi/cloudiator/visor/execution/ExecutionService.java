@@ -22,9 +22,27 @@ package de.uniulm.omi.cloudiator.visor.execution;
  * Created by daniel on 12.12.14.
  */
 public interface ExecutionService {
-    public void execute(Runnable runnable);
 
-    public void shutdown(int seconds);
+    /**
+     * Executes the runnable.
+     *
+     * @param runnable the runnable to be executed by the execution service.
+     */
+    void execute(Runnable runnable);
 
-    public void kill();
+    /**
+     * Gracefully shutdowns the execution service.
+     * <p/>
+     * Waits for the completion of the runnables until the timeout
+     * expired. Afterwards the execution of the runnables is interrupted.
+     *
+     * @param seconds the timeout.
+     */
+    void shutdown(int seconds);
+
+    /**
+     * Instantly kills the execution service, interrupting the execution
+     * of all runnables.
+     */
+    void kill();
 }

@@ -32,7 +32,7 @@ import java.util.concurrent.BlockingQueue;
  *
  * @param <T>
  */
-public class QueueWorker<T> implements Schedulable, Runnable {
+public class QueueWorker<T> implements Schedulable {
 
     private final BlockingQueue<T> queue;
     private final ReportingInterface<T> reportingInterface;
@@ -59,9 +59,5 @@ public class QueueWorker<T> implements Schedulable, Runnable {
 
     @Override public Interval getInterval() {
         return this.interval;
-    }
-
-    @Override public Runnable getRunnable() {
-        return this;
     }
 }
