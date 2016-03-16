@@ -4,6 +4,7 @@ de.uniulm.omi.cloudiator.visor.exceptions
 de.uniulm.omi.cloudiator.visor.execution
 de.uniulm.omi.cloudiator.visor.monitoring
 de.uniulm.omi.cloudiator.visor.reporting
+de.uniulm.omi.cloudiator.visor.reporting.chukwa
 de.uniulm.omi.cloudiator.visor.reporting.cli
 de.uniulm.omi.cloudiator.visor.reporting.kairos
 de.uniulm.omi.cloudiator.visor.rest
