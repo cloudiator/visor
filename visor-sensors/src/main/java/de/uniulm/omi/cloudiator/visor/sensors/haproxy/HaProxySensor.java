@@ -95,8 +95,30 @@ public class HaProxySensor extends AbstractSensor {
                 return MeasurementBuilder.newBuilder().timestamp(currentMeasurement.getTimestamp())
                     .value((double) valueDiff / timeDifferenceInSec).build();
             }
-        }
 
+        },
+        TWO_XX_PER_SECOND {
+            @Override public Measurement measure(Map<RawMetric, Measurement> old,
+                Map<RawMetric, Measurement> current) throws MeasurementNotAvailableException {
+
+                Measurement currentMeasurement = current.get(RawMetric.TWO_XX);
+                Measurement oldMeasurement = old.get(RawMetric.TWO_XX);
+
+                if (oldMeasurement == null) {
+                    throw new MeasurementNotAvailableException(
+                        "Measurement not available as old values is missing.");
+                }
+
+                long timeDifferenceInSec = TimeUnit.SECONDS
+                    .convert(currentMeasurement.getTimestamp() - oldMeasurement.getTimestamp(),
+                        TimeUnit.MILLISECONDS);
+                long valueDiff =
+                    (Long) currentMeasurement.getValue() - (Long) oldMeasurement.getValue();
+
+                return MeasurementBuilder.newBuilder().timestamp(currentMeasurement.getTimestamp())
+                    .value((double) valueDiff / timeDifferenceInSec).build();
+            }
+        }
     }
 
 
@@ -105,6 +127,15 @@ public class HaProxySensor extends AbstractSensor {
         SESSION_TOTAL {
             @Override public String string() {
                 return "stot";
+            }
+
+            @Override public Object toType(String value) {
+                return Long.valueOf(value);
+            }
+        },
+        TWO_XX {
+            @Override public String string() {
+                return "hrsp_2xx";
             }
 
             @Override public Object toType(String value) {
