@@ -99,6 +99,10 @@ public class SensorMonitorImpl implements SensorMonitor {
         return sensor.getClass();
     }
 
+    @Override public SensorConfiguration sensorConfiguration() {
+        return sensor.sensorConfiguration();
+    }
+
     private class SensorMonitorWorker implements Runnable {
 
         private final SensorMonitorImpl monitor;

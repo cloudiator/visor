@@ -30,6 +30,7 @@ public class SensorMonitorDtoBuilder {
     private Map<String, String> monitorContext;
     private String sensorClassName;
     private Interval interval;
+    private Map<String, String> sensorConfiguration;
 
     public SensorMonitorDtoBuilder uuid(String uuid) {
         this.uuid = uuid;
@@ -51,6 +52,11 @@ public class SensorMonitorDtoBuilder {
         return this;
     }
 
+    public SensorMonitorDtoBuilder sensorConfiguration(Map<String, String> sensorConfiguration) {
+        this.sensorConfiguration = sensorConfiguration;
+        return this;
+    }
+
     public SensorMonitorDtoBuilder sensorClassName(String sensorClassName) {
         this.sensorClassName = sensorClassName;
         return this;
@@ -62,7 +68,7 @@ public class SensorMonitorDtoBuilder {
     }
 
     public SensorMonitorDto build() {
-        return new SensorMonitorDto(uuid, metricName, componentId, monitorContext, sensorClassName,
-            interval);
+        return new SensorMonitorDto(uuid, metricName, componentId, sensorConfiguration,
+            monitorContext, sensorClassName, interval);
     }
 }

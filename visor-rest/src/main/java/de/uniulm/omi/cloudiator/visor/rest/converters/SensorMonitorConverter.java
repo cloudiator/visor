@@ -33,6 +33,7 @@ public class SensorMonitorConverter implements Function<SensorMonitor, SensorMon
     @Nullable @Override public SensorMonitorDto apply(SensorMonitor monitor) {
         return new SensorMonitorDtoBuilder().uuid(monitor.uuid()).componentId(monitor.componentId())
             .interval(monitor.getInterval()).metricName(monitor.metricName())
+            .sensorConfiguration(monitor.sensorConfiguration().getConfiguration())
             .monitorContext(monitor.monitorContext().getContext())
             .sensorClassName(monitor.sensorClass().getName()).build();
     }

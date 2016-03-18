@@ -38,10 +38,12 @@ public class SensorMonitorDto extends MonitorDto {
     private Map<String, String> sensorConfiguration;
 
     public SensorMonitorDto(String uuid, String metricName, String componentId,
-        Map<String, String> monitorContext, String sensorClassName, Interval interval) {
+        Map<String, String> sensorConfiguration, Map<String, String> monitorContext,
+        String sensorClassName, Interval interval) {
         super(uuid, metricName, componentId, monitorContext);
         this.sensorClassName = sensorClassName;
         this.interval = interval;
+        this.sensorConfiguration = sensorConfiguration;
     }
 
     protected SensorMonitorDto() {

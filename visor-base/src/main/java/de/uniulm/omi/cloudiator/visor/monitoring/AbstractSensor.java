@@ -29,17 +29,26 @@ import static com.google.common.base.Preconditions.checkState;
 public abstract class AbstractSensor implements Sensor {
 
     private boolean isInitialized = false;
+    private SensorConfiguration sensorConfiguration;
 
     @Override
     public final void init(MonitorContext monitorContext, SensorConfiguration sensorConfiguration)
         throws SensorInitializationException {
         this.initialize(monitorContext, sensorConfiguration);
+        this.sensorConfiguration = sensorConfiguration;
         this.isInitialized = true;
     }
 
     @Override public final Measurement getMeasurement() throws MeasurementNotAvailableException {
         checkState(isInitialized, "Measurement method was called before initialization.");
         return measure();
+    }
+
+    @Override public SensorConfiguration sensorConfiguration() {
+        if (!isInitialized) {
+            throw new IllegalStateException("sensor not initialized yet.");
+        }
+        return sensorConfiguration;
     }
 
     /**

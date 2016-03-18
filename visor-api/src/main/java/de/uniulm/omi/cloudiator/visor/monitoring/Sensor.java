@@ -38,6 +38,13 @@ public interface Sensor {
         throws SensorInitializationException;
 
     /**
+     * Returns the configuration used for this sensor.
+     *
+     * @return immutable sensor configuration.
+     */
+    SensorConfiguration sensorConfiguration();
+
+    /**
      * Called to retrieve a measurement from this probe.
      *
      * @return the current measurement for this probe.
