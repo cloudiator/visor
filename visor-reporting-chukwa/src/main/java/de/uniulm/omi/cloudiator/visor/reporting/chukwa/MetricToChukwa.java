@@ -44,7 +44,7 @@ public class MetricToChukwa implements Function<Metric, String> {
             "\t" +
             metric.getName() +
             "\t" +
-            "capturedTimestamp" +
+            metric.getName() + "capturedTimestamp" +
             "\n" +
             vmUuid +
             "\t" +
