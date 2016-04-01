@@ -86,14 +86,16 @@ public class HaProxySensor extends AbstractSensor {
                         "Measurement not available as old values is missing.");
                 }
 
-                long timeDifferenceInSec = TimeUnit.SECONDS
-                    .convert(currentMeasurement.getTimestamp() - oldMeasurement.getTimestamp(),
-                        TimeUnit.MILLISECONDS);
-                long valueDiff =
-                    (Long) currentMeasurement.getValue() - (Long) oldMeasurement.getValue();
+                // TimeUnit.MILLISECONDS
+                long timeDifferenceInSec = currentMeasurement.getTimestamp() - oldMeasurement.getTimestamp();
 
+                long valueDiff = (Long) currentMeasurement.getValue() - (Long) oldMeasurement.getValue();
+
+                double result = (double) 1000.0 * valueDiff / timeDifferenceInSec;
+
+                // TimeUnit.SECONDS
                 return MeasurementBuilder.newBuilder().timestamp(currentMeasurement.getTimestamp())
-                    .value((double) valueDiff / timeDifferenceInSec).build();
+                        .value(result).build();
             }
 
         },
@@ -109,14 +111,16 @@ public class HaProxySensor extends AbstractSensor {
                         "Measurement not available as old values is missing.");
                 }
 
-                long timeDifferenceInSec = TimeUnit.SECONDS
-                    .convert(currentMeasurement.getTimestamp() - oldMeasurement.getTimestamp(),
-                        TimeUnit.MILLISECONDS);
-                long valueDiff =
-                    (Long) currentMeasurement.getValue() - (Long) oldMeasurement.getValue();
+                // TimeUnit.MILLISECONDS
+                long timeDifferenceInSec = currentMeasurement.getTimestamp() - oldMeasurement.getTimestamp();
 
+                long valueDiff = (Long) currentMeasurement.getValue() - (Long) oldMeasurement.getValue();
+
+                double result = (double) 1000.0 * valueDiff / timeDifferenceInSec;
+
+                // TimeUnit.SECONDS
                 return MeasurementBuilder.newBuilder().timestamp(currentMeasurement.getTimestamp())
-                    .value((double) valueDiff / timeDifferenceInSec).build();
+                        .value(result).build();
             }
         }
     }
