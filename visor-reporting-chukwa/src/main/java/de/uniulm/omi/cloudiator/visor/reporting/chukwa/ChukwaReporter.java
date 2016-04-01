@@ -276,7 +276,7 @@ public class ChukwaReporter implements ReportingInterface<Metric> {
                 dataOutputStream.writeUTF(dataType);
                 dataOutputStream.writeUTF(debuggingInfo);
                 dataOutputStream.writeInt(numberOfRecords);
-                dataOutputStream.writeInt(data.length - 1);
+                dataOutputStream.writeInt(data.length);
                 dataOutputStream.write(data);
 
                 dataOutputStream.flush();
