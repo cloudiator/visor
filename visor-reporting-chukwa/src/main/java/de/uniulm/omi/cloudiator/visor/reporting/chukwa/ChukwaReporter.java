@@ -159,7 +159,7 @@ public class ChukwaReporter implements ReportingInterface<Metric> {
     }
 
 
-    private static class ChukwaRequestBuilder {
+    public static class ChukwaRequestBuilder {
         private int numberOfEvents;
         private int protocolVersion;
         private long sequenceId;
@@ -235,7 +235,7 @@ public class ChukwaReporter implements ReportingInterface<Metric> {
     }
 
 
-    private static class ChukwaRequest {
+    public static class ChukwaRequest {
 
         private final int numberOfEvents;
         private final int protocolVersion;
@@ -276,7 +276,7 @@ public class ChukwaReporter implements ReportingInterface<Metric> {
                 dataOutputStream.writeUTF(dataType);
                 dataOutputStream.writeUTF(debuggingInfo);
                 dataOutputStream.writeInt(numberOfRecords);
-                dataOutputStream.writeInt(data.length - 1);
+                dataOutputStream.writeInt(data.length -1);
                 dataOutputStream.write(data);
 
                 dataOutputStream.flush();

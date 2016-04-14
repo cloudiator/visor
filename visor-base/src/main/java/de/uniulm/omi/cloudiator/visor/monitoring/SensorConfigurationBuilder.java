@@ -28,7 +28,7 @@ public class SensorConfigurationBuilder {
 
     private Map<String, String> configuration;
 
-    private SensorConfigurationBuilder() {
+    public SensorConfigurationBuilder() {
         this.configuration = new HashMap<>();
     }
 
