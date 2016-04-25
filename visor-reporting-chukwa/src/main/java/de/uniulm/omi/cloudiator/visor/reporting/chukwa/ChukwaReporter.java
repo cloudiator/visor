@@ -18,6 +18,7 @@
 
 package de.uniulm.omi.cloudiator.visor.reporting.chukwa;
 
+import com.google.common.base.MoreObjects;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import de.uniulm.omi.cloudiator.visor.exceptions.ConfigurationException;
@@ -33,11 +34,13 @@ import org.apache.http.nio.entity.NByteArrayEntity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.Closeable;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -276,7 +279,7 @@ public class ChukwaReporter implements ReportingInterface<Metric> {
                 dataOutputStream.writeUTF(dataType);
                 dataOutputStream.writeUTF(debuggingInfo);
                 dataOutputStream.writeInt(numberOfRecords);
-                dataOutputStream.writeInt(data.length -1);
+                dataOutputStream.writeInt(data.length - 1);
                 dataOutputStream.write(data);
 
                 dataOutputStream.flush();
@@ -289,6 +292,8 @@ public class ChukwaReporter implements ReportingInterface<Metric> {
         }
     }
 
-
-
+    @Override public String toString() {
+        return MoreObjects.toStringHelper(this).add("chukwaUri", chukwaUri).add("vmID", vmID)
+            .toString();
+    }
 }

@@ -18,6 +18,7 @@
 
 package de.uniulm.omi.cloudiator.visor.reporting.kairos;
 
+import com.google.common.base.MoreObjects;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import de.uniulm.omi.cloudiator.visor.exceptions.ConfigurationException;
@@ -102,7 +103,7 @@ public class KairosDb implements ReportingInterface<Metric> {
      * @throws ReportingException of the metric could not be converted. or sent to kairos.
      */
     @Override public void report(Metric metric) throws ReportingException {
-        LOGGER.debug(String.format("Reporting new metric: %s", metric));
+
         KairosMetricConverter kairosMetricConverter = new KairosMetricConverter();
         try {
             kairosMetricConverter.add(metric);
@@ -122,7 +123,6 @@ public class KairosDb implements ReportingInterface<Metric> {
     @Override public void report(Collection<Metric> metrics) throws ReportingException {
         KairosMetricConverter kairosMetricConverter = new KairosMetricConverter();
         for (Metric metric : metrics) {
-            LOGGER.debug(String.format("Reporting new metric: %s", metric));
             try {
                 kairosMetricConverter.add(metric);
             } catch (KairosMetricConversionException e) {
@@ -132,4 +132,7 @@ public class KairosDb implements ReportingInterface<Metric> {
         this.sendMetric(kairosMetricConverter.convert());
     }
 
+    @Override public String toString() {
+        return MoreObjects.toStringHelper(this).add("server", server).add("port", port).toString();
+    }
 }

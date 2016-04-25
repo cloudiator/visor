@@ -117,9 +117,13 @@ public class SensorMonitorImpl implements SensorMonitor {
         @Override public void run() {
             try {
                 LOGGER.debug("Measuring Monitor " + this.monitor);
-                this.metricReportingInterface.report(MetricFactory
+                final Metric metric = MetricFactory
                     .from(monitor.metricName(), monitor.sensor.getMeasurement(),
-                        monitor.monitorContext().getContext()));
+                        monitor.monitorContext().getContext());
+                LOGGER.debug(String
+                    .format("Reporting metric %s using reporting interface %s.", metric,
+                        metricReportingInterface));
+                this.metricReportingInterface.report(metric);
             } catch (MeasurementNotAvailableException e) {
                 LOGGER.error("Could not retrieve metric", e);
             } catch (ReportingException e) {
