@@ -82,8 +82,10 @@ public class ChukwaReporter implements ReportingInterface<Metric> {
 
             final HttpResponse response = chukwaClient.post(chukwaRequest);
 
-            LOGGER.debug("Chukwa response " + response.getStatusLine().toString());
-
+            LOGGER.debug(String
+                .format("Sending request %s to chukwa, got response %s.", chukwaRequest,
+                    response.getStatusLine().toString()));
+            
         } catch (IOException e) {
             throw new ReportingException(e);
         }
@@ -107,42 +109,9 @@ public class ChukwaReporter implements ReportingInterface<Metric> {
 
         public HttpResponse post(ChukwaRequest chukwaRequest) throws IOException {
 
-            /**
-             URL url = new URL(uri.toString());
-             final HttpURLConnection urlConnection = (HttpURLConnection)url.openConnection();
-             urlConnection.setRequestMethod("POST");
-             urlConnection.setRequestProperty("Content-Length",
-             String.valueOf(chukwaRequest.toByteArray().length));
-             urlConnection.setRequestProperty("Content-Type","application/octet-stream");
-             urlConnection.setRequestProperty("Host","134.60.64.143:8080");
-             urlConnection.setDoOutput(true);
-             urlConnection.setUseCaches(false);
-
-             DataOutputStream wr = new DataOutputStream(urlConnection.getOutputStream());
-             wr.write(chukwaRequest.toByteArray());
-             wr.close();
-
-             //Get Response
-             InputStream is = urlConnection.getInputStream();
-             BufferedReader rd = new BufferedReader(new InputStreamReader(is));
-             StringBuilder response = new StringBuilder();
-             String line;
-             while((line = rd.readLine()) != null) {
-             response.append(line);
-             response.append('\r');
-             }
-             rd.close();
-             System.out.println(response.toString());
-
-             urlConnection.disconnect();
-
-             **/
             httpClient.start();
 
             byte[] payload = chukwaRequest.toByteArray();
-
-            //final HttpAsyncRequestProducer post = HttpAsyncMethods
-            //    .createPost(uri, payload, ContentType.APPLICATION_OCTET_STREAM);
 
             final HttpPost httpPost = new HttpPost(uri);
             final NByteArrayEntity nByteArrayEntity =
@@ -264,6 +233,14 @@ public class ChukwaReporter implements ReportingInterface<Metric> {
             this.debuggingInfo = debuggingInfo;
             this.numberOfRecords = numberOfRecords;
             this.data = data.clone();
+        }
+
+        @Override public String toString() {
+            return MoreObjects.toStringHelper(this).add("numberOfEvents", numberOfEvents)
+                .add("protocolVersion", protocolVersion).add("sequenceId", sequenceId)
+                .add("source", source).add("tags", tags).add("streamName", streamName)
+                .add("dataType", dataType).add("debuggingInfo", debuggingInfo)
+                .add("numberOfRecords", numberOfRecords).add("dataLength", data.length).toString();
         }
 
         public byte[] toByteArray() {
