@@ -18,7 +18,9 @@
 
 package de.uniulm.omi.cloudiator.visor.sensors.haproxy;
 
+import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Table;
 import de.uniulm.omi.cloudiator.visor.exceptions.MeasurementNotAvailableException;
 import de.uniulm.omi.cloudiator.visor.exceptions.SensorInitializationException;
 import de.uniulm.omi.cloudiator.visor.monitoring.*;
@@ -33,8 +35,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -87,15 +87,17 @@ public class HaProxySensor extends AbstractSensor {
                 }
 
                 // TimeUnit.MILLISECONDS
-                long timeDifferenceInSec = currentMeasurement.getTimestamp() - oldMeasurement.getTimestamp();
+                long timeDifferenceInSec =
+                    currentMeasurement.getTimestamp() - oldMeasurement.getTimestamp();
 
-                long valueDiff = (Long) currentMeasurement.getValue() - (Long) oldMeasurement.getValue();
+                long valueDiff =
+                    (Long) currentMeasurement.getValue() - (Long) oldMeasurement.getValue();
 
                 double result = (double) 1000.0 * valueDiff / timeDifferenceInSec;
 
                 // TimeUnit.SECONDS
                 return MeasurementBuilder.newBuilder().timestamp(currentMeasurement.getTimestamp())
-                        .value(result).build();
+                    .value(result).build();
             }
 
         },
@@ -112,15 +114,17 @@ public class HaProxySensor extends AbstractSensor {
                 }
 
                 // TimeUnit.MILLISECONDS
-                long timeDifferenceInSec = currentMeasurement.getTimestamp() - oldMeasurement.getTimestamp();
+                long timeDifferenceInSec =
+                    currentMeasurement.getTimestamp() - oldMeasurement.getTimestamp();
 
-                long valueDiff = (Long) currentMeasurement.getValue() - (Long) oldMeasurement.getValue();
+                long valueDiff =
+                    (Long) currentMeasurement.getValue() - (Long) oldMeasurement.getValue();
 
                 double result = (double) 1000.0 * valueDiff / timeDifferenceInSec;
 
                 // TimeUnit.SECONDS
                 return MeasurementBuilder.newBuilder().timestamp(currentMeasurement.getTimestamp())
-                        .value(result).build();
+                    .value(result).build();
             }
         }
     }
@@ -179,8 +183,11 @@ public class HaProxySensor extends AbstractSensor {
     private Optional<String> password;
     private Measureable metric;
 
-    private static Map<URL, Map<RawMetric, Measurement>> old = new ConcurrentHashMap<>();
-    private static Map<URL, Map<RawMetric, Measurement>> current = new ConcurrentHashMap<>();
+    //private static Map<URL, Map<RawMetric, Measurement>> old = new ConcurrentHashMap<>();
+    private static Table<URL, String, Map<RawMetric, Measurement>> old = HashBasedTable.create();
+    //private static Map<URL, Map<RawMetric, Measurement>> current = new ConcurrentHashMap<>();
+    private static Table<URL, String, Map<RawMetric, Measurement>> current =
+        HashBasedTable.create();
 
     @Override protected void initialize(MonitorContext monitorContext,
         SensorConfiguration sensorConfiguration) throws SensorInitializationException {
@@ -232,15 +239,21 @@ public class HaProxySensor extends AbstractSensor {
 
             CSVParser csvParser = CSVParserFactory.of(urlConnection);
 
-            if (current.containsKey(haProxyStatsUrl)) {
-                old.put(haProxyStatsUrl, current.get(haProxyStatsUrl));
+            //if (current.containsKey(haProxyStatsUrl)) {
+            if (current.contains(haProxyStatsUrl, haProxyGroup)) {
+                old.put(haProxyStatsUrl, haProxyGroup, current.get(haProxyStatsUrl, haProxyGroup));
+                //old.put(haProxyStatsUrl, current.get(haProxyStatsUrl));
             } else {
-                old.put(haProxyStatsUrl, Collections.emptyMap());
+                old.put(haProxyStatsUrl, haProxyGroup, Collections.emptyMap());
+                //old.put(haProxyStatsUrl, Collections.emptyMap());
             }
-            current
-                .put(haProxyStatsUrl, new RawMetricForUrlSupplier(csvParser, haProxyGroup).get());
+            //current
+            //    .put(haProxyStatsUrl, new RawMetricForUrlSupplier(csvParser, haProxyGroup).get());
+            current.put(haProxyStatsUrl, haProxyGroup,
+                new RawMetricForUrlSupplier(csvParser, haProxyGroup).get());
 
-            return metric.measure(old.get(haProxyStatsUrl), current.get(haProxyStatsUrl));
+            return metric.measure(old.get(haProxyStatsUrl, haProxyGroup),
+                current.get(haProxyStatsUrl, haProxyGroup));
 
         } catch (IOException e) {
             throw new MeasurementNotAvailableException(e);
