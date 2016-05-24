@@ -29,6 +29,7 @@ import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
 import java.io.BufferedReader;
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
@@ -240,7 +241,9 @@ public class HaProxySensor extends AbstractSensor {
                 urlConnection = URLConnectionFactory.of(haProxyStatsUrl);
             }
 
-            CSVParser csvParser = CSVParserFactory.of(urlConnection);
+            CSV csv = new CSVSupplier(urlConnection).get().orElseThrow(
+                () -> new MeasurementNotAvailableException(
+                    "Could not retrieve csv. Incorrect url?"));
 
             //if (current.containsKey(haProxyStatsUrl)) {
             if (current.contains(haProxyStatsUrl, haProxyGroup)) {
@@ -253,7 +256,7 @@ public class HaProxySensor extends AbstractSensor {
             //current
             //    .put(haProxyStatsUrl, new RawMetricForUrlSupplier(csvParser, haProxyGroup).get());
             current.put(haProxyStatsUrl, haProxyGroup,
-                new RawMetricForUrlSupplier(csvParser, haProxyGroup).get());
+                new RawMetricForUrlSupplier(csv, haProxyGroup).get());
 
             return metric.measure(old.get(haProxyStatsUrl, haProxyGroup),
                 current.get(haProxyStatsUrl, haProxyGroup));
@@ -283,44 +286,83 @@ public class HaProxySensor extends AbstractSensor {
             urlConnection.setRequestProperty("Authorization", authentication);
             return urlConnection;
         }
-
     }
 
 
-    private static class CSVParserFactory {
+    private static class CSVSupplier implements Supplier<Optional<CSV>> {
 
+        private final URLConnection urlConnection;
         private final static CSVFormat csvFormat = CSVFormat.DEFAULT.withHeader();
 
-        private static CSVParser of(URLConnection urlConnection) throws IOException {
-            return csvFormat
-                .parse(new BufferedReader(new InputStreamReader(urlConnection.getInputStream())));
+        private CSVSupplier(URLConnection urlConnection) {
+            checkNotNull(urlConnection);
+            this.urlConnection = urlConnection;
         }
 
+        @Override public Optional<CSV> get() {
+            try {
+                return Optional.of(new CSV(System.currentTimeMillis(), csvFormat.parse(
+                    new BufferedReader(new InputStreamReader(urlConnection.getInputStream())))));
+            } catch (IOException e) {
+                return Optional.empty();
+            }
+        }
+    }
+
+
+    private static class CSV implements Iterable<CSVRecord>, Closeable {
+        private final long timestamp;
+        private final CSVParser csvParser;
+
+        private CSV(long timestamp, CSVParser csvParser) {
+            checkNotNull(timestamp);
+            checkNotNull(csvParser);
+            this.timestamp = timestamp;
+            this.csvParser = csvParser;
+        }
+
+        public long timestamp() {
+            return timestamp;
+        }
+
+
+        @Override public void close() throws IOException {
+            csvParser.close();
+        }
+
+        @Override public Iterator<CSVRecord> iterator() {
+            return csvParser.iterator();
+        }
     }
 
 
     private static class RawMetricForUrlSupplier implements Supplier<Map<RawMetric, Measurement>> {
 
-        private final CSVParser csvParser;
+        private final CSV csv;
         private final String haProxyGroup;
 
-        private RawMetricForUrlSupplier(CSVParser csvParser, String haProxyGroup) {
-            this.csvParser = csvParser;
+        private RawMetricForUrlSupplier(CSV csv, String haProxyGroup) {
+            this.csv = csv;
             this.haProxyGroup = haProxyGroup;
         }
 
         @Override public Map<RawMetric, Measurement> get() {
             Map<RawMetric, Measurement> measurements = new HashMap<>(RawMetric.values().length);
-            for (CSVRecord csvRecord : csvParser) {
+            for (CSVRecord csvRecord : csv) {
                 if (csvRecord.get("# pxname").equals(haProxyGroup)) {
                     for (RawMetric rawMetric : RawMetric.values()) {
                         if (csvRecord.isMapped(rawMetric.string())) {
-                            measurements.put(rawMetric, MeasurementBuilder.newBuilder().now()
-                                .value(rawMetric.toType(csvRecord.get(rawMetric.string())))
-                                .build());
+                            measurements.put(rawMetric,
+                                MeasurementBuilder.newBuilder().timestamp(csv.timestamp())
+                                    .value(rawMetric.toType(csvRecord.get(rawMetric.string())))
+                                    .build());
                         }
                     }
                 }
+            }
+            try {
+                csv.close();
+            } catch (IOException ignored) {
             }
             return ImmutableMap.copyOf(measurements);
         }
