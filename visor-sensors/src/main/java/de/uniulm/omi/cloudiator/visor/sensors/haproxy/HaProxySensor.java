@@ -85,6 +85,9 @@ public class HaProxySensor extends AbstractSensor {
                     throw new MeasurementNotAvailableException(
                         "Measurement not available as old values is missing.");
                 }
+                if (currentMeasurement == null) {
+                    throw new MeasurementNotAvailableException("No current value available.");
+                }
 
                 // TimeUnit.MILLISECONDS
                 long timeDifferenceInSec =
@@ -111,6 +114,9 @@ public class HaProxySensor extends AbstractSensor {
                 if (oldMeasurement == null) {
                     throw new MeasurementNotAvailableException(
                         "Measurement not available as old values is missing.");
+                }
+                if (currentMeasurement == null) {
+                    throw new MeasurementNotAvailableException("No current value available.");
                 }
 
                 // TimeUnit.MILLISECONDS
@@ -183,11 +189,8 @@ public class HaProxySensor extends AbstractSensor {
     private Optional<String> password;
     private Measureable metric;
 
-    //private static Map<URL, Map<RawMetric, Measurement>> old = new ConcurrentHashMap<>();
-    private static Table<URL, String, Map<RawMetric, Measurement>> old = HashBasedTable.create();
-    //private static Map<URL, Map<RawMetric, Measurement>> current = new ConcurrentHashMap<>();
-    private static Table<URL, String, Map<RawMetric, Measurement>> current =
-        HashBasedTable.create();
+    private Table<URL, String, Map<RawMetric, Measurement>> old = HashBasedTable.create();
+    private Table<URL, String, Map<RawMetric, Measurement>> current = HashBasedTable.create();
 
     @Override protected void initialize(MonitorContext monitorContext,
         SensorConfiguration sensorConfiguration) throws SensorInitializationException {
