@@ -76,11 +76,50 @@ public class CassandraSensor extends AbstractSensor {
             }
 
             @Override
-            public String valueType() {
+            public String attribute() {
                 return "Value";
             }
 
+        },
+
+        WRITE_THROUGHPUT_LATENCY {
+
+            @Override
+            public String string() {
+                return "org.apache.cassandra.metrics:type=ClientRequest,scope=Write,name=Latency";
+            }
+
+            @Override
+            public Object toType(String value) {
+                return Long.valueOf(value);
+            }
+
+            @Override
+            public String attribute() {
+                return "Count";
+            }
+
+        },
+
+        READ_THROUGHPUT_LATENCY {
+
+            @Override
+            public String string() {
+                return "org.apache.cassandra.metrics:type=ClientRequest,scope=Read,name=Latency";
+            }
+
+            @Override
+            public Object toType(String value) {
+                return Long.valueOf(value);
+            }
+
+            @Override
+            public String attribute() {
+                return "Count";
+            }
+
         };
+
 
 
         @Override
@@ -94,7 +133,7 @@ public class CassandraSensor extends AbstractSensor {
 
         Object toType(String value);
 
-        String valueType();
+        String attribute();
 
 
     }
@@ -164,8 +203,9 @@ public class CassandraSensor extends AbstractSensor {
                 for (RawMetric rawMetric : RawMetric.values()) {
 
                     ObjectName mbeanObjectName = new ObjectName(rawMetric.string());
-                    String valueType = rawMetric.valueType();
-                    String mbeanValue =  this.mBeanServerConnection.getAttribute(mbeanObjectName, valueType).toString();
+                    String attribute = rawMetric.attribute();
+                    String mbeanValue =  this.mBeanServerConnection.getAttribute(mbeanObjectName, attribute).toString();
+
 
                     measurements.put(rawMetric, MeasurementBuilder.newBuilder().now().value(rawMetric.toType(mbeanValue)).build());
                 }
