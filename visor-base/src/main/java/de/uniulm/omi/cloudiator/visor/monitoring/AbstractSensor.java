@@ -28,8 +28,8 @@ import static com.google.common.base.Preconditions.checkState;
  */
 public abstract class AbstractSensor implements Sensor {
 
-    private boolean isInitialized = false;
-    private SensorConfiguration sensorConfiguration;
+    private volatile boolean isInitialized = false;
+    private volatile SensorConfiguration sensorConfiguration;
 
     @Override
     public final void init(MonitorContext monitorContext, SensorConfiguration sensorConfiguration)
