@@ -39,9 +39,9 @@ Possible metric types:
 
 ### Sensor Configuration
 ```json
-"sensorConfiguration":{
+{
         "cassandra.ip":"1.2.3.4",
         "cassandra.port":"7199",
       	"cassandra.metric": "TOTAL_DISK_SPACE_USED"
-    }
+}
 ```
