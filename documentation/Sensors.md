@@ -32,8 +32,10 @@ The Cassandra sensor measures [Cassandra specific metrics](https://wiki.apache.o
 
 Possible metric types: 
 - TOTAL_DISK_SPACE_USED (in bytes)
-- WRITE_THROUGHPUT_LATENCY (count)
-- READ_THROUGHPUT_LATENCY (count)
+- WRITE_THROUGHPUT_LATENCY 
+- WRITE_REQUESTS
+- READ_THROUGHPUT_LATENCY 
+- READ_REQUESTS
 
 ### Sensor Configuration
 ```json

@@ -14,7 +14,6 @@ import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Supplier;
 
 /**
  * Created by Daniel Seybold on 20.06.2016.
@@ -91,12 +90,31 @@ public class CassandraSensor extends AbstractSensor {
 
             @Override
             public Object toType(String value) {
-                return Long.valueOf(value);
+               return Float.valueOf(value);
             }
 
             @Override
             public String attribute() {
-                return "Count";
+                return "Mean";
+            }
+
+        },
+
+        WRITE_REQUESTS{
+
+            @Override
+            public String string() {
+                return "org.apache.cassandra.metrics:type=ClientRequest,scope=Write,name=Latency";
+            }
+
+            @Override
+            public Object toType(String value) {
+                return Double.valueOf(value);
+            }
+
+            @Override
+            public String attribute() {
+                return "OneMinuteRate";
             }
 
         },
@@ -110,12 +128,31 @@ public class CassandraSensor extends AbstractSensor {
 
             @Override
             public Object toType(String value) {
-                return Long.valueOf(value);
+                return Double.valueOf(value);
             }
 
             @Override
             public String attribute() {
-                return "Count";
+                return "Mean";
+            }
+
+        },
+
+        READ_REQUESTS{
+
+            @Override
+            public String string() {
+                return "org.apache.cassandra.metrics:type=ColumnFamily,name=ReadLatency";
+            }
+
+            @Override
+            public Object toType(String value) {
+                return Double.valueOf(value);
+            }
+
+            @Override
+            public String attribute() {
+                return "OneMinuteRate";
             }
 
         };
