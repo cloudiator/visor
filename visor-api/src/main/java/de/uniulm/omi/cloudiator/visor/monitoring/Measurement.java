@@ -23,7 +23,7 @@ package de.uniulm.omi.cloudiator.visor.monitoring;
  *
  * @author Daniel Baur
  */
-public interface Measurement {
+public interface Measurement<E> {
 
     /**
      * The timestamp the measurement object was taken.
@@ -37,5 +37,5 @@ public interface Measurement {
      *
      * @return a object representing the value. mandatory
      */
-    Object getValue();
+    E getValue();
 }

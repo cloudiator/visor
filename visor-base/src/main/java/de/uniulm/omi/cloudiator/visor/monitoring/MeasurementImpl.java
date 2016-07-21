@@ -26,12 +26,12 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Created by daniel on 18.12.14.
  */
-public class MeasurementImpl implements Measurement {
+public class MeasurementImpl<E> implements Measurement<E> {
 
     private final long timestamp;
-    private final Object value;
+    private final E value;
 
-    public MeasurementImpl(long timestamp, Object value) {
+    public MeasurementImpl(long timestamp, E value) {
         checkNotNull(value);
         this.timestamp = timestamp;
         this.value = value;
@@ -41,7 +41,7 @@ public class MeasurementImpl implements Measurement {
         return timestamp;
     }
 
-    @Override public Object getValue() {
+    @Override public E getValue() {
         return value;
     }
 

@@ -155,7 +155,7 @@ public class SigarNetworkSensor extends AbstractSigarSensor {
     @Override protected Measurement measure() throws MeasurementNotAvailableException {
         try {
             Measurement currentMeasurement =
-                measureMentBuilder().now().value(getCurrentBytes()).build();
+                measurementBuilder().now().value(getCurrentBytes()).build();
             if (lastMeasurement == null) {
                 lastMeasurement = currentMeasurement;
                 throw new MeasurementNotAvailableException("no last measurement data available");
@@ -168,7 +168,7 @@ public class SigarNetworkSensor extends AbstractSigarSensor {
             double dataPerTimeUnit = size.fromBytes(differenceBytes) / differenceTime;
 
             lastMeasurement = currentMeasurement;
-            return measureMentBuilder().now().value(dataPerTimeUnit).build();
+            return measurementBuilder().now().value(dataPerTimeUnit).build();
 
         } catch (SigarException e) {
             throw new MeasurementNotAvailableException(e);

@@ -18,6 +18,7 @@
 
 package de.uniulm.omi.cloudiator.visor.monitoring;
 
+import com.google.common.base.MoreObjects;
 import de.uniulm.omi.cloudiator.visor.exceptions.MeasurementNotAvailableException;
 import de.uniulm.omi.cloudiator.visor.exceptions.SensorInitializationException;
 
@@ -26,7 +27,7 @@ import static com.google.common.base.Preconditions.checkState;
 /**
  * @author Daniel Baur
  */
-public abstract class AbstractSensor implements Sensor {
+public abstract class AbstractSensor<E> implements Sensor {
 
     private volatile boolean isInitialized = false;
     private volatile SensorConfiguration sensorConfiguration;
@@ -44,7 +45,7 @@ public abstract class AbstractSensor implements Sensor {
         return measure();
     }
 
-    @Override public SensorConfiguration sensorConfiguration() {
+    @Override public final SensorConfiguration sensorConfiguration() {
         if (!isInitialized) {
             throw new IllegalStateException("sensor not initialized yet.");
         }
@@ -69,18 +70,27 @@ public abstract class AbstractSensor implements Sensor {
      * @return a measurement taken by this sensor.
      * @throws MeasurementNotAvailableException
      */
-    protected abstract Measurement measure() throws MeasurementNotAvailableException;
+    protected abstract Measurement<E> measure() throws MeasurementNotAvailableException;
 
     /**
-     * Provides a new measurement builder.
+     * Provides a type safe measurement builder.
      *
      * @return a measurement builder
      */
-    protected final MeasurementBuilder measureMentBuilder() {
+    protected final MeasurementBuilder<E> measurementBuilder(Class<E> eClass) {
+        return MeasurementBuilder.newBuilder(eClass);
+    }
+
+    /**
+     * Provides an object base measurement builder.
+     *
+     * @return a measurement builder
+     */
+    protected final MeasurementBuilder<?> measurementBuilder() {
         return MeasurementBuilder.newBuilder();
     }
 
     @Override public final String toString() {
-        return this.getClass().getCanonicalName();
+        return MoreObjects.toStringHelper(this).toString();
     }
 }
