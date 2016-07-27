@@ -20,7 +20,7 @@ package de.uniulm.omi.cloudiator.visor.telnet;
 
 import com.google.common.base.MoreObjects;
 import de.uniulm.omi.cloudiator.visor.execution.ExecutionService;
-import de.uniulm.omi.cloudiator.visor.monitoring.MeasurementImpl;
+import de.uniulm.omi.cloudiator.visor.monitoring.MeasurementBuilder;
 import de.uniulm.omi.cloudiator.visor.monitoring.Metric;
 import de.uniulm.omi.cloudiator.visor.monitoring.MetricFactory;
 import de.uniulm.omi.cloudiator.visor.monitoring.MonitorContext;
@@ -247,8 +247,9 @@ public class TCPServer implements Server {
                 }
                 MonitorContext monitorContext = metricContext.get(metricName);
 
-                return MetricFactory.from(metricName, new MeasurementImpl(timestamp, value),
-                    monitorContext.getContext());
+                return MetricFactory.from(metricName,
+                    MeasurementBuilder.newBuilder(String.class).timestamp(timestamp).value(value)
+                        .build(), monitorContext.getContext());
             }
         }
     }

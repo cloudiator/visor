@@ -212,7 +212,7 @@ public class CassandraSensor extends AbstractSensor {
     }
 
     @Override
-    protected Measurement measure() throws MeasurementNotAvailableException {
+    protected Measurement measureSingle() throws MeasurementNotAvailableException {
 
         return metric.measure(new RawMetricSupplier(this.mBeanServerConnection).get(),new RawMetricSupplier(this.mBeanServerConnection).get());
 

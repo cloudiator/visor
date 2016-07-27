@@ -98,17 +98,15 @@ public class IperfSensor extends AbstractSensor<Double> {
         }
 
         <E> E measure(Function<String, E> parser) throws MeasurementNotAvailableException {
-            DefaultExecuteResultHandler resultHandler = new DefaultExecuteResultHandler();
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            ExecuteStreamHandler streamHandler = new PumpStreamHandler(outputStream);
 
-            ExecuteWatchdog watchdog = new ExecuteWatchdog(ExecuteWatchdog.INFINITE_TIMEOUT);
-            Executor executor = new DefaultExecutor();
-            executor.setExitValue(0);
-            executor.setWatchdog(watchdog);
-            executor.setStreamHandler(streamHandler);
-
-            try {
+            try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+                DefaultExecuteResultHandler resultHandler = new DefaultExecuteResultHandler();
+                ExecuteStreamHandler streamHandler = new PumpStreamHandler(outputStream);
+                ExecuteWatchdog watchdog = new ExecuteWatchdog(ExecuteWatchdog.INFINITE_TIMEOUT);
+                Executor executor = new DefaultExecutor();
+                executor.setExitValue(0);
+                executor.setWatchdog(watchdog);
+                executor.setStreamHandler(streamHandler);
                 executor.execute(command, resultHandler);
                 resultHandler.waitFor();
                 String result = outputStream.toString();
@@ -162,7 +160,7 @@ public class IperfSensor extends AbstractSensor<Double> {
         }
     }
 
-    @Override protected Measurement<Double> measure() throws MeasurementNotAvailableException {
+    @Override protected Measurement<Double> measureSingle() throws MeasurementNotAvailableException {
         return measurementBuilder(Double.class).now()
             .value(new IperfClient(host).measure(new IperfParser())).build();
     }

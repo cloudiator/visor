@@ -304,7 +304,7 @@ public class ApacheStatusSensor extends AbstractSensor {
         }
     }
 
-    @Override protected Measurement measure() throws MeasurementNotAvailableException {
+    @Override protected Measurement measureSingle() throws MeasurementNotAvailableException {
         try {
             Map<RawMetric, Measurement> pastMeasurements = oldMeasurements.get(url);
             if (pastMeasurements == null) {

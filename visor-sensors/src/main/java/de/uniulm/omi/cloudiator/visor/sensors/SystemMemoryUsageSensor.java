@@ -38,7 +38,7 @@ public class SystemMemoryUsageSensor extends AbstractSensor {
 
     private OperatingSystemMXBean osBean;
 
-    @Override protected Measurement measure() throws MeasurementNotAvailableException {
+    @Override protected Measurement measureSingle() throws MeasurementNotAvailableException {
         //memory usage
         double totalPhysicalMemory = osBean.getTotalPhysicalMemorySize();
         double freePhysicalMemory = osBean.getFreePhysicalMemorySize();

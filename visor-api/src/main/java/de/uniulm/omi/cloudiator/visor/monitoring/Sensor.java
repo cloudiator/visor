@@ -21,6 +21,8 @@ package de.uniulm.omi.cloudiator.visor.monitoring;
 import de.uniulm.omi.cloudiator.visor.exceptions.MeasurementNotAvailableException;
 import de.uniulm.omi.cloudiator.visor.exceptions.SensorInitializationException;
 
+import java.util.Set;
+
 public interface Sensor<E> {
 
     /**
@@ -45,10 +47,10 @@ public interface Sensor<E> {
     SensorConfiguration sensorConfiguration();
 
     /**
-     * Called to retrieve a measurement from this probe.
+     * Called to retrieve measurements from this probe.
      *
-     * @return the current measurement for this probe.
+     * @return the current measurements for this probe.
      * @throws MeasurementNotAvailableException
      */
-    Measurement<E> getMeasurement() throws MeasurementNotAvailableException;
+    Set<Measurement<E>> getMeasurements() throws MeasurementNotAvailableException;
 }

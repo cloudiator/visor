@@ -152,7 +152,7 @@ public class SigarNetworkSensor extends AbstractSigarSensor {
         return type.getMeasurement(sigar().getNetInterfaceStat(interfaceName));
     }
 
-    @Override protected Measurement measure() throws MeasurementNotAvailableException {
+    @Override protected Measurement measureSingle() throws MeasurementNotAvailableException {
         try {
             Measurement currentMeasurement =
                 measurementBuilder().now().value(getCurrentBytes()).build();

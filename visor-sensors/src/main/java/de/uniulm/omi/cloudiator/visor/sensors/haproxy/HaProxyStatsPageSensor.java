@@ -24,17 +24,23 @@ import com.google.common.collect.Table;
 import de.uniulm.omi.cloudiator.visor.exceptions.MeasurementNotAvailableException;
 import de.uniulm.omi.cloudiator.visor.exceptions.SensorInitializationException;
 import de.uniulm.omi.cloudiator.visor.monitoring.*;
+import de.uniulm.omi.cloudiator.visor.util.MeasurementDifference;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
+import javax.annotation.Nullable;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.*;
+import java.util.Base64;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -42,10 +48,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Created by daniel on 20.01.16.
  */
-public class HaProxySensor extends AbstractSensor {
+public class HaProxyStatsPageSensor extends AbstractSensor<Object> {
 
 
-    private static class Measurables implements Measureable {
+    private static class Measurables {
 
         public static Measureable of(String string) {
             try {
@@ -62,20 +68,15 @@ public class HaProxySensor extends AbstractSensor {
             throw new IllegalArgumentException(
                 String.format("Could not find metric with name %s", string));
         }
-
-        @Override public Measurement measure(Map<RawMetric, Measurement> old,
-            Map<RawMetric, Measurement> current) {
-            return null;
-        }
     }
 
 
     private enum CompositeMetric implements Measureable {
 
         SESSION_PER_SECOND {
-            @Override public Measurement measure(Map<RawMetric, Measurement> old,
-                Map<RawMetric, Measurement> current) throws MeasurementNotAvailableException {
-
+            @Override public Measurement<Object> measure(Map<RawMetric, Measurement<Object>> old,
+                Map<RawMetric, Measurement<Object>> current)
+                throws MeasurementNotAvailableException {
 
 
                 Measurement currentMeasurement = current.get(RawMetric.SESSION_TOTAL);
@@ -89,24 +90,15 @@ public class HaProxySensor extends AbstractSensor {
                     throw new MeasurementNotAvailableException("No current value available.");
                 }
 
-                // TimeUnit.MILLISECONDS
-                long timeDifferenceInSec =
-                    currentMeasurement.getTimestamp() - oldMeasurement.getTimestamp();
-
-                long valueDiff =
-                    (Long) currentMeasurement.getValue() - (Long) oldMeasurement.getValue();
-
-                double result = (double) 1000.0 * valueDiff / timeDifferenceInSec;
-
-                // TimeUnit.SECONDS
                 return MeasurementBuilder.newBuilder().timestamp(currentMeasurement.getTimestamp())
-                    .value(result).build();
+                    .value(MeasurementDifference.of(oldMeasurement, currentMeasurement)
+                        .timeDifference(1, TimeUnit.SECONDS)).build();
             }
 
-        },
-        TWO_XX_PER_SECOND {
-            @Override public Measurement measure(Map<RawMetric, Measurement> old,
-                Map<RawMetric, Measurement> current) throws MeasurementNotAvailableException {
+        }, TWO_XX_PER_SECOND {
+            @Override public Measurement<Object> measure(Map<RawMetric, Measurement<Object>> old,
+                Map<RawMetric, Measurement<Object>> current)
+                throws MeasurementNotAvailableException {
 
                 Measurement currentMeasurement = current.get(RawMetric.TWO_XX);
                 Measurement oldMeasurement = old.get(RawMetric.TWO_XX);
@@ -119,18 +111,9 @@ public class HaProxySensor extends AbstractSensor {
                     throw new MeasurementNotAvailableException("No current value available.");
                 }
 
-                // TimeUnit.MILLISECONDS
-                long timeDifferenceInSec =
-                    currentMeasurement.getTimestamp() - oldMeasurement.getTimestamp();
-
-                long valueDiff =
-                    (Long) currentMeasurement.getValue() - (Long) oldMeasurement.getValue();
-
-                double result = (double) 1000.0 * valueDiff / timeDifferenceInSec;
-
-                // TimeUnit.SECONDS
                 return MeasurementBuilder.newBuilder().timestamp(currentMeasurement.getTimestamp())
-                    .value(result).build();
+                    .value(MeasurementDifference.of(oldMeasurement, currentMeasurement)
+                        .timeDifference(1, TimeUnit.SECONDS)).build();
             }
         }
     }
@@ -146,8 +129,7 @@ public class HaProxySensor extends AbstractSensor {
             @Override public Object toType(String value) {
                 return Long.valueOf(value);
             }
-        },
-        TWO_XX {
+        }, TWO_XX {
             @Override public String string() {
                 return "hrsp_2xx";
             }
@@ -157,8 +139,8 @@ public class HaProxySensor extends AbstractSensor {
             }
         };
 
-        @Override public Measurement measure(Map<RawMetric, Measurement> old,
-            Map<RawMetric, Measurement> current) {
+        @Override public Measurement<Object> measure(Map<RawMetric, Measurement<Object>> old,
+            Map<RawMetric, Measurement<Object>> current) {
             return current.get(this);
         }
     }
@@ -172,8 +154,8 @@ public class HaProxySensor extends AbstractSensor {
 
 
     private interface Measureable {
-        Measurement measure(Map<RawMetric, Measurement> old, Map<RawMetric, Measurement> current)
-            throws MeasurementNotAvailableException;
+        Measurement<Object> measure(Map<RawMetric, Measurement<Object>> old,
+            Map<RawMetric, Measurement<Object>> current) throws MeasurementNotAvailableException;
     }
 
 
@@ -185,12 +167,13 @@ public class HaProxySensor extends AbstractSensor {
     private final static String HAPROXY_METRIC = "haproxy.metric";
     private URL haProxyStatsUrl;
     private String haProxyGroup;
-    private Optional<String> username;
-    private Optional<String> password;
+    @Nullable private String username;
+    @Nullable private String password;
     private Measureable metric;
 
-    private Table<URL, String, Map<RawMetric, Measurement>> old = HashBasedTable.create();
-    private Table<URL, String, Map<RawMetric, Measurement>> current = HashBasedTable.create();
+    private Table<URL, String, Map<RawMetric, Measurement<Object>>> old = HashBasedTable.create();
+    private Table<URL, String, Map<RawMetric, Measurement<Object>>> current =
+        HashBasedTable.create();
 
     @Override protected void initialize(MonitorContext monitorContext,
         SensorConfiguration sensorConfiguration) throws SensorInitializationException {
@@ -206,10 +189,10 @@ public class HaProxySensor extends AbstractSensor {
                 "Url provided for HaProxy stats page is malformed", e);
         }
 
-        username = sensorConfiguration.getValue(HAPROXY_STATS_AUTH_USERNAME);
-        password = sensorConfiguration.getValue(HAPROXY_STATS_AUTH_PASSWORD);
+        username = sensorConfiguration.getValue(HAPROXY_STATS_AUTH_USERNAME).orElse(null);
+        password = sensorConfiguration.getValue(HAPROXY_STATS_AUTH_PASSWORD).orElse(null);
 
-        if (username.isPresent() ^ password.isPresent()) {
+        if (username == null ^ password == null) {
             throw new SensorInitializationException(
                 "If you provide a username or a password, you need to provide both.");
         }
@@ -228,30 +211,24 @@ public class HaProxySensor extends AbstractSensor {
 
     }
 
-    @Override protected Measurement measure() throws MeasurementNotAvailableException {
+    @Override protected Measurement<Object> measureSingle() throws MeasurementNotAvailableException {
 
         try {
 
             URLConnection urlConnection;
-            if (username.isPresent() && password.isPresent()) {
-                urlConnection =
-                    URLConnectionFactory.of(haProxyStatsUrl, username.get(), password.get());
+            if (username != null && password != null) {
+                urlConnection = URLConnectionFactory.of(haProxyStatsUrl, username, password);
             } else {
                 urlConnection = URLConnectionFactory.of(haProxyStatsUrl);
             }
 
             CSVParser csvParser = CSVParserFactory.of(urlConnection);
 
-            //if (current.containsKey(haProxyStatsUrl)) {
             if (current.contains(haProxyStatsUrl, haProxyGroup)) {
                 old.put(haProxyStatsUrl, haProxyGroup, current.get(haProxyStatsUrl, haProxyGroup));
-                //old.put(haProxyStatsUrl, current.get(haProxyStatsUrl));
             } else {
                 old.put(haProxyStatsUrl, haProxyGroup, Collections.emptyMap());
-                //old.put(haProxyStatsUrl, Collections.emptyMap());
             }
-            //current
-            //    .put(haProxyStatsUrl, new RawMetricForUrlSupplier(csvParser, haProxyGroup).get());
             current.put(haProxyStatsUrl, haProxyGroup,
                 new RawMetricForUrlSupplier(csvParser, haProxyGroup).get());
 
@@ -299,7 +276,8 @@ public class HaProxySensor extends AbstractSensor {
     }
 
 
-    private static class RawMetricForUrlSupplier implements Supplier<Map<RawMetric, Measurement>> {
+    private static class RawMetricForUrlSupplier
+        implements Supplier<Map<RawMetric, Measurement<Object>>> {
 
         private final CSVParser csvParser;
         private final String haProxyGroup;
@@ -309,8 +287,8 @@ public class HaProxySensor extends AbstractSensor {
             this.haProxyGroup = haProxyGroup;
         }
 
-        @Override public Map<RawMetric, Measurement> get() {
-            Map<RawMetric, Measurement> measurements = new HashMap<>(RawMetric.values().length);
+        @Override public Map<RawMetric, Measurement<Object>> get() {
+            Map<RawMetric, Measurement<Object>> measurements = new HashMap<>(RawMetric.values().length);
             for (CSVRecord csvRecord : csvParser) {
                 if (csvRecord.get("# pxname").equals(haProxyGroup)) {
                     for (RawMetric rawMetric : RawMetric.values()) {
