@@ -45,11 +45,15 @@ public class MetricToChukwa implements Function<Metric, String> {
             metric.getName() +
             "\t" +
             metric.getName() + "capturedTimestamp" +
+            "\t" +
+            "tags" +
             "\n" +
             vmUuid +
             "\t" +
             metric.getValue() +
             "\t" +
-            metric.getTimestamp();
+            metric.getTimestamp() +
+            "\t" +
+            metric.getTags().toString();
     }
 }

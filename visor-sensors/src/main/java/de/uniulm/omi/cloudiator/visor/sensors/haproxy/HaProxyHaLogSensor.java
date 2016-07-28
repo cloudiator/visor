@@ -80,7 +80,7 @@ public class HaProxyHaLogSensor extends AbstractSensor {
             @Override public String string() {
                 return "#req";
             }
-        }, ERROR_COUND {
+        }, ERROR_COUNT {
             @Override public String string() {
                 return "err";
             }
