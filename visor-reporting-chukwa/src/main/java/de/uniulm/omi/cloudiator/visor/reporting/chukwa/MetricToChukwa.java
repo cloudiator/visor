@@ -40,7 +40,7 @@ public class MetricToChukwa implements Function<Metric, String> {
     @Override public String apply(Metric metric) {
 
 
-        return simpleDateFormat.format(new Date(metric.getTimestamp())) + "VMID" +
+        return "VMID" +
             "\t" +
             metric.getName() +
             "\t" +
