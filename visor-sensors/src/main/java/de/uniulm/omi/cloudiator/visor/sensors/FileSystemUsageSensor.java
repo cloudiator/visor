@@ -57,7 +57,7 @@ public class FileSystemUsageSensor extends AbstractSensor {
         }
     }
 
-    @Override protected Measurement measure() throws MeasurementNotAvailableException {
+    @Override protected Measurement measureSingle() throws MeasurementNotAvailableException {
 
         checkState(fileStore != null, "file store was not correctly initialized");
 

@@ -18,6 +18,9 @@
 
 package de.uniulm.omi.cloudiator.visor.monitoring;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by daniel on 27.01.16.
  */
@@ -25,8 +28,10 @@ public class MeasurementBuilder<E> {
 
     private long timestamp;
     private E value;
+    private Map<String, String> tags;
 
     private MeasurementBuilder() {
+        this.tags = new HashMap<>();
     }
 
     public static MeasurementBuilder<Object> newBuilder() {
@@ -52,8 +57,18 @@ public class MeasurementBuilder<E> {
         return this;
     }
 
+    public MeasurementBuilder<E> addTag(String key, String value) {
+        this.tags.put(key, value);
+        return this;
+    }
+
+    public MeasurementBuilder<E> addTags(Map<String, String> tags) {
+        this.tags.putAll(tags);
+        return this;
+    }
+
     public Measurement<E> build() {
-        return new MeasurementImpl<>(timestamp, value);
+        return new MeasurementImpl<>(timestamp, value, tags);
     }
 
 

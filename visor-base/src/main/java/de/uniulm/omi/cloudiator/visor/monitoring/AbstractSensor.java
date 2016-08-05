@@ -22,6 +22,9 @@ import com.google.common.base.MoreObjects;
 import de.uniulm.omi.cloudiator.visor.exceptions.MeasurementNotAvailableException;
 import de.uniulm.omi.cloudiator.visor.exceptions.SensorInitializationException;
 
+import java.util.Collections;
+import java.util.Set;
+
 import static com.google.common.base.Preconditions.checkState;
 
 /**
@@ -40,9 +43,18 @@ public abstract class AbstractSensor<E> implements Sensor {
         this.isInitialized = true;
     }
 
-    @Override public final Measurement getMeasurement() throws MeasurementNotAvailableException {
+    @Override public final Set<Measurement<E>> getMeasurements()
+        throws MeasurementNotAvailableException {
         checkState(isInitialized, "Measurement method was called before initialization.");
-        return measure();
+        Set<Measurement<E>> measurements = measureSet();
+        if (measurements.isEmpty()) {
+            Measurement<E> single = measureSingle();
+            if (single != null) {
+                return Collections.singleton(measureSingle());
+            }
+            throw new MeasurementNotAvailableException(this + "does not implement measureSingle or measureSet");
+        }
+        return measureSet();
     }
 
     @Override public final SensorConfiguration sensorConfiguration() {
@@ -70,7 +82,13 @@ public abstract class AbstractSensor<E> implements Sensor {
      * @return a measurement taken by this sensor.
      * @throws MeasurementNotAvailableException
      */
-    protected abstract Measurement<E> measure() throws MeasurementNotAvailableException;
+    protected Measurement<E> measureSingle() throws MeasurementNotAvailableException {
+        return null;
+    }
+
+    protected Set<Measurement<E>> measureSet() throws MeasurementNotAvailableException {
+        return Collections.emptySet();
+    }
 
     /**
      * Provides a type safe measurement builder.

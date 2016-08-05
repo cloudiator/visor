@@ -36,7 +36,7 @@ public class SensorMonitorImpl implements SensorMonitor {
     private final String uuid;
     private final String metricName;
     private final String componentId;
-    private final Sensor sensor;
+    private final Sensor<?> sensor;
     private final MonitorContext monitorContext;
     private final SensorMonitorWorker sensorMonitorWorker;
     private final Interval interval;
@@ -117,13 +117,14 @@ public class SensorMonitorImpl implements SensorMonitor {
         @Override public void run() {
             try {
                 LOGGER.debug("Measuring Monitor " + this.monitor);
-                final Metric metric = MetricFactory
-                    .from(monitor.metricName(), monitor.sensor.getMeasurement(),
+                for (Measurement<?> measurement : monitor.sensor.getMeasurements()) {
+                    final Metric metric = MetricFactory.from(monitor.metricName(), measurement,
                         monitor.monitorContext().getContext());
-                LOGGER.debug(String
-                    .format("Reporting metric %s using reporting interface %s.", metric,
-                        metricReportingInterface));
-                this.metricReportingInterface.report(metric);
+                    LOGGER.debug(String
+                        .format("Reporting metric %s using reporting interface %s.", metric,
+                            metricReportingInterface));
+                    this.metricReportingInterface.report(metric);
+                }
             } catch (MeasurementNotAvailableException e) {
                 LOGGER.error("Could not retrieve metric", e);
             } catch (ReportingException e) {

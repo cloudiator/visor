@@ -25,7 +25,7 @@ import de.uniulm.omi.cloudiator.visor.monitoring.SensorConfiguration;
  * output of this external process is not huge. In case it is,
  * the system will block.
  */
-public class BashSensorWrapper extends AbstractSensor {
+public class BashSensorWrapper extends AbstractSensor<String> {
 
 	/** do we need to make this configurable? */
 	private static final String DEFAULT_SENSOR_SOURCE = "/opt/sensors/";
@@ -66,7 +66,7 @@ public class BashSensorWrapper extends AbstractSensor {
 		scriptFile = provideFile(sensorConfiguration).getAbsoluteFile();
 	}
 	
-	@Override protected Measurement measure() throws MeasurementNotAvailableException {
+	@Override protected Measurement<String> measureSingle() throws MeasurementNotAvailableException {
 		try {
 			Process p = Runtime.getRuntime().exec(scriptFile.getAbsolutePath());
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -81,7 +81,7 @@ public class BashSensorWrapper extends AbstractSensor {
 			int i = p.waitFor();
 			if(i == 0) {
 				byte[] b = out.toByteArray();
-				return new MeasurementImpl(System.currentTimeMillis(), new String(b, 0, b.length, Charset.defaultCharset()));
+				return measurementBuilder(String.class).now().value(new String(b, 0, b.length, Charset.defaultCharset())).build();
 			} 
 			throw new MeasurementNotAvailableException("measurement failed; exit code is " + i);
 		} catch (InterruptedException | IOException ex){

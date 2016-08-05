@@ -18,6 +18,8 @@
 
 package de.uniulm.omi.cloudiator.visor.monitoring;
 
+import java.util.Map;
+
 /**
  * Represents a measurement taken by a sensor.
  *
@@ -38,4 +40,11 @@ public interface Measurement<E> {
      * @return a object representing the value. mandatory
      */
     E getValue();
+
+    /**
+     * Tags
+     *
+     * @return a key=>value map of tags
+     */
+    Map<String, String> tags();
 }

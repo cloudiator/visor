@@ -30,14 +30,14 @@ import static com.google.common.base.Preconditions.checkState;
  */
 public class MeasurementDifference {
 
-    private final Measurement<Double> old;
-    private final Measurement<Double> current;
+    private final Measurement<?> old;
+    private final Measurement<?> current;
 
-    public static MeasurementDifference of(Measurement<Double> old, Measurement<Double> current) {
+    public static MeasurementDifference of(Measurement<?> old, Measurement<?> current) {
         return new MeasurementDifference(old, current);
     }
 
-    private MeasurementDifference(Measurement<Double> old, Measurement<Double> current) {
+    private MeasurementDifference(Measurement<?> old, Measurement<?> current) {
         checkArgument(old.getTimestamp() <= current.getTimestamp(), String.format(
             "Timestamp of old measurement (%s) must be less or equal then the timestamp (%s) of the current measurement.",
             old.getTimestamp(), current.getTimestamp()));
@@ -46,7 +46,8 @@ public class MeasurementDifference {
     }
 
     public Double difference() {
-        return current.getValue() - old.getValue();
+        return Double.valueOf(current.getValue().toString()) - Double
+            .valueOf(old.getValue().toString());
     }
 
     public Double timeDifference(long difference, TimeUnit timeUnit) {
