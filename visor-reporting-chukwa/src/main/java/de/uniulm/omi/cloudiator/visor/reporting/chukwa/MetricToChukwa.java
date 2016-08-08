@@ -30,10 +30,8 @@ import java.util.function.Function;
 public class MetricToChukwa implements Function<Metric, String> {
 
     private final String vmUuid;
-    private static final SimpleDateFormat simpleDateFormat =
-        new SimpleDateFormat("yyyy-mm-dd H:m:s,S");
 
-    public MetricToChukwa(String vmUuid) {
+    MetricToChukwa(String vmUuid) {
         this.vmUuid = vmUuid;
     }
 
