@@ -136,4 +136,12 @@ public class MeasurementDifferenceTest {
         assertThat(difference.compareTo(BigDecimal.ZERO), equalTo(0));
     }
 
+    @Test public void checkNonTerminatingDecimalExpansion() {
+        final BigDecimal old = BigDecimal.ZERO;
+        final BigDecimal current = BigDecimal.ONE;
+        final BigDecimal difference =
+            getValidDifferenceForValues(old, current, 3000).timeDifference(1, TimeUnit.SECONDS);
+        assertThat(difference.compareTo(BigDecimal.valueOf(0.34d)), equalTo(0));
+    }
+
 }

@@ -22,6 +22,7 @@ import de.uniulm.omi.cloudiator.visor.monitoring.Measurement;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.concurrent.TimeUnit;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -47,7 +48,7 @@ public class MeasurementDifference {
         this.current = current;
     }
 
-    BigDecimal difference() {
+    public BigDecimal difference() {
         return new BigDecimal(current.getValue().toString())
             .subtract(new BigDecimal(old.getValue().toString()));
     }
@@ -60,8 +61,16 @@ public class MeasurementDifference {
         final long timeBetweenMeasurements = current.getTimestamp() - old.getTimestamp();
         final long differenceInMillis = timeUnit.toMillis(difference);
         checkState(differenceInMillis != 0);
-        BigDecimal weightedTime = BigDecimal.valueOf(differenceInMillis)
-            .divide(BigDecimal.valueOf(timeBetweenMeasurements), MathContext.UNLIMITED);
+        BigDecimal weightedTime;
+        try {
+            weightedTime = BigDecimal.valueOf(differenceInMillis)
+                .divide(BigDecimal.valueOf(timeBetweenMeasurements), MathContext.UNLIMITED);
+        } catch (ArithmeticException e) {
+            weightedTime =
+                BigDecimal.valueOf(differenceInMillis).setScale(2, RoundingMode.CEILING)
+                    .divide(BigDecimal.valueOf(timeBetweenMeasurements), RoundingMode.CEILING);
+        }
+
         return difference().multiply(weightedTime);
     }
 
