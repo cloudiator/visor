@@ -55,11 +55,11 @@ public class MeasurementDifferenceTest {
         MeasurementDifference.of(old, current);
     }
 
-    @Test public void checkNoDifference() {
+    @Test(expected = IllegalArgumentException.class)
+    public void checkTimestampOfCurrentMeasurementEqualOldMeasurement() {
         final BigDecimal old = BigDecimal.ZERO;
-        final BigDecimal current = BigDecimal.ZERO;
-
-        assertThat(getValidDifferenceForValues(old, current, 1).difference(),
+        final BigDecimal current = BigDecimal.ONE;
+        assertThat(getValidDifferenceForValues(old, current, 0).difference(),
             equalTo(BigDecimal.ZERO));
     }
 
@@ -80,16 +80,19 @@ public class MeasurementDifferenceTest {
     @Test public void checkTimeDifferenceSameTimeUnit() {
         final BigDecimal old = BigDecimal.ZERO;
         final BigDecimal current = BigDecimal.valueOf(5d);
+
         assertThat(getValidDifferenceForValues(old, current, 1000)
-            .timeDifference(1000, TimeUnit.MILLISECONDS), equalTo(BigDecimal.valueOf(5d)));
+                .timeDifference(1000, TimeUnit.MILLISECONDS).compareTo(BigDecimal.valueOf(5d)),
+            equalTo(0));
     }
 
     @Test public void checkTimeDifferenceDifferentTimeUnit() {
         final BigDecimal old = BigDecimal.ZERO;
         final BigDecimal current = BigDecimal.valueOf(5d);
+
         assertThat(
-            getValidDifferenceForValues(old, current, 1000).timeDifference(1, TimeUnit.SECONDS),
-            equalTo(BigDecimal.valueOf(5d)));
+            getValidDifferenceForValues(old, current, 1000).timeDifference(1, TimeUnit.SECONDS)
+                .compareTo(BigDecimal.valueOf(5d)), equalTo(0));
     }
 
     @Test public void checkTimeDifferenceFloatSameTimeUnit() {
@@ -141,7 +144,7 @@ public class MeasurementDifferenceTest {
         final BigDecimal current = BigDecimal.ONE;
         final BigDecimal difference =
             getValidDifferenceForValues(old, current, 3000).timeDifference(1, TimeUnit.SECONDS);
-        assertThat(difference.compareTo(BigDecimal.valueOf(0.34d)), equalTo(0));
+        assertThat(difference.compareTo(BigDecimal.valueOf(0.3333333334d)), equalTo(0));
     }
 
 }

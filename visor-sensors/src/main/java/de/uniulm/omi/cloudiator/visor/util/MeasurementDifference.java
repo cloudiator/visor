@@ -21,8 +21,6 @@ package de.uniulm.omi.cloudiator.visor.util;
 import de.uniulm.omi.cloudiator.visor.monitoring.Measurement;
 
 import java.math.BigDecimal;
-import java.math.MathContext;
-import java.math.RoundingMode;
 import java.util.concurrent.TimeUnit;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -41,37 +39,43 @@ public class MeasurementDifference {
     }
 
     private MeasurementDifference(Measurement<?> old, Measurement<?> current) {
-        checkArgument(old.getTimestamp() <= current.getTimestamp(), String.format(
-            "Timestamp of old measurement (%s) must be less or equal then the timestamp (%s) of the current measurement.",
+        checkArgument(old.getTimestamp() < current.getTimestamp(), String.format(
+            "Timestamp of old measurement (%s) must be less than the timestamp (%s) of the current measurement.",
             old.getTimestamp(), current.getTimestamp()));
         this.old = old;
         this.current = current;
     }
 
-    public BigDecimal difference() {
+    BigDecimal difference() {
         return new BigDecimal(current.getValue().toString())
             .subtract(new BigDecimal(old.getValue().toString()));
     }
 
-    public BigDecimal timeDifference(long difference, TimeUnit timeUnit) {
-        checkArgument(difference >= 0);
-        if (difference == 0) {
+    public BigDecimal timeDifference(long timeScale, TimeUnit timeUnit) {
+
+        checkArgument(timeScale > 0, "Timescale must be larger than 0");
+
+        BigDecimal valueDifference = difference();
+        if (BigDecimal.ZERO.compareTo(valueDifference) == 0) {
             return BigDecimal.ZERO;
         }
-        final long timeBetweenMeasurements = current.getTimestamp() - old.getTimestamp();
-        final long differenceInMillis = timeUnit.toMillis(difference);
-        checkState(differenceInMillis != 0);
-        BigDecimal weightedTime;
-        try {
-            weightedTime = BigDecimal.valueOf(differenceInMillis)
-                .divide(BigDecimal.valueOf(timeBetweenMeasurements), MathContext.UNLIMITED);
-        } catch (ArithmeticException e) {
-            weightedTime =
-                BigDecimal.valueOf(differenceInMillis).setScale(2, RoundingMode.CEILING)
-                    .divide(BigDecimal.valueOf(timeBetweenMeasurements), RoundingMode.CEILING);
-        }
 
-        return difference().multiply(weightedTime);
+        BigDecimal timeBetweenMeasurementsInMillis =
+            BigDecimal.valueOf(current.getTimestamp() - old.getTimestamp());
+
+        checkState(timeBetweenMeasurementsInMillis.compareTo(BigDecimal.ZERO) > 0,
+            "Time between measurements is not larger than 0");
+
+        BigDecimal timeScaleBetweenMeasurementsInMillis =
+            BigDecimal.valueOf(timeUnit.toMillis(timeScale));
+
+        BigDecimal weight = timeBetweenMeasurementsInMillis.setScale(10, BigDecimal.ROUND_CEILING)
+            .divide(timeScaleBetweenMeasurementsInMillis, BigDecimal.ROUND_CEILING);
+
+        return valueDifference.setScale(10, BigDecimal.ROUND_CEILING)
+            .divide(weight, BigDecimal.ROUND_CEILING);
     }
+
+
 
 }
