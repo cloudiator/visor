@@ -22,6 +22,7 @@ import de.uniulm.omi.cloudiator.visor.monitoring.Measurement;
 import de.uniulm.omi.cloudiator.visor.monitoring.MeasurementBuilder;
 import org.junit.Test;
 
+import java.math.BigDecimal;
 import java.util.concurrent.TimeUnit;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -32,11 +33,16 @@ import static org.hamcrest.MatcherAssert.assertThat;
  */
 public class MeasurementDifferenceTest {
 
-    private static MeasurementDifference getValidDifferenceForValues(Double oldValue,
-        Double newValue, long timeDifference) {
+    private static MeasurementDifference getValidDifferenceForValues(BigDecimal oldValue,
+        BigDecimal newValue, long timeDifference) {
+
+        long initialTime = 0L;
+        long secondTime = initialTime + timeDifference;
+
         return MeasurementDifference
-            .of(MeasurementBuilder.newBuilder(Double.class).timestamp(0L).value(oldValue).build(),
-                MeasurementBuilder.newBuilder(Double.class).timestamp(timeDifference)
+            .of(MeasurementBuilder.newBuilder(BigDecimal.class).timestamp(initialTime)
+                    .value(oldValue).build(),
+                MeasurementBuilder.newBuilder(BigDecimal.class).timestamp(secondTime)
                     .value(newValue).build());
     }
 
@@ -50,52 +56,84 @@ public class MeasurementDifferenceTest {
     }
 
     @Test public void checkNoDifference() {
-        final Double old = 0d;
-        final Double current = 0d;
+        final BigDecimal old = BigDecimal.ZERO;
+        final BigDecimal current = BigDecimal.ZERO;
 
-        assertThat(getValidDifferenceForValues(old, current, 1).difference(), equalTo(0d));
+        assertThat(getValidDifferenceForValues(old, current, 1).difference(),
+            equalTo(BigDecimal.ZERO));
     }
 
     @Test public void checkPositiveDifference() {
-        final Double old = 0d;
-        final Double current = 5d;
-        assertThat(getValidDifferenceForValues(old, current, 1).difference(), equalTo(5d));
+        final BigDecimal old = BigDecimal.ZERO;
+        final BigDecimal current = BigDecimal.valueOf(5d);
+        assertThat(getValidDifferenceForValues(old, current, 1).difference(),
+            equalTo(BigDecimal.valueOf(5d)));
     }
 
     @Test public void checkNegativeDifference() {
-        final Double old = 5d;
-        final Double current = 0d;
-        assertThat(getValidDifferenceForValues(old, current, 1).difference(), equalTo(-5d));
+        final BigDecimal old = BigDecimal.valueOf(5d);
+        final BigDecimal current = BigDecimal.ZERO;
+        assertThat(getValidDifferenceForValues(old, current, 1).difference(),
+            equalTo(BigDecimal.valueOf(-5d)));
     }
 
     @Test public void checkTimeDifferenceSameTimeUnit() {
-        final Double old = 0d;
-        final Double current = 5d;
+        final BigDecimal old = BigDecimal.ZERO;
+        final BigDecimal current = BigDecimal.valueOf(5d);
         assertThat(getValidDifferenceForValues(old, current, 1000)
-            .timeDifference(1000, TimeUnit.MILLISECONDS), equalTo(5d));
+            .timeDifference(1000, TimeUnit.MILLISECONDS), equalTo(BigDecimal.valueOf(5d)));
     }
 
     @Test public void checkTimeDifferenceDifferentTimeUnit() {
-        final Double old = 0d;
-        final Double current = 5d;
+        final BigDecimal old = BigDecimal.ZERO;
+        final BigDecimal current = BigDecimal.valueOf(5d);
         assertThat(
             getValidDifferenceForValues(old, current, 1000).timeDifference(1, TimeUnit.SECONDS),
-            equalTo(5d));
+            equalTo(BigDecimal.valueOf(5d)));
     }
 
     @Test public void checkTimeDifferenceFloatSameTimeUnit() {
-        final Double old = 0d;
-        final Double current = 5d;
-        assertThat(getValidDifferenceForValues(old, current, 1000)
-            .timeDifference(500, TimeUnit.MILLISECONDS), equalTo(2.5d));
+        final BigDecimal old = BigDecimal.ZERO;
+        final BigDecimal current = BigDecimal.valueOf(2.5d);
+        assertThat(
+            getValidDifferenceForValues(old, current, 1000).timeDifference(1, TimeUnit.SECONDS)
+                .compareTo(BigDecimal.valueOf(2.5d)), equalTo(0));
     }
 
     @Test public void checkTimeDifferenceFloatDifferentTimeUnit() {
-        final Double old = 0d;
-        final Double current = 2.5d;
-        assertThat(
-            getValidDifferenceForValues(old, current, 1000).timeDifference(1, TimeUnit.SECONDS),
-            equalTo(2.5d));
+        final BigDecimal old = BigDecimal.ZERO;
+        final BigDecimal current = BigDecimal.valueOf(5d);
+
+        assertThat(getValidDifferenceForValues(old, current, 1000)
+                .timeDifference(500, TimeUnit.MILLISECONDS).compareTo(BigDecimal.valueOf(2.5d)),
+            equalTo(0));
+    }
+
+    @Test public void checkTimeDifferenceOtherValue() {
+        final BigDecimal old = BigDecimal.valueOf(8957.546d);
+        final BigDecimal current = BigDecimal.valueOf(9587.567d);
+        final BigDecimal difference = getValidDifferenceForValues(old, current, 1000)
+            .timeDifference(500, TimeUnit.MILLISECONDS);
+
+        assertThat(difference.compareTo(BigDecimal.valueOf(315.0105d)), equalTo(0));
+    }
+
+    @Test public void checkTimeDifferenceSmallValue() {
+        final BigDecimal old = BigDecimal.valueOf(9000);
+        final BigDecimal current = BigDecimal.valueOf(9000.001);
+        final BigDecimal difference =
+            getValidDifferenceForValues(old, current, 10000).timeDifference(1, TimeUnit.SECONDS);
+
+        assertThat(difference.compareTo(BigDecimal.valueOf(0.0001d)), equalTo(0));
+    }
+
+    @Test public void checkTimeDifferenceNoValueButLongTime() {
+        final BigDecimal old = BigDecimal.valueOf(1000);
+        final BigDecimal current = BigDecimal.valueOf(1000);
+        final BigDecimal difference =
+            getValidDifferenceForValues(old, current, 10000).timeDifference(1, TimeUnit.SECONDS);
+
+        assertThat(difference.compareTo(BigDecimal.ZERO), equalTo(0));
     }
 
 }
