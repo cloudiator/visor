@@ -50,11 +50,12 @@ public abstract class AbstractSensor<E> implements Sensor {
         if (measurements.isEmpty()) {
             Measurement<E> single = measureSingle();
             if (single != null) {
-                return Collections.singleton(measureSingle());
+                return Collections.singleton(single);
             }
-            throw new MeasurementNotAvailableException(this + "does not implement measureSingle or measureSet");
+            throw new MeasurementNotAvailableException(
+                this + "does not implement measureSingle or measureSet");
         }
-        return measureSet();
+        return measurements;
     }
 
     @Override public final SensorConfiguration sensorConfiguration() {
