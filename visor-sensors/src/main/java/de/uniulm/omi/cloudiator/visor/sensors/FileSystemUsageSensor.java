@@ -57,14 +57,14 @@ public class FileSystemUsageSensor extends AbstractSensor {
         }
     }
 
-    @Override protected Measurement measure() throws MeasurementNotAvailableException {
+    @Override protected Measurement measureSingle() throws MeasurementNotAvailableException {
 
         checkState(fileStore != null, "file store was not correctly initialized");
 
         try {
             final double usage =
                 100 - (((double) fileStore.getUsableSpace() / fileStore.getTotalSpace()) * 100);
-            return measureMentBuilder().now().value(usage).build();
+            return measurementBuilder(Double.class).now().value(usage).build();
         } catch (IOException e) {
             throw new MeasurementNotAvailableException(e);
         }

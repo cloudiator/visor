@@ -30,26 +30,28 @@ import java.util.function.Function;
 public class MetricToChukwa implements Function<Metric, String> {
 
     private final String vmUuid;
-    private static final SimpleDateFormat simpleDateFormat =
-        new SimpleDateFormat("yyyy-mm-dd H:m:s,S");
 
-    public MetricToChukwa(String vmUuid) {
+    MetricToChukwa(String vmUuid) {
         this.vmUuid = vmUuid;
     }
 
     @Override public String apply(Metric metric) {
 
 
-        return simpleDateFormat.format(new Date(metric.getTimestamp())) + "VMID" +
+        return "VMID" +
             "\t" +
             metric.getName() +
             "\t" +
             metric.getName() + "capturedTimestamp" +
+            "\t" +
+            metric.getName() + "tags" +
             "\n" +
             vmUuid +
             "\t" +
             metric.getValue() +
             "\t" +
-            metric.getTimestamp();
+            metric.getTimestamp() +
+            "\t" +
+            metric.getTags().toString();
     }
 }

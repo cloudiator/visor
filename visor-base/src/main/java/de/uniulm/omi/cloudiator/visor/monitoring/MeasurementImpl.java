@@ -20,29 +20,40 @@ package de.uniulm.omi.cloudiator.visor.monitoring;
 
 
 import com.google.common.base.MoreObjects;
+import com.google.common.collect.ImmutableMap;
+
+import java.util.Map;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Created by daniel on 18.12.14.
  */
-public class MeasurementImpl implements Measurement {
+public class MeasurementImpl<E> implements Measurement<E> {
 
     private final long timestamp;
-    private final Object value;
+    private final E value;
+    private final Map<String, String> tags;
 
-    public MeasurementImpl(long timestamp, Object value) {
-        checkNotNull(value);
+    MeasurementImpl(long timestamp, E value, Map<String, String> tags) {
+        checkNotNull(timestamp);
         this.timestamp = timestamp;
+        checkNotNull(value);
         this.value = value;
+        checkNotNull(tags);
+        this.tags = tags;
     }
 
     @Override public long getTimestamp() {
         return timestamp;
     }
 
-    @Override public Object getValue() {
+    @Override public E getValue() {
         return value;
+    }
+
+    @Override public Map<String, String> tags() {
+        return ImmutableMap.copyOf(tags);
     }
 
     @Override public boolean equals(Object o) {
@@ -53,9 +64,7 @@ public class MeasurementImpl implements Measurement {
 
         MeasurementImpl that = (MeasurementImpl) o;
 
-        if (getTimestamp() != that.getTimestamp())
-            return false;
-        return getValue().equals(that.getValue());
+        return getTimestamp() == that.getTimestamp() && getValue().equals(that.getValue());
 
     }
 
@@ -66,6 +75,7 @@ public class MeasurementImpl implements Measurement {
     }
 
     @Override public String toString() {
-        return MoreObjects.toStringHelper(this).add("timestamp",timestamp).add("value",value).toString();
+        return MoreObjects.toStringHelper(this).add("timestamp", timestamp).add("value", value)
+            .add("tags", tags).toString();
     }
 }

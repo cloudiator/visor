@@ -18,38 +18,57 @@
 
 package de.uniulm.omi.cloudiator.visor.monitoring;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by daniel on 27.01.16.
  */
-public class MeasurementBuilder {
+public class MeasurementBuilder<E> {
 
     private long timestamp;
-    private Object value;
+    private E value;
+    private Map<String, String> tags;
 
     private MeasurementBuilder() {
+        this.tags = new HashMap<>();
     }
 
-    public static MeasurementBuilder newBuilder() {
-        return new MeasurementBuilder();
+    public static MeasurementBuilder<Object> newBuilder() {
+        return new MeasurementBuilder<>();
     }
 
-    public MeasurementBuilder value(Object value) {
+    public static <F> MeasurementBuilder<F> newBuilder(Class<F> fClass) {
+        return new MeasurementBuilder<>();
+    }
+
+    public MeasurementBuilder<E> value(E value) {
         this.value = value;
         return this;
     }
 
-    public MeasurementBuilder timestamp(long timestamp) {
+    public MeasurementBuilder<E> timestamp(long timestamp) {
         this.timestamp = timestamp;
         return this;
     }
 
-    public MeasurementBuilder now() {
+    public MeasurementBuilder<E> now() {
         timestamp = System.currentTimeMillis();
         return this;
     }
 
-    public Measurement build() {
-        return new MeasurementImpl(timestamp, value);
+    public MeasurementBuilder<E> addTag(String key, String value) {
+        this.tags.put(key, value);
+        return this;
+    }
+
+    public MeasurementBuilder<E> addTags(Map<String, String> tags) {
+        this.tags.putAll(tags);
+        return this;
+    }
+
+    public Measurement<E> build() {
+        return new MeasurementImpl<>(timestamp, value, tags);
     }
 
 

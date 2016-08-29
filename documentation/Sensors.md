@@ -23,3 +23,25 @@ No configuration is needed.
 ## Apache Status Sensor
 ***
 ## HA_Proxy Sensor
+***
+## Cassandra Sensor
+### ClassName
+de.uniulm.omi.cloudiator.visor.sensors.cassandra.CassandraSensor
+### Description
+The Cassandra sensor measures [Cassandra specific metrics](https://wiki.apache.org/cassandra/Metrics). 
+
+Possible metric types: 
+- TOTAL_DISK_SPACE_USED (in bytes)
+- WRITE_THROUGHPUT_LATENCY 
+- WRITE_REQUESTS
+- READ_THROUGHPUT_LATENCY 
+- READ_REQUESTS
+
+### Sensor Configuration
+```json
+{
+        "cassandra.ip":"1.2.3.4",
+        "cassandra.port":"7199",
+      	"cassandra.metric": "TOTAL_DISK_SPACE_USED"
+}
+```

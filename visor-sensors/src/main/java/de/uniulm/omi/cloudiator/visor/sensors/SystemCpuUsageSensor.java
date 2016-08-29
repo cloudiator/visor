@@ -35,7 +35,7 @@ public class SystemCpuUsageSensor extends AbstractSensor {
 
     private OperatingSystemMXBean osBean;
 
-    @Override protected Measurement measure() throws MeasurementNotAvailableException {
+    @Override protected Measurement measureSingle() throws MeasurementNotAvailableException {
 
         double systemCpuLoad = osBean.getSystemCpuLoad();
         double systemCpuLoadPercentage = systemCpuLoad * 100;
@@ -44,7 +44,7 @@ public class SystemCpuUsageSensor extends AbstractSensor {
             throw new MeasurementNotAvailableException("Received negative value");
         }
 
-        return measureMentBuilder().now().value(systemCpuLoadPercentage).build();
+        return measurementBuilder(Double.class).now().value(systemCpuLoadPercentage).build();
     }
 
     @Override protected void initialize(MonitorContext monitorContext,

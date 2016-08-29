@@ -75,17 +75,23 @@ public class ChukwaReporter implements ReportingInterface<Metric> {
 
         try (ChukwaClient chukwaClient = new ChukwaClient(chukwaUri)) {
 
+            final String encodedMetric = new MetricToChukwa(vmID).apply(item);
+
+            LOGGER.debug(String
+                .format("Encoded metric %s as %s before creating chukwa request.", item,
+                    encodedMetric));
+
             ChukwaRequest chukwaRequest = ChukwaRequestBuilder.newBuilder().numberOfEvents(1)
                 .protocolVersion(DEFAULT_PROTOCOL_VERSION).sequenceId(1L).source("Visor").tags("")
                 .streamName("Visor Monitoring Information").dataType("Visor").debuggingInfo("")
-                .numberOfRecords(1).stringData(new MetricToChukwa(vmID).apply(item)).build();
+                .numberOfRecords(1).stringData(encodedMetric).build();
 
             final HttpResponse response = chukwaClient.post(chukwaRequest);
 
             LOGGER.debug(String
-                .format("Sending request %s to chukwa, got response %s.", chukwaRequest,
-                    response.getStatusLine().toString()));
-            
+                .format("Sending request %s for metric %s to chukwa, got response %s.",
+                    chukwaRequest, item, response.getStatusLine().toString()));
+
         } catch (IOException e) {
             throw new ReportingException(e);
         }

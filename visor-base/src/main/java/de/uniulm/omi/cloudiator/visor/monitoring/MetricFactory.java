@@ -18,6 +18,7 @@
 
 package de.uniulm.omi.cloudiator.visor.monitoring;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -29,10 +30,15 @@ public class MetricFactory {
 
     }
 
-    public static Metric from(String metricName, Measurement measurement,
+    public static Metric from(String metricName, Measurement<?> measurement,
         Map<String, String> tags) {
+
+        Map<String, String> mergedTags = new HashMap<>(measurement.tags().size() + tags.size());
+        mergedTags.putAll(tags);
+        mergedTags.putAll(measurement.tags());
+
         return MetricBuilder.newBuilder().name(metricName).value(measurement.getValue())
-            .timestamp(measurement.getTimestamp()).addTags(tags).build();
+            .timestamp(measurement.getTimestamp()).addTags(mergedTags).build();
     }
 
 }

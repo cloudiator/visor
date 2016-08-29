@@ -18,12 +18,14 @@
 
 package de.uniulm.omi.cloudiator.visor.monitoring;
 
+import java.util.Map;
+
 /**
  * Represents a measurement taken by a sensor.
  *
  * @author Daniel Baur
  */
-public interface Measurement {
+public interface Measurement<E> {
 
     /**
      * The timestamp the measurement object was taken.
@@ -37,5 +39,12 @@ public interface Measurement {
      *
      * @return a object representing the value. mandatory
      */
-    Object getValue();
+    E getValue();
+
+    /**
+     * Tags
+     *
+     * @return a key=>value map of tags
+     */
+    Map<String, String> tags();
 }

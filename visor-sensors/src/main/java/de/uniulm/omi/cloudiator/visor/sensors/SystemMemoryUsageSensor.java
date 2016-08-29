@@ -21,7 +21,10 @@ package de.uniulm.omi.cloudiator.visor.sensors;
 import com.sun.management.OperatingSystemMXBean;
 import de.uniulm.omi.cloudiator.visor.exceptions.MeasurementNotAvailableException;
 import de.uniulm.omi.cloudiator.visor.exceptions.SensorInitializationException;
-import de.uniulm.omi.cloudiator.visor.monitoring.*;
+import de.uniulm.omi.cloudiator.visor.monitoring.AbstractSensor;
+import de.uniulm.omi.cloudiator.visor.monitoring.Measurement;
+import de.uniulm.omi.cloudiator.visor.monitoring.MonitorContext;
+import de.uniulm.omi.cloudiator.visor.monitoring.SensorConfiguration;
 
 import java.lang.management.ManagementFactory;
 
@@ -35,7 +38,7 @@ public class SystemMemoryUsageSensor extends AbstractSensor {
 
     private OperatingSystemMXBean osBean;
 
-    @Override protected Measurement measure() throws MeasurementNotAvailableException {
+    @Override protected Measurement measureSingle() throws MeasurementNotAvailableException {
         //memory usage
         double totalPhysicalMemory = osBean.getTotalPhysicalMemorySize();
         double freePhysicalMemory = osBean.getFreePhysicalMemorySize();
@@ -45,8 +48,8 @@ public class SystemMemoryUsageSensor extends AbstractSensor {
                 "Received negative value for total or free physical memory size");
         }
 
-        return new MeasurementImpl(System.currentTimeMillis(),
-            100 - ((freePhysicalMemory / totalPhysicalMemory) * 100));
+        return measurementBuilder(Double.class).now()
+            .value(100 - ((freePhysicalMemory / totalPhysicalMemory) * 100)).build();
     }
 
     @Override protected void initialize(MonitorContext monitorContext,

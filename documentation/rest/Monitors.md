@@ -111,7 +111,7 @@ interval | Object | period: the period for sampling, timeUnit: the TimeUnit of s
     "@type":"sensor",
     "metricName":"MyMetricName",
     "componentId":"d1d63337-51bb-497d-8752-8d242974bd56",
-    "sensorClassName":"de.uniulm.omi.cloudiator.visor.sensors.CpuUsageSensor",
+    "sensorClassName":"de.uniulm.omi.cloudiator.visor.sensors.SystemCpuUsageSensor",
     "interval":{
         "period":1,
         "timeUnit":"SECONDS"
@@ -131,7 +131,7 @@ interval | Object | period: the period for sampling, timeUnit: the TimeUnit of s
         "os.arch":"x86_64",
         "os.version":"10.11.1"
     },
-    "sensorClassName":"de.uniulm.omi.cloudiator.visor.sensors.CpuUsageSensor",
+    "sensorClassName":"de.uniulm.omi.cloudiator.visor.sensors.SystemCpuUsageSensor",
     "interval":{
         "period":1,
         "timeUnit":"SECONDS"
