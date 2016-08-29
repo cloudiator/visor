@@ -56,12 +56,13 @@ public class MolproStatusSensor extends AbstractSensor {
     enum MolproStatus {
 	    INITIALISING, // nothing happened so far
 	    RUNNING, // molpro is still in the middle of executing
-	    DONE{
-		    @Override boolean isFinalState() {return trueM} 
-	    }, // we already reported the final results
+	    DONE, // we already reported the final results
 	    FAILURE {
-    		    @Override boolean isFinalState() {return trueM} 
+    		    @Override boolean isFinalState() {return true;} 
 	    }, // something bad happened
+	    SUCCESS{
+		    @Override boolean isFinalState() {return true;} 
+	    },
 	    UNKNOWN,  // an error occurred
 	    TO_BE_COMPLETED,
 	    ;
@@ -79,19 +80,19 @@ public class MolproStatusSensor extends AbstractSensor {
 
     private static final String QUERY_STRING = "grep ";
     
-    private boolean processRunning(String procName) throws InterruptedException {
+    private boolean processRunning(String procName) throws InterruptedException, IOException {
 	Process p = Runtime.getRuntime().exec("pa -A | grep " + procName);
-	int i = 0 p.waitFor();
+	int i = p.waitFor();
 	if(i == 0) return true;
 	if(i == 1) return false;
-	throw new IllegalStateExceptin("grep error");
+	throw new IllegalStateException("grep error");
     }
     
-    private boolean molproRunning() {
+    private boolean molproRunning() throws InterruptedException, IOException {
 	    return processRunning(MOLPRO_NAME);
     }
 
-    private boolean executorRunning() {
+    private boolean executorRunning() throws InterruptedException, IOException {
 	    return processRunning(EXECUTOR_NAME);
     }
 
@@ -130,36 +131,36 @@ public class MolproStatusSensor extends AbstractSensor {
 		    if(completeFileExists()) return MolproStatus.DONE;
 		    if(molproRunning()) return MolproStatus.RUNNING;
 		    if(failureFileExists()) return MolproStatus.FAILURE;
-		    if(successFileExists()) return MolproStatus.COMPLETED;
+		    if(successFileExists()) return MolproStatus.SUCCESS;
 		    // none of the critical files exist, let's see if
 		    // an outputfile is there
 		    if(outputFileExists()) return MolproStatus.TO_BE_COMPLETED;
 		    // nothing found. probably initialising
 		    return MolproStatus.INITIALISING;
-	    } catch (Execption ie) {
+	    } catch (Exception ie) {
 		    ie.printStackTrace();
 		    return MolproStatus.UNKNOWN;
 	    }
     }
 
-    private void copyEncodedFileToBuffer(StringBuilder b, File f) {
+    private void copyEncodedFileToBuffer(StringBuilder b, File f) throws IOException {
 	Encoder enc = Base64.getEncoder();
-	byte[] b = enc.encode(Files.readAllBytes(f.toPath()));
-	b.append(new String(b));
+	byte[] by = enc.encode(Files.readAllBytes(f.toPath()));
+	b.append(new String(by));
     }
 
-    private void copyFileToBuffer(StringBuilder b, String prefix, String absFilename) {
+    private void copyFileToBuffer(StringBuilder b, String prefix, String absFilename) throws IOException {
 	b.append(prefix);
-	if(fileExists(absFilename){copyEncodedFileToBuffer(b, getFile(absFilename));}
+	if(fileExists(absFilename)){copyEncodedFileToBuffer(b, getFile(absFilename));}
 	else b.append("\"\"");
     }
 
-    private void touchFileFile() {
+    private void touchFileFile() throws IOException {
 	    File f = getFile(MONITOR_FILE);
-	    t.createNewFile();
+	    f.createNewFile();
     }
 
-    private void dealWithFinalState(StringBuilder b, MolproStatus stat) {
+    private void dealWithFinalState(StringBuilder b, MolproStatus stat) throws IOException {
 	    if(!stat.isFinalState()) return;
 	    copyFileToBuffer(b, ", log : ", LOG_FILE);
 	    copyFileToBuffer(b, ", output : ", OUTPUT_FILE);
@@ -170,12 +171,12 @@ public class MolproStatusSensor extends AbstractSensor {
         try {
 		MolproStatus status = getStatus();
 		StringBuilder b = new StringBuilder();
-		b.add("{ status : " ).add(status);
+		b.append("{ status : " ).append(status);
 		dealWithFinalState(b, status);
-		b.add("}");
+		b.append("}");
 		return MeasurementBuilder.newBuilder().
 			timestamp(System.currentTimeMillis()).
-                        value(b.build()).build();
+                        value(b.toString()).build();
         } catch (Exception e) {
             throw new MeasurementNotAvailableException(e);
         }
