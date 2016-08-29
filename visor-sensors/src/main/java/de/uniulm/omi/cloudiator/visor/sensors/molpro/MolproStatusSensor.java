@@ -41,6 +41,7 @@ import java.util.concurrent.TimeUnit;
 import java.nio.file.Files;
 import java.util.Base64;
 import java.util.Base64.Encoder;
+import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
@@ -167,7 +168,7 @@ public class MolproStatusSensor extends AbstractSensor {
     	    touchFileFile();
     }
 
-    @Override protected Measurement measure() throws MeasurementNotAvailableException {
+    @Override protected Measurement measureSingle() throws MeasurementNotAvailableException {
         try {
 		MolproStatus status = getStatus();
 		StringBuilder b = new StringBuilder();
