@@ -38,6 +38,8 @@ public class MetricToChukwa implements Function<Metric, String> {
 	private static final Logger LOGGER = LogManager.getLogger(ChukwaReporter.class);
 	private static Map<String, AtomicLong> streamCounterCache = new HashMap<>(); 
 	
+	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss,SSS");
+
     private static final int DEFAULT_PROTOCOL_VERSION = 1;
     private final String vmUuid;
 
@@ -45,8 +47,6 @@ public class MetricToChukwa implements Function<Metric, String> {
         this.vmUuid = vmUuid;
     }
     
-    
-
     @Override public String apply(Metric metric) {
 
 
@@ -121,8 +121,18 @@ public class MetricToChukwa implements Function<Metric, String> {
     	}
     	acc.append(key).append("=\"").append(value).append("\"");
     }
+    
+    private static String generateDebuggingInfo(long timestamp) {
+    	Date d = new Date(timestamp); 
+    	String date = sdf.format(d);
+    	LOGGER.debug(String.format("Setting timestamp: %s", date));
+    	return date;
+    }
 
 	public static ChukwaRequest parse(String vmID, Metric item) {
+		LOGGER.debug(String.format("Chukwaing metric %s with tags: %s", item,
+                item.getTags()));
+		
 		final String source = getSource(item.getTags());
 		final String datatype = getDatatype(item.getTags());
 		final String stream = item.getName();
@@ -131,7 +141,8 @@ public class MetricToChukwa implements Function<Metric, String> {
 		ChukwaRequest chukwaRequest = ChukwaRequestBuilder.newBuilder().numberOfEvents(1).
 	            protocolVersion(DEFAULT_PROTOCOL_VERSION).source(source).dataType(datatype).
 	            stringData(item.getValue().toString()).streamName(stream).sequenceId(seqId).
-	            tags(tagList).debuggingInfo("").numberOfRecords(1).build();
+	            tags(tagList).debuggingInfo(generateDebuggingInfo(item.getTimestamp())).
+	            numberOfRecords(1).build();
 		// .streamName("Visor Monitoring Information")
 		
 		 LOGGER.debug(String.format("Encoded metric %s as chukwa request %s", item,
