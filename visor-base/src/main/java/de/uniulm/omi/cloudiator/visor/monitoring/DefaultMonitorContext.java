@@ -46,9 +46,9 @@ class DefaultMonitorContext extends BaseMonitorContext {
         checkArgument(!localIp.isEmpty());
 
         this.defaultContext = ImmutableMap
-            .of(LOCAL_IP, localIp, OS_NAME, System.getProperty(OS_NAME), OS_ARCH,
-                System.getProperty(OS_ARCH), OS_VERS, System.getProperty(OS_VERS), JAVA_VERSION,
-                System.getProperty(JAVA_VERSION));
+            .of(LOCAL_IP, localIp, OS_NAME, System.getProperty(OS_NAME).replaceAll("\\s", ""),
+                OS_ARCH, System.getProperty(OS_ARCH), OS_VERS, System.getProperty(OS_VERS),
+                JAVA_VERSION, System.getProperty(JAVA_VERSION));
     }
 
     @Override public Map<String, String> getContext() {
