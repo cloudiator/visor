@@ -29,6 +29,6 @@ public class TheOneSensor extends AbstractSensor<Integer> {
 
     @Override protected Measurement<Integer> measureSingle()
         throws MeasurementNotAvailableException {
-        measurementBuilder(Integer.class).now().value(1).build();
+        return measurementBuilder(Integer.class).now().value(1).build();
     }
 }
