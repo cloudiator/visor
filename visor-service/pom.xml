@@ -56,6 +56,11 @@
             <groupId>io.github.cloudiator.visor</groupId>
             <artifactId>visor-sensors</artifactId>
         </dependency>
+        <dependency>
+            <groupId>be.bewan.cloudiator</groupId>
+            <artifactId>bewan-sensors</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <artifactId>visor-service</artifactId>
