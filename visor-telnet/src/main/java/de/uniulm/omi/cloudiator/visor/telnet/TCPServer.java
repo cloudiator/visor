@@ -148,12 +148,8 @@ public class TCPServer implements Server {
                 } catch (IOException e) {
                     LOGGER.info("Exception occurred while accepting the socket.", e);
                 }
-                try {
-                    LOGGER.debug(String.format("%s got interrupted, closing server socket.", this));
-                    this.serverSocket.close();
-                } catch (IOException ignored) {
-                    LOGGER.warn(ignored);
-                }
+                LOGGER.debug(String.format("%s got interrupted, server socket remains open" +
+                    "for new connections.", this));
             }
         }
 
