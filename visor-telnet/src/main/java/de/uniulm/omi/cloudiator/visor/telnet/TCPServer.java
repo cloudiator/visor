@@ -133,7 +133,7 @@ public class TCPServer implements Server {
             try {
                 serverSocket.close();
             } catch (IOException ignored) {
-                LOGGER.debug("Ignoring exception thrown during stopping the server", ignored);
+                LOGGER.warn("Ignoring exception thrown during stopping the server", ignored);
             }
         }
 
@@ -146,10 +146,8 @@ public class TCPServer implements Server {
                     workers.add(tcpSocketWorker);
                     executionService.execute(tcpSocketWorker);
                 } catch (IOException e) {
-                    LOGGER.info("Exception occurred while accepting the socket.", e);
+                    LOGGER.error("Exception occurred while accepting the socket.", e);
                 }
-                LOGGER.debug(String.format("%s got interrupted, server socket remains open" +
-                    "for new connections.", this));
             }
         }
 
@@ -171,7 +169,7 @@ public class TCPServer implements Server {
                 try {
                     this.socket.close();
                 } catch (IOException ignored) {
-                    LOGGER.info("Ignoring exception during closing of socket.", ignored);
+                    LOGGER.warn("Ignoring exception during closing of socket.", ignored);
                 }
             }
 
