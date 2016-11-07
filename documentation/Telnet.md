@@ -1,4 +1,4 @@
-﻿# Telnet Interface
+# Telnet Interface
 ***
 ## Description
 ***
@@ -14,7 +14,7 @@ Value           | Description
 --------------- | -----------
 metricName      | The name of the metric that is reported.
 value           | The value of the metric.
-timestamp       | The unix timestamp when this metric value occured.
+timestamp       | The timestamp (milliseconds since epoch) when this metric value occured.
 
 The TCP connection currently has a fixed timeout of 20 seconds.
 
