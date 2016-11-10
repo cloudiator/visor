@@ -21,9 +21,9 @@ package de.uniulm.omi.cloudiator.visor.exceptions;
 /**
  * Created by daniel on 15.01.15.
  */
-public class SensorNotFoundException extends Exception {
+public class SensorCreationException extends Exception {
 
-    public SensorNotFoundException(String message, Throwable cause) {
+    public SensorCreationException(String message, Throwable cause) {
         super(message, cause);
     }
 }

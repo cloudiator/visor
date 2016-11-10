@@ -21,8 +21,8 @@ package de.uniulm.omi.cloudiator.visor.monitoring;
 import com.google.inject.Inject;
 import de.uniulm.omi.cloudiator.visor.exceptions.InvalidMonitorContextException;
 import de.uniulm.omi.cloudiator.visor.exceptions.MonitorException;
+import de.uniulm.omi.cloudiator.visor.exceptions.SensorCreationException;
 import de.uniulm.omi.cloudiator.visor.exceptions.SensorInitializationException;
-import de.uniulm.omi.cloudiator.visor.exceptions.SensorNotFoundException;
 import de.uniulm.omi.cloudiator.visor.execution.ScheduledExecutionService;
 import de.uniulm.omi.cloudiator.visor.reporting.QueuedReporting;
 import de.uniulm.omi.cloudiator.visor.reporting.ReportingInterface;
@@ -61,8 +61,8 @@ public class MonitorFactoryImpl implements MonitorFactory {
             return new SensorMonitorImpl(uuid, metricName, componentId,
                 sensorFactory.from(sensorClassName, sensorConfiguration, context), interval,
                 context, metricReportingInterface, executionService);
-        } catch (InvalidMonitorContextException | SensorInitializationException | SensorNotFoundException e) {
-            throw new MonitorException("Unable to create monitor.", e);
+        } catch (InvalidMonitorContextException | SensorInitializationException | SensorCreationException e) {
+            throw new MonitorException("Unable to create monitor due to error", e);
         }
     }
 
@@ -74,7 +74,7 @@ public class MonitorFactoryImpl implements MonitorFactory {
             return new PushMonitorImpl(serverRegistry.getServer(componentId), uuid, metricName,
                 componentId, context);
         } catch (IOException e) {
-            throw new MonitorException("Unable to create monitor.", e);
+            throw new MonitorException("Unable to create monitor due to error", e);
         }
     }
 }

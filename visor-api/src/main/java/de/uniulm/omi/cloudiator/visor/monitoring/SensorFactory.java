@@ -19,7 +19,7 @@
 package de.uniulm.omi.cloudiator.visor.monitoring;
 
 import de.uniulm.omi.cloudiator.visor.exceptions.SensorInitializationException;
-import de.uniulm.omi.cloudiator.visor.exceptions.SensorNotFoundException;
+import de.uniulm.omi.cloudiator.visor.exceptions.SensorCreationException;
 
 /**
  * Created by daniel on 15.01.15.
@@ -28,5 +28,5 @@ public interface SensorFactory {
 
     Sensor from(String className, SensorConfiguration sensorConfiguration,
         MonitorContext monitorContext)
-        throws SensorNotFoundException, SensorInitializationException;
+        throws SensorCreationException, SensorInitializationException;
 }

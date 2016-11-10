@@ -79,7 +79,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
         try {
             monitor.start(uuid, monitoringService);
         } catch (MonitorException e) {
-            LOGGER.error(e);
+            LOGGER.error("Could not create monitor.", e);
             throw new BadRequestException(e);
         }
 
