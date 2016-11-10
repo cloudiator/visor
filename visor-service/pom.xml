@@ -50,6 +50,10 @@
         </dependency>
         <dependency>
             <groupId>io.github.cloudiator.visor</groupId>
+            <artifactId>visor-reporting-druid</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.cloudiator.visor</groupId>
             <artifactId>visor-reporting-chukwa</artifactId>
         </dependency>
         <dependency>

@@ -45,6 +45,7 @@
         <module>visor-reporting-cli</module>
         <module>visor-service</module>
         <module>visor-reporting-chukwa</module>
+        <module>visor-reporting-druid</module>
     </modules>
 
     <parent>
@@ -94,6 +95,11 @@
             <dependency>
                 <groupId>io.github.cloudiator.visor</groupId>
                 <artifactId>visor-reporting-kairos</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.cloudiator.visor</groupId>
+                <artifactId>visor-reporting-druid</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
