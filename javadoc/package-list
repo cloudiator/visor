@@ -7,6 +7,7 @@ de.uniulm.omi.cloudiator.visor.monitoring
 de.uniulm.omi.cloudiator.visor.reporting
 de.uniulm.omi.cloudiator.visor.reporting.chukwa
 de.uniulm.omi.cloudiator.visor.reporting.cli
+de.uniulm.omi.cloudiator.visor.reporting.influx
 de.uniulm.omi.cloudiator.visor.reporting.kairos
 de.uniulm.omi.cloudiator.visor.rest
 de.uniulm.omi.cloudiator.visor.rest.controllers
