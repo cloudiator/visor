@@ -54,6 +54,8 @@ public class QueueWorker<T> implements Schedulable {
             this.reportingInterface.report(tList);
         } catch (ReportingException e) {
             LOGGER.error("Could not report metrics, throwing them away.", e);
+        } catch (Exception e) {
+            LOGGER.error("Unexpected exception during metric reporting.", e);
         }
     }
 
