@@ -79,7 +79,19 @@ public class SimpleHTTPResponseTimeSensor extends AbstractSensor {
         if(uri.isPresent()){
             this.uri = uri.get();
         } else {
-            this.uri = "http://127.0.0.1:8080";
+
+            Optional<String> endpoint_ip = sensorConfiguration.getValue("endpoint_ip");
+            Optional<String> path = sensorConfiguration.getValue("path");
+
+            if(!endpoint_ip.isPresent() && !path.isPresent()) {
+                this.uri = "http://127.0.0.1:8080";
+            } else if(endpoint_ip.isPresent() && path.isPresent()){
+                this.uri = "http://" + endpoint_ip + path.get();
+            } else if(endpoint_ip.isPresent()){
+                this.uri = "http://" + endpoint_ip;
+            } else { // only path is present
+                this.uri = "http://127.0.0.1" + path.get();
+            }
         }
     }
 }
