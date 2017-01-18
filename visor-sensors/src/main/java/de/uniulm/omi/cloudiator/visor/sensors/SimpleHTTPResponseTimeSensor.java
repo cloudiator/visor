@@ -23,8 +23,11 @@ import java.util.Optional;
 public class SimpleHTTPResponseTimeSensor extends AbstractSensor {
 
     private String uri;
+    private Integer timeout = 20000; // 20 seconds default
 
     @Override protected Measurement measureSingle() throws MeasurementNotAvailableException {
+
+        Date start = new Date();
 
         URL url = null;
         try {
@@ -36,6 +39,7 @@ public class SimpleHTTPResponseTimeSensor extends AbstractSensor {
         HttpURLConnection connection = null;
         try {
             connection = (HttpURLConnection)url.openConnection();
+            connection.setConnectTimeout(this.timeout);
         } catch (IOException e) {
             throw new MeasurementNotAvailableException("could not open connection");
         }
@@ -44,7 +48,7 @@ public class SimpleHTTPResponseTimeSensor extends AbstractSensor {
         } catch (ProtocolException e) {
             throw new MeasurementNotAvailableException("could not set GET method");
         }
-        Date start = new Date();
+
         try {
             connection.connect();
         } catch (IOException e) {
@@ -91,6 +95,20 @@ public class SimpleHTTPResponseTimeSensor extends AbstractSensor {
                 this.uri = "http://" + endpoint_ip;
             } else { // only path is present
                 this.uri = "http://127.0.0.1" + path.get();
+            }
+        }
+
+        Optional<String> timeout = sensorConfiguration.getValue("timeout");
+
+        if(timeout.isPresent()){
+            try {
+                Integer transformedTimeout = Integer.parseInt(timeout.get());
+
+                if (transformedTimeout >= 0) {
+                    this.timeout = transformedTimeout;
+                }
+            } catch (NumberFormatException ex){
+                // do nothing and use default instead
             }
         }
     }
