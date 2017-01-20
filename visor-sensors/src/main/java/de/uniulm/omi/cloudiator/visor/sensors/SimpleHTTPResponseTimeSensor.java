@@ -78,9 +78,13 @@ public class SimpleHTTPResponseTimeSensor extends AbstractSensor {
                                         SensorConfiguration sensorConfiguration) throws SensorInitializationException {
         super.initialize(monitorContext, sensorConfiguration);
 
+        Optional<String> paasEndpoint = sensorConfiguration.getValue("paasEndpoint");
+
         Optional<String> uri = sensorConfiguration.getValue("uri");
 
-        if(uri.isPresent()){
+        if(paasEndpoint.isPresent()) {
+            this.uri = paasEndpoint.get();
+        } else if(uri.isPresent()){
             this.uri = uri.get();
         } else {
 
