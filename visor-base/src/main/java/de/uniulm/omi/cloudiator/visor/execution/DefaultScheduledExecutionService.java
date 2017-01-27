@@ -21,8 +21,8 @@ package de.uniulm.omi.cloudiator.visor.execution;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -38,7 +38,7 @@ import static com.google.common.base.Preconditions.*;
  */
 @Singleton public class DefaultScheduledExecutionService implements ScheduledExecutionService {
 
-    private static final Logger LOGGER = LogManager.getLogger(ScheduledExecutionService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ScheduledExecutionService.class);
 
     /**
      * The executor service used for scheduling the probe runs.

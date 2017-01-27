@@ -24,11 +24,11 @@ import de.uniulm.omi.cloudiator.visor.exceptions.ConfigurationException;
 import de.uniulm.omi.cloudiator.visor.execution.ExecutionService;
 import de.uniulm.omi.cloudiator.visor.monitoring.MonitoringService;
 import de.uniulm.omi.cloudiator.visor.rest.controllers.MonitorController;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.core.UriBuilder;
 import java.io.IOException;
@@ -42,7 +42,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class RestServer {
 
-    private static final Logger LOGGER = LogManager.getLogger(RestServer.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RestServer.class);
 
     @Inject public RestServer(@Named("restPort") int restPort, @Named("restHost") String restHost,
         MonitoringService monitoringService, ExecutionService executionService) {

@@ -20,6 +20,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <repositories>
+        <repository>
+            <id>opencast</id>
+            <name>opencast Releases</name>
+            <url>http://nexus.opencast.org/nexus/content/groups/public/</url>
+        </repository>
+    </repositories>
+
     <parent>
         <artifactId>project</artifactId>
         <groupId>io.github.cloudiator.visor</groupId>
@@ -62,7 +71,17 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.4.2</version>
+            <version>2.7.3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>2.7.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.opencastproject</groupId>
+            <artifactId>matterhorn-common</artifactId>
+            <version>RELEASE</version>
         </dependency>
     </dependencies>
 </project>

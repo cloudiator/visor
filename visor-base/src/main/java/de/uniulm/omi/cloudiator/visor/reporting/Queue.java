@@ -23,8 +23,8 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import de.uniulm.omi.cloudiator.visor.execution.ScheduledExecutionService;
 import de.uniulm.omi.cloudiator.visor.monitoring.Intervals;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.concurrent.BlockingQueue;
@@ -44,7 +44,7 @@ import java.util.concurrent.TimeUnit;
      * The queue storing the items.
      */
     private final BlockingQueue<T> queueDelegate;
-    private static final Logger LOGGER = LogManager.getLogger(Queue.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Queue.class);
 
     @Inject public Queue(ScheduledExecutionService executionService,
         QueueWorkerFactoryInterface<T> queueWorkerFactory,
@@ -61,7 +61,7 @@ import java.util.concurrent.TimeUnit;
         try {
             this.queueDelegate.put(item);
         } catch (InterruptedException e) {
-            LOGGER.error(e);
+            LOGGER.error("Interrupted during write to queue",e);
         }
     }
 

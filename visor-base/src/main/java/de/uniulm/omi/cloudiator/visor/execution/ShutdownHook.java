@@ -20,15 +20,15 @@ package de.uniulm.omi.cloudiator.visor.execution;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by daniel on 15.12.14.
  */
 public class ShutdownHook extends Thread {
 
-    private static final Logger logger = LogManager.getLogger(ShutdownHook.class);
+    private static final Logger logger = LoggerFactory.getLogger(ShutdownHook.class);
 
     private final ExecutionService executionService;
     private final int reportingInterval;

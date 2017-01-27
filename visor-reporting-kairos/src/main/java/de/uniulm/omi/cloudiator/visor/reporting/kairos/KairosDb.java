@@ -25,11 +25,11 @@ import de.uniulm.omi.cloudiator.visor.exceptions.ConfigurationException;
 import de.uniulm.omi.cloudiator.visor.monitoring.Metric;
 import de.uniulm.omi.cloudiator.visor.reporting.ReportingException;
 import de.uniulm.omi.cloudiator.visor.reporting.ReportingInterface;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.kairosdb.client.HttpClient;
 import org.kairosdb.client.builder.MetricBuilder;
 import org.kairosdb.client.response.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -57,7 +57,7 @@ public class KairosDb implements ReportingInterface<Metric> {
     /**
      * A logger.
      */
-    private static final Logger LOGGER = LogManager.getLogger(KairosDb.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(KairosDb.class);
 
     @Inject public KairosDb(@Named("kairosServer") String server, @Named("kairosPort") int port) {
         checkNotNull(server);

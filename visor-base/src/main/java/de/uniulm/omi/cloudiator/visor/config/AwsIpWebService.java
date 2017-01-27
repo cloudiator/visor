@@ -19,9 +19,8 @@
 package de.uniulm.omi.cloudiator.visor.config;
 
 import com.google.inject.Singleton;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
 import java.io.BufferedReader;
@@ -35,7 +34,7 @@ import java.net.URL;
 @Singleton public class AwsIpWebService implements IpProvider {
 
     private static final String AWS_SERVICE = "http://checkip.amazonaws.com";
-    private static final Logger LOGGER = LogManager.getLogger(AwsIpWebService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AwsIpWebService.class);
     private String ipCache;
 
     private static String contactService() {
@@ -44,7 +43,7 @@ import java.net.URL;
         try {
             LOGGER.debug("Contacting AWS IP service at " + AWS_SERVICE);
             whatIsMyIp = new URL(AWS_SERVICE);
-            in = new BufferedReader(new InputStreamReader(whatIsMyIp.openStream(),"UTF-8"));
+            in = new BufferedReader(new InputStreamReader(whatIsMyIp.openStream(), "UTF-8"));
             String ip = in.readLine();
             LOGGER.info("AWS IP service returned " + ip + " as public ip");
             return ip;
@@ -56,7 +55,7 @@ import java.net.URL;
                 try {
                     in.close();
                 } catch (IOException ignored) {
-                    LOGGER.warn(ignored);
+                    LOGGER.warn("Error contacting AWS service", ignored);
                 }
             }
         }

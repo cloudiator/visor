@@ -24,15 +24,16 @@ import de.uniulm.omi.cloudiator.visor.exceptions.MeasurementNotAvailableExceptio
 import de.uniulm.omi.cloudiator.visor.execution.ScheduledExecutionService;
 import de.uniulm.omi.cloudiator.visor.reporting.ReportingException;
 import de.uniulm.omi.cloudiator.visor.reporting.ReportingInterface;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by daniel on 18.12.14.
  */
 public class SensorMonitorImpl implements SensorMonitor {
 
-    private static final Logger LOGGER = LogManager.getLogger(Monitor.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Monitor.class);
     private final String uuid;
     private final String metricName;
     private final String componentId;

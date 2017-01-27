@@ -31,8 +31,8 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.impl.nio.client.HttpAsyncClients;
 import org.apache.http.nio.entity.NByteArrayEntity;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
@@ -53,7 +53,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class ChukwaReporter implements ReportingInterface<Metric> {
 
-    private static final Logger LOGGER = LogManager.getLogger(ChukwaReporter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ChukwaReporter.class);
     private static final int DEFAULT_PROTOCOL_VERSION = 1;
 
     private final URI chukwaUri;

@@ -18,8 +18,8 @@
 
 package de.uniulm.omi.cloudiator.visor.execution;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.*;
 
@@ -33,7 +33,7 @@ public class ExtendedScheduledThreadPoolExecutor extends ScheduledThreadPoolExec
     }
 
     private static final Logger LOGGER =
-        LogManager.getLogger(ExtendedScheduledThreadPoolExecutor.class);
+        LoggerFactory.getLogger(ExtendedScheduledThreadPoolExecutor.class);
 
     public ExtendedScheduledThreadPoolExecutor(int corePoolSize) {
         super(corePoolSize);
@@ -66,7 +66,7 @@ public class ExtendedScheduledThreadPoolExecutor extends ScheduledThreadPoolExec
             }
         }
         if (t != null) {
-            LOGGER.fatal("Uncaught exception occurred during the execution of task.", t);
+            LOGGER.error("Uncaught exception occurred during the execution of task.", t);
         }
     }
 }

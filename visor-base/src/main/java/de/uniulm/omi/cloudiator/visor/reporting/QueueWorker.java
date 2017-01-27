@@ -20,8 +20,8 @@ package de.uniulm.omi.cloudiator.visor.reporting;
 
 import de.uniulm.omi.cloudiator.visor.execution.Schedulable;
 import de.uniulm.omi.cloudiator.visor.monitoring.Interval;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +36,7 @@ public class QueueWorker<T> implements Schedulable {
 
     private final BlockingQueue<T> queue;
     private final ReportingInterface<T> reportingInterface;
-    private static final Logger LOGGER = LogManager.getLogger(QueueWorker.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(QueueWorker.class);
     private final Interval interval;
 
     public QueueWorker(BlockingQueue<T> queue, ReportingInterface<T> reportingInterface,
