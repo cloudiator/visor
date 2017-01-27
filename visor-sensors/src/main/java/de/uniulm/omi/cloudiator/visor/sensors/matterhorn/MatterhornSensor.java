@@ -73,7 +73,7 @@ public class MatterhornSensor extends AbstractSensor<Integer> {
 
     private final static String URL_CONFIGURATION_KEY = "matterhorn.url";
     private final static String URL_DEFAULT_VALUE =
-        "http://localhost:8080/admin-ng/event/events.json?filter=status:EVENTS.EVENTS.STATUS.PROCESSING";
+        "http://$IP$/admin-ng/event/events.json?filter=status:EVENTS.EVENTS.STATUS.PROCESSING";
     private final static String USER_CONFIGURATION_KEY = "matterhorn.user";
     private final static String USER_DEFAULT_VALUE = "opencast_system_account";
     private final static String PASSWORD_CONFIGURATION_KEY = "matterhorn.password";
@@ -90,7 +90,8 @@ public class MatterhornSensor extends AbstractSensor<Integer> {
         SensorConfiguration sensorConfiguration) throws SensorInitializationException {
         super.initialize(monitorContext, sensorConfiguration);
 
-        this.url = sensorConfiguration.getValue(URL_CONFIGURATION_KEY).orElse(URL_DEFAULT_VALUE);
+        this.url = sensorConfiguration.getValue(URL_CONFIGURATION_KEY).orElse(URL_DEFAULT_VALUE)
+            .replace("$IP$", monitorContext.getValue("local.ip"));
         this.user = sensorConfiguration.getValue(USER_CONFIGURATION_KEY).orElse(USER_DEFAULT_VALUE);
         this.password =
             sensorConfiguration.getValue(PASSWORD_CONFIGURATION_KEY).orElse(PASSWORD_DEFAULT_VALUE);
