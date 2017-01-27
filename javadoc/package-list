@@ -18,6 +18,7 @@ de.uniulm.omi.cloudiator.visor.sensors.apache
 de.uniulm.omi.cloudiator.visor.sensors.bandwith
 de.uniulm.omi.cloudiator.visor.sensors.cassandra
 de.uniulm.omi.cloudiator.visor.sensors.haproxy
+de.uniulm.omi.cloudiator.visor.sensors.matterhorn
 de.uniulm.omi.cloudiator.visor.sensors.sigar
 de.uniulm.omi.cloudiator.visor.server
 de.uniulm.omi.cloudiator.visor.telnet
