@@ -21,6 +21,7 @@ package de.uniulm.omi.cloudiator.visor.sensors.matterhorn;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Charsets;
+import com.google.common.base.MoreObjects;
 import de.uniulm.omi.cloudiator.visor.exceptions.MeasurementNotAvailableException;
 import de.uniulm.omi.cloudiator.visor.exceptions.SensorInitializationException;
 import de.uniulm.omi.cloudiator.visor.monitoring.AbstractSensor;
@@ -73,7 +74,7 @@ public class MatterhornSensor extends AbstractSensor<Integer> {
 
     private final static String URL_CONFIGURATION_KEY = "matterhorn.url";
     private final static String URL_DEFAULT_VALUE =
-        "http://$IP$/admin-ng/event/events.json?filter=status:EVENTS.EVENTS.STATUS.PROCESSING";
+        "http://$IP$:8080/admin-ng/event/events.json?filter=status:EVENTS.EVENTS.STATUS.PROCESSING";
     private final static String USER_CONFIGURATION_KEY = "matterhorn.user";
     private final static String USER_DEFAULT_VALUE = "opencast_system_account";
     private final static String PASSWORD_CONFIGURATION_KEY = "matterhorn.password";
@@ -116,6 +117,11 @@ public class MatterhornSensor extends AbstractSensor<Integer> {
             throw new MeasurementNotAvailableException(
                 String.format("%s failed to take measurement.", this), e);
         }
+    }
+
+    @Override public String toString() {
+        return MoreObjects.toStringHelper(this).add("url", url).add("user", user)
+            .add("password", password).add("entryType", entryType).toString();
     }
 
     private final static class ResponseParser {
