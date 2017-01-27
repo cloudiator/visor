@@ -81,7 +81,7 @@
         <dependency>
             <groupId>org.opencastproject</groupId>
             <artifactId>matterhorn-common</artifactId>
-            <version>RELEASE</version>
+            <version>1.4.4</version>
         </dependency>
     </dependencies>
 </project>
