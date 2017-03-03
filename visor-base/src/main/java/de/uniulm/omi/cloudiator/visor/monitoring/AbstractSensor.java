@@ -109,7 +109,7 @@ public abstract class AbstractSensor<E> implements Sensor {
         return MeasurementBuilder.newBuilder();
     }
 
-    @Override public final String toString() {
+    @Override public String toString() {
         return MoreObjects.toStringHelper(this).toString();
     }
 }
