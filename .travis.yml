@@ -3,13 +3,19 @@ jdk:
 - oraclejdk8
 language: java
 install: mvn install -U -DskipTests=true
-script: mvn install -U -Dmaven.javadoc.skip=true
+script: mvn org.jacoco:jacoco-maven-plugin:prepare-agent install -U -Dmaven.javadoc.skip=true sonar:sonar
 after_success:
 - util/deploy_snapshot.sh
 - util/publish-javadoc-to-gh-pages.sh
 branches:
   except:
   - gh-pages
+
+addons:
+  sonarqube:
+    token:
+      secure: f5fpO6lbgrl4UGmcy3J3UwEWaJIk1JrvK/ZyOWKlFzsumWjTr4m4S8G8ixROZAj70468hk59dZ44Km/9CaC0Yu2M920Tjhv+jhlXFXWaldxZQPPfj/ZYdtVAfCF7SaEW3Ec9ZPXDfzieycVml9WIFHgvrfRAUhMYDuOONLwbM/CF6t+BcsbR3zF0s/5t7Htnhhd+O/IkHj+rvSpj8uQ4YQ5WEHTGbJ3J+SJnFvv6Jfqx6qvoM1qlOsHHwx8CmynjmvL03Xi8l4qqeWvNMV09OhFXxqoPHK9zdT8/HjBKKURNuZ29OC8r8UjlhO1ygLhNfoSPB7EQCBdCJx5K6XTaxqq2noJ9HvDjBJuGyr23Vj8H9dWcIv9LzAM3LdRZaXp5EKm/c4pG2SDjMrpXQv9fseiqid5CBvmbjAmcNA9tcP9DS9dUzu4rrF8ZFgkY4oJMlE/GbthXsTuB+uCqHDtP/wj3k3eT/W16XXUH19GB7iwjfyCdyY3cdU+97tstehpvDry4R3ta8mdty/5FtSFlNgkAG++AxDvtBKCQics+sVru60k1UYoDXqWd2Box7fV5EW3wHJpSweeXjhAVuT9Dg4RpJnsIlyjjZ3c6kn33qGJGgnEM+i/xSuBfsb59YHsll/D7FIFrM6xB3ExcPJFc/FCJtAJxa5DMCnKWBQoMduE=
+
 env:
   global:
   - secure: ZGnT7fJH2Giz9jg/SqFKlg4OqBNLAwzQCdR1jmsBqHJt6rzWpc0AZprD+o88PYZ7wpWiLxJQzr9OAOVnaVRER3WnYEQ47nzV2Zl1+PuLkxGGbXINIPDsxEwcV+Cjzof0pSUxkHiIO4plI7XjV0aXISCU1xNTCL3k2NECtPuHEwANlQFsm8KVXsV01jhuWP4x9qzyv4JwNbCaml3a0BORxaBiMb/pwde9JVK40SnMZErkIqge1zyT3FO/KQvoPt0xPJggzv/7f1xfryczNmc2xKzOlbLuuhBgbkR5pgEXEX2nHn/CjZGNGiY9a1gQmM7gHF/vbQgpqzoMAaituLAC/lQxUqQrADIBmpUNsbeq/rJH2EMIX6MrYcPcCnZBIKOasIqSDNTYpgfXKgJA0K5rkjxRNpx9sTMnaQ0YHSYfLOqug2z/UVQPonlkX1/kNaHjL5knKMBqSg8ghwErffGPxggTgwezHiJHlPtqBITvRcBctOwly4owiIDdaX49j4w+MqJhdhvOlgzEtQDHt/bhd5q0wask7O5RvMI0MK9S0fsNqrSGGZR+f8AM1On7veDhz87N/WK4gkS9GMsvUMrNFSkTw+JZ9TN+lK79GWierpJZfEQjKJ3HmV/+YeOJhEE4pCFNBYixdS79/rDxYi9wPjup52yuGnKnrmh0yDE9UTc=
