@@ -21,6 +21,7 @@ package de.uniulm.omi.cloudiator.visor;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.google.common.base.MoreObjects;
 import com.google.inject.Inject;
 import de.uniulm.omi.cloudiator.visor.exceptions.MonitorException;
 import de.uniulm.omi.cloudiator.visor.monitoring.MonitoringService;
@@ -35,13 +36,25 @@ import java.util.List;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Created by daniel on 28.04.17.
+ * Class YamlParser
+ * <p>
+ * Parses a yaml file present at the {@link YamlParser#CONF_INIT_YAML} location.
+ * <p>
+ * The monitors in this file will be added to the {@link MonitoringService}.
+ * <p>
+ * An example can be found in the conf folder.
  */
 public class YamlParser {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(YamlParser.class);
     private static final String CONF_INIT_YAML = "conf/init.yaml";
 
+    /**
+     * Parses the file and adds the described monitors to the passed monitoringService.
+     *
+     * @param monitoringService the monitoringService used to start the monitors.
+     * @throws NullPointerException if monitoringService is null
+     */
     @Inject public YamlParser(MonitoringService monitoringService) {
 
         checkNotNull(monitoringService, "monitoringService is null");
@@ -80,6 +93,10 @@ public class YamlParser {
         }
 
         LOGGER.info("YAML initialization finished successfully.");
+    }
+
+    @Override public String toString() {
+        return MoreObjects.toStringHelper(this).toString();
     }
 
 }
