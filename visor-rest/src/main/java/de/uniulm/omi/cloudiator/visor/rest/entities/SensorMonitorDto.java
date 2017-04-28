@@ -20,6 +20,7 @@ package de.uniulm.omi.cloudiator.visor.rest.entities;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.google.common.base.MoreObjects;
 import de.uniulm.omi.cloudiator.visor.exceptions.MonitorException;
 import de.uniulm.omi.cloudiator.visor.monitoring.*;
 
@@ -81,5 +82,14 @@ public class SensorMonitorDto extends MonitorDto {
             return Collections.emptyMap();
         }
         return sensorConfiguration;
+    }
+
+    protected MoreObjects.ToStringHelper toStringHelper() {
+        return super.toStringHelper().add("sensorClassName", sensorClassName)
+            .add("interval", interval).add("sensorConfiguration", sensorClassName);
+    }
+
+    @Override public String toString() {
+        return toStringHelper().toString();
     }
 }

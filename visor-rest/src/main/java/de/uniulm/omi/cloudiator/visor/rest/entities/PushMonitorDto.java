@@ -18,6 +18,7 @@
 
 package de.uniulm.omi.cloudiator.visor.rest.entities;
 
+import com.google.common.base.MoreObjects;
 import de.uniulm.omi.cloudiator.visor.exceptions.MonitorException;
 import de.uniulm.omi.cloudiator.visor.monitoring.Monitor;
 import de.uniulm.omi.cloudiator.visor.monitoring.MonitoringService;
@@ -54,5 +55,13 @@ public class PushMonitorDto extends MonitorDto {
         throws MonitorException {
         return monitoringService
             .startMonitor(uuid, getComponentId(), getMetricName(), getMonitorContext());
+    }
+
+    protected MoreObjects.ToStringHelper toStringHelper() {
+        return super.toStringHelper().add("port", port);
+    }
+
+    @Override public String toString() {
+        return toStringHelper().toString();
     }
 }

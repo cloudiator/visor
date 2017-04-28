@@ -62,6 +62,7 @@
             <outputDirectory>/conf</outputDirectory>
             <includes>
                 <include>default.properties</include>
+                <include>init.example.yaml</include>
             </includes>
         </fileSet>
         <fileSet>

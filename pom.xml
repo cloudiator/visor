@@ -46,6 +46,7 @@
         <module>visor-service</module>
         <module>visor-reporting-chukwa</module>
         <module>visor-reporting-influx</module>
+        <module>visor-init</module>
     </modules>
 
     <parent>
@@ -120,6 +121,11 @@
             <dependency>
                 <groupId>io.github.cloudiator.visor</groupId>
                 <artifactId>visor-telnet</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.cloudiator.visor</groupId>
+                <artifactId>visor-init</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

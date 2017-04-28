@@ -21,6 +21,7 @@ package de.uniulm.omi.cloudiator.visor;
 import com.google.inject.Module;
 import de.uniulm.omi.cloudiator.visor.config.*;
 import de.uniulm.omi.cloudiator.visor.exceptions.ConfigurationException;
+import de.uniulm.omi.cloudiator.visor.rest.RestServerModule;
 import de.uniulm.omi.cloudiator.visor.telnet.TelnetServiceModule;
 
 import java.util.Arrays;
@@ -56,7 +57,7 @@ public class VisorServiceBuilder {
         this.modules.addAll(Arrays.asList(modules));
         return this;
     }
-    
+
     private void loadModulesBasedOnConfiguration(ConfigurationAccess configurationAccess) {
         try {
             this.modules.add((Module) Class
@@ -75,6 +76,8 @@ public class VisorServiceBuilder {
             new FileConfigurationAccessor(commandLinePropertiesAccessor.getConfFileLocation());
         this.modules.add(new BaseModule(configurationAccess, commandLinePropertiesAccessor));
         this.modules.add(new TelnetServiceModule());
+        this.modules.add(new RestServerModule());
+        this.modules.add(new InitModule());
         this.loadModulesBasedOnConfiguration(configurationAccess);
         return new VisorService(this.modules);
     }

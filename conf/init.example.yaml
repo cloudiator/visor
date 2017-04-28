@@ -1,0 +1,15 @@
+- metricName: "cpuUsage"
+  componentId: "1"
+  "@type": "sensor"
+  monitorContext:
+    local.ip: "46.5.97.61"
+    os.name: "MacOSX"
+    java.version: "1.8.0_40"
+    os.arch: "x86_64"
+    os.version: "10.12.4"
+  sensorClassName: "de.uniulm.omi.cloudiator.visor.sensors.SystemCpuUsageSensor"
+  interval:
+    period: 10
+    timeUnit: "SECONDS"
+  sensorConfiguration: {}
+  uuid: "b7eeb9b5-3394-42bc-9c0b-c2df1bc4935e"
