@@ -87,6 +87,7 @@
             <groupId>org.pcap4j</groupId>
             <artifactId>pcap4j-distribution</artifactId>
             <version>1.7.0</version>
+            <type>pom</type>
         </dependency>
     </dependencies>
 </project>

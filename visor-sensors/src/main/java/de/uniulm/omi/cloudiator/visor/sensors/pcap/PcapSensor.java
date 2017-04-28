@@ -26,8 +26,11 @@ import de.uniulm.omi.cloudiator.visor.monitoring.Measurement;
 import de.uniulm.omi.cloudiator.visor.monitoring.MonitorContext;
 import de.uniulm.omi.cloudiator.visor.monitoring.SensorConfiguration;
 import org.pcap4j.core.*;
+import org.pcap4j.packet.IpV4Packet;
 import org.pcap4j.packet.Packet;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -41,6 +44,8 @@ public class PcapSensor extends AbstractSensor {
 
     private final static String PORT_FIELD = "port";
     private final static int PORT_DEFAULT_VALUE = 80;
+
+    static Map<String, Long> numberOfPackages = new HashMap<>();
 
     public static void main(String[] args) throws PcapNativeException, NotOpenException {
         PcapHandle.Builder phb = new PcapHandle.Builder("any").snaplen(SNAPLEN)
@@ -57,7 +62,12 @@ public class PcapSensor extends AbstractSensor {
                 continue;
 
             }
-            System.out.println(packet);
+            final IpV4Packet ipV4Packet = packet.get(IpV4Packet.class);
+            String ip = ipV4Packet.getHeader().getSrcAddr().toString();
+            numberOfPackages.merge(ip, 1L, (a, b) -> a + b);
+            //numberOfPackages.get();
+            //System.out.println(packet);
+            System.out.println(numberOfPackages.toString());
         }
     }
 
