@@ -60,6 +60,10 @@
             <groupId>io.github.cloudiator.visor</groupId>
             <artifactId>visor-sensors</artifactId>
         </dependency>
+        <dependency>
+            <groupId>io.github.cloudiator.visor</groupId>
+            <artifactId>visor-init</artifactId>
+        </dependency>
     </dependencies>
 
     <artifactId>visor-service</artifactId>
