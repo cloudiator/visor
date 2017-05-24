@@ -55,6 +55,7 @@
         <dependency>
             <groupId>io.github.cloudiator</groupId>
             <artifactId>common</artifactId>
+            <version>0.2.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
