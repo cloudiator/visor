@@ -125,7 +125,7 @@
                         <configuration>
                             <target>
                                 <mkdir dir="${project.build.directory}/native-libs"/>
-                                <get src="http://downloads.sourceforge.net/project/sigar/sigar/1.6/hyperic-sigar-1.6.4.zip"
+                                <get src="https://github.com/cloudiator/visor/raw/master/lib/hyperic-sigar-1.6.4.zip"
                                      dest="${project.build.directory}/native-libs/"/>
                                 <unzip src="${project.build.directory}/native-libs/hyperic-sigar-1.6.4.zip"
                                        dest="${project.build.directory}/native-libs/"/>
