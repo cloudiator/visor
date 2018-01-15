@@ -28,6 +28,7 @@ import de.uniulm.omi.cloudiator.visor.monitoring.SensorConfiguration;
 import org.pcap4j.core.*;
 import org.pcap4j.packet.IpV4Packet;
 import org.pcap4j.packet.Packet;
+import org.pcap4j.packet.TcpPacket;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -45,7 +46,8 @@ public class PcapSensor extends AbstractSensor {
     private final static String PORT_FIELD = "port";
     private final static int PORT_DEFAULT_VALUE = 80;
 
-    static Map<String, Long> numberOfPackages = new HashMap<>();
+    static Map<String, Long> numberOfIncomingPackages = new HashMap<>();
+    static Map<String, Long> numberOfOutgoingPackages = new HashMap<>();
 
     public static void main(String[] args) throws PcapNativeException, NotOpenException {
         PcapHandle.Builder phb = new PcapHandle.Builder("any").snaplen(SNAPLEN)
@@ -56,18 +58,32 @@ public class PcapSensor extends AbstractSensor {
 
         handle.setFilter("port 80", BpfProgram.BpfCompileMode.OPTIMIZE);
 
-        while (true) {
+        while (!Thread.currentThread().isInterrupted()) {
             Packet packet = handle.getNextPacket();
             if (packet == null) {
                 continue;
-
             }
             final IpV4Packet ipV4Packet = packet.get(IpV4Packet.class);
-            String ip = ipV4Packet.getHeader().getSrcAddr().toString();
-            numberOfPackages.merge(ip, 1L, (a, b) -> a + b);
-            //numberOfPackages.get();
-            //System.out.println(packet);
-            System.out.println(numberOfPackages.toString());
+            final TcpPacket tcpPacket = packet.get(TcpPacket.class);
+
+            String srcAddr = ipV4Packet.getHeader().getSrcAddr().toString();
+            String destAddr = ipV4Packet.getHeader().getDstAddr().toString();
+
+            //check if incoming our outgoing
+            if (tcpPacket.getHeader().getDstPort().valueAsInt() == 80) {
+                //incoming
+                numberOfIncomingPackages.merge(srcAddr, 1L, (a, b) -> a + b);
+            } else if (tcpPacket.getHeader().getSrcPort().valueAsInt() == 80) {
+                //outgoing
+                numberOfOutgoingPackages.merge(destAddr, 1L, (a, b) -> a + b);
+            } else {
+                throw new IllegalStateException(
+                    String.format("Could not classify packet %s as incoming or outgoing.", packet));
+            }
+            System.out.println(" ------ Incoming -------");
+            System.out.println(numberOfIncomingPackages.toString());
+            System.out.println(" ------ Outgoing -------");
+            System.out.println(numberOfOutgoingPackages.toString());
         }
     }
 
