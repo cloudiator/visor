@@ -48,6 +48,7 @@
         <module>visor-reporting-influx</module>
         <module>visor-init</module>
         <module>visor-reporting-json-tcp</module>
+      <module>visor-reporting-jms</module>
     </modules>
 
     <parent>
