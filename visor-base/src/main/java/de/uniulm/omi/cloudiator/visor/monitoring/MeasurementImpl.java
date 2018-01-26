@@ -19,63 +19,70 @@
 package de.uniulm.omi.cloudiator.visor.monitoring;
 
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableMap;
-
 import java.util.Map;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Created by daniel on 18.12.14.
  */
 public class MeasurementImpl<E> implements Measurement<E> {
 
-    private final long timestamp;
-    private final E value;
-    private final Map<String, String> tags;
+  private final long timestamp;
+  private final E value;
+  private final Map<String, String> tags;
 
-    MeasurementImpl(long timestamp, E value, Map<String, String> tags) {
-        checkNotNull(timestamp);
-        this.timestamp = timestamp;
-        checkNotNull(value);
-        this.value = value;
-        checkNotNull(tags);
-        this.tags = tags;
+  MeasurementImpl(long timestamp, E value, Map<String, String> tags) {
+    checkNotNull(timestamp);
+    this.timestamp = timestamp;
+    checkNotNull(value);
+    this.value = value;
+    checkNotNull(tags);
+    this.tags = tags;
+  }
+
+  @Override
+  public long getTimestamp() {
+    return timestamp;
+  }
+
+  @Override
+  public E getValue() {
+    return value;
+  }
+
+  @Override
+  public Map<String, String> tags() {
+    return ImmutableMap.copyOf(tags);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
     }
 
-    @Override public long getTimestamp() {
-        return timestamp;
-    }
+    MeasurementImpl that = (MeasurementImpl) o;
 
-    @Override public E getValue() {
-        return value;
-    }
+    return getTimestamp() == that.getTimestamp() && getValue().equals(that.getValue());
 
-    @Override public Map<String, String> tags() {
-        return ImmutableMap.copyOf(tags);
-    }
+  }
 
-    @Override public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
+  @Override
+  public int hashCode() {
+    int result = (int) (getTimestamp() ^ (getTimestamp() >>> 32));
+    result = 31 * result + getValue().hashCode();
+    return result;
+  }
 
-        MeasurementImpl that = (MeasurementImpl) o;
-
-        return getTimestamp() == that.getTimestamp() && getValue().equals(that.getValue());
-
-    }
-
-    @Override public int hashCode() {
-        int result = (int) (getTimestamp() ^ (getTimestamp() >>> 32));
-        result = 31 * result + getValue().hashCode();
-        return result;
-    }
-
-    @Override public String toString() {
-        return MoreObjects.toStringHelper(this).add("timestamp", timestamp).add("value", value)
-            .add("tags", tags).toString();
-    }
+  @Override
+  public String toString() {
+    return MoreObjects.toStringHelper(this).add("timestamp", timestamp).add("value", value)
+        .add("tags", tags).toString();
+  }
 }

@@ -40,7 +40,6 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 import de.uniulm.omi.cloudiator.visor.execution.ShutdownHook;
-
 import java.util.Set;
 
 /**
@@ -48,14 +47,14 @@ import java.util.Set;
  */
 public class VisorService {
 
-    private final Set<Module> modules;
+  private final Set<Module> modules;
 
-    public VisorService(Set<Module> modules) {
-        this.modules = modules;
-    }
+  public VisorService(Set<Module> modules) {
+    this.modules = modules;
+  }
 
-    public void start() {
-        final Injector injector = Guice.createInjector(this.modules);
-        Runtime.getRuntime().addShutdownHook(injector.getInstance(ShutdownHook.class));
-    }
+  public void start() {
+    final Injector injector = Guice.createInjector(this.modules);
+    Runtime.getRuntime().addShutdownHook(injector.getInstance(ShutdownHook.class));
+  }
 }

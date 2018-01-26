@@ -20,7 +20,6 @@ package de.uniulm.omi.cloudiator.visor.config;
 
 import com.google.inject.Singleton;
 import de.uniulm.omi.cloudiator.visor.exceptions.ConfigurationException;
-
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -29,26 +28,28 @@ import java.util.Properties;
 /**
  * Created by daniel on 15.12.14.
  */
-@Singleton public class FileConfigurationAccessor implements ConfigurationAccess {
+@Singleton
+public class FileConfigurationAccessor implements ConfigurationAccess {
 
-    private final Properties properties;
+  private final Properties properties;
 
-    public FileConfigurationAccessor(String configurationFilePath) {
-        this.properties = new Properties();
-        try (final FileInputStream fileInputStream = new FileInputStream(configurationFilePath);
-            final BufferedInputStream bufferedInputStream = new BufferedInputStream(
-                fileInputStream)) {
-            properties.load(bufferedInputStream);
-        } catch (IOException e) {
-            throw new ConfigurationException("Could not read properties file.", e);
-        }
+  public FileConfigurationAccessor(String configurationFilePath) {
+    this.properties = new Properties();
+    try (final FileInputStream fileInputStream = new FileInputStream(configurationFilePath);
+        final BufferedInputStream bufferedInputStream = new BufferedInputStream(
+            fileInputStream)) {
+      properties.load(bufferedInputStream);
+    } catch (IOException e) {
+      throw new ConfigurationException("Could not read properties file.", e);
     }
+  }
 
-    public String getProperty(String key) {
-        return this.properties.getProperty(key);
-    }
+  public String getProperty(String key) {
+    return this.properties.getProperty(key);
+  }
 
-    @Override public Properties getProperties() {
-        return this.properties;
-    }
+  @Override
+  public Properties getProperties() {
+    return this.properties;
+  }
 }

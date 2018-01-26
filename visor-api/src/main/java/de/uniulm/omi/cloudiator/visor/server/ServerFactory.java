@@ -18,36 +18,33 @@
 
 package de.uniulm.omi.cloudiator.visor.server;
 
-import de.uniulm.omi.cloudiator.visor.monitoring.MonitorContext;
-
 import java.io.IOException;
-import java.util.Map;
 
 /**
  * Created by daniel on 23.10.15.
  */
 public interface ServerFactory {
 
-    /**
-     * Starts a new server on the given port.
-     *
-     * @param port the port used by the server.
-     * @return the created server
-     * @throws IOException if an I/O error occurs while opening the socket.
-     * @see java.net.ServerSocket
-     */
-    Server createServer(int port) throws IOException;
+  /**
+   * Starts a new server on the given port.
+   *
+   * @param port the port used by the server.
+   * @return the created server
+   * @throws IOException if an I/O error occurs while opening the socket.
+   * @see java.net.ServerSocket
+   */
+  Server createServer(int port) throws IOException;
 
-    /**
-     * Starts a new server using a free port from the given port range.
-     *
-     * @param lower         lower boundary of the port range (included)
-     * @param upper         upper boundary of the port range (included)
-     * @return the created server
-     * @throws IOException if no empty port could be found on the given port range.
-     * @see java.net.ServerSocket
-     */
-    Server createServer(int lower, int upper)
-        throws IOException;
+  /**
+   * Starts a new server using a free port from the given port range.
+   *
+   * @param lower lower boundary of the port range (included)
+   * @param upper upper boundary of the port range (included)
+   * @return the created server
+   * @throws IOException if no empty port could be found on the given port range.
+   * @see java.net.ServerSocket
+   */
+  Server createServer(int lower, int upper)
+      throws IOException;
 
 }

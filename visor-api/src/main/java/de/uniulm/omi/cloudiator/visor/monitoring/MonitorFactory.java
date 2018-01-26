@@ -19,7 +19,6 @@
 package de.uniulm.omi.cloudiator.visor.monitoring;
 
 import de.uniulm.omi.cloudiator.visor.exceptions.MonitorException;
-
 import java.util.Map;
 
 /**
@@ -27,10 +26,10 @@ import java.util.Map;
  */
 public interface MonitorFactory {
 
-    SensorMonitor create(String uuid, String metricName, String componentId,
-        Map<String, String> monitorContext, String sensorClassName, Interval interval,
-        SensorConfiguration sensorConfiguration) throws MonitorException;
+  SensorMonitor create(String uuid, String metricName, String componentId,
+      Map<String, String> monitorContext, String sensorClassName, Interval interval,
+      SensorConfiguration sensorConfiguration) throws MonitorException;
 
-    PushMonitor create(String uuid, String metricName, String componentId,
-        Map<String, String> monitorContext) throws MonitorException;
+  PushMonitor create(String uuid, String metricName, String componentId,
+      Map<String, String> monitorContext) throws MonitorException;
 }

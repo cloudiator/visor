@@ -3,43 +3,215 @@ package de.uniulm.omi.cloudiator.visor.sensors.cassandra;
 import com.google.common.collect.ImmutableMap;
 import de.uniulm.omi.cloudiator.visor.exceptions.MeasurementNotAvailableException;
 import de.uniulm.omi.cloudiator.visor.exceptions.SensorInitializationException;
-import de.uniulm.omi.cloudiator.visor.monitoring.*;
-
-import javax.management.*;
-import javax.management.remote.JMXConnector;
-import javax.management.remote.JMXConnectorFactory;
-import javax.management.remote.JMXServiceURL;
+import de.uniulm.omi.cloudiator.visor.monitoring.AbstractSensor;
+import de.uniulm.omi.cloudiator.visor.monitoring.Measurement;
+import de.uniulm.omi.cloudiator.visor.monitoring.MeasurementBuilder;
+import de.uniulm.omi.cloudiator.visor.monitoring.MonitorContext;
+import de.uniulm.omi.cloudiator.visor.monitoring.SensorConfiguration;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import javax.management.AttributeNotFoundException;
+import javax.management.InstanceNotFoundException;
+import javax.management.MBeanException;
+import javax.management.MBeanServerConnection;
+import javax.management.MalformedObjectNameException;
+import javax.management.ObjectName;
+import javax.management.ReflectionException;
+import javax.management.remote.JMXConnector;
+import javax.management.remote.JMXConnectorFactory;
+import javax.management.remote.JMXServiceURL;
 
 /**
  * Created by Daniel Seybold on 20.06.2016.
  */
 public class CassandraSensor extends AbstractSensor {
 
-    private static final String CASSANDRA_IP = "cassandra.ip";
-    private static final String CASSANDRA_PORT = "cassandra.port";
-    private final static String CASSANDRA_METRIC = "cassandra.metric";
+  private static final String CASSANDRA_IP = "cassandra.ip";
+  private static final String CASSANDRA_PORT = "cassandra.port";
+  private final static String CASSANDRA_METRIC = "cassandra.metric";
 
-    private Optional<String> cassandraIp;
-    private Optional<String> cassandraPort;
+  private Optional<String> cassandraIp;
+  private Optional<String> cassandraPort;
 
-    private JMXServiceURL cassandraMonitoringUrl;
-    private JMXConnector jmxConnector;
-    private MBeanServerConnection mBeanServerConnection;
+  private JMXServiceURL cassandraMonitoringUrl;
+  private JMXConnector jmxConnector;
+  private MBeanServerConnection mBeanServerConnection;
 
-    private Measureable metric;
+  private Measureable metric;
 
-    private static class Measurables implements Measureable {
+  @Override
+  protected void initialize(MonitorContext monitorContext,
+      SensorConfiguration sensorConfiguration) throws SensorInitializationException {
+    super.initialize(monitorContext, sensorConfiguration);
 
-        public static Measureable of(String string) {
-            try {
-                return RawMetric.valueOf(string);
-            } catch (IllegalArgumentException ignored) {
-            }
+    this.cassandraIp = sensorConfiguration.getValue(CASSANDRA_IP);
+    this.cassandraPort = sensorConfiguration.getValue(CASSANDRA_PORT);
+
+    try {
+      this.cassandraMonitoringUrl = new JMXServiceURL(
+          "service:jmx:rmi:///jndi/rmi://" + this.cassandraIp.get() + ":" + this.cassandraPort.get()
+              + "/jmxrmi");
+      this.jmxConnector = JMXConnectorFactory.connect(this.cassandraMonitoringUrl, null);
+      this.mBeanServerConnection = this.jmxConnector.getMBeanServerConnection();
+
+    } catch (MalformedURLException e) {
+      throw new SensorInitializationException(
+          "Url provided for Cassandra  stats is malformed", e);
+    } catch (IOException e) {
+      throw new SensorInitializationException("Unable to create MBean connection", e);
+    }
+
+    try {
+      this.metric = Measurables.of(sensorConfiguration.getValue(CASSANDRA_METRIC).orElseThrow(
+          () -> new SensorInitializationException(
+              "Configuration parameter " + CASSANDRA_METRIC + " is required")));
+    } catch (IllegalArgumentException e) {
+      throw new SensorInitializationException(e);
+    }
+
+
+  }
+
+  @Override
+  protected Measurement measureSingle() throws MeasurementNotAvailableException {
+
+    return metric.measure(new RawMetricSupplier(this.mBeanServerConnection).get(),
+        new RawMetricSupplier(this.mBeanServerConnection).get());
+
+
+  }
+
+  private enum RawMetric implements CassandraMetric, Measureable {
+    TOTAL_DISK_SPACE_USED {
+      @Override
+      public String string() {
+        return "org.apache.cassandra.metrics:type=ColumnFamily,name=TotalDiskSpaceUsed";
+      }
+
+      @Override
+      public Object toType(String value) {
+        return Long.valueOf(value);
+      }
+
+      @Override
+      public String attribute() {
+        return "Value";
+      }
+
+    },
+
+    WRITE_THROUGHPUT_LATENCY {
+      @Override
+      public String string() {
+        return "org.apache.cassandra.metrics:type=ClientRequest,scope=Write,name=Latency";
+      }
+
+      @Override
+      public Object toType(String value) {
+        return Float.valueOf(value);
+      }
+
+      @Override
+      public String attribute() {
+        return "Mean";
+      }
+
+    },
+
+    WRITE_REQUESTS {
+      @Override
+      public String string() {
+        return "org.apache.cassandra.metrics:type=ClientRequest,scope=Write,name=Latency";
+      }
+
+      @Override
+      public Object toType(String value) {
+        return Double.valueOf(value);
+      }
+
+      @Override
+      public String attribute() {
+        return "OneMinuteRate";
+      }
+
+    },
+
+    READ_THROUGHPUT_LATENCY {
+      @Override
+      public String string() {
+        return "org.apache.cassandra.metrics:type=ClientRequest,scope=Read,name=Latency";
+      }
+
+      @Override
+      public Object toType(String value) {
+        return Double.valueOf(value);
+      }
+
+      @Override
+      public String attribute() {
+        return "Mean";
+      }
+
+    },
+
+    READ_REQUESTS {
+      @Override
+      public String string() {
+        return "org.apache.cassandra.metrics:type=ColumnFamily,name=ReadLatency";
+      }
+
+      @Override
+      public Object toType(String value) {
+        return Double.valueOf(value);
+      }
+
+      @Override
+      public String attribute() {
+        return "OneMinuteRate";
+      }
+
+    };
+
+
+    @Override
+    public Measurement measure(Map<RawMetric, Measurement> old, Map<RawMetric, Measurement> current)
+        throws MeasurementNotAvailableException {
+      return current.get(this);
+    }
+  }
+
+  private interface CassandraMetric {
+
+    String string();
+
+    Object toType(String value);
+
+    String attribute();
+
+
+  }
+
+  private interface Measureable {
+
+    Measurement measure(Map<RawMetric, Measurement> old, Map<RawMetric, Measurement> current)
+        throws MeasurementNotAvailableException;
+  }
+
+  private interface MetricSupplier<T> {
+
+    T get() throws MeasurementNotAvailableException;
+  }
+
+  private static class Measurables implements Measureable {
+
+    public static Measureable of(String string) {
+      try {
+        return RawMetric.valueOf(string);
+      } catch (IllegalArgumentException ignored) {
+      }
 
             /*
             //currently no composite metrics implemented
@@ -50,212 +222,49 @@ public class CassandraSensor extends AbstractSensor {
             }
             */
 
-            throw new IllegalArgumentException(
-                    String.format("Could not find metric with name %s", string));
-        }
-
-        @Override public Measurement measure(Map<RawMetric, Measurement> old,
-                                             Map<RawMetric, Measurement> current) {
-            return null;
-        }
-    }
-
-
-    private enum RawMetric implements CassandraMetric, Measureable {
-        TOTAL_DISK_SPACE_USED {
-
-            @Override
-            public String string() {
-                return "org.apache.cassandra.metrics:type=ColumnFamily,name=TotalDiskSpaceUsed";
-            }
-
-            @Override
-            public Object toType(String value) {
-                return Long.valueOf(value);
-            }
-
-            @Override
-            public String attribute() {
-                return "Value";
-            }
-
-        },
-
-        WRITE_THROUGHPUT_LATENCY {
-
-            @Override
-            public String string() {
-                return "org.apache.cassandra.metrics:type=ClientRequest,scope=Write,name=Latency";
-            }
-
-            @Override
-            public Object toType(String value) {
-               return Float.valueOf(value);
-            }
-
-            @Override
-            public String attribute() {
-                return "Mean";
-            }
-
-        },
-
-        WRITE_REQUESTS{
-
-            @Override
-            public String string() {
-                return "org.apache.cassandra.metrics:type=ClientRequest,scope=Write,name=Latency";
-            }
-
-            @Override
-            public Object toType(String value) {
-                return Double.valueOf(value);
-            }
-
-            @Override
-            public String attribute() {
-                return "OneMinuteRate";
-            }
-
-        },
-
-        READ_THROUGHPUT_LATENCY {
-
-            @Override
-            public String string() {
-                return "org.apache.cassandra.metrics:type=ClientRequest,scope=Read,name=Latency";
-            }
-
-            @Override
-            public Object toType(String value) {
-                return Double.valueOf(value);
-            }
-
-            @Override
-            public String attribute() {
-                return "Mean";
-            }
-
-        },
-
-        READ_REQUESTS{
-
-            @Override
-            public String string() {
-                return "org.apache.cassandra.metrics:type=ColumnFamily,name=ReadLatency";
-            }
-
-            @Override
-            public Object toType(String value) {
-                return Double.valueOf(value);
-            }
-
-            @Override
-            public String attribute() {
-                return "OneMinuteRate";
-            }
-
-        };
-
-
-
-        @Override
-        public Measurement measure(Map<RawMetric, Measurement> old, Map<RawMetric, Measurement> current) throws MeasurementNotAvailableException {
-            return current.get(this);
-        }
-    }
-
-    private interface CassandraMetric{
-        String string();
-
-        Object toType(String value);
-
-        String attribute();
-
-
-    }
-
-    private interface Measureable {
-        Measurement measure(Map<RawMetric, Measurement> old, Map<RawMetric, Measurement> current)
-                throws MeasurementNotAvailableException;
-    }
-
-    @Override protected void initialize(MonitorContext monitorContext,
-                                        SensorConfiguration sensorConfiguration) throws SensorInitializationException {
-        super.initialize(monitorContext, sensorConfiguration);
-
-        this.cassandraIp = sensorConfiguration.getValue(CASSANDRA_IP);
-        this.cassandraPort = sensorConfiguration.getValue(CASSANDRA_PORT);
-
-
-        try {
-            this.cassandraMonitoringUrl =  new JMXServiceURL("service:jmx:rmi:///jndi/rmi://"+this.cassandraIp.get()+":"+this.cassandraPort.get()+"/jmxrmi");
-            this.jmxConnector = JMXConnectorFactory.connect(this.cassandraMonitoringUrl, null);
-            this.mBeanServerConnection = this.jmxConnector.getMBeanServerConnection();
-
-        } catch (MalformedURLException e) {
-            throw new SensorInitializationException(
-                    "Url provided for Cassandra  stats is malformed", e);
-        }catch (IOException e){
-            throw new SensorInitializationException("Unable to create MBean connection", e);
-        }
-
-        try {
-            this.metric = Measurables.of(sensorConfiguration.getValue(CASSANDRA_METRIC).orElseThrow(
-                    () -> new SensorInitializationException(
-                            "Configuration parameter " + CASSANDRA_METRIC + " is required")));
-        } catch (IllegalArgumentException e) {
-            throw new SensorInitializationException(e);
-        }
-
-
+      throw new IllegalArgumentException(
+          String.format("Could not find metric with name %s", string));
     }
 
     @Override
-    protected Measurement measureSingle() throws MeasurementNotAvailableException {
+    public Measurement measure(Map<RawMetric, Measurement> old,
+        Map<RawMetric, Measurement> current) {
+      return null;
+    }
+  }
 
-        return metric.measure(new RawMetricSupplier(this.mBeanServerConnection).get(),new RawMetricSupplier(this.mBeanServerConnection).get());
+  private static class RawMetricSupplier implements MetricSupplier<Map<RawMetric, Measurement>> {
 
+    private final MBeanServerConnection mBeanServerConnection;
 
+    private RawMetricSupplier(MBeanServerConnection mBeanServerConnection) {
+      this.mBeanServerConnection = mBeanServerConnection;
     }
 
-    private interface MetricSupplier<T>{
+    @Override
+    public Map<RawMetric, Measurement> get() throws MeasurementNotAvailableException {
+      Map<RawMetric, Measurement> measurements = new HashMap<>(RawMetric.values().length);
+      try {
 
-        T get() throws MeasurementNotAvailableException;
-    }
+        for (RawMetric rawMetric : RawMetric.values()) {
 
-    private static class RawMetricSupplier implements MetricSupplier<Map<RawMetric, Measurement>>{
+          ObjectName mbeanObjectName = new ObjectName(rawMetric.string());
+          String attribute = rawMetric.attribute();
+          String mbeanValue = this.mBeanServerConnection.getAttribute(mbeanObjectName, attribute)
+              .toString();
 
-        private final MBeanServerConnection mBeanServerConnection;
-
-        private RawMetricSupplier(MBeanServerConnection mBeanServerConnection){
-            this.mBeanServerConnection = mBeanServerConnection;
+          measurements.put(rawMetric,
+              MeasurementBuilder.newBuilder().now().value(rawMetric.toType(mbeanValue)).build());
         }
 
-        @Override
-        public Map<RawMetric, Measurement> get() throws MeasurementNotAvailableException {
-            Map<RawMetric, Measurement> measurements = new HashMap<>(RawMetric.values().length);
-            try {
 
-                for (RawMetric rawMetric : RawMetric.values()) {
+      } catch (IOException | MalformedObjectNameException | AttributeNotFoundException | InstanceNotFoundException | ReflectionException | MBeanException e) {
 
-                    ObjectName mbeanObjectName = new ObjectName(rawMetric.string());
-                    String attribute = rawMetric.attribute();
-                    String mbeanValue =  this.mBeanServerConnection.getAttribute(mbeanObjectName, attribute).toString();
+        throw new MeasurementNotAvailableException(e);
 
+      }
+      return ImmutableMap.copyOf(measurements);
 
-                    measurements.put(rawMetric, MeasurementBuilder.newBuilder().now().value(rawMetric.toType(mbeanValue)).build());
-                }
-
-
-
-            } catch (IOException | MalformedObjectNameException | AttributeNotFoundException | InstanceNotFoundException |ReflectionException | MBeanException e) {
-
-                throw new MeasurementNotAvailableException(e);
-
-            }
-            return ImmutableMap.copyOf(measurements);
-
-        }
     }
+  }
 }

@@ -18,27 +18,35 @@
 
 package de.uniulm.omi.cloudiator.visor.monitoring;
 
+import static de.uniulm.omi.cloudiator.visor.config.ContextConstants.COMPONENT_ID;
+
 import java.util.HashMap;
 import java.util.Map;
+import javax.annotation.Nullable;
 
 /**
  * Created by daniel on 06.02.15.
  */
 public class MetricFactory {
 
-    private MetricFactory() {
 
+
+  private MetricFactory() {
+
+  }
+
+  public static Metric from(String metricName, Measurement<?> measurement,
+      Map<String, String> tags, @Nullable String componentId) {
+
+    Map<String, String> mergedTags = new HashMap<>(measurement.tags().size() + tags.size());
+    mergedTags.putAll(tags);
+    mergedTags.putAll(measurement.tags());
+    if (componentId != null) {
+      mergedTags.put(COMPONENT_ID, componentId);
     }
 
-    public static Metric from(String metricName, Measurement<?> measurement,
-        Map<String, String> tags) {
-
-        Map<String, String> mergedTags = new HashMap<>(measurement.tags().size() + tags.size());
-        mergedTags.putAll(tags);
-        mergedTags.putAll(measurement.tags());
-
-        return MetricBuilder.newBuilder().name(metricName).value(measurement.getValue())
-            .timestamp(measurement.getTimestamp()).addTags(mergedTags).build();
-    }
+    return MetricBuilder.newBuilder().name(metricName).value(measurement.getValue())
+        .timestamp(measurement.getTimestamp()).addTags(mergedTags).build();
+  }
 
 }

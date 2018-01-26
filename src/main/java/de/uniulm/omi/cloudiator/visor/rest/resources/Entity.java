@@ -25,6 +25,6 @@ import java.util.Set;
  */
 public interface Entity {
 
-    public Set<Link> getLinks();
+  public Set<Link> getLinks();
 
 }

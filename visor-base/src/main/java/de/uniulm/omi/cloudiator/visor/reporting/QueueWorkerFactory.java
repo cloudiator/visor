@@ -20,7 +20,6 @@ package de.uniulm.omi.cloudiator.visor.reporting;
 
 import com.google.inject.Inject;
 import de.uniulm.omi.cloudiator.visor.monitoring.Interval;
-
 import java.util.concurrent.BlockingQueue;
 
 /**
@@ -28,13 +27,15 @@ import java.util.concurrent.BlockingQueue;
  */
 public class QueueWorkerFactory<T> implements QueueWorkerFactoryInterface<T> {
 
-    private final ReportingInterface<T> reportingInterface;
+  private final ReportingInterface<T> reportingInterface;
 
-    @Inject public QueueWorkerFactory(@ExternalReporting ReportingInterface<T> reportingInterface) {
-        this.reportingInterface = reportingInterface;
-    }
+  @Inject
+  public QueueWorkerFactory(@ExternalReporting ReportingInterface<T> reportingInterface) {
+    this.reportingInterface = reportingInterface;
+  }
 
-    @Override public QueueWorker<T> create(BlockingQueue<T> queue, Interval interval) {
-        return new QueueWorker<>(queue, this.reportingInterface, interval);
-    }
+  @Override
+  public QueueWorker<T> create(BlockingQueue<T> queue, Interval interval) {
+    return new QueueWorker<>(queue, this.reportingInterface, interval);
+  }
 }

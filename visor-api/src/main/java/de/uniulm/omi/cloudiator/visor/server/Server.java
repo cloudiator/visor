@@ -18,30 +18,30 @@
 
 package de.uniulm.omi.cloudiator.visor.server;
 
-import de.uniulm.omi.cloudiator.visor.monitoring.MonitorContext;
+import de.uniulm.omi.cloudiator.visor.monitoring.Monitor;
 
 /**
  * Created by daniel on 23.10.15.
  */
 public interface Server extends Runnable {
 
-    /**
-     * @return the port the server is running on.
-     */
-    int port();
+  /**
+   * @return the port the server is running on.
+   */
+  int port();
 
-    /**
-     * Registers a new metric with this server.
-     *
-     * @param metricName     the name of the metric
-     * @param monitorContext the context for this metric.
-     */
-    void registerMetric(String metricName, MonitorContext monitorContext);
+  /**
+   * Registers a new metric with this server.
+   *
+   * @param metricName the name of the metric
+   * @param monitor the monitor responsible for collecting this metric
+   */
+  void registerMonitor(String metricName, Monitor monitor);
 
-    /**
-     * Unregisters a new metric.
-     *
-     * @param metricName the name of the metric.
-     */
-    void unregisterMetric(String metricName);
+  /**
+   * Unregisters a monitor.
+   *
+   * @param metricName the name of the metric.
+   */
+  void unregisterMonitor(String metricName);
 }

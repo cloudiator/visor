@@ -25,23 +25,21 @@ import java.io.IOException;
  */
 public interface ServerRegistry {
 
-    /**
-     * Returns the server for this component instance id.
-     * <p>
-     * If such a server does not exist, it will be automatically created by the
-     * registry.
-     *
-     * @param componentInstanceId the component instance to measure
-     * @return a new server or an existing one.
-     * @throws IOException if the creating of the new server fails.
-     */
-    Server getServer(String componentInstanceId) throws IOException;
+  /**
+   * Returns the server for this component instance id. <p> If such a server does not exist, it will
+   * be automatically created by the registry.
+   *
+   * @param componentInstanceId the component instance to measure
+   * @return a new server or an existing one.
+   * @throws IOException if the creating of the new server fails.
+   */
+  Server getServer(String componentInstanceId) throws IOException;
 
-    /**
-     * Unregisters a server at this registry.
-     *
-     * @param server the server to unregister.
-     */
-    void unregister(Server server);
+  /**
+   * Unregisters a server at this registry.
+   *
+   * @param server the server to unregister.
+   */
+  void unregister(Server server);
 
 }

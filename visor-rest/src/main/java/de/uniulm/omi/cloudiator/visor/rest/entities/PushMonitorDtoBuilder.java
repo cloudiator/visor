@@ -22,38 +22,38 @@ import java.util.Map;
 
 public class PushMonitorDtoBuilder {
 
-    private String uuid;
-    private String metricName;
-    private String componentId;
-    private Map<String, String> monitorContext;
-    private int port;
+  private String uuid;
+  private String metricName;
+  private String componentId;
+  private Map<String, String> monitorContext;
+  private int port;
 
-    public PushMonitorDtoBuilder uuid(String uuid) {
-        this.uuid = uuid;
-        return this;
-    }
+  public PushMonitorDtoBuilder uuid(String uuid) {
+    this.uuid = uuid;
+    return this;
+  }
 
-    public PushMonitorDtoBuilder metricName(String metricName) {
-        this.metricName = metricName;
-        return this;
-    }
+  public PushMonitorDtoBuilder metricName(String metricName) {
+    this.metricName = metricName;
+    return this;
+  }
 
-    public PushMonitorDtoBuilder componentId(String componentId) {
-        this.componentId = componentId;
-        return this;
-    }
+  public PushMonitorDtoBuilder componentId(String componentId) {
+    this.componentId = componentId;
+    return this;
+  }
 
-    public PushMonitorDtoBuilder monitorContext(Map<String, String> monitorContext) {
-        this.monitorContext = monitorContext;
-        return this;
-    }
+  public PushMonitorDtoBuilder monitorContext(Map<String, String> monitorContext) {
+    this.monitorContext = monitorContext;
+    return this;
+  }
 
-    public PushMonitorDtoBuilder port(int port) {
-        this.port = port;
-        return this;
-    }
+  public PushMonitorDtoBuilder port(int port) {
+    this.port = port;
+    return this;
+  }
 
-    public PushMonitorDto build() {
-        return new PushMonitorDto(uuid, metricName, componentId, monitorContext, port);
-    }
+  public PushMonitorDto build() {
+    return new PushMonitorDto(uuid, metricName, componentId, monitorContext, port);
+  }
 }

@@ -19,14 +19,14 @@
 package de.uniulm.omi.cloudiator.visor.monitoring;
 
 import com.google.inject.ImplementedBy;
-
 import java.util.Map;
 
 /**
  * Created by daniel on 23.10.15.
  */
-@ImplementedBy(DefaultMonitorContextFactory.class) public interface MonitorContextFactory {
+@ImplementedBy(DefaultMonitorContextFactory.class)
+public interface MonitorContextFactory {
 
-    MonitorContext create(Map<String, String> context);
+  MonitorContext create(Map<String, String> context);
 
 }

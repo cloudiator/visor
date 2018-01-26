@@ -19,56 +19,55 @@
 package de.uniulm.omi.cloudiator.visor.rest.entities;
 
 import de.uniulm.omi.cloudiator.visor.monitoring.Interval;
-
 import java.util.Map;
 
 public class SensorMonitorDtoBuilder {
 
-    private String uuid;
-    private String metricName;
-    private String componentId;
-    private Map<String, String> monitorContext;
-    private String sensorClassName;
-    private Interval interval;
-    private Map<String, String> sensorConfiguration;
+  private String uuid;
+  private String metricName;
+  private String componentId;
+  private Map<String, String> monitorContext;
+  private String sensorClassName;
+  private Interval interval;
+  private Map<String, String> sensorConfiguration;
 
-    public SensorMonitorDtoBuilder uuid(String uuid) {
-        this.uuid = uuid;
-        return this;
-    }
+  public SensorMonitorDtoBuilder uuid(String uuid) {
+    this.uuid = uuid;
+    return this;
+  }
 
-    public SensorMonitorDtoBuilder metricName(String metricName) {
-        this.metricName = metricName;
-        return this;
-    }
+  public SensorMonitorDtoBuilder metricName(String metricName) {
+    this.metricName = metricName;
+    return this;
+  }
 
-    public SensorMonitorDtoBuilder componentId(String componentId) {
-        this.componentId = componentId;
-        return this;
-    }
+  public SensorMonitorDtoBuilder componentId(String componentId) {
+    this.componentId = componentId;
+    return this;
+  }
 
-    public SensorMonitorDtoBuilder monitorContext(Map<String, String> monitorContext) {
-        this.monitorContext = monitorContext;
-        return this;
-    }
+  public SensorMonitorDtoBuilder monitorContext(Map<String, String> monitorContext) {
+    this.monitorContext = monitorContext;
+    return this;
+  }
 
-    public SensorMonitorDtoBuilder sensorConfiguration(Map<String, String> sensorConfiguration) {
-        this.sensorConfiguration = sensorConfiguration;
-        return this;
-    }
+  public SensorMonitorDtoBuilder sensorConfiguration(Map<String, String> sensorConfiguration) {
+    this.sensorConfiguration = sensorConfiguration;
+    return this;
+  }
 
-    public SensorMonitorDtoBuilder sensorClassName(String sensorClassName) {
-        this.sensorClassName = sensorClassName;
-        return this;
-    }
+  public SensorMonitorDtoBuilder sensorClassName(String sensorClassName) {
+    this.sensorClassName = sensorClassName;
+    return this;
+  }
 
-    public SensorMonitorDtoBuilder interval(Interval interval) {
-        this.interval = interval;
-        return this;
-    }
+  public SensorMonitorDtoBuilder interval(Interval interval) {
+    this.interval = interval;
+    return this;
+  }
 
-    public SensorMonitorDto build() {
-        return new SensorMonitorDto(uuid, metricName, componentId, sensorConfiguration,
-            monitorContext, sensorClassName, interval);
-    }
+  public SensorMonitorDto build() {
+    return new SensorMonitorDto(uuid, metricName, componentId, sensorConfiguration,
+        monitorContext, sensorClassName, interval);
+  }
 }

@@ -26,10 +26,9 @@ import com.google.common.base.MoreObjects;
 import de.uniulm.omi.cloudiator.visor.exceptions.MonitorException;
 import de.uniulm.omi.cloudiator.visor.monitoring.Monitor;
 import de.uniulm.omi.cloudiator.visor.monitoring.MonitoringService;
-
-import javax.validation.constraints.NotNull;
 import java.util.Collections;
 import java.util.Map;
+import javax.validation.constraints.NotNull;
 
 /**
  * Created by daniel on 26.10.15.
@@ -39,67 +38,73 @@ import java.util.Map;
     @JsonSubTypes.Type(value = SensorMonitorDto.class, name = "sensor")})
 public abstract class MonitorDto {
 
-    @JsonIgnore private String uuid;
-    @NotNull private String metricName;
-    @NotNull private String componentId;
-    private Map<String, String> monitorContext;
+  @JsonIgnore
+  private String uuid;
+  @NotNull
+  private String metricName;
+  @NotNull
+  private String componentId;
+  private Map<String, String> monitorContext;
 
-    protected MonitorDto() {
+  protected MonitorDto() {
 
+  }
+
+  public MonitorDto(String uuid, String metricName, String componentId,
+      Map<String, String> monitorContext) {
+    this.uuid = uuid;
+    this.metricName = metricName;
+    this.componentId = componentId;
+    this.monitorContext = monitorContext;
+  }
+
+  public abstract Monitor start(String uuid, MonitoringService monitoringService)
+      throws MonitorException;
+
+  public String getMetricName() {
+    return metricName;
+  }
+
+  public void setMetricName(String metricName) {
+    this.metricName = metricName;
+  }
+
+  public Map<String, String> getMonitorContext() {
+    if (monitorContext == null) {
+      return Collections.emptyMap();
     }
+    return monitorContext;
+  }
 
-    public MonitorDto(String uuid, String metricName, String componentId,
-        Map<String, String> monitorContext) {
-        this.uuid = uuid;
-        this.metricName = metricName;
-        this.componentId = componentId;
-        this.monitorContext = monitorContext;
-    }
+  public void setMonitorContext(Map<String, String> monitorContext) {
+    this.monitorContext = monitorContext;
+  }
 
-    public abstract Monitor start(String uuid, MonitoringService monitoringService)
-        throws MonitorException;
+  public String getComponentId() {
+    return componentId;
+  }
 
-    public String getMetricName() {
-        return metricName;
-    }
+  public void setComponentId(String componentId) {
+    this.componentId = componentId;
+  }
 
-    public void setMetricName(String metricName) {
-        this.metricName = metricName;
-    }
+  @JsonProperty("uuid")
+  public String getUuid() {
+    return uuid;
+  }
 
-    public Map<String, String> getMonitorContext() {
-        if (monitorContext == null) {
-            return Collections.emptyMap();
-        }
-        return monitorContext;
-    }
+  @JsonIgnore
+  public void setUuid(String uuid) {
+    this.uuid = uuid;
+  }
 
-    public void setMonitorContext(Map<String, String> monitorContext) {
-        this.monitorContext = monitorContext;
-    }
+  protected MoreObjects.ToStringHelper toStringHelper() {
+    return MoreObjects.toStringHelper(this).add("uuid", uuid).add("metricName", metricName)
+        .add("componentId", componentId).add("monitorContext", monitorContext);
+  }
 
-    public String getComponentId() {
-        return componentId;
-    }
-
-    public void setComponentId(String componentId) {
-        this.componentId = componentId;
-    }
-
-    @JsonProperty("uuid") public String getUuid() {
-        return uuid;
-    }
-
-    @JsonIgnore public void setUuid(String uuid) {
-        this.uuid = uuid;
-    }
-
-    protected MoreObjects.ToStringHelper toStringHelper() {
-        return MoreObjects.toStringHelper(this).add("uuid", uuid).add("metricName", metricName)
-            .add("componentId", componentId).add("monitorContext", monitorContext);
-    }
-
-    @Override public String toString() {
-        return toStringHelper().toString();
-    }
+  @Override
+  public String toString() {
+    return toStringHelper().toString();
+  }
 }

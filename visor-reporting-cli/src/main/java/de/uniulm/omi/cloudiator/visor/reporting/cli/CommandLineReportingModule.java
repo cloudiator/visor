@@ -27,7 +27,9 @@ import de.uniulm.omi.cloudiator.visor.reporting.ReportingModule;
  * Created by daniel on 15.12.14.
  */
 public class CommandLineReportingModule extends ReportingModule {
-    @Override protected Class<? extends ReportingInterface<Metric>> getReportingInterface() {
-        return CommandLineReporter.class;
-    }
+
+  @Override
+  protected Class<? extends ReportingInterface<Metric>> getReportingInterface() {
+    return CommandLineReporter.class;
+  }
 }

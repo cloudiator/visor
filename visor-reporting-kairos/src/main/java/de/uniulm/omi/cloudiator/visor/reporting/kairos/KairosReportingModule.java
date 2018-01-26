@@ -19,7 +19,6 @@
 package de.uniulm.omi.cloudiator.visor.reporting.kairos;
 
 
-
 import de.uniulm.omi.cloudiator.visor.monitoring.Metric;
 import de.uniulm.omi.cloudiator.visor.reporting.ReportingInterface;
 import de.uniulm.omi.cloudiator.visor.reporting.ReportingModule;
@@ -28,8 +27,9 @@ import de.uniulm.omi.cloudiator.visor.reporting.ReportingModule;
  * Created by daniel on 10.12.14.
  */
 public class KairosReportingModule extends ReportingModule {
-    @Override
-    protected Class<? extends ReportingInterface<Metric>> getReportingInterface() {
-        return KairosDb.class;
-    }
+
+  @Override
+  protected Class<? extends ReportingInterface<Metric>> getReportingInterface() {
+    return KairosDb.class;
+  }
 }

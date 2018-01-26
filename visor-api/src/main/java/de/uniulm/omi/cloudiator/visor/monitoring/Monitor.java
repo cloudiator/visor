@@ -19,21 +19,20 @@
 package de.uniulm.omi.cloudiator.visor.monitoring;
 
 
-
 /**
  * Created by daniel on 18.12.14.
  */
 public interface Monitor {
 
-    void start();
+  void start();
 
-    void stop();
+  void stop();
 
-    String uuid();
+  String uuid();
 
-    String metricName();
+  String metricName();
 
-    String componentId();
+  String componentId();
 
-    MonitorContext monitorContext();
+  MonitorContext monitorContext();
 }

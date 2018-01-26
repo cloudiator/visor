@@ -26,14 +26,14 @@ import java.util.Set;
  */
 public class Links {
 
-    private Links() {
+  private Links() {
 
-    }
+  }
 
-    public static Set<Link> selfLink(String href) {
-        Link link = new Link(href,Rel.SELF);
-        Set<Link> links = new HashSet<>();
-        links.add(link);
-        return links;
-    }
+  public static Set<Link> selfLink(String href) {
+    Link link = new Link(href, Rel.SELF);
+    Set<Link> links = new HashSet<>();
+    links.add(link);
+    return links;
+  }
 }

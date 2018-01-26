@@ -22,7 +22,6 @@ import com.google.common.base.MoreObjects;
 import de.uniulm.omi.cloudiator.visor.exceptions.MonitorException;
 import de.uniulm.omi.cloudiator.visor.monitoring.Monitor;
 import de.uniulm.omi.cloudiator.visor.monitoring.MonitoringService;
-
 import java.util.Map;
 
 /**
@@ -31,37 +30,39 @@ import java.util.Map;
 public class PushMonitorDto extends MonitorDto {
 
 
-    private Integer port;
+  private Integer port;
 
-    public PushMonitorDto(String uuid, String metricName, String componentId,
-        Map<String, String> monitorContext, Integer port) {
-        super(uuid, metricName, componentId, monitorContext);
-        this.port = port;
-    }
+  public PushMonitorDto(String uuid, String metricName, String componentId,
+      Map<String, String> monitorContext, Integer port) {
+    super(uuid, metricName, componentId, monitorContext);
+    this.port = port;
+  }
 
-    protected PushMonitorDto() {
-    }
+  protected PushMonitorDto() {
+  }
 
-    public Integer getPort() {
-        return port;
-    }
+  public Integer getPort() {
+    return port;
+  }
 
-    public void setPort(Integer port) {
-        this.port = port;
-    }
+  public void setPort(Integer port) {
+    this.port = port;
+  }
 
 
-    @Override public Monitor start(String uuid, MonitoringService monitoringService)
-        throws MonitorException {
-        return monitoringService
-            .startMonitor(uuid, getComponentId(), getMetricName(), getMonitorContext());
-    }
+  @Override
+  public Monitor start(String uuid, MonitoringService monitoringService)
+      throws MonitorException {
+    return monitoringService
+        .startMonitor(uuid, getComponentId(), getMetricName(), getMonitorContext());
+  }
 
-    protected MoreObjects.ToStringHelper toStringHelper() {
-        return super.toStringHelper().add("port", port);
-    }
+  protected MoreObjects.ToStringHelper toStringHelper() {
+    return super.toStringHelper().add("port", port);
+  }
 
-    @Override public String toString() {
-        return toStringHelper().toString();
-    }
+  @Override
+  public String toString() {
+    return toStringHelper().toString();
+  }
 }

@@ -26,36 +26,39 @@ import com.google.inject.Singleton;
 import de.uniulm.omi.cloudiator.visor.server.Server;
 import de.uniulm.omi.cloudiator.visor.server.ServerFactory;
 import de.uniulm.omi.cloudiator.visor.server.ServerRegistry;
-
 import java.io.IOException;
 import java.util.HashMap;
 
 /**
  * Created by daniel on 11.11.15.
  */
-@Singleton public class ServerRegistryImpl implements ServerRegistry {
+@Singleton
+public class ServerRegistryImpl implements ServerRegistry {
 
-    static int LOWER_PORT_BOUNDARY = 49152;
-    static int UPPER_PORT_BOUNDARY = 65535;
+  static int LOWER_PORT_BOUNDARY = 49152;
+  static int UPPER_PORT_BOUNDARY = 65535;
 
 
-    private final ServerFactory serverFactory;
-    private final BiMap<String, Server> servers;
+  private final ServerFactory serverFactory;
+  private final BiMap<String, Server> servers;
 
-    @Inject public ServerRegistryImpl(ServerFactory serverFactory) {
-        this.serverFactory = serverFactory;
-        servers = Maps.synchronizedBiMap(HashBiMap.create(new HashMap<>()));
+  @Inject
+  public ServerRegistryImpl(ServerFactory serverFactory) {
+    this.serverFactory = serverFactory;
+    servers = Maps.synchronizedBiMap(HashBiMap.create(new HashMap<>()));
+  }
+
+  @Override
+  public Server getServer(String componentId) throws IOException {
+    if (!servers.containsKey(componentId)) {
+      Server server = serverFactory.createServer(LOWER_PORT_BOUNDARY, UPPER_PORT_BOUNDARY);
+      servers.put(componentId, server);
     }
+    return servers.get(componentId);
+  }
 
-    @Override public Server getServer(String componentId) throws IOException {
-        if (!servers.containsKey(componentId)) {
-            Server server = serverFactory.createServer(LOWER_PORT_BOUNDARY, UPPER_PORT_BOUNDARY);
-            servers.put(componentId, server);
-        }
-        return servers.get(componentId);
-    }
-
-    @Override public void unregister(Server server) {
-        this.servers.inverse().remove(server);
-    }
+  @Override
+  public void unregister(Server server) {
+    this.servers.inverse().remove(server);
+  }
 }

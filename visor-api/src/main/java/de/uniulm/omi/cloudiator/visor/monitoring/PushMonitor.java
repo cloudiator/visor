@@ -23,6 +23,6 @@ package de.uniulm.omi.cloudiator.visor.monitoring;
  */
 public interface PushMonitor extends Monitor {
 
-    int port();
+  int port();
 
 }

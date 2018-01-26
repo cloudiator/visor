@@ -27,24 +27,24 @@ import java.util.Map;
  */
 public interface Measurement<E> {
 
-    /**
-     * The timestamp the measurement object was taken.
-     *
-     * @return unix timestamp
-     */
-    long getTimestamp();
+  /**
+   * The timestamp the measurement object was taken.
+   *
+   * @return unix timestamp
+   */
+  long getTimestamp();
 
-    /**
-     * The value for this measurement at the defined timestamp.
-     *
-     * @return a object representing the value. mandatory
-     */
-    E getValue();
+  /**
+   * The value for this measurement at the defined timestamp.
+   *
+   * @return a object representing the value. mandatory
+   */
+  E getValue();
 
-    /**
-     * Tags
-     *
-     * @return a key=>value map of tags
-     */
-    Map<String, String> tags();
+  /**
+   * Tags
+   *
+   * @return a key=>value map of tags
+   */
+  Map<String, String> tags();
 }

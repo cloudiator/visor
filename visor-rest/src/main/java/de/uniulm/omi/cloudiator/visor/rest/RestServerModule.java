@@ -24,7 +24,9 @@ import com.google.inject.AbstractModule;
  * Created by daniel on 28.04.17.
  */
 public class RestServerModule extends AbstractModule {
-    @Override protected void configure() {
-        bind(RestServer.class).asEagerSingleton();
-    }
+
+  @Override
+  protected void configure() {
+    bind(RestServer.class).asEagerSingleton();
+  }
 }

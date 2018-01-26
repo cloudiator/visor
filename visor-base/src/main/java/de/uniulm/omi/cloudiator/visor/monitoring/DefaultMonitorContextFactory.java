@@ -20,7 +20,6 @@ package de.uniulm.omi.cloudiator.visor.monitoring;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-
 import java.util.Map;
 
 /**
@@ -28,16 +27,23 @@ import java.util.Map;
  */
 public class DefaultMonitorContextFactory implements MonitorContextFactory {
 
-    private final String localIp;
+  @Inject(optional = true)
+  @Named("cloudId")
+  private String cloudId = null;
 
-    @Inject DefaultMonitorContextFactory(@Named("localIp") String localIp) {
+  private final String localIp;
+  private final String vmId;
 
-        this.localIp = localIp;
-    }
+  @Inject
+  DefaultMonitorContextFactory(@Named("localIp") String localIp, @Named("vmId") String vmId) {
+    this.localIp = localIp;
+    this.vmId = vmId;
+  }
 
-    @Override public MonitorContext create(Map<String, String> context) {
-        return new DefaultMonitorContext(context, localIp);
-    }
+  @Override
+  public MonitorContext create(Map<String, String> context) {
+    return new DefaultMonitorContext(context, localIp, vmId, cloudId);
+  }
 
 
 }

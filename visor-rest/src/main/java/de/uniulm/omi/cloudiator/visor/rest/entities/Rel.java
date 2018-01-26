@@ -23,15 +23,16 @@ package de.uniulm.omi.cloudiator.visor.rest.entities;
  */
 public enum Rel {
 
-    SELF("self");
+  SELF("self");
 
-    private final String text;
+  private final String text;
 
-    private Rel(final String text) {
-        this.text = text;
-    }
+  private Rel(final String text) {
+    this.text = text;
+  }
 
-    @Override public String toString() {
-        return text;
-    }
+  @Override
+  public String toString() {
+    return text;
+  }
 }

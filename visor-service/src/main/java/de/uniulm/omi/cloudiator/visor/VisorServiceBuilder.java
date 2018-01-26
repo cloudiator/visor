@@ -18,69 +18,72 @@
 
 package de.uniulm.omi.cloudiator.visor;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.google.inject.Module;
-import de.uniulm.omi.cloudiator.visor.config.*;
+import de.uniulm.omi.cloudiator.visor.config.BaseModule;
+import de.uniulm.omi.cloudiator.visor.config.CommandLinePropertiesAccessor;
+import de.uniulm.omi.cloudiator.visor.config.CommandLinePropertiesAccessorImpl;
+import de.uniulm.omi.cloudiator.visor.config.ConfigurationAccess;
+import de.uniulm.omi.cloudiator.visor.config.FileConfigurationAccessor;
 import de.uniulm.omi.cloudiator.visor.exceptions.ConfigurationException;
 import de.uniulm.omi.cloudiator.visor.rest.RestServerModule;
 import de.uniulm.omi.cloudiator.visor.telnet.TelnetServiceModule;
-
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Created by daniel on 17.12.14.
  */
 public class VisorServiceBuilder {
 
-    private String[] args;
-    private Set<Module> modules;
+  private String[] args;
+  private Set<Module> modules;
 
-    private VisorServiceBuilder() {
-        this.modules = new HashSet<>();
-    }
+  private VisorServiceBuilder() {
+    this.modules = new HashSet<>();
+  }
 
-    public static VisorServiceBuilder create() {
-        return new VisorServiceBuilder();
-    }
+  public static VisorServiceBuilder create() {
+    return new VisorServiceBuilder();
+  }
 
-    public VisorServiceBuilder args(String[] args) {
-        checkNotNull(args);
-        this.args = args;
-        return this;
-    }
+  public VisorServiceBuilder args(String[] args) {
+    checkNotNull(args);
+    this.args = args;
+    return this;
+  }
 
-    public VisorServiceBuilder modules(Module... modules) {
-        checkNotNull(modules);
-        this.modules.addAll(Arrays.asList(modules));
-        return this;
-    }
+  public VisorServiceBuilder modules(Module... modules) {
+    checkNotNull(modules);
+    this.modules.addAll(Arrays.asList(modules));
+    return this;
+  }
 
-    private void loadModulesBasedOnConfiguration(ConfigurationAccess configurationAccess) {
-        try {
-            this.modules.add((Module) Class
-                .forName(configurationAccess.getProperties().getProperty("reportingModule"))
-                .newInstance());
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
-            throw new ConfigurationException(e);
-        }
+  private void loadModulesBasedOnConfiguration(ConfigurationAccess configurationAccess) {
+    try {
+      this.modules.add((Module) Class
+          .forName(configurationAccess.getProperties().getProperty("reportingModule"))
+          .newInstance());
+    } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+      throw new ConfigurationException(e);
     }
+  }
 
-    public VisorService build() {
-        //create the config file access
-        CommandLinePropertiesAccessor commandLinePropertiesAccessor =
-            new CommandLinePropertiesAccessorImpl(this.args);
-        ConfigurationAccess configurationAccess =
-            new FileConfigurationAccessor(commandLinePropertiesAccessor.getConfFileLocation());
-        this.modules.add(new BaseModule(configurationAccess, commandLinePropertiesAccessor));
-        this.modules.add(new TelnetServiceModule());
-        this.modules.add(new RestServerModule());
-        this.modules.add(new InitModule());
-        this.loadModulesBasedOnConfiguration(configurationAccess);
-        return new VisorService(this.modules);
-    }
+  public VisorService build() {
+    //create the config file access
+    CommandLinePropertiesAccessor commandLinePropertiesAccessor =
+        new CommandLinePropertiesAccessorImpl(this.args);
+    ConfigurationAccess configurationAccess =
+        new FileConfigurationAccessor(commandLinePropertiesAccessor.getConfFileLocation());
+    this.modules.add(new BaseModule(configurationAccess, commandLinePropertiesAccessor));
+    this.modules.add(new TelnetServiceModule());
+    this.modules.add(new RestServerModule());
+    this.modules.add(new InitModule());
+    this.loadModulesBasedOnConfiguration(configurationAccess);
+    return new VisorService(this.modules);
+  }
 
 
 }

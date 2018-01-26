@@ -22,7 +22,6 @@ import de.uniulm.omi.cloudiator.visor.monitoring.Monitor;
 import de.uniulm.omi.cloudiator.visor.monitoring.PushMonitorImpl;
 import de.uniulm.omi.cloudiator.visor.monitoring.SensorMonitorImpl;
 import de.uniulm.omi.cloudiator.visor.rest.entities.MonitorDto;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -32,23 +31,22 @@ import java.util.function.Function;
  */
 public class MonitorConverters {
 
-    private static Map<Class<? extends Monitor>, Function<? extends Monitor, ? extends MonitorDto>>
-        converters = new HashMap<>();
+  private static Map<Class<? extends Monitor>, Function<? extends Monitor, ? extends MonitorDto>>
+      converters = new HashMap<>();
 
-    static {
-        converters.put(SensorMonitorImpl.class, new SensorMonitorConverter());
-        converters.put(PushMonitorImpl.class, new PushMonitorConverter());
+  static {
+    converters.put(SensorMonitorImpl.class, new SensorMonitorConverter());
+    converters.put(PushMonitorImpl.class, new PushMonitorConverter());
+  }
+
+  public static Function<Monitor, MonitorDto> getConverter(Class<? extends Monitor> fromClass) {
+
+    if (!converters.containsKey(fromClass)) {
+      throw new IllegalArgumentException();
     }
 
-    public static Function<Monitor, MonitorDto> getConverter(Class<? extends Monitor> fromClass) {
-
-        if (!converters.containsKey(fromClass)) {
-            throw new IllegalArgumentException();
-        }
-
-
-        //noinspection unchecked
-        return (Function<Monitor, MonitorDto>) converters.get(fromClass);
-    }
+    //noinspection unchecked
+    return (Function<Monitor, MonitorDto>) converters.get(fromClass);
+  }
 
 }

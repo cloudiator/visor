@@ -22,74 +22,82 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.base.MoreObjects;
 import de.uniulm.omi.cloudiator.visor.exceptions.MonitorException;
-import de.uniulm.omi.cloudiator.visor.monitoring.*;
-
-import javax.validation.constraints.NotNull;
+import de.uniulm.omi.cloudiator.visor.monitoring.DefaultInterval;
+import de.uniulm.omi.cloudiator.visor.monitoring.Interval;
+import de.uniulm.omi.cloudiator.visor.monitoring.Monitor;
+import de.uniulm.omi.cloudiator.visor.monitoring.MonitoringService;
+import de.uniulm.omi.cloudiator.visor.monitoring.SensorConfigurationBuilder;
 import java.util.Collections;
 import java.util.Map;
+import javax.validation.constraints.NotNull;
 
 /**
  * Created by daniel on 11.11.15.
  */
 public class SensorMonitorDto extends MonitorDto {
 
-    @NotNull private String sensorClassName;
-    @NotNull @JsonSerialize(as = DefaultInterval.class) @JsonDeserialize(as = DefaultInterval.class)
-    private Interval interval;
-    private Map<String, String> sensorConfiguration;
+  @NotNull
+  private String sensorClassName;
+  @NotNull
+  @JsonSerialize(as = DefaultInterval.class)
+  @JsonDeserialize(as = DefaultInterval.class)
+  private Interval interval;
+  private Map<String, String> sensorConfiguration;
 
-    public SensorMonitorDto(String uuid, String metricName, String componentId,
-        Map<String, String> sensorConfiguration, Map<String, String> monitorContext,
-        String sensorClassName, Interval interval) {
-        super(uuid, metricName, componentId, monitorContext);
-        this.sensorClassName = sensorClassName;
-        this.interval = interval;
-        this.sensorConfiguration = sensorConfiguration;
+  public SensorMonitorDto(String uuid, String metricName, String componentId,
+      Map<String, String> sensorConfiguration, Map<String, String> monitorContext,
+      String sensorClassName, Interval interval) {
+    super(uuid, metricName, componentId, monitorContext);
+    this.sensorClassName = sensorClassName;
+    this.interval = interval;
+    this.sensorConfiguration = sensorConfiguration;
+  }
+
+  protected SensorMonitorDto() {
+
+  }
+
+  @Override
+  public Monitor start(String uuid, MonitoringService monitoringService)
+      throws MonitorException {
+    return monitoringService
+        .startMonitor(uuid, getComponentId(), getMetricName(), getSensorClassName(),
+            getInterval(), getMonitorContext(),
+            SensorConfigurationBuilder.newBuilder().addValues(getSensorConfiguration())
+                .build());
+  }
+
+
+  public String getSensorClassName() {
+    return sensorClassName;
+  }
+
+  public void setSensorClassName(String sensorClassName) {
+    this.sensorClassName = sensorClassName;
+  }
+
+  public Interval getInterval() {
+    return interval;
+  }
+
+  public void setInterval(Interval interval) {
+    this.interval = interval;
+  }
+
+  public Map<String, String> getSensorConfiguration() {
+    if (sensorConfiguration == null) {
+      return Collections.emptyMap();
     }
+    return sensorConfiguration;
+  }
 
-    protected SensorMonitorDto() {
+  protected MoreObjects.ToStringHelper toStringHelper() {
+    return super.toStringHelper().add("sensorClassName", sensorClassName)
+        .add("interval", interval).add("sensorConfiguration", sensorClassName);
+  }
 
-    }
-
-    @Override public Monitor start(String uuid, MonitoringService monitoringService)
-        throws MonitorException {
-        return monitoringService
-            .startMonitor(uuid, getComponentId(), getMetricName(), getSensorClassName(),
-                getInterval(), getMonitorContext(),
-                SensorConfigurationBuilder.newBuilder().addValues(getSensorConfiguration())
-                    .build());
-    }
-
-
-    public String getSensorClassName() {
-        return sensorClassName;
-    }
-
-    public void setSensorClassName(String sensorClassName) {
-        this.sensorClassName = sensorClassName;
-    }
-
-    public Interval getInterval() {
-        return interval;
-    }
-
-    public void setInterval(Interval interval) {
-        this.interval = interval;
-    }
-
-    public Map<String, String> getSensorConfiguration() {
-        if (sensorConfiguration == null) {
-            return Collections.emptyMap();
-        }
-        return sensorConfiguration;
-    }
-
-    protected MoreObjects.ToStringHelper toStringHelper() {
-        return super.toStringHelper().add("sensorClassName", sensorClassName)
-            .add("interval", interval).add("sensorConfiguration", sensorClassName);
-    }
-
-    @Override public String toString() {
-        return toStringHelper().toString();
-    }
+  @Override
+  public String toString() {
+    return toStringHelper().toString();
+  }
 }

@@ -22,7 +22,6 @@ import de.uniulm.omi.cloudiator.visor.execution.ExecutionService;
 import de.uniulm.omi.cloudiator.visor.monitoring.Metric;
 import de.uniulm.omi.cloudiator.visor.reporting.ReportingInterface;
 import de.uniulm.omi.cloudiator.visor.server.ServerRegistry;
-
 import java.io.IOException;
 
 /**
@@ -30,58 +29,59 @@ import java.io.IOException;
  */
 public class TCPServerBuilder {
 
-    private int port;
-    private ExecutionService executionService;
-    private ReportingInterface<Metric> metricReporting;
-    private ServerRegistry serverRegistry;
+  private int port;
+  private ExecutionService executionService;
+  private ReportingInterface<Metric> metricReporting;
+  private ServerRegistry serverRegistry;
 
-    public static TCPServerBuilder newBuilder() {
-        return new TCPServerBuilder();
-    }
+  private TCPServerBuilder() {
 
-    private TCPServerBuilder() {
+  }
 
-    }
+  public static TCPServerBuilder newBuilder() {
+    return new TCPServerBuilder();
+  }
 
-    /**
-     * @param port the port the server should listen to
-     * @return fluent interface
-     */
-    public TCPServerBuilder port(int port) {
-        this.port = port;
-        return this;
-    }
+  /**
+   * @param port the port the server should listen to
+   * @return fluent interface
+   */
+  public TCPServerBuilder port(int port) {
+    this.port = port;
+    return this;
+  }
 
-    /**
-     * @param executionService the executionservice the server should use for creating its worker threads.
-     * @return fluent interface
-     */
-    public TCPServerBuilder executionService(ExecutionService executionService) {
-        this.executionService = executionService;
-        return this;
-    }
+  /**
+   * @param executionService the executionservice the server should use for creating its worker
+   * threads.
+   * @return fluent interface
+   */
+  public TCPServerBuilder executionService(ExecutionService executionService) {
+    this.executionService = executionService;
+    return this;
+  }
 
-    /**
-     * @param reportingInterface the interface where this server should report its metrics.
-     * @return fluent interface.
-     */
-    public TCPServerBuilder reportingInterface(ReportingInterface<Metric> reportingInterface) {
-        this.metricReporting = reportingInterface;
-        return this;
-    }
+  /**
+   * @param reportingInterface the interface where this server should report its metrics.
+   * @return fluent interface.
+   */
+  public TCPServerBuilder reportingInterface(ReportingInterface<Metric> reportingInterface) {
+    this.metricReporting = reportingInterface;
+    return this;
+  }
 
-    /**
-     * @param serverRegistry the registry where the server is registered.
-     * @return fluent interface
-     */
-    public TCPServerBuilder registry(ServerRegistry serverRegistry) {
-        this.serverRegistry = serverRegistry;
-        return this;
-    }
+  /**
+   * @param serverRegistry the registry where the server is registered.
+   * @return fluent interface
+   */
+  public TCPServerBuilder registry(ServerRegistry serverRegistry) {
+    this.serverRegistry = serverRegistry;
+    return this;
+  }
 
-    public TCPServer build() throws IOException {
-        return new TCPServer(executionService, metricReporting, port, serverRegistry);
-    }
+  public TCPServer build() throws IOException {
+    return new TCPServer(executionService, metricReporting, port, serverRegistry);
+  }
 
 
 }

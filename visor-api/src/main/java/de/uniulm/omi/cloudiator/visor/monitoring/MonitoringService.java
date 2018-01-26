@@ -20,7 +20,6 @@ package de.uniulm.omi.cloudiator.visor.monitoring;
 
 
 import de.uniulm.omi.cloudiator.visor.exceptions.MonitorException;
-
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
@@ -30,18 +29,18 @@ import java.util.Optional;
  */
 public interface MonitoringService {
 
-    Monitor startMonitor(String uuid, String componentId, String metricName, String sensorClassName,
-        Interval interval, Map<String, String> monitorContext,
-        SensorConfiguration sensorConfiguration) throws MonitorException;
+  Monitor startMonitor(String uuid, String componentId, String metricName, String sensorClassName,
+      Interval interval, Map<String, String> monitorContext,
+      SensorConfiguration sensorConfiguration) throws MonitorException;
 
-    Monitor startMonitor(String uuid, String componentId, String metricName,
-        Map<String, String> monitorContext) throws MonitorException;
+  Monitor startMonitor(String uuid, String componentId, String metricName,
+      Map<String, String> monitorContext) throws MonitorException;
 
-    Collection<Monitor> getMonitors();
+  Collection<Monitor> getMonitors();
 
-    Optional<Monitor> getMonitor(String uuid);
+  Optional<Monitor> getMonitor(String uuid);
 
-    boolean isMonitoring(String uuid);
+  boolean isMonitoring(String uuid);
 
-    void stopMonitor(String uuid);
+  void stopMonitor(String uuid);
 }

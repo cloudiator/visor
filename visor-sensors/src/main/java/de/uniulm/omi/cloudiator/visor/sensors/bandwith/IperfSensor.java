@@ -27,14 +27,19 @@ import de.uniulm.omi.cloudiator.visor.monitoring.AbstractSensor;
 import de.uniulm.omi.cloudiator.visor.monitoring.Measurement;
 import de.uniulm.omi.cloudiator.visor.monitoring.MonitorContext;
 import de.uniulm.omi.cloudiator.visor.monitoring.SensorConfiguration;
-import org.apache.commons.exec.*;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.function.Function;
 import java.util.stream.StreamSupport;
+import org.apache.commons.exec.CommandLine;
+import org.apache.commons.exec.DefaultExecuteResultHandler;
+import org.apache.commons.exec.DefaultExecutor;
+import org.apache.commons.exec.ExecuteStreamHandler;
+import org.apache.commons.exec.ExecuteWatchdog;
+import org.apache.commons.exec.Executor;
+import org.apache.commons.exec.PumpStreamHandler;
 
 
 /**
@@ -42,126 +47,125 @@ import java.util.stream.StreamSupport;
  */
 public class IperfSensor extends AbstractSensor<Double> {
 
-    private static final String HOST_FIELD = "host";
-    private static final String HOST_DEFAULT_VALUE = "localhost";
-    private HostAndPort host;
+  private static final String HOST_FIELD = "host";
+  private static final String HOST_DEFAULT_VALUE = "localhost";
+  private HostAndPort host;
 
+  @Override
+  protected void initialize(MonitorContext monitorContext,
+      SensorConfiguration sensorConfiguration) throws SensorInitializationException {
+    super.initialize(monitorContext, sensorConfiguration);
 
-    private static class Iperf3Installer {
+    host = HostAndPort
+        .fromHost(sensorConfiguration.getValue(HOST_FIELD).orElse(HOST_DEFAULT_VALUE));
+    final Iperf3Installer iperf3Installer = new Iperf3Installer();
+    if (!iperf3Installer.installed()) {
+      try {
+        iperf3Installer.install();
+      } catch (IOException e) {
+        throw new SensorInitializationException(e);
+      }
+    }
+    try {
+      new IperfServer().start();
+    } catch (IOException e) {
+      throw new SensorInitializationException(e);
+    }
+  }
 
-        boolean installed() {
-            CommandLine which = new CommandLine("which");
-            which.addArgument("iperf3");
-            Executor whichExecutor = new DefaultExecutor();
-            whichExecutor.setExitValue(0);
-            try {
-                whichExecutor.execute(which);
-            } catch (IOException e) {
-                return false;
-            }
-            return true;
-        }
+  @Override
+  protected Measurement<Double> measureSingle() throws MeasurementNotAvailableException {
+    return measurementBuilder(Double.class).now()
+        .value(new IperfClient(host).measure(new IperfParser())).build();
+  }
 
-        void install() throws IOException {
-            CommandLine install = new CommandLine("sudo");
-            install.addArgument("apt-get");
-            install.addArgument("install");
-            install.addArgument("iperf3");
-            Executor installExecutor = new DefaultExecutor();
-            installExecutor.setExitValue(0);
-            installExecutor.execute(install);
-        }
+  private static class Iperf3Installer {
+
+    boolean installed() {
+      CommandLine which = new CommandLine("which");
+      which.addArgument("iperf3");
+      Executor whichExecutor = new DefaultExecutor();
+      whichExecutor.setExitValue(0);
+      try {
+        whichExecutor.execute(which);
+      } catch (IOException e) {
+        return false;
+      }
+      return true;
     }
 
+    void install() throws IOException {
+      CommandLine install = new CommandLine("sudo");
+      install.addArgument("apt-get");
+      install.addArgument("install");
+      install.addArgument("iperf3");
+      Executor installExecutor = new DefaultExecutor();
+      installExecutor.setExitValue(0);
+      installExecutor.execute(install);
+    }
+  }
 
-    private static class IperfServer {
+  private static class IperfServer {
 
-        void start() throws IOException {
-            CommandLine startServer = new CommandLine("iperf3");
-            startServer.addArgument("-sD");
-            Executor start = new DefaultExecutor();
-            start.execute(startServer);
-        }
+    void start() throws IOException {
+      CommandLine startServer = new CommandLine("iperf3");
+      startServer.addArgument("-sD");
+      Executor start = new DefaultExecutor();
+      start.execute(startServer);
+    }
+
+  }
+
+  private static class IperfClient {
+
+    private final CommandLine command;
+
+    private IperfClient(HostAndPort hostAndPort) {
+      command = new CommandLine("iperf3");
+      command.addArgument("-c");
+      command.addArgument(hostAndPort.getHostText());
+      command.addArgument("--json");
+    }
+
+    <E> E measure(Function<String, E> parser) throws MeasurementNotAvailableException {
+
+      try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+        DefaultExecuteResultHandler resultHandler = new DefaultExecuteResultHandler();
+        ExecuteStreamHandler streamHandler = new PumpStreamHandler(outputStream);
+        ExecuteWatchdog watchdog = new ExecuteWatchdog(ExecuteWatchdog.INFINITE_TIMEOUT);
+        Executor executor = new DefaultExecutor();
+        executor.setExitValue(0);
+        executor.setWatchdog(watchdog);
+        executor.setStreamHandler(streamHandler);
+        executor.execute(command, resultHandler);
+        resultHandler.waitFor();
+        String result = outputStream.toString();
+        return parser.apply(result);
+      } catch (InterruptedException | IOException | IllegalArgumentException e) {
+        throw new MeasurementNotAvailableException(e);
+      }
 
     }
 
+  }
 
-    private static class IperfClient {
+  private static class IperfParser implements Function<String, Double> {
 
-        private final CommandLine command;
-
-        private IperfClient(HostAndPort hostAndPort) {
-            command = new CommandLine("iperf3");
-            command.addArgument("-c");
-            command.addArgument(hostAndPort.getHostText());
-            command.addArgument("--json");
-        }
-
-        <E> E measure(Function<String, E> parser) throws MeasurementNotAvailableException {
-
-            try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-                DefaultExecuteResultHandler resultHandler = new DefaultExecuteResultHandler();
-                ExecuteStreamHandler streamHandler = new PumpStreamHandler(outputStream);
-                ExecuteWatchdog watchdog = new ExecuteWatchdog(ExecuteWatchdog.INFINITE_TIMEOUT);
-                Executor executor = new DefaultExecutor();
-                executor.setExitValue(0);
-                executor.setWatchdog(watchdog);
-                executor.setStreamHandler(streamHandler);
-                executor.execute(command, resultHandler);
-                resultHandler.waitFor();
-                String result = outputStream.toString();
-                return parser.apply(result);
-            } catch (InterruptedException | IOException | IllegalArgumentException e) {
-                throw new MeasurementNotAvailableException(e);
-            }
-
-        }
-
+    @Override
+    public Double apply(String s) {
+      ObjectMapper objectMapper = new ObjectMapper();
+      JsonNode rootNode;
+      try {
+        rootNode = objectMapper.readTree(s);
+      } catch (IOException e) {
+        throw new IllegalStateException(e);
+      }
+      final JsonNode end = rootNode.path("end");
+      return StreamSupport
+          .stream(Spliterators.spliteratorUnknownSize(end.iterator(), Spliterator.ORDERED),
+              false).filter(jsonNode -> jsonNode.has("bits_per_second")).mapToDouble(
+              jsonNode -> jsonNode.get("bits_per_second").doubleValue() * 0.125 * 1e-6)
+          .average().orElseThrow(() -> new IllegalArgumentException("Unparsable output"));
     }
-
-
-    private static class IperfParser implements Function<String, Double> {
-
-        @Override public Double apply(String s) {
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode rootNode;
-            try {
-                rootNode = objectMapper.readTree(s);
-            } catch (IOException e) {
-                throw new IllegalStateException(e);
-            }
-            final JsonNode end = rootNode.path("end");
-            return StreamSupport
-                .stream(Spliterators.spliteratorUnknownSize(end.iterator(), Spliterator.ORDERED),
-                    false).filter(jsonNode -> jsonNode.has("bits_per_second")).mapToDouble(
-                    jsonNode -> jsonNode.get("bits_per_second").doubleValue() * 0.125 * 1e-6)
-                .average().orElseThrow(() -> new IllegalArgumentException("Unparsable output"));
-        }
-    }
-
-    @Override protected void initialize(MonitorContext monitorContext,
-        SensorConfiguration sensorConfiguration) throws SensorInitializationException {
-        super.initialize(monitorContext, sensorConfiguration);
-
-        host = HostAndPort
-            .fromHost(sensorConfiguration.getValue(HOST_FIELD).orElse(HOST_DEFAULT_VALUE));
-        final Iperf3Installer iperf3Installer = new Iperf3Installer();
-        if (!iperf3Installer.installed()) {
-            try {
-                iperf3Installer.install();
-            } catch (IOException e) {
-                throw new SensorInitializationException(e);
-            }
-        }
-        try {
-            new IperfServer().start();
-        } catch (IOException e) {
-            throw new SensorInitializationException(e);
-        }
-    }
-
-    @Override protected Measurement<Double> measureSingle() throws MeasurementNotAvailableException {
-        return measurementBuilder(Double.class).now()
-            .value(new IperfClient(host).measure(new IperfParser())).build();
-    }
+  }
 }

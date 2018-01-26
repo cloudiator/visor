@@ -26,11 +26,11 @@ import java.util.Map;
 public interface MonitorContext {
 
 
-    String getValue(String context);
+  String getValue(String context);
 
-    boolean hasValue(String context);
+  boolean hasValue(String context);
 
-    String getOrDefault(String context, String defaultValue);
+  String getOrDefault(String context, String defaultValue);
 
-    Map<String, String> getContext();
+  Map<String, String> getContext();
 }
