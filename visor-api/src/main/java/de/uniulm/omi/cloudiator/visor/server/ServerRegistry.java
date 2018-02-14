@@ -19,29 +19,31 @@
 package de.uniulm.omi.cloudiator.visor.server;
 
 import java.io.IOException;
+import javax.annotation.Nullable;
 
 /**
  * Created by daniel on 11.11.15.
  */
 public interface ServerRegistry {
 
-    /**
-     * Returns the server for this component instance id.
-     * <p>
-     * If such a server does not exist, it will be automatically created by the
-     * registry.
-     *
-     * @param componentInstanceId the component instance to measure
-     * @return a new server or an existing one.
-     * @throws IOException if the creating of the new server fails.
-     */
-    Server getServer(String componentInstanceId) throws IOException;
+  /**
+   * Returns the server for this component instance id.
+   * <p>
+   * If such a server does not exist, it will be automatically created by the
+   * registry.
+   *
+   * @param componentInstanceId the component instance to measure
+   * @param port if the server does not exist, use this port to create it
+   * @return a new server or an existing one.
+   * @throws IOException if the creating of the new server fails.
+   */
+  Server getServer(String componentInstanceId, @Nullable Integer port) throws IOException;
 
-    /**
-     * Unregisters a server at this registry.
-     *
-     * @param server the server to unregister.
-     */
-    void unregister(Server server);
+  /**
+   * Unregisters a server at this registry.
+   *
+   * @param server the server to unregister.
+   */
+  void unregister(Server server);
 
 }

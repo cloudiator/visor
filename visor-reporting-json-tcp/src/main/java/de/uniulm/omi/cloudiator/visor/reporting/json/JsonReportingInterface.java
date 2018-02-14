@@ -77,6 +77,7 @@ public class JsonReportingInterface implements ReportingInterface<Metric> {
       String metricString = om.writeValueAsString(new DecoratedMetric(item));
       OutputStreamWriter osw = new OutputStreamWriter(socket.getOutputStream(), Charsets.UTF_8);
       osw.write(metricString);
+      osw.flush();
     } catch (JsonProcessingException e) {
       throw new ReportingException(String.format("Could not convert metric %s to json", item), e);
     } catch (IOException e) {
