@@ -28,19 +28,19 @@ import java.util.Collection;
  */
 public interface ReportingInterface<T> {
 
-    /**
-     * Reports the generic item.
-     *
-     * @param item the item to report.
-     * @throws ReportingException If an error occurred while reporting the item.
-     */
-    public void report(T item) throws ReportingException;
+  /**
+   * Reports the generic item.
+   *
+   * @param item the item to report.
+   * @throws ReportingException If an error occurred while reporting the item.
+   */
+  public void report(T item) throws ReportingException;
 
-    /**
-     * Reports a collection of the generic item.
-     *
-     * @param items a collection of generic items to report.
-     * @throws ReportingException If an error occurred while reporting on of the items.
-     */
-    public void report(Collection<T> items) throws ReportingException;
+  /**
+   * Reports a collection of the generic item.
+   *
+   * @param items a collection of generic items to report.
+   * @throws ReportingException If an error occurred while reporting on of the items.
+   */
+  public void report(Collection<T> items) throws ReportingException;
 }

@@ -23,8 +23,8 @@ import org.apache.commons.cli.ParseException;
 
 public class Visor {
 
-    public static void main(final String[] args) throws ParseException {
-        VisorServiceBuilder.create().args(args).build().start();
-    }
+  public static void main(final String[] args) throws ParseException {
+    VisorServiceBuilder.create().args(args).build().start();
+  }
 
 }

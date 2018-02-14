@@ -26,27 +26,27 @@ import java.util.Map;
  */
 public class SensorConfigurationBuilder {
 
-    private Map<String, String> configuration;
+  private Map<String, String> configuration;
 
-    public SensorConfigurationBuilder() {
-        this.configuration = new HashMap<>();
-    }
+  public SensorConfigurationBuilder() {
+    this.configuration = new HashMap<>();
+  }
 
-    public static SensorConfigurationBuilder newBuilder() {
-        return new SensorConfigurationBuilder();
-    }
+  public static SensorConfigurationBuilder newBuilder() {
+    return new SensorConfigurationBuilder();
+  }
 
-    public SensorConfigurationBuilder addValue(String key, String value) {
-        this.configuration.put(key, value);
-        return this;
-    }
+  public SensorConfigurationBuilder addValue(String key, String value) {
+    this.configuration.put(key, value);
+    return this;
+  }
 
-    public SensorConfigurationBuilder addValues(Map<String, String> valueMap) {
-        this.configuration.putAll(valueMap);
-        return this;
-    }
+  public SensorConfigurationBuilder addValues(Map<String, String> valueMap) {
+    this.configuration.putAll(valueMap);
+    return this;
+  }
 
-    public SensorConfiguration build() {
-        return new SensorConfigurationImpl(configuration);
-    }
+  public SensorConfiguration build() {
+    return new SensorConfigurationImpl(configuration);
+  }
 }

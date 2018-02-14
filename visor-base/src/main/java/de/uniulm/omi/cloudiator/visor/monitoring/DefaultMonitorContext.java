@@ -18,48 +18,61 @@
 
 package de.uniulm.omi.cloudiator.visor.monitoring;
 
-import com.google.common.collect.ImmutableMap;
-
-import java.util.HashMap;
-import java.util.Map;
-
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static de.uniulm.omi.cloudiator.visor.config.ContextConstants.CLOUD_ID;
+import static de.uniulm.omi.cloudiator.visor.config.ContextConstants.JAVA_VERSION;
+import static de.uniulm.omi.cloudiator.visor.config.ContextConstants.LOCAL_IP;
+import static de.uniulm.omi.cloudiator.visor.config.ContextConstants.OS_ARCH;
+import static de.uniulm.omi.cloudiator.visor.config.ContextConstants.OS_NAME;
+import static de.uniulm.omi.cloudiator.visor.config.ContextConstants.OS_VERS;
+import static de.uniulm.omi.cloudiator.visor.config.ContextConstants.VM_ID;
+
+import com.google.common.collect.ImmutableMap;
+import java.util.HashMap;
+import java.util.Map;
+import javax.annotation.Nullable;
 
 /**
  * Created by daniel on 23.10.15.
  */
 class DefaultMonitorContext extends BaseMonitorContext {
 
-    private final Map<String, String> defaultContext;
 
-    public static final String LOCAL_IP = "local.ip";
-    public static final String OS_NAME = "os.name";
-    public static final String OS_ARCH = "os.arch";
-    public static final String OS_VERS = "os.version";
-    public static final String JAVA_VERSION = "java.version";
+  private final Map<String, String> defaultContext;
 
-    DefaultMonitorContext(Map<String, String> context, String localIp) {
-        super(context);
+  DefaultMonitorContext(Map<String, String> context, String localIp, String vmId,
+      @Nullable String cloudId) {
+    super(context);
 
-        checkNotNull(localIp);
-        checkArgument(!localIp.isEmpty());
+    checkNotNull(localIp, "localIp is null");
+    checkArgument(!localIp.isEmpty(), "localIp is empty");
 
-        this.defaultContext = ImmutableMap
-            .of(LOCAL_IP, localIp, OS_NAME, System.getProperty(OS_NAME).replaceAll("\\s", ""),
-                OS_ARCH, System.getProperty(OS_ARCH), OS_VERS, System.getProperty(OS_VERS),
-                JAVA_VERSION, System.getProperty(JAVA_VERSION));
+    checkNotNull(vmId, "vmId is null");
+    checkArgument(!vmId.isEmpty(), "vmId is empty");
+
+    this.defaultContext = new HashMap<>();
+    defaultContext.put(LOCAL_IP, localIp);
+    defaultContext.put(OS_NAME, System.getProperty(OS_NAME).replaceAll("\\s", ""));
+    defaultContext.put(OS_ARCH, System.getProperty(OS_ARCH));
+    defaultContext.put(OS_VERS, System.getProperty(OS_VERS));
+    defaultContext.put(JAVA_VERSION, System.getProperty(JAVA_VERSION));
+    if (cloudId != null) {
+      defaultContext.put(CLOUD_ID, cloudId);
     }
+    defaultContext.put(VM_ID, vmId);
+  }
 
-    @Override public Map<String, String> getContext() {
+  @Override
+  public Map<String, String> getContext() {
 
-        //temporary map two filter duplicates as they are not allowed by the immutable map builder
-        Map<String, String> temp = new HashMap<>(defaultContext.size() + super.getContext().size());
-        temp.putAll(super.getContext());
-        temp.putAll(defaultContext);
+    //temporary map two filter duplicates as they are not allowed by the immutable map builder
+    Map<String, String> temp = new HashMap<>(defaultContext.size() + super.getContext().size());
+    temp.putAll(super.getContext());
+    temp.putAll(defaultContext);
 
-        return ImmutableMap.copyOf(temp);
-    }
+    return ImmutableMap.copyOf(temp);
+  }
 
 
 }

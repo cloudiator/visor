@@ -42,20 +42,6 @@ public class JsonReportingInterface implements ReportingInterface<Metric> {
 
   private final Socket socket;
 
-  private static class DecoratedMetric {
-
-    @JsonUnwrapped
-    public Metric metric;
-
-    public String type = "visor";
-
-
-    public DecoratedMetric(Metric metric) {
-      this.metric = metric;
-    }
-
-  }
-
   @Inject
   public JsonReportingInterface(@Named("jsonTcpServer") String tcpServer,
       @Named("jsonTcpPort") int port) {
@@ -90,5 +76,19 @@ public class JsonReportingInterface implements ReportingInterface<Metric> {
     for (Metric metric : items) {
       report(metric);
     }
+  }
+
+  private static class DecoratedMetric {
+
+    @JsonUnwrapped
+    public Metric metric;
+
+    public String type = "visor";
+
+
+    public DecoratedMetric(Metric metric) {
+      this.metric = metric;
+    }
+
   }
 }

@@ -20,46 +20,45 @@ package de.uniulm.omi.cloudiator.visor.reporting;
 
 import de.uniulm.omi.cloudiator.visor.execution.Schedulable;
 import de.uniulm.omi.cloudiator.visor.monitoring.Interval;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Generic implementation of a queue worker.
- *
- * @param <T>
  */
 public class QueueWorker<T> implements Schedulable {
 
-    private final BlockingQueue<T> queue;
-    private final ReportingInterface<T> reportingInterface;
-    private static final Logger LOGGER = LoggerFactory.getLogger(QueueWorker.class);
-    private final Interval interval;
+  private static final Logger LOGGER = LoggerFactory.getLogger(QueueWorker.class);
+  private final BlockingQueue<T> queue;
+  private final ReportingInterface<T> reportingInterface;
+  private final Interval interval;
 
-    public QueueWorker(BlockingQueue<T> queue, ReportingInterface<T> reportingInterface,
-        Interval interval) {
-        this.queue = queue;
-        this.reportingInterface = reportingInterface;
-        this.interval = interval;
-    }
+  public QueueWorker(BlockingQueue<T> queue, ReportingInterface<T> reportingInterface,
+      Interval interval) {
+    this.queue = queue;
+    this.reportingInterface = reportingInterface;
+    this.interval = interval;
+  }
 
-    @Override public void run() {
-        List<T> tList = new ArrayList<>();
-        this.queue.drainTo(tList);
-        try {
-            LOGGER.info("Reporting " + tList.size() + " items.");
-            this.reportingInterface.report(tList);
-        } catch (ReportingException e) {
-            LOGGER.error("Could not report metrics, throwing them away.", e);
-        } catch (Exception e) {
-            LOGGER.error("Unexpected exception during metric reporting.", e);
-        }
+  @Override
+  public void run() {
+    List<T> tList = new ArrayList<>();
+    this.queue.drainTo(tList);
+    try {
+      LOGGER.info("Reporting " + tList.size() + " items.");
+      this.reportingInterface.report(tList);
+    } catch (ReportingException e) {
+      LOGGER.error("Could not report metrics, throwing them away.", e);
+    } catch (Exception e) {
+      LOGGER.error("Unexpected exception during metric reporting.", e);
     }
+  }
 
-    @Override public Interval getInterval() {
-        return this.interval;
-    }
+  @Override
+  public Interval getInterval() {
+    return this.interval;
+  }
 }

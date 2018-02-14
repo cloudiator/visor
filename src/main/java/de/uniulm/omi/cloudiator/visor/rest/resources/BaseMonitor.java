@@ -19,7 +19,6 @@
 package de.uniulm.omi.cloudiator.visor.rest.resources;
 
 import de.uniulm.omi.cloudiator.visor.monitoring.impl.MonitorContext;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -29,103 +28,106 @@ import java.util.Map;
  */
 public class BaseMonitor implements Monitor {
 
+  private String metricName;
+
+  private String sensorClassName;
+
+  private Interval interval;
+
+  private List<Context> contexts;
+
+  @SuppressWarnings("UnusedDeclaration")
+  BaseMonitor() {
+  }
+
+  BaseMonitor(String metricName, String sensorClassName, Interval interval,
+      List<Context> contexts) {
+    this.metricName = metricName;
+    this.sensorClassName = sensorClassName;
+    this.interval = interval;
+    this.contexts = contexts;
+  }
+
+  public static MonitorBuilder builder() {
+    return new MonitorBuilder();
+  }
+
+  public String getMetricName() {
+    return metricName;
+  }
+
+  public void setMetricName(String metricName) {
+    this.metricName = metricName;
+  }
+
+  public String getSensorClassName() {
+    return sensorClassName;
+  }
+
+  @SuppressWarnings("UnusedDeclaration")
+  public void setSensorClassName(String sensorClassName) {
+    this.sensorClassName = sensorClassName;
+  }
+
+  public Interval getInterval() {
+    return interval;
+  }
+
+  public void setInterval(Interval interval) {
+    this.interval = interval;
+  }
+
+  public List<Context> getContexts() {
+    return contexts;
+  }
+
+  @SuppressWarnings("UnusedDeclaration")
+  public void setContexts(List<Context> contexts) {
+    this.contexts = contexts;
+  }
+
+  public static class MonitorBuilder {
+
     private String metricName;
-
     private String sensorClassName;
-
-    private Interval interval;
-
+    private long period;
+    private String timeUnit;
     private List<Context> contexts;
 
-    @SuppressWarnings("UnusedDeclaration") BaseMonitor() {
+    public MonitorBuilder() {
+      this.contexts = new ArrayList<>();
     }
 
-    BaseMonitor(String metricName, String sensorClassName, Interval interval,
-        List<Context> contexts) {
-        this.metricName = metricName;
-        this.sensorClassName = sensorClassName;
-        this.interval = interval;
-        this.contexts = contexts;
+    public MonitorBuilder metricName(final String metricName) {
+      this.metricName = metricName;
+      return this;
     }
 
-    public String getMetricName() {
-        return metricName;
+    public MonitorBuilder sensorClassName(final String sensorClassName) {
+      this.sensorClassName = sensorClassName;
+      return this;
     }
 
-    public void setMetricName(String metricName) {
-        this.metricName = metricName;
+    public MonitorBuilder interval(
+        final de.uniulm.omi.cloudiator.visor.monitoring.impl.Interval interval) {
+      this.period = interval.getPeriod();
+      this.timeUnit = interval.getTimeUnit().toString();
+      return this;
     }
 
-    public String getSensorClassName() {
-        return sensorClassName;
+    public MonitorBuilder context(final MonitorContext monitorContext) {
+      //noinspection Convert2streamapi
+      for (final Map.Entry<String, String> entry : monitorContext.getContext().entrySet()) {
+        this.contexts.add(new Context(entry.getKey(), entry.getValue()));
+      }
+      return this;
     }
 
-    @SuppressWarnings("UnusedDeclaration") public void setSensorClassName(String sensorClassName) {
-        this.sensorClassName = sensorClassName;
+    public BaseMonitor build() {
+      return new BaseMonitor(metricName, sensorClassName, new Interval(period, timeUnit),
+          contexts);
     }
 
-    public Interval getInterval() {
-        return interval;
-    }
-
-    public void setInterval(Interval interval) {
-        this.interval = interval;
-    }
-
-    public List<Context> getContexts() {
-        return contexts;
-    }
-
-    @SuppressWarnings("UnusedDeclaration") public void setContexts(List<Context> contexts) {
-        this.contexts = contexts;
-    }
-
-    public static MonitorBuilder builder() {
-        return new MonitorBuilder();
-    }
-
-    public static class MonitorBuilder {
-
-        private String metricName;
-        private String sensorClassName;
-        private long period;
-        private String timeUnit;
-        private List<Context> contexts;
-
-        public MonitorBuilder() {
-            this.contexts = new ArrayList<>();
-        }
-
-        public MonitorBuilder metricName(final String metricName) {
-            this.metricName = metricName;
-            return this;
-        }
-
-        public MonitorBuilder sensorClassName(final String sensorClassName) {
-            this.sensorClassName = sensorClassName;
-            return this;
-        }
-
-        public MonitorBuilder interval(
-            final de.uniulm.omi.cloudiator.visor.monitoring.impl.Interval interval) {
-            this.period = interval.getPeriod();
-            this.timeUnit = interval.getTimeUnit().toString();
-            return this;
-        }
-
-        public MonitorBuilder context(final MonitorContext monitorContext) {
-            //noinspection Convert2streamapi
-            for (final Map.Entry<String, String> entry : monitorContext.getContext().entrySet()) {
-                this.contexts.add(new Context(entry.getKey(), entry.getValue()));
-            }
-            return this;
-        }
-
-        public BaseMonitor build() {
-            return new BaseMonitor(metricName, sensorClassName, new Interval(period, timeUnit),
-                contexts);
-        }
-
-    }
+  }
 
 }

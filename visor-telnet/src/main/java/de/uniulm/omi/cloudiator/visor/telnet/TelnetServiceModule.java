@@ -26,9 +26,10 @@ import de.uniulm.omi.cloudiator.visor.server.ServerModule;
  */
 public class TelnetServiceModule extends ServerModule {
 
-    @Override protected Class<? extends ServerFactory> metricServerFactory() {
-        return TCPServerFactory.class;
-    }
+  @Override
+  protected Class<? extends ServerFactory> metricServerFactory() {
+    return TCPServerFactory.class;
+  }
 
 
 }

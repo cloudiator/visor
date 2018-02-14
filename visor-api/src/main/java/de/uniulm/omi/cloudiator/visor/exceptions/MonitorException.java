@@ -22,23 +22,24 @@ package de.uniulm.omi.cloudiator.visor.exceptions;
  * Created by daniel on 11.11.15.
  */
 public class MonitorException extends Exception {
-    public MonitorException() {
-    }
 
-    public MonitorException(String message) {
-        super(message);
-    }
+  public MonitorException() {
+  }
 
-    public MonitorException(String message, Throwable cause) {
-        super(message, cause);
-    }
+  public MonitorException(String message) {
+    super(message);
+  }
 
-    public MonitorException(Throwable cause) {
-        super(cause);
-    }
+  public MonitorException(String message, Throwable cause) {
+    super(message, cause);
+  }
 
-    public MonitorException(String message, Throwable cause, boolean enableSuppression,
-        boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
-    }
+  public MonitorException(Throwable cause) {
+    super(cause);
+  }
+
+  public MonitorException(String message, Throwable cause, boolean enableSuppression,
+      boolean writableStackTrace) {
+    super(message, cause, enableSuppression, writableStackTrace);
+  }
 }

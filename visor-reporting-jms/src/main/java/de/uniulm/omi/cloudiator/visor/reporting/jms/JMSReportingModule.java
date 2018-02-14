@@ -30,6 +30,8 @@ public class JMSReportingModule extends ReportingModule {
   @Override
   protected void configure() {
     super.configure();
+    bind(JMSEncoding.class).to(MelodicJsonEncoding.class);
+    bind(TopicSelector.class).to(MetricNameTopicSelector.class);
   }
 
   @Override

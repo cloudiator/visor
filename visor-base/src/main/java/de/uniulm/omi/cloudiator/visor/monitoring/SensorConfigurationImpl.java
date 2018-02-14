@@ -18,35 +18,37 @@
 
 package de.uniulm.omi.cloudiator.visor.monitoring;
 
-import com.google.common.collect.ImmutableMap;
+import static com.google.common.base.Preconditions.checkNotNull;
 
+import com.google.common.collect.ImmutableMap;
 import java.util.Map;
 import java.util.Optional;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Created by daniel on 20.01.16.
  */
 public class SensorConfigurationImpl implements SensorConfiguration {
 
-    private final Map<String, String> configuration;
+  private final Map<String, String> configuration;
 
-    SensorConfigurationImpl(Map<String, String> configuration) {
-        this.configuration = ImmutableMap.copyOf(configuration);
-    }
+  SensorConfigurationImpl(Map<String, String> configuration) {
+    this.configuration = ImmutableMap.copyOf(configuration);
+  }
 
-    @Override public boolean hasValue(String id) {
-        checkNotNull(id, "id must not be null.");
-        return configuration.containsKey(id);
-    }
+  @Override
+  public boolean hasValue(String id) {
+    checkNotNull(id, "id must not be null.");
+    return configuration.containsKey(id);
+  }
 
-    @Override public Optional<String> getValue(String id) {
-        checkNotNull(id, "id must not be null.");
-        return Optional.ofNullable(configuration.get(id));
-    }
+  @Override
+  public Optional<String> getValue(String id) {
+    checkNotNull(id, "id must not be null.");
+    return Optional.ofNullable(configuration.get(id));
+  }
 
-    @Override public Map<String, String> getConfiguration() {
-        return configuration;
-    }
+  @Override
+  public Map<String, String> getConfiguration() {
+    return configuration;
+  }
 }

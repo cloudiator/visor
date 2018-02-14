@@ -24,11 +24,12 @@ import java.util.Map;
  * Created by daniel on 20.01.15.
  */
 public interface Metric {
-    String getName();
 
-    Object getValue();
+  String getName();
 
-    long getTimestamp();
+  Object getValue();
 
-    Map<String, String> getTags();
+  long getTimestamp();
+
+  Map<String, String> getTags();
 }

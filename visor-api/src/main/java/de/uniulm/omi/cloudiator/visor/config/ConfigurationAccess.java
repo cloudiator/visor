@@ -25,6 +25,6 @@ import java.util.Properties;
  */
 public interface ConfigurationAccess {
 
-    Properties getProperties();
+  Properties getProperties();
 
 }

@@ -21,20 +21,21 @@ package de.uniulm.omi.cloudiator.visor.rest.converters;
 import de.uniulm.omi.cloudiator.visor.monitoring.SensorMonitor;
 import de.uniulm.omi.cloudiator.visor.rest.entities.SensorMonitorDto;
 import de.uniulm.omi.cloudiator.visor.rest.entities.SensorMonitorDtoBuilder;
-
-import javax.annotation.Nullable;
 import java.util.function.Function;
+import javax.annotation.Nullable;
 
 /**
  * Created by daniel on 27.10.15.
  */
 public class SensorMonitorConverter implements Function<SensorMonitor, SensorMonitorDto> {
 
-    @Nullable @Override public SensorMonitorDto apply(SensorMonitor monitor) {
-        return new SensorMonitorDtoBuilder().uuid(monitor.uuid()).componentId(monitor.componentId())
-            .interval(monitor.getInterval()).metricName(monitor.metricName())
-            .sensorConfiguration(monitor.sensorConfiguration().getConfiguration())
-            .monitorContext(monitor.monitorContext().getContext())
-            .sensorClassName(monitor.sensorClass().getName()).build();
-    }
+  @Nullable
+  @Override
+  public SensorMonitorDto apply(SensorMonitor monitor) {
+    return new SensorMonitorDtoBuilder().uuid(monitor.uuid()).componentId(monitor.componentId())
+        .interval(monitor.getInterval()).metricName(monitor.metricName())
+        .sensorConfiguration(monitor.sensorConfiguration().getConfiguration())
+        .monitorContext(monitor.monitorContext().getContext())
+        .sensorClassName(monitor.sensorClass().getName()).build();
+  }
 }

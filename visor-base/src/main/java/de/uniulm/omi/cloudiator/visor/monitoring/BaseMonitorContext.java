@@ -20,7 +20,6 @@ package de.uniulm.omi.cloudiator.visor.monitoring;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableMap;
-
 import java.util.Map;
 
 /**
@@ -28,29 +27,34 @@ import java.util.Map;
  */
 public class BaseMonitorContext implements MonitorContext {
 
-    private final Map<String, String> context;
+  private final Map<String, String> context;
 
-    BaseMonitorContext(Map<String, String> context) {
-        this.context = ImmutableMap.copyOf(context);
-    }
+  BaseMonitorContext(Map<String, String> context) {
+    this.context = ImmutableMap.copyOf(context);
+  }
 
-    @Override public final String getValue(String context) {
-        return getContext().get(context);
-    }
+  @Override
+  public final String getValue(String context) {
+    return getContext().get(context);
+  }
 
-    @Override public final boolean hasValue(String context) {
-        return getContext().containsKey(context);
-    }
+  @Override
+  public final boolean hasValue(String context) {
+    return getContext().containsKey(context);
+  }
 
-    @Override public final String getOrDefault(String context, String defaultValue) {
-        return getContext().getOrDefault(context, defaultValue);
-    }
+  @Override
+  public final String getOrDefault(String context, String defaultValue) {
+    return getContext().getOrDefault(context, defaultValue);
+  }
 
-    @Override public Map<String, String> getContext() {
-        return context;
-    }
+  @Override
+  public Map<String, String> getContext() {
+    return context;
+  }
 
-    @Override public final String toString() {
-        return MoreObjects.toStringHelper(this.getClass()).add("context", getContext()).toString();
-    }
+  @Override
+  public final String toString() {
+    return MoreObjects.toStringHelper(this.getClass()).add("context", getContext()).toString();
+  }
 }

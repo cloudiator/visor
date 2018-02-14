@@ -22,7 +22,6 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.name.Named;
 import de.uniulm.omi.cloudiator.visor.exceptions.ConfigurationException;
-
 import java.util.Set;
 
 /**
@@ -30,16 +29,19 @@ import java.util.Set;
  */
 public class IpModule extends AbstractModule {
 
-    @Override protected void configure() {
+  @Override
+  protected void configure() {
 
-    }
+  }
 
-    @Provides @Named("localIp") public String provideIp(Set<IpProvider> ipProviders) {
-        for (IpProvider ipProvider : ipProviders) {
-            if (ipProvider.getPublicIp() != null) {
-                return ipProvider.getPublicIp();
-            }
-        }
-        throw new ConfigurationException("Could not resolve the ip address.");
+  @Provides
+  @Named("localIp")
+  public String provideIp(Set<IpProvider> ipProviders) {
+    for (IpProvider ipProvider : ipProviders) {
+      if (ipProvider.getPublicIp() != null) {
+        return ipProvider.getPublicIp();
+      }
     }
+    throw new ConfigurationException("Could not resolve the ip address.");
+  }
 }

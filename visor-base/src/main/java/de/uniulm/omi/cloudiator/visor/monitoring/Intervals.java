@@ -25,12 +25,12 @@ import java.util.concurrent.TimeUnit;
  */
 public class Intervals {
 
-    private Intervals() {
+  private Intervals() {
 
-    }
+  }
 
-    public static Interval of(long period, TimeUnit timeUnit) {
-        return new DefaultInterval(period, timeUnit);
-    }
+  public static Interval of(long period, TimeUnit timeUnit) {
+    return new DefaultInterval(period, timeUnit);
+  }
 
 }

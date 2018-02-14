@@ -25,36 +25,35 @@ import de.uniulm.omi.cloudiator.visor.monitoring.AbstractSensor;
 import de.uniulm.omi.cloudiator.visor.monitoring.Measurement;
 import de.uniulm.omi.cloudiator.visor.monitoring.MonitorContext;
 import de.uniulm.omi.cloudiator.visor.monitoring.SensorConfiguration;
-
 import java.lang.management.ManagementFactory;
 
 /**
- * The MemoryUsageProbe class.
- * <p>
- * Measures the current
- * ly used memory by the operating system in percentage.
+ * The MemoryUsageProbe class. <p> Measures the current ly used memory by the operating system in
+ * percentage.
  */
 public class SystemMemoryUsageSensor extends AbstractSensor {
 
-    private OperatingSystemMXBean osBean;
+  private OperatingSystemMXBean osBean;
 
-    @Override protected Measurement measureSingle() throws MeasurementNotAvailableException {
-        //memory usage
-        double totalPhysicalMemory = osBean.getTotalPhysicalMemorySize();
-        double freePhysicalMemory = osBean.getFreePhysicalMemorySize();
+  @Override
+  protected Measurement measureSingle() throws MeasurementNotAvailableException {
+    //memory usage
+    double totalPhysicalMemory = osBean.getTotalPhysicalMemorySize();
+    double freePhysicalMemory = osBean.getFreePhysicalMemorySize();
 
-        if (totalPhysicalMemory < 0 || freePhysicalMemory < 0) {
-            throw new MeasurementNotAvailableException(
-                "Received negative value for total or free physical memory size");
-        }
-
-        return measurementBuilder(Double.class).now()
-            .value(100 - ((freePhysicalMemory / totalPhysicalMemory) * 100)).build();
+    if (totalPhysicalMemory < 0 || freePhysicalMemory < 0) {
+      throw new MeasurementNotAvailableException(
+          "Received negative value for total or free physical memory size");
     }
 
-    @Override protected void initialize(MonitorContext monitorContext,
-        SensorConfiguration sensorConfiguration) throws SensorInitializationException {
-        super.initialize(monitorContext, sensorConfiguration);
-        osBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
-    }
+    return measurementBuilder(Double.class).now()
+        .value(100 - ((freePhysicalMemory / totalPhysicalMemory) * 100)).build();
+  }
+
+  @Override
+  protected void initialize(MonitorContext monitorContext,
+      SensorConfiguration sensorConfiguration) throws SensorInitializationException {
+    super.initialize(monitorContext, sensorConfiguration);
+    osBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
+  }
 }

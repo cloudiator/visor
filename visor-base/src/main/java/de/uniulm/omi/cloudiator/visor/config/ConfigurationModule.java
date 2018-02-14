@@ -27,20 +27,21 @@ import com.google.inject.name.Names;
  */
 public class ConfigurationModule extends AbstractModule {
 
-    private final ConfigurationAccess configurationAccess;
-    private final CommandLinePropertiesAccessor commandLinePropertiesAccessor;
+  private final ConfigurationAccess configurationAccess;
+  private final CommandLinePropertiesAccessor commandLinePropertiesAccessor;
 
-    public ConfigurationModule(ConfigurationAccess configurationAccess,
-        CommandLinePropertiesAccessor commandLinePropertiesAccessor) {
-        this.commandLinePropertiesAccessor = commandLinePropertiesAccessor;
-        this.configurationAccess = configurationAccess;
-    }
+  public ConfigurationModule(ConfigurationAccess configurationAccess,
+      CommandLinePropertiesAccessor commandLinePropertiesAccessor) {
+    this.commandLinePropertiesAccessor = commandLinePropertiesAccessor;
+    this.configurationAccess = configurationAccess;
+  }
 
-    @Override protected void configure() {
-        Names.bindProperties(binder(), configurationAccess.getProperties());
-        Multibinder<IpProvider> ipProviderMultibinder =
-            Multibinder.newSetBinder(binder(), IpProvider.class);
-        ipProviderMultibinder.addBinding().toInstance(commandLinePropertiesAccessor);
-        ipProviderMultibinder.addBinding().to(AwsIpWebService.class);
-    }
+  @Override
+  protected void configure() {
+    Names.bindProperties(binder(), configurationAccess.getProperties());
+    Multibinder<IpProvider> ipProviderMultibinder =
+        Multibinder.newSetBinder(binder(), IpProvider.class);
+    ipProviderMultibinder.addBinding().toInstance(commandLinePropertiesAccessor);
+    ipProviderMultibinder.addBinding().to(AwsIpWebService.class);
+  }
 }

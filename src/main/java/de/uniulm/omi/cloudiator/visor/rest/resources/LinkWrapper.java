@@ -19,7 +19,6 @@
 package de.uniulm.omi.cloudiator.visor.rest.resources;
 
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
-
 import java.util.Set;
 
 /**
@@ -27,20 +26,21 @@ import java.util.Set;
  */
 public class LinkWrapper<T> {
 
-    protected T wrappedEntity;
-    private final Set<Link> links;
+  private final Set<Link> links;
+  protected T wrappedEntity;
 
-    public LinkWrapper(T wrappedEntity, Set<Link> links) {
-        this.wrappedEntity = wrappedEntity;
-        this.links = links;
-    }
+  public LinkWrapper(T wrappedEntity, Set<Link> links) {
+    this.wrappedEntity = wrappedEntity;
+    this.links = links;
+  }
 
-    @JsonUnwrapped public T getEntity() {
-        return wrappedEntity;
-    }
+  @JsonUnwrapped
+  public T getEntity() {
+    return wrappedEntity;
+  }
 
-    public Set<Link> getLinks() {
-        return links;
-    }
+  public Set<Link> getLinks() {
+    return links;
+  }
 
 }

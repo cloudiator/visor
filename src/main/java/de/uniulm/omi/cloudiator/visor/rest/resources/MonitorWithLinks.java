@@ -26,40 +26,48 @@ import java.util.Set;
  */
 public class MonitorWithLinks extends LinkWrapper<Monitor> implements MonitorEntity {
 
-    public MonitorWithLinks(Monitor wrappedEntity, Set<Link> links) {
-        super(wrappedEntity, links);
+  public MonitorWithLinks(Monitor wrappedEntity, Set<Link> links) {
+    super(wrappedEntity, links);
 
-    }
+  }
 
-    @Override public String getMetricName() {
-        return this.wrappedEntity.getMetricName();
-    }
+  @Override
+  public String getMetricName() {
+    return this.wrappedEntity.getMetricName();
+  }
 
-    @Override public void setMetricName(String metricName) {
-        this.wrappedEntity.setMetricName(metricName);
-    }
+  @Override
+  public void setMetricName(String metricName) {
+    this.wrappedEntity.setMetricName(metricName);
+  }
 
-    @Override public String getSensorClassName() {
-        return this.wrappedEntity.getSensorClassName();
-    }
+  @Override
+  public String getSensorClassName() {
+    return this.wrappedEntity.getSensorClassName();
+  }
 
-    @Override public void setSensorClassName(String sensorClassName) {
-        this.wrappedEntity.setSensorClassName(sensorClassName);
-    }
+  @Override
+  public void setSensorClassName(String sensorClassName) {
+    this.wrappedEntity.setSensorClassName(sensorClassName);
+  }
 
-    @Override public Interval getInterval() {
-        return this.wrappedEntity.getInterval();
-    }
+  @Override
+  public Interval getInterval() {
+    return this.wrappedEntity.getInterval();
+  }
 
-    @Override public void setInterval(Interval interval) {
-        this.wrappedEntity.setInterval(interval);
-    }
+  @Override
+  public void setInterval(Interval interval) {
+    this.wrappedEntity.setInterval(interval);
+  }
 
-    @Override public List<Context> getContexts() {
-        return this.wrappedEntity.getContexts();
-    }
+  @Override
+  public List<Context> getContexts() {
+    return this.wrappedEntity.getContexts();
+  }
 
-    @Override public void setContexts(List<Context> contexts) {
-        this.wrappedEntity.setContexts(contexts);
-    }
+  @Override
+  public void setContexts(List<Context> contexts) {
+    this.wrappedEntity.setContexts(contexts);
+  }
 }

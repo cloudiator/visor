@@ -25,9 +25,10 @@ import com.google.inject.AbstractModule;
  */
 public abstract class ServerModule extends AbstractModule {
 
-    @Override protected void configure() {
-        bind(ServerFactory.class).to(metricServerFactory());
-    }
+  @Override
+  protected void configure() {
+    bind(ServerFactory.class).to(metricServerFactory());
+  }
 
-    protected abstract Class<? extends ServerFactory> metricServerFactory();
+  protected abstract Class<? extends ServerFactory> metricServerFactory();
 }

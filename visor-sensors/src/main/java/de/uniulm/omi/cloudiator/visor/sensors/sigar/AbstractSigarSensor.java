@@ -26,9 +26,9 @@ import org.hyperic.sigar.Sigar;
  */
 public abstract class AbstractSigarSensor extends AbstractSensor {
 
-    private final static Sigar SIGAR = new Sigar();
+  private final static Sigar SIGAR = new Sigar();
 
-    protected Sigar sigar() {
-        return SIGAR;
-    }
+  protected Sigar sigar() {
+    return SIGAR;
+  }
 }

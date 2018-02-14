@@ -21,5 +21,6 @@ package de.uniulm.omi.cloudiator.visor.rest.resources;
 /**
  * Created by daniel on 07.04.15.
  */
-public interface MonitorEntity extends Monitor,Entity {
+public interface MonitorEntity extends Monitor, Entity {
+
 }

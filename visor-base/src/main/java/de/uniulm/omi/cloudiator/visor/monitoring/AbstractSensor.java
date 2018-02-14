@@ -18,98 +18,99 @@
 
 package de.uniulm.omi.cloudiator.visor.monitoring;
 
+import static com.google.common.base.Preconditions.checkState;
+
 import com.google.common.base.MoreObjects;
 import de.uniulm.omi.cloudiator.visor.exceptions.MeasurementNotAvailableException;
 import de.uniulm.omi.cloudiator.visor.exceptions.SensorInitializationException;
-
 import java.util.Collections;
 import java.util.Set;
-
-import static com.google.common.base.Preconditions.checkState;
 
 /**
  * @author Daniel Baur
  */
 public abstract class AbstractSensor<E> implements Sensor {
 
-    private volatile boolean isInitialized = false;
-    private volatile SensorConfiguration sensorConfiguration;
+  private volatile boolean isInitialized = false;
+  private volatile SensorConfiguration sensorConfiguration;
 
-    @Override
-    public final void init(MonitorContext monitorContext, SensorConfiguration sensorConfiguration)
-        throws SensorInitializationException {
-        this.initialize(monitorContext, sensorConfiguration);
-        this.sensorConfiguration = sensorConfiguration;
-        this.isInitialized = true;
-    }
+  @Override
+  public final void init(MonitorContext monitorContext, SensorConfiguration sensorConfiguration)
+      throws SensorInitializationException {
+    this.initialize(monitorContext, sensorConfiguration);
+    this.sensorConfiguration = sensorConfiguration;
+    this.isInitialized = true;
+  }
 
-    @Override public final Set<Measurement<E>> getMeasurements()
-        throws MeasurementNotAvailableException {
-        checkState(isInitialized, "Measurement method was called before initialization.");
-        Set<Measurement<E>> measurements = measureSet();
-        if (measurements.isEmpty()) {
-            Measurement<E> single = measureSingle();
-            if (single != null) {
-                return Collections.singleton(single);
-            }
-            throw new MeasurementNotAvailableException(
-                this + "does not implement measureSingle or measureSet");
-        }
-        return measurements;
+  @Override
+  public final Set<Measurement<E>> getMeasurements()
+      throws MeasurementNotAvailableException {
+    checkState(isInitialized, "Measurement method was called before initialization.");
+    Set<Measurement<E>> measurements = measureSet();
+    if (measurements.isEmpty()) {
+      Measurement<E> single = measureSingle();
+      if (single != null) {
+        return Collections.singleton(single);
+      }
+      throw new MeasurementNotAvailableException(
+          this + "does not implement measureSingle or measureSet");
     }
+    return measurements;
+  }
 
-    @Override public final SensorConfiguration sensorConfiguration() {
-        if (!isInitialized) {
-            throw new IllegalStateException("sensor not initialized yet.");
-        }
-        return sensorConfiguration;
+  @Override
+  public final SensorConfiguration sensorConfiguration() {
+    if (!isInitialized) {
+      throw new IllegalStateException("sensor not initialized yet.");
     }
+    return sensorConfiguration;
+  }
 
-    /**
-     * Provides the possibility to initialize the sensor.
-     *
-     * @param monitorContext      the context of the sensor
-     * @param sensorConfiguration the configuration of the sensor
-     * @throws SensorInitializationException if it was not possible to init the sensor
-     */
-    protected void initialize(MonitorContext monitorContext,
-        SensorConfiguration sensorConfiguration) throws SensorInitializationException {
-        // intentionally left empty
-    }
+  /**
+   * Provides the possibility to initialize the sensor.
+   *
+   * @param monitorContext the context of the sensor
+   * @param sensorConfiguration the configuration of the sensor
+   * @throws SensorInitializationException if it was not possible to init the sensor
+   */
+  protected void initialize(MonitorContext monitorContext,
+      SensorConfiguration sensorConfiguration) throws SensorInitializationException {
+    // intentionally left empty
+  }
 
-    /**
-     * Returns a single measurement object.
-     *
-     * @return a measurement taken by this sensor.
-     * @throws MeasurementNotAvailableException
-     */
-    protected Measurement<E> measureSingle() throws MeasurementNotAvailableException {
-        return null;
-    }
+  /**
+   * Returns a single measurement object.
+   *
+   * @return a measurement taken by this sensor.
+   */
+  protected Measurement<E> measureSingle() throws MeasurementNotAvailableException {
+    return null;
+  }
 
-    protected Set<Measurement<E>> measureSet() throws MeasurementNotAvailableException {
-        return Collections.emptySet();
-    }
+  protected Set<Measurement<E>> measureSet() throws MeasurementNotAvailableException {
+    return Collections.emptySet();
+  }
 
-    /**
-     * Provides a type safe measurement builder.
-     *
-     * @return a measurement builder
-     */
-    protected final MeasurementBuilder<E> measurementBuilder(Class<E> eClass) {
-        return MeasurementBuilder.newBuilder(eClass);
-    }
+  /**
+   * Provides a type safe measurement builder.
+   *
+   * @return a measurement builder
+   */
+  protected final MeasurementBuilder<E> measurementBuilder(Class<E> eClass) {
+    return MeasurementBuilder.newBuilder(eClass);
+  }
 
-    /**
-     * Provides an object base measurement builder.
-     *
-     * @return a measurement builder
-     */
-    protected final MeasurementBuilder<?> measurementBuilder() {
-        return MeasurementBuilder.newBuilder();
-    }
+  /**
+   * Provides an object base measurement builder.
+   *
+   * @return a measurement builder
+   */
+  protected final MeasurementBuilder<?> measurementBuilder() {
+    return MeasurementBuilder.newBuilder();
+  }
 
-    @Override public String toString() {
-        return MoreObjects.toStringHelper(this).toString();
-    }
+  @Override
+  public String toString() {
+    return MoreObjects.toStringHelper(this).toString();
+  }
 }

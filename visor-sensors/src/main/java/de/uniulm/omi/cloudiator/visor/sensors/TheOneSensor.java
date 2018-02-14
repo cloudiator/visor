@@ -27,8 +27,9 @@ import de.uniulm.omi.cloudiator.visor.monitoring.Measurement;
  */
 public class TheOneSensor extends AbstractSensor<Integer> {
 
-    @Override protected Measurement<Integer> measureSingle()
-        throws MeasurementNotAvailableException {
-        return measurementBuilder(Integer.class).now().value(1).build();
-    }
+  @Override
+  protected Measurement<Integer> measureSingle()
+      throws MeasurementNotAvailableException {
+    return measurementBuilder(Integer.class).now().value(1).build();
+  }
 }

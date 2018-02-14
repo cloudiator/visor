@@ -16,13 +16,17 @@
  * under the License.
  */
 
-package de.uniulm.omi.cloudiator.visor;import com.google.inject.AbstractModule;
+package de.uniulm.omi.cloudiator.visor;
+
+import com.google.inject.AbstractModule;
 
 /**
  * Created by daniel on 28.04.17.
  */
 public class InitModule extends AbstractModule {
-    @Override protected void configure() {
-        bind(YamlParser.class).asEagerSingleton();
-    }
+
+  @Override
+  protected void configure() {
+    bind(YamlParser.class).asEagerSingleton();
+  }
 }

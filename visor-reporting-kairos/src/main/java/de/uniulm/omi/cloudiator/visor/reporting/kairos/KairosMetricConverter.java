@@ -20,37 +20,36 @@ package de.uniulm.omi.cloudiator.visor.reporting.kairos;
 
 
 import de.uniulm.omi.cloudiator.visor.monitoring.Metric;
-import org.kairosdb.client.builder.MetricBuilder;
-
 import java.util.Map;
+import org.kairosdb.client.builder.MetricBuilder;
 
 /**
  * Created by daniel on 23.09.14.
  */
 public class KairosMetricConverter {
 
-    private final MetricBuilder metricBuilder;
+  private final MetricBuilder metricBuilder;
 
-    public KairosMetricConverter() {
-        this.metricBuilder = MetricBuilder.getInstance();
+  public KairosMetricConverter() {
+    this.metricBuilder = MetricBuilder.getInstance();
+  }
+
+  public KairosMetricConverter add(Metric metric) throws KairosMetricConversionException {
+    org.kairosdb.client.builder.Metric kairosMetric = metricBuilder.addMetric(metric.getName())
+        .addDataPoint(metric.getTimestamp(), metric.getValue());
+
+    //workaround for https://github.com/kairosdb/kairosdb-client/issues/27
+    //manually add single tags as addTags() is broken.
+    for (final Map.Entry<String, String> entry : metric.getTags().entrySet()) {
+      kairosMetric.addTag(entry.getKey(), entry.getValue());
     }
-
-    public KairosMetricConverter add(Metric metric) throws KairosMetricConversionException {
-        org.kairosdb.client.builder.Metric kairosMetric = metricBuilder.addMetric(metric.getName())
-            .addDataPoint(metric.getTimestamp(), metric.getValue());
-
-        //workaround for https://github.com/kairosdb/kairosdb-client/issues/27
-        //manually add single tags as addTags() is broken.
-        for (final Map.Entry<String, String> entry : metric.getTags().entrySet()) {
-            kairosMetric.addTag(entry.getKey(), entry.getValue());
-        }
-        return this;
-    }
+    return this;
+  }
 
 
-    public MetricBuilder convert() {
-        return metricBuilder;
-    }
+  public MetricBuilder convert() {
+    return metricBuilder;
+  }
 
 
 }

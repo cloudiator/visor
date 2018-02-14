@@ -21,18 +21,19 @@ package de.uniulm.omi.cloudiator.visor.rest.converters;
 import de.uniulm.omi.cloudiator.visor.monitoring.PushMonitor;
 import de.uniulm.omi.cloudiator.visor.rest.entities.PushMonitorDto;
 import de.uniulm.omi.cloudiator.visor.rest.entities.PushMonitorDtoBuilder;
-
-import javax.annotation.Nullable;
 import java.util.function.Function;
+import javax.annotation.Nullable;
 
 /**
  * Created by daniel on 27.10.15.
  */
 public class PushMonitorConverter implements Function<PushMonitor, PushMonitorDto> {
 
-    @Nullable @Override public PushMonitorDto apply(PushMonitor monitor) {
-        return new PushMonitorDtoBuilder().uuid(monitor.uuid()).componentId(monitor.componentId())
-            .metricName(monitor.metricName()).monitorContext(monitor.monitorContext().getContext())
-            .port(monitor.port()).build();
-    }
+  @Nullable
+  @Override
+  public PushMonitorDto apply(PushMonitor monitor) {
+    return new PushMonitorDtoBuilder().uuid(monitor.uuid()).componentId(monitor.componentId())
+        .metricName(monitor.metricName()).monitorContext(monitor.monitorContext().getContext())
+        .port(monitor.port()).build();
+  }
 }
