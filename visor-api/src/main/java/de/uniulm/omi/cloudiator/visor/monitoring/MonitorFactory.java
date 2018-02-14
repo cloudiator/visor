@@ -19,18 +19,18 @@
 package de.uniulm.omi.cloudiator.visor.monitoring;
 
 import de.uniulm.omi.cloudiator.visor.exceptions.MonitorException;
-
 import java.util.Map;
+import javax.annotation.Nullable;
 
 /**
  * Created by daniel on 15.01.15.
  */
 public interface MonitorFactory {
 
-    SensorMonitor create(String uuid, String metricName, String componentId,
-        Map<String, String> monitorContext, String sensorClassName, Interval interval,
-        SensorConfiguration sensorConfiguration) throws MonitorException;
+  SensorMonitor create(String uuid, String metricName, String componentId,
+      Map<String, String> monitorContext, String sensorClassName, Interval interval,
+      SensorConfiguration sensorConfiguration) throws MonitorException;
 
-    PushMonitor create(String uuid, String metricName, String componentId,
-        Map<String, String> monitorContext) throws MonitorException;
+  PushMonitor create(String uuid, String metricName, String componentId,
+      Map<String, String> monitorContext, @Nullable Integer port) throws MonitorException;
 }

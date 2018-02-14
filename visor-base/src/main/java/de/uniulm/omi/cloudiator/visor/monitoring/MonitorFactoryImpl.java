@@ -30,6 +30,7 @@ import de.uniulm.omi.cloudiator.visor.server.ServerRegistry;
 
 import java.io.IOException;
 import java.util.Map;
+import javax.annotation.Nullable;
 
 /**
  * Created by daniel on 15.01.15.
@@ -67,11 +68,11 @@ public class MonitorFactoryImpl implements MonitorFactory {
     }
 
     @Override public PushMonitor create(String uuid, String metricName, String componentId,
-        Map<String, String> monitorContext) throws MonitorException {
+        Map<String, String> monitorContext, @Nullable Integer port) throws MonitorException {
 
         try {
             MonitorContext context = monitorContextFactory.create(monitorContext);
-            return new PushMonitorImpl(serverRegistry.getServer(componentId), uuid, metricName,
+            return new PushMonitorImpl(serverRegistry.getServer(componentId, port), uuid, metricName,
                 componentId, context);
         } catch (IOException e) {
             throw new MonitorException("Unable to create monitor due to error", e);
