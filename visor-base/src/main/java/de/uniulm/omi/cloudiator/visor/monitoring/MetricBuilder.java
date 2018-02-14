@@ -19,7 +19,6 @@
 package de.uniulm.omi.cloudiator.visor.monitoring;
 
 import com.google.common.collect.ImmutableMap;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,45 +27,45 @@ import java.util.Map;
  */
 public class MetricBuilder {
 
-    private String name;
-    private Object value;
-    private long timestamp;
-    private final Map<String, String> tags;
+  private final Map<String, String> tags;
+  private String name;
+  private Object value;
+  private long timestamp;
 
-    MetricBuilder() {
-        tags = new HashMap<>();
-    }
+  MetricBuilder() {
+    tags = new HashMap<>();
+  }
 
-    public static MetricBuilder newBuilder() {
-        return new MetricBuilder();
-    }
+  public static MetricBuilder newBuilder() {
+    return new MetricBuilder();
+  }
 
-    public MetricBuilder name(String name) {
-        this.name = name;
-        return this;
-    }
+  public MetricBuilder name(String name) {
+    this.name = name;
+    return this;
+  }
 
-    public MetricBuilder value(Object value) {
-        this.value = value;
-        return this;
-    }
+  public MetricBuilder value(Object value) {
+    this.value = value;
+    return this;
+  }
 
-    public MetricBuilder timestamp(long timestamp) {
-        this.timestamp = timestamp;
-        return this;
-    }
+  public MetricBuilder timestamp(long timestamp) {
+    this.timestamp = timestamp;
+    return this;
+  }
 
-    public MetricBuilder addTag(String key, String value) {
-        this.tags.put(key, value);
-        return this;
-    }
+  public MetricBuilder addTag(String key, String value) {
+    this.tags.put(key, value);
+    return this;
+  }
 
-    public MetricBuilder addTags(Map<String, String> tags) {
-        this.tags.putAll(tags);
-        return this;
-    }
+  public MetricBuilder addTags(Map<String, String> tags) {
+    this.tags.putAll(tags);
+    return this;
+  }
 
-    public Metric build() {
-        return new MetricImpl(name, value, timestamp, ImmutableMap.copyOf(this.tags));
-    }
+  public Metric build() {
+    return new MetricImpl(name, value, timestamp, ImmutableMap.copyOf(this.tags));
+  }
 }

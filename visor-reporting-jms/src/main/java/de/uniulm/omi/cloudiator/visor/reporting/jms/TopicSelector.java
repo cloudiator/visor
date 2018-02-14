@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2016 University of Ulm
+ * Copyright (c) 2014-2018 University of Ulm
  *
  * See the NOTICE file distributed with this work for additional information
  * regarding copyright ownership.  Licensed under the Apache License, Version 2.0 (the
@@ -16,18 +16,11 @@
  * under the License.
  */
 
-package de.uniulm.omi.cloudiator.visor.reporting.chukwa;
+package de.uniulm.omi.cloudiator.visor.reporting.jms;
 
 import de.uniulm.omi.cloudiator.visor.monitoring.Metric;
-import de.uniulm.omi.cloudiator.visor.reporting.ReportingInterface;
-import de.uniulm.omi.cloudiator.visor.reporting.ReportingModule;
+import java.util.function.Function;
 
-/**
- * Created by daniel on 22.02.16.
- */
-public class ChukwaReportingModule extends ReportingModule {
+public interface TopicSelector extends Function<Metric, String> {
 
-    @Override protected Class<? extends ReportingInterface<Metric>> getReportingInterface() {
-        return ChukwaReporter.class;
-    }
 }

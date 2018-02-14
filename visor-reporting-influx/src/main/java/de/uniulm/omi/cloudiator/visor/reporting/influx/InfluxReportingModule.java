@@ -29,13 +29,15 @@ import org.influxdb.InfluxDB;
  */
 public class InfluxReportingModule extends ReportingModule {
 
-    @Override protected void configure() {
-        super.configure();
-        bind(MetricToPoint.class).in(Singleton.class);
-        bind(InfluxDB.class).toProvider(InfluxDbProvider.class).in(Singleton.class);
-    }
+  @Override
+  protected void configure() {
+    super.configure();
+    bind(MetricToPoint.class).in(Singleton.class);
+    bind(InfluxDB.class).toProvider(InfluxDbProvider.class).in(Singleton.class);
+  }
 
-    @Override protected Class<? extends ReportingInterface<Metric>> getReportingInterface() {
-        return InfluxReporter.class;
-    }
+  @Override
+  protected Class<? extends ReportingInterface<Metric>> getReportingInterface() {
+    return InfluxReporter.class;
+  }
 }

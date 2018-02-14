@@ -25,46 +25,53 @@ import de.uniulm.omi.cloudiator.visor.server.Server;
  */
 public class PushMonitorImpl implements PushMonitor {
 
-    private final Server server;
-    private final String uuid;
-    private final String metricName;
-    private final String componentId;
-    private final MonitorContext monitorContext;
+  private final Server server;
+  private final String uuid;
+  private final String metricName;
+  private final String componentId;
+  private final MonitorContext monitorContext;
 
-    public PushMonitorImpl(Server server, String uuid, String metricName, String componentId,
-        MonitorContext monitorContext) {
-        this.server = server;
-        this.uuid = uuid;
-        this.metricName = metricName;
-        this.componentId = componentId;
-        this.monitorContext = monitorContext;
-    }
+  public PushMonitorImpl(Server server, String uuid, String metricName, String componentId,
+      MonitorContext monitorContext) {
+    this.server = server;
+    this.uuid = uuid;
+    this.metricName = metricName;
+    this.componentId = componentId;
+    this.monitorContext = monitorContext;
+  }
 
-    @Override public int port() {
-        return server.port();
-    }
+  @Override
+  public int port() {
+    return server.port();
+  }
 
-    @Override public void start() {
-        this.server.registerMetric(metricName, monitorContext);
-    }
+  @Override
+  public void start() {
+    this.server.registerMonitor(metricName, this);
+  }
 
-    @Override public void stop() {
-        this.server.unregisterMetric(metricName);
-    }
+  @Override
+  public void stop() {
+    this.server.unregisterMonitor(metricName);
+  }
 
-    @Override public String uuid() {
-        return uuid;
-    }
+  @Override
+  public String uuid() {
+    return uuid;
+  }
 
-    @Override public String metricName() {
-        return metricName;
-    }
+  @Override
+  public String metricName() {
+    return metricName;
+  }
 
-    @Override public String componentId() {
-        return componentId;
-    }
+  @Override
+  public String componentId() {
+    return componentId;
+  }
 
-    @Override public MonitorContext monitorContext() {
-        return monitorContext;
-    }
+  @Override
+  public MonitorContext monitorContext() {
+    return monitorContext;
+  }
 }

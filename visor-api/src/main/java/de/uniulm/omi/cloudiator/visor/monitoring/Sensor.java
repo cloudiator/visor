@@ -20,37 +20,33 @@ package de.uniulm.omi.cloudiator.visor.monitoring;
 
 import de.uniulm.omi.cloudiator.visor.exceptions.MeasurementNotAvailableException;
 import de.uniulm.omi.cloudiator.visor.exceptions.SensorInitializationException;
-
 import java.util.Set;
 
 public interface Sensor<E> {
 
-    /**
-     * Initializes the sensor.
-     * <p>
-     * The configuration and the context for the sensor are passed using the configuration and context parameter.
-     * <p>
-     * Also allows the sensor to e.g. install dependencies.
-     *
-     * @param configuration  the configuration for the sensor.
-     * @param monitorContext the monitor context
-     * @throws SensorInitializationException for problems during the initialization
-     */
-    void init(MonitorContext monitorContext, SensorConfiguration configuration)
-        throws SensorInitializationException;
+  /**
+   * Initializes the sensor. <p> The configuration and the context for the sensor are passed using
+   * the configuration and context parameter. <p> Also allows the sensor to e.g. install
+   * dependencies.
+   *
+   * @param configuration the configuration for the sensor.
+   * @param monitorContext the monitor context
+   * @throws SensorInitializationException for problems during the initialization
+   */
+  void init(MonitorContext monitorContext, SensorConfiguration configuration)
+      throws SensorInitializationException;
 
-    /**
-     * Returns the configuration used for this sensor.
-     *
-     * @return immutable sensor configuration.
-     */
-    SensorConfiguration sensorConfiguration();
+  /**
+   * Returns the configuration used for this sensor.
+   *
+   * @return immutable sensor configuration.
+   */
+  SensorConfiguration sensorConfiguration();
 
-    /**
-     * Called to retrieve measurements from this probe.
-     *
-     * @return the current measurements for this probe.
-     * @throws MeasurementNotAvailableException
-     */
-    Set<Measurement<E>> getMeasurements() throws MeasurementNotAvailableException;
+  /**
+   * Called to retrieve measurements from this probe.
+   *
+   * @return the current measurements for this probe.
+   */
+  Set<Measurement<E>> getMeasurements() throws MeasurementNotAvailableException;
 }

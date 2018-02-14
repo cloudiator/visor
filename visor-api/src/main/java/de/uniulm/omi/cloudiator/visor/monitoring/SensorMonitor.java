@@ -25,8 +25,8 @@ import de.uniulm.omi.cloudiator.visor.execution.Schedulable;
  */
 public interface SensorMonitor extends Monitor, Schedulable {
 
-    Class<? extends Sensor> sensorClass();
+  Class<? extends Sensor> sensorClass();
 
-    SensorConfiguration sensorConfiguration();
+  SensorConfiguration sensorConfiguration();
 
 }

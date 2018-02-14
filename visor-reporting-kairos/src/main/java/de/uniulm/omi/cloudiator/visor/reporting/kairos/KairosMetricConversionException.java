@@ -23,38 +23,38 @@ package de.uniulm.omi.cloudiator.visor.reporting.kairos;
  */
 public class KairosMetricConversionException extends Exception {
 
-    /**
-     * @see java.lang.Exception
-     */
-    public KairosMetricConversionException() {
-    }
+  /**
+   * @see java.lang.Exception
+   */
+  public KairosMetricConversionException() {
+  }
 
-    /**
-     * @see java.lang.Exception
-     */
-    public KairosMetricConversionException(String message) {
-        super(message);
-    }
+  /**
+   * @see java.lang.Exception
+   */
+  public KairosMetricConversionException(String message) {
+    super(message);
+  }
 
-    /**
-     * @see java.lang.Exception
-     */
-    public KairosMetricConversionException(String message, Throwable cause) {
-        super(message, cause);
-    }
+  /**
+   * @see java.lang.Exception
+   */
+  public KairosMetricConversionException(String message, Throwable cause) {
+    super(message, cause);
+  }
 
-    /**
-     * @see java.lang.Exception
-     */
-    public KairosMetricConversionException(Throwable cause) {
-        super(cause);
-    }
+  /**
+   * @see java.lang.Exception
+   */
+  public KairosMetricConversionException(Throwable cause) {
+    super(cause);
+  }
 
-    /**
-     * @see java.lang.Exception
-     */
-    public KairosMetricConversionException(String message, Throwable cause,
-        boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
-    }
+  /**
+   * @see java.lang.Exception
+   */
+  public KairosMetricConversionException(String message, Throwable cause,
+      boolean enableSuppression, boolean writableStackTrace) {
+    super(message, cause, enableSuppression, writableStackTrace);
+  }
 }

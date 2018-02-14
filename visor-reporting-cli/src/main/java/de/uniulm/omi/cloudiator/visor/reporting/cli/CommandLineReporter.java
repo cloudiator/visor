@@ -22,7 +22,6 @@ package de.uniulm.omi.cloudiator.visor.reporting.cli;
 import de.uniulm.omi.cloudiator.visor.monitoring.Metric;
 import de.uniulm.omi.cloudiator.visor.reporting.ReportingException;
 import de.uniulm.omi.cloudiator.visor.reporting.ReportingInterface;
-
 import java.util.Collection;
 
 /**
@@ -30,13 +29,15 @@ import java.util.Collection;
  */
 public class CommandLineReporter implements ReportingInterface<Metric> {
 
-    @Override public void report(Metric metric) throws ReportingException {
-        System.out.println(metric.toString());
-    }
+  @Override
+  public void report(Metric metric) throws ReportingException {
+    System.out.println(metric.toString());
+  }
 
-    @Override public void report(Collection<Metric> metrics) throws ReportingException {
-        for (Metric metric : metrics) {
-            this.report(metric);
-        }
+  @Override
+  public void report(Collection<Metric> metrics) throws ReportingException {
+    for (Metric metric : metrics) {
+      this.report(metric);
     }
+  }
 }

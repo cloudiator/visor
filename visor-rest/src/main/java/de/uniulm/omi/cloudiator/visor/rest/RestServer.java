@@ -18,65 +18,66 @@
 
 package de.uniulm.omi.cloudiator.visor.rest;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import de.uniulm.omi.cloudiator.visor.exceptions.ConfigurationException;
 import de.uniulm.omi.cloudiator.visor.execution.ExecutionService;
 import de.uniulm.omi.cloudiator.visor.monitoring.MonitoringService;
 import de.uniulm.omi.cloudiator.visor.rest.controllers.MonitorController;
+import java.io.IOException;
+import java.net.URI;
+import javax.ws.rs.core.UriBuilder;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.core.UriBuilder;
-import java.io.IOException;
-import java.net.URI;
-
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-
 /**
  * Created by daniel on 06.02.15.
  */
 public class RestServer {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(RestServer.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(RestServer.class);
 
-    @Inject public RestServer(@Named("restPort") int restPort, @Named("restHost") String restHost,
-        MonitoringService monitoringService, ExecutionService executionService) {
-        checkArgument(restPort > 0);
+  @Inject
+  public RestServer(@Named("restPort") int restPort, @Named("restHost") String restHost,
+      MonitoringService monitoringService, ExecutionService executionService) {
+    checkArgument(restPort > 0);
 
-        if (restPort <= 1024) {
-            LOGGER.warn("You try to open a port below 1024. This is usual not a good idea...");
-        }
-        checkNotNull(restHost);
-        checkArgument(!restHost.isEmpty());
+    if (restPort <= 1024) {
+      LOGGER.warn("You try to open a port below 1024. This is usual not a good idea...");
+    }
+    checkNotNull(restHost);
+    checkArgument(!restHost.isEmpty());
 
-        URI baseUri = UriBuilder.fromUri(restHost).port(restPort).build();
-        ResourceConfig config = new ResourceConfig();
-        config.register(new MonitorController(monitoringService));
-        config.register(JacksonFeature.class);
-        executionService.execute(new GrizzlyServer(baseUri, config));
+    URI baseUri = UriBuilder.fromUri(restHost).port(restPort).build();
+    ResourceConfig config = new ResourceConfig();
+    config.register(new MonitorController(monitoringService));
+    config.register(JacksonFeature.class);
+    executionService.execute(new GrizzlyServer(baseUri, config));
+  }
+
+  public static class GrizzlyServer implements Runnable {
+
+    private final URI baseUri;
+    private final ResourceConfig config;
+
+    private GrizzlyServer(URI baseUri, ResourceConfig config) {
+      this.baseUri = baseUri;
+      this.config = config;
     }
 
-    public static class GrizzlyServer implements Runnable {
-
-        private final URI baseUri;
-        private final ResourceConfig config;
-
-        private GrizzlyServer(URI baseUri, ResourceConfig config) {
-            this.baseUri = baseUri;
-            this.config = config;
-        }
-
-        @Override public void run() {
-            try {
-                GrizzlyHttpServerFactory.createHttpServer(baseUri, config).start();
-            } catch (IOException e) {
-                throw new ConfigurationException(e);
-            }
-        }
+    @Override
+    public void run() {
+      try {
+        GrizzlyHttpServerFactory.createHttpServer(baseUri, config).start();
+      } catch (IOException e) {
+        throw new ConfigurationException(e);
+      }
     }
+  }
 }

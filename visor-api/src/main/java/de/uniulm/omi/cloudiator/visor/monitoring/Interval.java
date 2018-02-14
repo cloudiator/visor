@@ -24,7 +24,8 @@ import java.util.concurrent.TimeUnit;
  * Created by daniel on 07.04.15.
  */
 public interface Interval {
-    long getPeriod();
 
-    TimeUnit getTimeUnit();
+  long getPeriod();
+
+  TimeUnit getTimeUnit();
 }

@@ -18,36 +18,37 @@
 
 package de.uniulm.omi.cloudiator.visor.monitoring;
 
-import de.uniulm.omi.cloudiator.visor.exceptions.SensorCreationException;
-import de.uniulm.omi.cloudiator.visor.exceptions.SensorInitializationException;
-
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+
+import de.uniulm.omi.cloudiator.visor.exceptions.SensorCreationException;
+import de.uniulm.omi.cloudiator.visor.exceptions.SensorInitializationException;
 
 /**
  * Created by daniel on 15.01.15.
  */
 public class SensorFactoryImpl implements SensorFactory {
 
-    @Override public Sensor from(String className, SensorConfiguration sensorConfiguration,
-        MonitorContext monitorContext)
-        throws SensorCreationException, SensorInitializationException {
-        checkNotNull(className);
-        checkArgument(!className.isEmpty());
-        return this.loadAndInitializeSensor(className, sensorConfiguration, monitorContext);
-    }
+  @Override
+  public Sensor from(String className, SensorConfiguration sensorConfiguration,
+      MonitorContext monitorContext)
+      throws SensorCreationException, SensorInitializationException {
+    checkNotNull(className);
+    checkArgument(!className.isEmpty());
+    return this.loadAndInitializeSensor(className, sensorConfiguration, monitorContext);
+  }
 
-    protected Sensor loadAndInitializeSensor(String className,
-        SensorConfiguration sensorConfiguration, MonitorContext monitorContext)
-        throws SensorCreationException, SensorInitializationException {
-        try {
-            Sensor sensor = (Sensor) Class.forName(className).newInstance();
-            sensor.init(monitorContext, sensorConfiguration);
-            return sensor;
-        } catch (ClassCastException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {
-            throw new SensorCreationException("Could not create sensor with className " + className,
-                e);
-        }
+  protected Sensor loadAndInitializeSensor(String className,
+      SensorConfiguration sensorConfiguration, MonitorContext monitorContext)
+      throws SensorCreationException, SensorInitializationException {
+    try {
+      Sensor sensor = (Sensor) Class.forName(className).newInstance();
+      sensor.init(monitorContext, sensorConfiguration);
+      return sensor;
+    } catch (ClassCastException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+      throw new SensorCreationException("Could not create sensor with className " + className,
+          e);
     }
+  }
 
 }

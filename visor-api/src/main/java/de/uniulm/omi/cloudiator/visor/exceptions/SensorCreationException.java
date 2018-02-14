@@ -23,7 +23,7 @@ package de.uniulm.omi.cloudiator.visor.exceptions;
  */
 public class SensorCreationException extends Exception {
 
-    public SensorCreationException(String message, Throwable cause) {
-        super(message, cause);
-    }
+  public SensorCreationException(String message, Throwable cause) {
+    super(message, cause);
+  }
 }

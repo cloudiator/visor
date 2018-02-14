@@ -36,13 +36,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Class YamlParser
- * <p>
- * Parses a yaml file present at the {@link YamlParser#CONF_INIT_YAML} location.
- * <p>
- * The monitors in this file will be added to the {@link MonitoringService}.
- * <p>
- * An example can be found in the conf folder.
+ * Class YamlParser <p> Parses a yaml file present at the {@link YamlParser#CONF_INIT_YAML}
+ * location. <p> The monitors in this file will be added to the {@link MonitoringService}. <p> An
+ * example can be found in the conf folder.
  */
 public class YamlParser {
 

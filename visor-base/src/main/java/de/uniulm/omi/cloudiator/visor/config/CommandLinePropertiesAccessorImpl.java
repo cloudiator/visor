@@ -18,66 +18,77 @@
 
 package de.uniulm.omi.cloudiator.visor.config;
 
+import static com.google.common.base.Preconditions.checkState;
+
 import com.google.inject.Inject;
 import de.uniulm.omi.cloudiator.visor.exceptions.ConfigurationException;
-import org.apache.commons.cli.*;
-
 import javax.annotation.Nullable;
 import javax.inject.Singleton;
-
-import static com.google.common.base.Preconditions.checkState;
+import org.apache.commons.cli.BasicParser;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.OptionBuilder;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 
 /**
  * Created by daniel on 24.09.14.
  */
-@SuppressWarnings("AccessStaticViaInstance") public class CommandLinePropertiesAccessorImpl
+@SuppressWarnings("AccessStaticViaInstance")
+public class CommandLinePropertiesAccessorImpl
     implements CommandLinePropertiesAccessor {
 
-    private final Options options;
-    private CommandLine commandLine;
-    private final static BasicParser parser = new BasicParser();
-    private final static HelpFormatter helpFormatter = new HelpFormatter();
+  private final static BasicParser parser = new BasicParser();
+  private final static HelpFormatter helpFormatter = new HelpFormatter();
+  private final Options options;
+  private CommandLine commandLine;
 
-    @Inject @Singleton public CommandLinePropertiesAccessorImpl(String[] args) {
-        this.options = new Options();
-        this.generateOptions(this.options);
+  @Inject
+  @Singleton
+  public CommandLinePropertiesAccessorImpl(String[] args) {
+    this.options = new Options();
+    this.generateOptions(this.options);
 
-        try {
-            this.commandLine = this.parser.parse(options, args);
-        } catch (ParseException e) {
-            this.commandLine = null;
-            throw new ConfigurationException(e);
-        }
+    try {
+      this.commandLine = this.parser.parse(options, args);
+    } catch (ParseException e) {
+      this.commandLine = null;
+      throw new ConfigurationException(e);
     }
+  }
 
-    private void generateOptions(Options options) {
-        options.addOption(
-            OptionBuilder.withLongOpt("localIp").withDescription("IP of the local machine").hasArg()
-                .create("ip"));
-        options.addOption(
-            OptionBuilder.withLongOpt("configFile").withDescription("Configuration file location.")
-                .isRequired().hasArg().create("conf"));
-    }
+  private void generateOptions(Options options) {
+    options.addOption(
+        OptionBuilder.withLongOpt("localIp").withDescription("IP of the local machine").hasArg()
+            .create("ip"));
+    options.addOption(
+        OptionBuilder.withLongOpt("configFile").withDescription("Configuration file location.")
+            .isRequired().hasArg().create("conf"));
+  }
 
-    public void printHelp() {
-        helpFormatter.printHelp("java -jar [args] visor.jar", options);
-    }
+  public void printHelp() {
+    helpFormatter.printHelp("java -jar [args] visor.jar", options);
+  }
 
-    @Nullable protected String getCommandLineOption(String name) {
-        checkState(this.commandLine != null, "Command line not parsed.");
-        if (!commandLine.hasOption(name)) {
-            return null;
-        }
-        return commandLine.getOptionValue(name);
+  @Nullable
+  protected String getCommandLineOption(String name) {
+    checkState(this.commandLine != null, "Command line not parsed.");
+    if (!commandLine.hasOption(name)) {
+      return null;
     }
+    return commandLine.getOptionValue(name);
+  }
 
-    @Override public String getConfFileLocation() {
-        String confFile = this.getCommandLineOption("conf");
-        checkState(confFile != null, "No command line argument value for conf (configFile)");
-        return confFile;
-    }
+  @Override
+  public String getConfFileLocation() {
+    String confFile = this.getCommandLineOption("conf");
+    checkState(confFile != null, "No command line argument value for conf (configFile)");
+    return confFile;
+  }
 
-    @Override @Nullable public String getPublicIp() {
-        return getCommandLineOption("ip");
-    }
+  @Override
+  @Nullable
+  public String getPublicIp() {
+    return getCommandLineOption("ip");
+  }
 }

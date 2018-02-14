@@ -60,7 +60,7 @@ public class ServerRegistryImpl implements ServerRegistry {
       } else {
         server = serverFactory.createServer(port);
       }
-      checkState(server != null, "server was create as null");
+      checkState(server != null, "server was created as null");
       servers.put(componentId, server);
     }
     return servers.get(componentId);

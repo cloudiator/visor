@@ -23,23 +23,23 @@ package de.uniulm.omi.cloudiator.visor.exceptions;
  */
 public class InvalidMonitorContextException extends Exception {
 
-    public InvalidMonitorContextException() {
-    }
+  public InvalidMonitorContextException() {
+  }
 
-    public InvalidMonitorContextException(String message) {
-        super(message);
-    }
+  public InvalidMonitorContextException(String message) {
+    super(message);
+  }
 
-    public InvalidMonitorContextException(String message, Throwable cause) {
-        super(message, cause);
-    }
+  public InvalidMonitorContextException(String message, Throwable cause) {
+    super(message, cause);
+  }
 
-    public InvalidMonitorContextException(Throwable cause) {
-        super(cause);
-    }
+  public InvalidMonitorContextException(Throwable cause) {
+    super(cause);
+  }
 
-    public InvalidMonitorContextException(String message, Throwable cause,
-        boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
-    }
+  public InvalidMonitorContextException(String message, Throwable cause,
+      boolean enableSuppression, boolean writableStackTrace) {
+    super(message, cause, enableSuppression, writableStackTrace);
+  }
 }

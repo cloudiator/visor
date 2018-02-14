@@ -19,23 +19,23 @@
 package de.uniulm.omi.cloudiator.visor.reporting.influx;
 
 import de.uniulm.omi.cloudiator.visor.monitoring.Metric;
-import org.influxdb.dto.Point;
-
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
+import org.influxdb.dto.Point;
 
 /**
  * Created by daniel on 01.12.16.
  */
 public class MetricToPoint implements Function<Metric, Point> {
 
-    @Override public Point apply(Metric metric) {
+  @Override
+  public Point apply(Metric metric) {
 
-        Point.Builder builder =
-            Point.measurement(metric.getName()).time(metric.getTimestamp(), TimeUnit.MILLISECONDS)
-                .addField("value", Double.valueOf(metric.getValue().toString()));
-        metric.getTags().forEach(builder::addField);
-        return builder.build();
-    }
+    Point.Builder builder =
+        Point.measurement(metric.getName()).time(metric.getTimestamp(), TimeUnit.MILLISECONDS)
+            .addField("value", Double.valueOf(metric.getValue().toString()));
+    metric.getTags().forEach(builder::addField);
+    return builder.build();
+  }
 
 }

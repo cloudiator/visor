@@ -27,20 +27,21 @@ import java.net.ServerSocket;
  */
 public abstract class AbstractServerFactory implements ServerFactory {
 
-    @Override public synchronized final Server createServer(int lower, int upper)
-        throws IOException {
-        for (int i = lower; i <= upper; i++) {
-            try (ServerSocket serverSocket = new ServerSocket(i);
-                DatagramSocket datagramSocket = new DatagramSocket(i)) {
-                serverSocket.setReuseAddress(true);
-                datagramSocket.setReuseAddress(true);
-                serverSocket.close();
-                datagramSocket.close();
-                return createServer(i);
-            } catch (IOException ignored) {
-            }
-        }
-        throw new IOException(
-            String.format("Could not find an empty port in the range %s-%s", lower, upper));
+  @Override
+  public synchronized final Server createServer(int lower, int upper)
+      throws IOException {
+    for (int i = lower; i <= upper; i++) {
+      try (ServerSocket serverSocket = new ServerSocket(i);
+          DatagramSocket datagramSocket = new DatagramSocket(i)) {
+        serverSocket.setReuseAddress(true);
+        datagramSocket.setReuseAddress(true);
+        serverSocket.close();
+        datagramSocket.close();
+        return createServer(i);
+      } catch (IOException ignored) {
+      }
     }
+    throw new IOException(
+        String.format("Could not find an empty port in the range %s-%s", lower, upper));
+  }
 }

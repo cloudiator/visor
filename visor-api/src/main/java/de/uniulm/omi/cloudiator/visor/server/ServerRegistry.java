@@ -27,6 +27,7 @@ import javax.annotation.Nullable;
 public interface ServerRegistry {
 
   /**
+<<<<<<< HEAD
    * Returns the server for this component instance id.
    * <p>
    * If such a server does not exist, it will be automatically created by the

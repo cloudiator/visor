@@ -21,24 +21,25 @@ package de.uniulm.omi.cloudiator.visor.reporting;
 /**
  * Created by daniel on 08.10.14.
  */
-public class ReportingException extends Exception{
+public class ReportingException extends Exception {
 
-    public ReportingException() {
-    }
+  public ReportingException() {
+  }
 
-    public ReportingException(String message) {
-        super(message);
-    }
+  public ReportingException(String message) {
+    super(message);
+  }
 
-    public ReportingException(String message, Throwable cause) {
-        super(message, cause);
-    }
+  public ReportingException(String message, Throwable cause) {
+    super(message, cause);
+  }
 
-    public ReportingException(Throwable cause) {
-        super(cause);
-    }
+  public ReportingException(Throwable cause) {
+    super(cause);
+  }
 
-    public ReportingException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
-    }
+  public ReportingException(String message, Throwable cause, boolean enableSuppression,
+      boolean writableStackTrace) {
+    super(message, cause, enableSuppression, writableStackTrace);
+  }
 }

@@ -16,7 +16,9 @@
  * under the License.
  */
 
-package de.uniulm.omi.cloudiator.visor.reporting.json;import de.uniulm.omi.cloudiator.visor.monitoring.Metric;
+package de.uniulm.omi.cloudiator.visor.reporting.json;
+
+import de.uniulm.omi.cloudiator.visor.monitoring.Metric;
 import de.uniulm.omi.cloudiator.visor.reporting.ReportingInterface;
 import de.uniulm.omi.cloudiator.visor.reporting.ReportingModule;
 

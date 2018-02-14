@@ -25,7 +25,6 @@ import de.uniulm.omi.cloudiator.visor.monitoring.AbstractSensor;
 import de.uniulm.omi.cloudiator.visor.monitoring.Measurement;
 import de.uniulm.omi.cloudiator.visor.monitoring.MonitorContext;
 import de.uniulm.omi.cloudiator.visor.monitoring.SensorConfiguration;
-
 import java.lang.management.ManagementFactory;
 
 /**
@@ -33,23 +32,25 @@ import java.lang.management.ManagementFactory;
  */
 public class SystemCpuUsageSensor extends AbstractSensor {
 
-    private OperatingSystemMXBean osBean;
+  private OperatingSystemMXBean osBean;
 
-    @Override protected Measurement measureSingle() throws MeasurementNotAvailableException {
+  @Override
+  protected Measurement measureSingle() throws MeasurementNotAvailableException {
 
-        double systemCpuLoad = osBean.getSystemCpuLoad();
-        double systemCpuLoadPercentage = systemCpuLoad * 100;
+    double systemCpuLoad = osBean.getSystemCpuLoad();
+    double systemCpuLoadPercentage = systemCpuLoad * 100;
 
-        if (systemCpuLoad < 0) {
-            throw new MeasurementNotAvailableException("Received negative value");
-        }
-
-        return measurementBuilder(Double.class).now().value(systemCpuLoadPercentage).build();
+    if (systemCpuLoad < 0) {
+      throw new MeasurementNotAvailableException("Received negative value");
     }
 
-    @Override protected void initialize(MonitorContext monitorContext,
-        SensorConfiguration sensorConfiguration) throws SensorInitializationException {
-        super.initialize(monitorContext, sensorConfiguration);
-        osBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
-    }
+    return measurementBuilder(Double.class).now().value(systemCpuLoadPercentage).build();
+  }
+
+  @Override
+  protected void initialize(MonitorContext monitorContext,
+      SensorConfiguration sensorConfiguration) throws SensorInitializationException {
+    super.initialize(monitorContext, sensorConfiguration);
+    osBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
+  }
 }

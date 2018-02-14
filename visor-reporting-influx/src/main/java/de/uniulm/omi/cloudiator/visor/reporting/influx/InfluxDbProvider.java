@@ -18,47 +18,49 @@
 
 package de.uniulm.omi.cloudiator.visor.reporting.influx;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.name.Named;
 import org.influxdb.InfluxDB;
 import org.influxdb.InfluxDBFactory;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 /**
  * Created by daniel on 01.12.16.
  */
 public class InfluxDbProvider implements Provider<InfluxDB> {
 
-    private final String influxUrl;
-    private final String influxUserName;
-    private final String influxPassword;
-    private final String influxDatabaseName;
+  private final String influxUrl;
+  private final String influxUserName;
+  private final String influxPassword;
+  private final String influxDatabaseName;
 
-    @Inject InfluxDbProvider(@Named("influxUrl") String influxUrl,
-        @Named("influxUserName") String influxUserName,
-        @Named("influxPassword") String influxPassword,
-        @Named("influxDatabaseName") String influxDatabaseName) {
+  @Inject
+  InfluxDbProvider(@Named("influxUrl") String influxUrl,
+      @Named("influxUserName") String influxUserName,
+      @Named("influxPassword") String influxPassword,
+      @Named("influxDatabaseName") String influxDatabaseName) {
 
-        checkNotNull(influxUrl, "influxUrl is null");
-        checkNotNull(influxUserName, "influxUserName is null");
-        checkNotNull(influxPassword, "influxPassword is null");
-        checkNotNull(influxDatabaseName, "influxDatabaseName is null");
+    checkNotNull(influxUrl, "influxUrl is null");
+    checkNotNull(influxUserName, "influxUserName is null");
+    checkNotNull(influxPassword, "influxPassword is null");
+    checkNotNull(influxDatabaseName, "influxDatabaseName is null");
 
-        this.influxUrl = influxUrl;
-        this.influxUserName = influxUserName;
-        this.influxPassword = influxPassword;
-        this.influxDatabaseName = influxDatabaseName;
+    this.influxUrl = influxUrl;
+    this.influxUserName = influxUserName;
+    this.influxPassword = influxPassword;
+    this.influxDatabaseName = influxDatabaseName;
+  }
+
+  @Override
+  public InfluxDB get() {
+
+    InfluxDB connect = InfluxDBFactory.connect(influxUrl, influxUserName, influxPassword);
+    if (connect.describeDatabases().stream().noneMatch(influxDatabaseName::equals)) {
+      connect.createDatabase(influxDatabaseName);
     }
 
-    @Override public InfluxDB get() {
-
-        InfluxDB connect = InfluxDBFactory.connect(influxUrl, influxUserName, influxPassword);
-        if (connect.describeDatabases().stream().noneMatch(influxDatabaseName::equals)) {
-            connect.createDatabase(influxDatabaseName);
-        }
-
-        return connect;
-    }
+    return connect;
+  }
 }

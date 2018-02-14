@@ -26,50 +26,50 @@ import java.util.Map;
  */
 public class MeasurementBuilder<E> {
 
-    private long timestamp;
-    private E value;
-    private Map<String, String> tags;
+  private long timestamp;
+  private E value;
+  private Map<String, String> tags;
 
-    private MeasurementBuilder() {
-        this.tags = new HashMap<>();
-    }
+  private MeasurementBuilder() {
+    this.tags = new HashMap<>();
+  }
 
-    public static MeasurementBuilder<Object> newBuilder() {
-        return new MeasurementBuilder<>();
-    }
+  public static MeasurementBuilder<Object> newBuilder() {
+    return new MeasurementBuilder<>();
+  }
 
-    public static <F> MeasurementBuilder<F> newBuilder(Class<F> fClass) {
-        return new MeasurementBuilder<>();
-    }
+  public static <F> MeasurementBuilder<F> newBuilder(Class<F> fClass) {
+    return new MeasurementBuilder<>();
+  }
 
-    public MeasurementBuilder<E> value(E value) {
-        this.value = value;
-        return this;
-    }
+  public MeasurementBuilder<E> value(E value) {
+    this.value = value;
+    return this;
+  }
 
-    public MeasurementBuilder<E> timestamp(long timestamp) {
-        this.timestamp = timestamp;
-        return this;
-    }
+  public MeasurementBuilder<E> timestamp(long timestamp) {
+    this.timestamp = timestamp;
+    return this;
+  }
 
-    public MeasurementBuilder<E> now() {
-        timestamp = System.currentTimeMillis();
-        return this;
-    }
+  public MeasurementBuilder<E> now() {
+    timestamp = System.currentTimeMillis();
+    return this;
+  }
 
-    public MeasurementBuilder<E> addTag(String key, String value) {
-        this.tags.put(key, value);
-        return this;
-    }
+  public MeasurementBuilder<E> addTag(String key, String value) {
+    this.tags.put(key, value);
+    return this;
+  }
 
-    public MeasurementBuilder<E> addTags(Map<String, String> tags) {
-        this.tags.putAll(tags);
-        return this;
-    }
+  public MeasurementBuilder<E> addTags(Map<String, String> tags) {
+    this.tags.putAll(tags);
+    return this;
+  }
 
-    public Measurement<E> build() {
-        return new MeasurementImpl<>(timestamp, value, tags);
-    }
+  public Measurement<E> build() {
+    return new MeasurementImpl<>(timestamp, value, tags);
+  }
 
 
 }

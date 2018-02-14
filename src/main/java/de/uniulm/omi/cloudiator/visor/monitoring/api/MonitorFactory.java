@@ -21,7 +21,6 @@ package de.uniulm.omi.cloudiator.visor.monitoring.api;
 import com.google.inject.ImplementedBy;
 import de.uniulm.omi.cloudiator.visor.monitoring.impl.Interval;
 import de.uniulm.omi.cloudiator.visor.monitoring.impl.MonitorFactoryImpl;
-
 import java.util.Map;
 
 /**
@@ -29,5 +28,7 @@ import java.util.Map;
  */
 @ImplementedBy(MonitorFactoryImpl.class)
 public interface MonitorFactory {
-    public Monitor create(String uuid, String metricName, Sensor sensor, Interval interval, Map<String,String> context) throws InvalidMonitorContextException;
+
+  public Monitor create(String uuid, String metricName, Sensor sensor, Interval interval,
+      Map<String, String> context) throws InvalidMonitorContextException;
 }
