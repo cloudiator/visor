@@ -107,7 +107,9 @@
               <goal>single</goal>
             </goals>
             <configuration>
-              <descriptor>src/assembly/dep.xml</descriptor>
+              <descriptors>
+                <descriptor>src/assembly/dep.xml</descriptor>
+              </descriptors>
               <finalName>visor</finalName>
               <appendAssemblyId>false</appendAssemblyId>
             </configuration>
