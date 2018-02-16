@@ -25,6 +25,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.google.common.base.MoreObjects;
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import de.uniulm.omi.cloudiator.visor.exceptions.MonitorException;
 import de.uniulm.omi.cloudiator.visor.monitoring.MonitoringService;
 import de.uniulm.omi.cloudiator.visor.rest.entities.MonitorDto;
@@ -32,18 +33,19 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
+import javax.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Class YamlParser <p> Parses a yaml file present at the {@link YamlParser#CONF_INIT_YAML}
+ * Class YamlParser <p> Parses a yaml file present at the {@link YamlParser#initFileLocation}
  * location. <p> The monitors in this file will be added to the {@link MonitoringService}. <p> An
  * example can be found in the conf folder.
  */
 public class YamlParser {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(YamlParser.class);
-  private static final String CONF_INIT_YAML = "conf/init.yaml";
+
 
   /**
    * Parses the file and adds the described monitors to the passed monitoringService.
@@ -52,14 +54,21 @@ public class YamlParser {
    * @throws NullPointerException if monitoringService is null
    */
   @Inject
-  public YamlParser(MonitoringService monitoringService) {
+  public YamlParser(MonitoringService monitoringService,
+      @Nullable @Named("initFileLocation") String initFileLocation) {
 
     checkNotNull(monitoringService, "monitoringService is null");
 
-    LOGGER.info(String.format("Starting initialization using YAML file (%s)", CONF_INIT_YAML));
+    if (initFileLocation == null) {
+      LOGGER.info("Skipping init. No init file configured.");
+      return;
+    }
+
+    LOGGER.info(String.format("Starting initialization using YAML file (%s)",
+        initFileLocation));
 
     ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-    File file = new File(CONF_INIT_YAML);
+    File file = new File(initFileLocation);
     if (!file.exists()) {
       LOGGER.warn(String.format("Skipping YAML initialization as file (%s) does not exist.",
           file.getAbsolutePath()));

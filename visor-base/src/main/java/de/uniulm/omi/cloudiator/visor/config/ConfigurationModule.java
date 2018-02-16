@@ -21,6 +21,7 @@ package de.uniulm.omi.cloudiator.visor.config;
 import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.Multibinder;
 import com.google.inject.name.Names;
+import com.google.inject.util.Providers;
 
 /**
  * Created by daniel on 17.12.14.
@@ -43,5 +44,12 @@ public class ConfigurationModule extends AbstractModule {
         Multibinder.newSetBinder(binder(), IpProvider.class);
     ipProviderMultibinder.addBinding().toInstance(commandLinePropertiesAccessor);
     ipProviderMultibinder.addBinding().to(AwsIpWebService.class);
+    if (commandLinePropertiesAccessor.getInitFileLocation().isPresent()) {
+      bind(String.class).annotatedWith(Names.named("initFileLocation"))
+          .toInstance(commandLinePropertiesAccessor.getInitFileLocation().get());
+    } else {
+      bind(String.class).annotatedWith(Names.named("initFileLocation"))
+          .toProvider(Providers.of(null));
+    }
   }
 }

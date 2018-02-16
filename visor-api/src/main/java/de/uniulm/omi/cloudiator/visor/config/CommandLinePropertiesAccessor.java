@@ -18,11 +18,15 @@
 
 package de.uniulm.omi.cloudiator.visor.config;
 
+import java.util.Optional;
+
 /**
  * Created by daniel on 10.02.15.
  */
 public interface CommandLinePropertiesAccessor extends IpProvider {
 
   String getConfFileLocation();
+
+  Optional<String> getInitFileLocation();
 
 }

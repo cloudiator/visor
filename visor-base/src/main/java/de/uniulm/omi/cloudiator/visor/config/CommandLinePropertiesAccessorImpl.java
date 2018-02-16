@@ -22,6 +22,7 @@ import static com.google.common.base.Preconditions.checkState;
 
 import com.google.inject.Inject;
 import de.uniulm.omi.cloudiator.visor.exceptions.ConfigurationException;
+import java.util.Optional;
 import javax.annotation.Nullable;
 import javax.inject.Singleton;
 import org.apache.commons.cli.BasicParser;
@@ -64,6 +65,9 @@ public class CommandLinePropertiesAccessorImpl
     options.addOption(
         OptionBuilder.withLongOpt("configFile").withDescription("Configuration file location.")
             .isRequired().hasArg().create("conf"));
+    options.addOption(
+        OptionBuilder.withLongOpt("initYaml").withDescription("Init file location")
+            .isRequired(false).hasArg().create("init"));
   }
 
   public void printHelp() {
@@ -84,6 +88,11 @@ public class CommandLinePropertiesAccessorImpl
     String confFile = this.getCommandLineOption("conf");
     checkState(confFile != null, "No command line argument value for conf (configFile)");
     return confFile;
+  }
+
+  @Override
+  public Optional<String> getInitFileLocation() {
+    return Optional.ofNullable(this.getCommandLineOption("init"));
   }
 
   @Override
