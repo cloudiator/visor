@@ -5,8 +5,8 @@ language: java
 install: mvn install -U -DskipTests=true
 script: mvn org.jacoco:jacoco-maven-plugin:prepare-agent install -Dmaven.javadoc.skip=true sonar:sonar
 after_success:
-- util/deploy_snapshot.sh
-- util/publish-javadoc-to-gh-pages.sh
+- ci/deploy_snapshot.sh
+- ci/publish-javadoc-to-gh-pages.sh
 branches:
   except:
   - gh-pages
