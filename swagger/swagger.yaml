@@ -66,6 +66,31 @@ definitions:
     allOf:
       - $ref: '#/definitions/Monitor'
       - type: object
+        required:
+          - sensorClassName
+          - interval
+        properties:
+          sensorClassName:
+            type: string
+          interval:
+            $ref: '#/definitions/Interval'
+          sensorConfiguration:
+            type: object
+            additionalProperties:
+              type: string
+
+  Interval:
+    type: object
+    required:
+      - period
+      - timeUnit
+    properties:
+      period:
+        type: number
+        format: int64
+      timeUnit:
+        type: string
+        enum: ['NANOSECONDS','MICROSECONDS','MILLISECONDS','SECONDS','MINUTES','HOURS','DAYS']
 
 paths:
   /monitors:
