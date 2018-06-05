@@ -34,10 +34,16 @@ parameters:
 definitions:
 
   Monitor:
+    type: object
     required:
       - metricName
       - componentId
+      - type
+    discriminator: type
     properties:
+      type:
+        type: string
+        enum: ['PushMonitor','SensorMonitor']
       metricName:
         type: string
       componentId:
@@ -46,6 +52,20 @@ definitions:
         type: object
         additionalProperties:
           type: string
+
+  PushMonitor:
+    allOf:
+      - $ref: '#/definitions/Monitor'
+      - type: object
+        properties:
+          port:
+            type: number
+            format: int32
+
+  SensorMonitor:
+    allOf:
+      - $ref: '#/definitions/Monitor'
+      - type: object
 
 paths:
   /monitors:
