@@ -1,0 +1,116 @@
+#
+# Documentation of the Visor REST Api
+#
+swagger: '2.0'
+
+# Document Metadata
+info:
+  version: "0.2.0"
+  title: Visor REST Api
+  contact:
+    name: Daniel Baur
+    email: daniel.baur@uni-ulm.de
+    url: http://github.com/cloudiator/visor
+  license:
+    name: Apache License 2.0
+    url: https://raw.githubusercontent.com/cloudiator/visor/master/LICENSE
+schemes:
+  - http
+consumes:
+  - application/json
+produces:
+  - application/json
+
+host: localhost:31415
+
+parameters:
+  uuid:
+    name: uuid
+    in: path
+    description: A globally unique identifier of a resource
+    required: true
+    type: string
+
+definitions:
+
+  Monitor:
+    required:
+      - metricName
+      - componentId
+    properties:
+      metricName:
+        type: string
+      componentId:
+        type: string
+      monitorContext:
+        type: object
+        additionalProperties:
+          type: string
+
+paths:
+  /monitors:
+    get:
+      operationId: getMonitors
+      responses:
+        200:
+         description: 'OK'
+         schema:
+           type: array
+           items:
+             $ref: '#/definitions/Monitor'
+
+    post:
+      operationId: postMonitors
+      parameters:
+        - name: monitor
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Monitor'
+      responses:
+        200:
+          description: 'OK'
+          schema:
+            $ref: '#/definitions/Monitor'
+
+    delete:
+      operationId: deleteMonitors
+      responses:
+        200:
+          description: 'OK'
+
+
+
+  /monitors/{uuid}:
+    get:
+      operationId: getMonitor
+      parameters:
+        - $ref: '#/parameters/uuid'
+      responses:
+        200:
+          description: 'OK'
+          schema:
+            $ref: '#/definitions/Monitor'
+
+    put:
+      operationId: putMonitor
+      parameters:
+        - $ref: '#/parameters/uuid'
+      responses:
+        200:
+          description: 'OK'
+          schema:
+            $ref: '#/definitions/Monitor'
+
+    delete:
+      operationId: deleteMonitor
+      parameters:
+        - $ref: '#/parameters/uuid'
+      responses:
+        200:
+          description: 'OK'
+
+
+
+
+
