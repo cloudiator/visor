@@ -2,11 +2,7 @@
 ***
 ## Description
 The RESTful interface can be used to control the monitors, sensors and telnet servers of Visor.
-See the following table for more information on the entities:
-
-Entity  | Description
--------- |-------------
-[Monitors](Monitors.md) | Information on how to deploy sensors, and how to start them. 
+The RESTful interface is documented using Swagger. The documentation can be accessed at: cloudiator.org/visor
 
 ## Configuration
 The port of the rest server can be configured using the "restPort" configuration property of the configuration file.
