@@ -33,11 +33,13 @@ import javax.validation.constraints.NotNull;
 /**
  * Created by daniel on 26.10.15.
  */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY)
-@JsonSubTypes({@JsonSubTypes.Type(value = PushMonitorDto.class, name = "push"),
-    @JsonSubTypes.Type(value = SensorMonitorDto.class, name = "sensor")})
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type", visible = true)
+@JsonSubTypes({@JsonSubTypes.Type(value = PushMonitorDto.class, name = "PushMonitor"),
+    @JsonSubTypes.Type(value = SensorMonitorDto.class, name = "SensorMonitor")})
 public abstract class MonitorDto {
 
+  @JsonProperty("type")
+  private String type;
   @JsonIgnore
   private String uuid;
   @NotNull
@@ -50,8 +52,9 @@ public abstract class MonitorDto {
 
   }
 
-  public MonitorDto(String uuid, String metricName, String componentId,
+  public MonitorDto(String type, String uuid, String metricName, String componentId,
       Map<String, String> monitorContext) {
+    this.type = type;
     this.uuid = uuid;
     this.metricName = metricName;
     this.componentId = componentId;

@@ -34,7 +34,7 @@ public class PushMonitorDto extends MonitorDto {
 
   public PushMonitorDto(String uuid, String metricName, String componentId,
       Map<String, String> monitorContext, Integer port) {
-    super(uuid, metricName, componentId, monitorContext);
+    super("PushMonitor", uuid, metricName, componentId, monitorContext);
     this.port = port;
   }
 

@@ -1,6 +1,6 @@
 - metricName: "cpuUsage"
   componentId: "1"
-  "@type": "sensor"
+  "type": "SensorMonitor"
   monitorContext:
     local.ip: "46.5.97.61"
     os.name: "MacOSX"
