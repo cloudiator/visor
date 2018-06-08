@@ -130,8 +130,7 @@ public class SensorMonitorImpl implements SensorMonitor {
       try {
         LOGGER.debug("Measuring Monitor " + this.monitor);
         for (Measurement<?> measurement : monitor.sensor.getMeasurements()) {
-          final Metric metric = MetricFactory.from(monitor.metricName(), measurement,
-              monitor.monitorContext().getContext(), componentId);
+          final Metric metric = MetricFactory.from(monitor, measurement);
           LOGGER.debug(String
               .format("Reporting metric %s using reporting interface %s.", metric,
                   metricReportingInterface));

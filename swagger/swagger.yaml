@@ -27,7 +27,7 @@ parameters:
   uuid:
     name: uuid
     in: path
-    description: A globally unique identifier of a resource
+    description: A globally unique identifier of a monitor.
     required: true
     type: string
 
@@ -46,14 +46,18 @@ definitions:
         enum: ['PushMonitor','SensorMonitor']
       metricName:
         type: string
+        description: "Unique name identifying the metric"
       componentId:
         type: string
+        description: "ID of the component monitored by this sensor."
       monitorContext:
         type: object
+        description: "Context of the monitor. Multiple key - value pairs depicting the environment of the monitor."
         additionalProperties:
           type: string
 
   PushMonitor:
+    description: "A monitoring providing a telnet endpoint where applications can advertise metrics."
     allOf:
       - $ref: '#/definitions/Monitor'
       - type: object

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2016 University of Ulm
+ * Copyright (c) 2014-2015 University of Ulm
  *
  * See the NOTICE file distributed with this work for additional information
  * regarding copyright ownership.  Licensed under the Apache License, Version 2.0 (the
@@ -16,28 +16,20 @@
  * under the License.
  */
 
-package de.uniulm.omi.cloudiator.visor.reporting.influx;
+package de.uniulm.omi.cloudiator.visor.reporting.cli;
 
-import com.google.inject.Singleton;
+
 import de.uniulm.omi.cloudiator.visor.monitoring.Metric;
 import de.uniulm.omi.cloudiator.visor.reporting.ReportingInterface;
-import de.uniulm.omi.cloudiator.visor.reporting.ReportingModule;
-import org.influxdb.InfluxDB;
+import de.uniulm.omi.cloudiator.visor.reporting.MetricReportingModule;
 
 /**
- * Created by daniel on 01.12.16.
+ * Created by daniel on 15.12.14.
  */
-public class InfluxReportingModule extends ReportingModule {
-
-  @Override
-  protected void configure() {
-    super.configure();
-    bind(MetricToPoint.class).in(Singleton.class);
-    bind(InfluxDB.class).toProvider(InfluxDbProvider.class).in(Singleton.class);
-  }
+public class CommandLineMetricReportingModule extends MetricReportingModule {
 
   @Override
   protected Class<? extends ReportingInterface<Metric>> getReportingInterface() {
-    return InfluxReporter.class;
+    return CommandLineReporter.class;
   }
 }

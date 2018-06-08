@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2017 University of Ulm
+ * Copyright (c) 2014-2018 University of Ulm
  *
  * See the NOTICE file distributed with this work for additional information
  * regarding copyright ownership.  Licensed under the Apache License, Version 2.0 (the
@@ -16,19 +16,26 @@
  * under the License.
  */
 
-package de.uniulm.omi.cloudiator.visor.reporting.json;
+package de.uniulm.omi.cloudiator.visor.reporting.jms;
 
 import de.uniulm.omi.cloudiator.visor.monitoring.Metric;
+import de.uniulm.omi.cloudiator.visor.reporting.MetricReportingModule;
 import de.uniulm.omi.cloudiator.visor.reporting.ReportingInterface;
-import de.uniulm.omi.cloudiator.visor.reporting.ReportingModule;
 
 /**
- * Created by daniel on 10.12.14.
+ * Created by daniel on 01.12.16.
  */
-public class JsonReportingModule extends ReportingModule {
+public class JMSMetricReportingModule extends MetricReportingModule {
+
+  @Override
+  protected void configure() {
+    super.configure();
+    bind(JMSEncoding.class).to(MelodicJsonEncoding.class);
+    bind(TopicSelector.class).to(MetricNameTopicSelector.class);
+  }
 
   @Override
   protected Class<? extends ReportingInterface<Metric>> getReportingInterface() {
-    return JsonReportingInterface.class;
+    return JMSReporter.class;
   }
 }

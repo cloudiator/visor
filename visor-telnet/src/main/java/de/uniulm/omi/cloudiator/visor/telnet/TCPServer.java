@@ -23,6 +23,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.base.MoreObjects;
 import de.uniulm.omi.cloudiator.visor.execution.ExecutionService;
+import de.uniulm.omi.cloudiator.visor.monitoring.Measurement;
 import de.uniulm.omi.cloudiator.visor.monitoring.MeasurementBuilder;
 import de.uniulm.omi.cloudiator.visor.monitoring.Metric;
 import de.uniulm.omi.cloudiator.visor.monitoring.MetricFactory;
@@ -246,9 +247,10 @@ public class TCPServer implements Server {
         }
         Monitor monitor = monitors.get(metricName);
 
-        return MetricFactory.from(metricName,
-            MeasurementBuilder.newBuilder(String.class).timestamp(timestamp).value(value)
-                .build(), monitor.monitorContext().getContext(), monitor.componentId());
+        Measurement<String> measurement = MeasurementBuilder.newBuilder(String.class)
+            .timestamp(timestamp).value(value).build();
+
+        return MetricFactory.from(monitor, measurement);
       }
     }
   }

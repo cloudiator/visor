@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2015 University of Ulm
+ * Copyright (c) 2014-2018 University of Ulm
  *
  * See the NOTICE file distributed with this work for additional information
  * regarding copyright ownership.  Licensed under the Apache License, Version 2.0 (the
@@ -16,20 +16,20 @@
  * under the License.
  */
 
-package de.uniulm.omi.cloudiator.visor.reporting.kairos;
+package de.uniulm.omi.cloudiator.visor.monitoring;
 
+import java.util.Map;
 
-import de.uniulm.omi.cloudiator.visor.monitoring.Metric;
-import de.uniulm.omi.cloudiator.visor.reporting.ReportingInterface;
-import de.uniulm.omi.cloudiator.visor.reporting.ReportingModule;
+public interface DataSink {
 
-/**
- * Created by daniel on 10.12.14.
- */
-public class KairosReportingModule extends ReportingModule {
+  interface DataSinkConfiguration {
 
-  @Override
-  protected Class<? extends ReportingInterface<Metric>> getReportingInterface() {
-    return KairosDb.class;
+    Map<String, String> values();
+
   }
+
+  String type();
+
+  DataSinkConfiguration config();
+
 }

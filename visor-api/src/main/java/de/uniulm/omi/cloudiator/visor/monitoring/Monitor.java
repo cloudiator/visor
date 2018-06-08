@@ -35,4 +35,6 @@ public interface Monitor {
   String componentId();
 
   MonitorContext monitorContext();
+
+  DataSink dataSink();
 }

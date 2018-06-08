@@ -18,7 +18,6 @@
 
 package de.uniulm.omi.cloudiator.visor.monitoring;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Map;
@@ -32,34 +31,23 @@ import java.util.Map;
  */
 public class MetricImpl implements Metric {
 
-  protected final String name;
+  private final Monitor monitor;
 
-  protected final Object value;
-
-  protected final long timestamp;
-
-  protected final Map<String, String> tags;
+  private final Measurement<?> measurement;
 
   /**
    * Constructor for the metric.
    *
-   * @param name the name of the metric.
-   * @param value the value of the metric.
-   * @param timestamp the timestamp of the metric.
-   * @param tags tags for the metric.
+   * @param monitor the monitor collecting this metric
+   * @param measurement the measurement represented by this metric.
    */
-  MetricImpl(String name, Object value, long timestamp, Map<String, String> tags) {
-    checkNotNull(name);
-    checkNotNull(value);
-    checkNotNull(timestamp);
-    checkNotNull(tags);
-    checkArgument(!name.isEmpty(), "Name must not be empty.");
-    checkArgument(timestamp > 0, "Timestamp must be > 0");
+  MetricImpl(Monitor monitor, Measurement<?> measurement) {
 
-    this.name = name;
-    this.value = value;
-    this.timestamp = timestamp;
-    this.tags = tags;
+    checkNotNull(monitor, "monitor is null");
+    checkNotNull(measurement, "measurement is null");
+
+    this.monitor = monitor;
+    this.measurement = measurement;
   }
 
   /**
@@ -69,7 +57,7 @@ public class MetricImpl implements Metric {
    */
   @Override
   public String getName() {
-    return name;
+    return monitor.metricName();
   }
 
   /**
@@ -79,7 +67,7 @@ public class MetricImpl implements Metric {
    */
   @Override
   public Object getValue() {
-    return value;
+    return measurement.getValue();
   }
 
   /**
@@ -89,17 +77,24 @@ public class MetricImpl implements Metric {
    */
   @Override
   public long getTimestamp() {
-    return timestamp;
+    return measurement.getTimestamp();
+  }
+
+  @Override
+  public Monitor monitor() {
+    return this.monitor;
   }
 
   /**
    * Getter for the tags of the metric.
    *
+   * todo: check if we need to merge component ID here.
+   *
    * @return tags for the metric.
    */
   @Override
   public Map<String, String> getTags() {
-    return tags;
+    return monitor.monitorContext().getContext();
   }
 
   /**
