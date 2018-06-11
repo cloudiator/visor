@@ -18,9 +18,14 @@
 
 package de.uniulm.omi.cloudiator.visor.reporting.jms;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
+import de.uniulm.omi.cloudiator.visor.monitoring.DataSink.DataSinkConfiguration;
 import de.uniulm.omi.cloudiator.visor.monitoring.Metric;
+import de.uniulm.omi.cloudiator.visor.monitoring.ReportingInterfaceFactory;
 import de.uniulm.omi.cloudiator.visor.reporting.MetricReportingModule;
 import de.uniulm.omi.cloudiator.visor.reporting.ReportingInterface;
+import javax.jms.JMSException;
 
 /**
  * Created by daniel on 01.12.16.
@@ -34,8 +39,69 @@ public class JMSMetricReportingModule extends MetricReportingModule {
     bind(TopicSelector.class).to(MetricNameTopicSelector.class);
   }
 
+  private static class JMSReportingInterfaceFactory implements ReportingInterfaceFactory<Metric> {
+
+    private static final String JMS_BROKER = "jms.broker";
+    private static final String JMS_TOPIC_SELECTOR = "jms.topic.selector";
+    private static final String JMS_MESSAGE_FORMAT = "jms.message.format";
+    private static final String VALIDATION_ERROR = "Expected configuration %s to contain %s.";
+
+    @Override
+    public ReportingInterface<Metric> of(DataSinkConfiguration dataSinkConfiguration) {
+
+      validate(dataSinkConfiguration);
+
+      final String broker = dataSinkConfiguration.values().get(JMS_BROKER);
+      final TopicSelector topicSelector = loadTopicSelector(
+          dataSinkConfiguration.values().get(JMS_TOPIC_SELECTOR));
+      final JMSEncoding jmsEncoding = loadEncoding(
+          dataSinkConfiguration.values().get(JMS_MESSAGE_FORMAT));
+
+      try {
+        return new JMSReporter(new JMSProducer(broker, topicSelector, jmsEncoding));
+      } catch (JMSException e) {
+        throw new IllegalStateException("Could not establish JMS communication.", e);
+      }
+    }
+
+    private JMSEncoding loadEncoding(String clazz) {
+      try {
+        return (JMSEncoding) Class.forName(clazz).newInstance();
+      } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | ClassCastException e) {
+        throw new IllegalStateException("Could not load jms encoding class " + clazz, e);
+      }
+    }
+
+    private TopicSelector loadTopicSelector(String clazz) {
+      try {
+        return (TopicSelector) Class.forName(clazz).newInstance();
+      } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | ClassCastException e) {
+        throw new IllegalStateException("Could not load topic selector class " + clazz, e);
+      }
+    }
+
+    private void validate(DataSinkConfiguration dataSinkConfiguration) {
+      checkArgument(dataSinkConfiguration.values().containsKey(JMS_BROKER),
+          String.format(VALIDATION_ERROR, dataSinkConfiguration, JMS_BROKER));
+      checkArgument(dataSinkConfiguration.values().containsKey(JMS_TOPIC_SELECTOR),
+          String.format(VALIDATION_ERROR, dataSinkConfiguration, JMS_TOPIC_SELECTOR));
+      checkArgument(dataSinkConfiguration.values().containsKey(JMS_MESSAGE_FORMAT),
+          String.format(VALIDATION_ERROR, dataSinkConfiguration, JMS_MESSAGE_FORMAT));
+    }
+
+
+  }
+
+
+  private static final JMSReportingInterfaceFactory INSTANCE = new JMSReportingInterfaceFactory();
+
   @Override
-  protected Class<? extends ReportingInterface<Metric>> getReportingInterface() {
-    return JMSReporter.class;
+  protected ReportingInterfaceFactory<Metric> reportingInterfaceFactory() {
+    return INSTANCE;
+  }
+
+  @Override
+  protected String identifier() {
+    return "jms";
   }
 }

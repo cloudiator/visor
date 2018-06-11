@@ -22,12 +22,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import de.uniulm.omi.cloudiator.visor.monitoring.Metric;
 import de.uniulm.omi.cloudiator.visor.reporting.jms.JMSEncoding.EncodingException;
 import java.util.concurrent.ExecutionException;
-import javax.inject.Named;
 import javax.jms.Connection;
 import javax.jms.Destination;
 import javax.jms.JMSException;
@@ -43,8 +41,7 @@ public class JMSProducer {
   private final Cache<String, MessageProducer> producerCache;
   private final JMSEncoding jmsEncoding;
 
-  @Inject
-  JMSProducer(@Named("jmsBroker") String broker, TopicSelector topicSelector,
+  JMSProducer(String broker, TopicSelector topicSelector,
       JMSEncoding jmsEncoding) throws JMSException {
     checkNotNull(jmsEncoding, "jmsEncoding is null");
     this.jmsEncoding = jmsEncoding;

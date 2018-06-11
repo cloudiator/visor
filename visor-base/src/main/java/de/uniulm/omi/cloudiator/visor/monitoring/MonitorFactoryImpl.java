@@ -57,12 +57,12 @@ public class MonitorFactoryImpl implements MonitorFactory {
   @Override
   public SensorMonitor create(String uuid, String metricName, String componentId,
       Map<String, String> monitorContext, String sensorClassName, Interval interval,
-      SensorConfiguration sensorConfiguration) throws MonitorException {
+      SensorConfiguration sensorConfiguration, DataSink dataSink) throws MonitorException {
     try {
       final MonitorContext context = monitorContextFactory.create(monitorContext);
       return new SensorMonitorImpl(uuid, metricName, componentId,
           sensorFactory.from(sensorClassName, sensorConfiguration, context), interval,
-          context, metricReportingInterface, executionService);
+          context, metricReportingInterface, executionService, dataSink);
     } catch (InvalidMonitorContextException | SensorInitializationException | SensorCreationException e) {
       throw new MonitorException("Unable to create monitor due to error", e);
     }
@@ -70,12 +70,13 @@ public class MonitorFactoryImpl implements MonitorFactory {
 
   @Override
   public PushMonitor create(String uuid, String metricName, String componentId,
-      Map<String, String> monitorContext, @Nullable Integer port) throws MonitorException {
+      Map<String, String> monitorContext, @Nullable Integer port, DataSink dataSink)
+      throws MonitorException {
 
     try {
       MonitorContext context = monitorContextFactory.create(monitorContext);
       return new PushMonitorImpl(serverRegistry.getServer(componentId, port), uuid, metricName,
-          componentId, context);
+          componentId, context, dataSink);
     } catch (IOException e) {
       throw new MonitorException("Unable to create monitor due to error", e);
     }

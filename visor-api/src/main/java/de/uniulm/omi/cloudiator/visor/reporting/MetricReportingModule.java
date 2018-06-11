@@ -23,11 +23,15 @@ import com.google.inject.TypeLiteral;
 import com.google.inject.multibindings.MapBinder;
 import de.uniulm.omi.cloudiator.visor.monitoring.Metric;
 import de.uniulm.omi.cloudiator.visor.monitoring.ReportingInterfaceFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by daniel on 10.12.14.
  */
 public abstract class MetricReportingModule extends AbstractModule {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(MetricReportingModule.class);
 
   @Override
   protected void configure() {
@@ -37,6 +41,9 @@ public abstract class MetricReportingModule extends AbstractModule {
         }, new TypeLiteral<ReportingInterfaceFactory<Metric>>() {
         });
 
+    LOGGER.info(String
+        .format("Adding reporting module binding: identifier %s -> reportingInterface %s",
+            identifier(), reportingInterfaceFactory()));
     mapBinder.addBinding(identifier()).toInstance(reportingInterfaceFactory());
   }
 

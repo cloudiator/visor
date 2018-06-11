@@ -22,6 +22,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.base.MoreObjects;
 import de.uniulm.omi.cloudiator.visor.exceptions.MonitorException;
+import de.uniulm.omi.cloudiator.visor.monitoring.DataSink;
 import de.uniulm.omi.cloudiator.visor.monitoring.DefaultInterval;
 import de.uniulm.omi.cloudiator.visor.monitoring.Interval;
 import de.uniulm.omi.cloudiator.visor.monitoring.Monitor;
@@ -46,8 +47,8 @@ public class SensorMonitorDto extends MonitorDto {
 
   public SensorMonitorDto(String uuid, String metricName, String componentId,
       Map<String, String> sensorConfiguration, Map<String, String> monitorContext,
-      String sensorClassName, Interval interval) {
-    super("SensorMonitor", uuid, metricName, componentId, monitorContext);
+      String sensorClassName, Interval interval, DataSink dataSink) {
+    super("SensorMonitor", uuid, metricName, componentId, monitorContext, dataSink);
     this.sensorClassName = sensorClassName;
     this.interval = interval;
     this.sensorConfiguration = sensorConfiguration;
@@ -64,7 +65,7 @@ public class SensorMonitorDto extends MonitorDto {
         .startMonitor(uuid, getComponentId(), getMetricName(), getSensorClassName(),
             getInterval(), getMonitorContext(),
             SensorConfigurationBuilder.newBuilder().addValues(getSensorConfiguration())
-                .build());
+                .build(), getDataSink());
   }
 
 

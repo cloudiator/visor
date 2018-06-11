@@ -29,9 +29,11 @@ import de.uniulm.omi.cloudiator.visor.reporting.ReportingInterface;
  */
 public class JsonTCPMetricReportingModule extends MetricReportingModule {
 
+  private static final JsonTCPReportingFactory INSTANCE = new JsonTCPReportingFactory();
+
   private static class JsonTCPReportingFactory implements ReportingInterfaceFactory<Metric> {
 
-    private static final JsonTCPReportingFactory INSTANCE = new JsonTCPReportingFactory();
+
     private static final String TCP_SERVER = "json-tcp.server";
     private static final String TCP_PORT = "json-tcp.port";
 
@@ -47,7 +49,7 @@ public class JsonTCPMetricReportingModule extends MetricReportingModule {
 
   @Override
   protected ReportingInterfaceFactory<Metric> reportingInterfaceFactory() {
-    return null;
+    return INSTANCE;
   }
 
   @Override

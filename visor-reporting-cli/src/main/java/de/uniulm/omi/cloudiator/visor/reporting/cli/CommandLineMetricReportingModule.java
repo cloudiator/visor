@@ -19,17 +19,36 @@
 package de.uniulm.omi.cloudiator.visor.reporting.cli;
 
 
+import de.uniulm.omi.cloudiator.visor.monitoring.DataSink.DataSinkConfiguration;
 import de.uniulm.omi.cloudiator.visor.monitoring.Metric;
-import de.uniulm.omi.cloudiator.visor.reporting.ReportingInterface;
+import de.uniulm.omi.cloudiator.visor.monitoring.ReportingInterfaceFactory;
 import de.uniulm.omi.cloudiator.visor.reporting.MetricReportingModule;
+import de.uniulm.omi.cloudiator.visor.reporting.ReportingInterface;
 
 /**
  * Created by daniel on 15.12.14.
  */
 public class CommandLineMetricReportingModule extends MetricReportingModule {
 
+  private static final CommandLineReporterFactory FACTORY = new CommandLineReporterFactory();
+
+  private static class CommandLineReporterFactory implements ReportingInterfaceFactory<Metric> {
+
+    private final static CommandLineReporter INSTANCE = new CommandLineReporter();
+
+    @Override
+    public ReportingInterface<Metric> of(DataSinkConfiguration dataSinkConfiguration) {
+      return INSTANCE;
+    }
+  }
+
   @Override
-  protected Class<? extends ReportingInterface<Metric>> getReportingInterface() {
-    return CommandLineReporter.class;
+  protected ReportingInterfaceFactory<Metric> reportingInterfaceFactory() {
+    return FACTORY;
+  }
+
+  @Override
+  protected String identifier() {
+    return "cli";
   }
 }

@@ -22,13 +22,19 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.base.MoreObjects;
 import de.uniulm.omi.cloudiator.visor.exceptions.MonitorException;
+import de.uniulm.omi.cloudiator.visor.monitoring.DataSink;
+import de.uniulm.omi.cloudiator.visor.monitoring.DataSinkImpl;
+import de.uniulm.omi.cloudiator.visor.monitoring.DefaultInterval;
 import de.uniulm.omi.cloudiator.visor.monitoring.Monitor;
 import de.uniulm.omi.cloudiator.visor.monitoring.MonitoringService;
 import java.util.Collections;
 import java.util.Map;
 import javax.validation.constraints.NotNull;
+import javax.xml.crypto.Data;
 
 /**
  * Created by daniel on 26.10.15.
@@ -47,18 +53,22 @@ public abstract class MonitorDto {
   @NotNull
   private String componentId;
   private Map<String, String> monitorContext;
+  @JsonSerialize(as = DataSinkImpl.class)
+  @JsonDeserialize(as = DataSinkImpl.class)
+  private DataSink dataSink;
 
   protected MonitorDto() {
 
   }
 
   public MonitorDto(String type, String uuid, String metricName, String componentId,
-      Map<String, String> monitorContext) {
+      Map<String, String> monitorContext, DataSink dataSink) {
     this.type = type;
     this.uuid = uuid;
     this.metricName = metricName;
     this.componentId = componentId;
     this.monitorContext = monitorContext;
+    this.dataSink = dataSink;
   }
 
   public abstract Monitor start(String uuid, MonitoringService monitoringService)
@@ -103,11 +113,20 @@ public abstract class MonitorDto {
 
   protected MoreObjects.ToStringHelper toStringHelper() {
     return MoreObjects.toStringHelper(this).add("uuid", uuid).add("metricName", metricName)
-        .add("componentId", componentId).add("monitorContext", monitorContext);
+        .add("componentId", componentId).add("monitorContext", monitorContext)
+        .add("dataSink", dataSink);
   }
 
   @Override
   public String toString() {
     return toStringHelper().toString();
+  }
+
+  public DataSink getDataSink() {
+    return dataSink;
+  }
+
+  public void setDataSink(DataSink dataSink) {
+    this.dataSink = dataSink;
   }
 }

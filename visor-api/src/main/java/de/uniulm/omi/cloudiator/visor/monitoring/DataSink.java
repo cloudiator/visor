@@ -20,6 +20,7 @@ package de.uniulm.omi.cloudiator.visor.monitoring;
 
 import java.util.Map;
 
+
 public interface DataSink {
 
   interface DataSinkConfiguration {

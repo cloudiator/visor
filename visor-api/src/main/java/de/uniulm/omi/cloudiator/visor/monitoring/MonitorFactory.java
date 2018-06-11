@@ -29,8 +29,9 @@ public interface MonitorFactory {
 
   SensorMonitor create(String uuid, String metricName, String componentId,
       Map<String, String> monitorContext, String sensorClassName, Interval interval,
-      SensorConfiguration sensorConfiguration) throws MonitorException;
+      SensorConfiguration sensorConfiguration, DataSink dataSink) throws MonitorException;
 
   PushMonitor create(String uuid, String metricName, String componentId,
-      Map<String, String> monitorContext, @Nullable Integer port) throws MonitorException;
+      Map<String, String> monitorContext, @Nullable Integer port, DataSink dataSink)
+      throws MonitorException;
 }

@@ -34,6 +34,6 @@ public class PushMonitorConverter implements Function<PushMonitor, PushMonitorDt
   public PushMonitorDto apply(PushMonitor monitor) {
     return new PushMonitorDtoBuilder().uuid(monitor.uuid()).componentId(monitor.componentId())
         .metricName(monitor.metricName()).monitorContext(monitor.monitorContext().getContext())
-        .port(monitor.port()).build();
+        .port(monitor.port()).dataSink(monitor.dataSink()).build();
   }
 }

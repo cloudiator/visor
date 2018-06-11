@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2016 University of Ulm
+ * Copyright (c) 2014-2018 University of Ulm
  *
  * See the NOTICE file distributed with this work for additional information
  * regarding copyright ownership.  Licensed under the Apache License, Version 2.0 (the
@@ -16,42 +16,38 @@
  * under the License.
  */
 
-package de.uniulm.omi.cloudiator.visor.reporting.influx;
+package de.uniulm.omi.cloudiator.visor.reporting;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
+import com.google.inject.Inject;
 import de.uniulm.omi.cloudiator.visor.monitoring.Metric;
-import de.uniulm.omi.cloudiator.visor.reporting.ReportingException;
-import de.uniulm.omi.cloudiator.visor.reporting.ReportingInterface;
+import de.uniulm.omi.cloudiator.visor.monitoring.ReportingInterfaceFactory;
 import java.util.Collection;
-import org.influxdb.InfluxDB;
+import java.util.Map;
 
 /**
- * Created by daniel on 01.12.16.
+ * @// TODO: 11.06.18 implement caching of reporters based on data sink configurations
+ * @// TODO: 11.06.18 implement collection report by grouping by configurations
  */
-public class InfluxReporter implements ReportingInterface<Metric> {
+public class MultiDataSinkReportingInterface implements ReportingInterface<Metric> {
 
-  private final String database;
-  private final MetricToPoint converter = MetricToPoint.getInstance();
-  private final InfluxDB influxDB;
+  private final Map<String, ReportingInterfaceFactory<Metric>> factories;
 
-  public InfluxReporter(String database,
-      InfluxDB influxDB) {
-
-    checkNotNull(database, "database is null");
-    this.database = database;
-    this.influxDB = influxDB;
+  @Inject
+  public MultiDataSinkReportingInterface(
+      Map<String, ReportingInterfaceFactory<Metric>> factories) {
+    this.factories = factories;
   }
 
   @Override
   public void report(Metric item) throws ReportingException {
-    influxDB.write(database, "autogen", converter.apply(item));
+    factories.get(item.monitor().dataSink().type()).of(item.monitor().dataSink().config())
+        .report(item);
   }
 
   @Override
   public void report(Collection<Metric> items) throws ReportingException {
-    for (Metric metric : items) {
-      report(metric);
+    for (Metric item : items) {
+      report(item);
     }
   }
 }

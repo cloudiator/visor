@@ -36,6 +36,6 @@ public class SensorMonitorConverter implements Function<SensorMonitor, SensorMon
         .interval(monitor.getInterval()).metricName(monitor.metricName())
         .sensorConfiguration(monitor.sensorConfiguration().getConfiguration())
         .monitorContext(monitor.monitorContext().getContext())
-        .sensorClassName(monitor.sensorClass().getName()).build();
+        .sensorClassName(monitor.sensorClass().getName()).dataSink(monitor.dataSink()).build();
   }
 }

@@ -33,6 +33,8 @@ import de.uniulm.omi.cloudiator.visor.monitoring.MonitoringServiceImpl;
 import de.uniulm.omi.cloudiator.visor.monitoring.SensorFactory;
 import de.uniulm.omi.cloudiator.visor.monitoring.SensorFactoryImpl;
 import de.uniulm.omi.cloudiator.visor.monitoring.ServerRegistryImpl;
+import de.uniulm.omi.cloudiator.visor.reporting.ExternalReporting;
+import de.uniulm.omi.cloudiator.visor.reporting.MultiDataSinkReportingInterface;
 import de.uniulm.omi.cloudiator.visor.reporting.Queue;
 import de.uniulm.omi.cloudiator.visor.reporting.QueueWorkerFactory;
 import de.uniulm.omi.cloudiator.visor.reporting.QueueWorkerFactoryInterface;
@@ -64,6 +66,8 @@ public class BaseModule extends AbstractModule {
     bind(new TypeLiteral<ReportingInterface<Metric>>() {
     }).annotatedWith(QueuedReporting.class).to(new TypeLiteral<Queue<Metric>>() {
     });
+    bind(new TypeLiteral<ReportingInterface<Metric>>() {
+    }).annotatedWith(ExternalReporting.class).to(MultiDataSinkReportingInterface.class);
     bind(new TypeLiteral<QueueWorkerFactoryInterface<Metric>>() {
     }).to(new TypeLiteral<QueueWorkerFactory<Metric>>() {
     });
