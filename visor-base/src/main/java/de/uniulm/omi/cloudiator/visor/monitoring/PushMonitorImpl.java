@@ -30,16 +30,16 @@ public class PushMonitorImpl implements PushMonitor {
   private final String metricName;
   private final String componentId;
   private final MonitorContext monitorContext;
-  private final DataSink dataSink;
+  private final Iterable<DataSink> dataSinks;
 
   public PushMonitorImpl(Server server, String uuid, String metricName, String componentId,
-      MonitorContext monitorContext, DataSink dataSink) {
+      MonitorContext monitorContext, Iterable<DataSink> dataSinks) {
     this.server = server;
     this.uuid = uuid;
     this.metricName = metricName;
     this.componentId = componentId;
     this.monitorContext = monitorContext;
-    this.dataSink = dataSink;
+    this.dataSinks = dataSinks;
   }
 
   @Override
@@ -78,7 +78,7 @@ public class PushMonitorImpl implements PushMonitor {
   }
 
   @Override
-  public DataSink dataSink() {
-    return dataSink;
+  public Iterable<DataSink> dataSinks() {
+    return dataSinks;
   }
 }

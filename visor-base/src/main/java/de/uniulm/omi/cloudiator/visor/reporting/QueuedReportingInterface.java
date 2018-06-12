@@ -18,15 +18,10 @@
 
 package de.uniulm.omi.cloudiator.visor.reporting;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-import com.google.inject.name.Named;
 import de.uniulm.omi.cloudiator.visor.execution.ScheduledExecutionService;
-import de.uniulm.omi.cloudiator.visor.monitoring.Intervals;
 import java.util.Collection;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,22 +31,25 @@ import org.slf4j.LoggerFactory;
  *
  * @param <T> the class of the generic item.
  */
-@Singleton
-public class Queue<T> implements ReportingInterface<T> {
+public class QueuedReportingInterface<T> implements ReportingInterface<T> {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(Queue.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(QueuedReportingInterface.class);
   /**
    * The queue storing the items.
    */
   private final BlockingQueue<T> queueDelegate;
 
-  @Inject
-  public Queue(ScheduledExecutionService executionService,
-      QueueWorkerFactoryInterface<T> queueWorkerFactory,
-      @Named("reportingInterval") int reportingInterval) {
+  private final ScheduledExecutionService scheduledExecutionService;
+
+  private final QueueWorker<T> queueWorker;
+
+
+  public QueuedReportingInterface(ScheduledExecutionService executionService,
+      ReportingInterface<T> reportingInterface, QueueWorkerFactory<T> queueWorkerFactory) {
     this.queueDelegate = new LinkedBlockingQueue<>();
-    executionService.schedule(queueWorkerFactory
-        .create(this.queueDelegate, Intervals.of(reportingInterval, TimeUnit.SECONDS)));
+    this.scheduledExecutionService = executionService;
+    this.queueWorker = queueWorkerFactory.create(reportingInterface, queueDelegate);
+    executionService.schedule(queueWorker);
   }
 
   @Override
@@ -71,5 +69,9 @@ public class Queue<T> implements ReportingInterface<T> {
     for (T item : items) {
       this.report(item);
     }
+  }
+
+  void cancel() {
+    this.scheduledExecutionService.remove(queueWorker, true);
   }
 }

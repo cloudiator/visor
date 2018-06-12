@@ -18,6 +18,8 @@
 
 package de.uniulm.omi.cloudiator.visor.monitoring;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -25,6 +27,8 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.collect.ImmutableMap;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+import javax.annotation.Nullable;
 
 public class DataSinkImpl implements DataSink {
 
@@ -35,9 +39,15 @@ public class DataSinkImpl implements DataSink {
 
   @JsonCreator
   public DataSinkImpl(@JsonProperty("type") String type,
-      @JsonProperty("config") DataSinkConfiguration config) {
+      @Nullable @JsonProperty("config") DataSinkConfiguration config) {
+
+    checkNotNull(type, "type is null");
     this.type = type;
-    this.config = config;
+    if (config == null) {
+      this.config = new DataSinkConfigurationImpl(null);
+    } else {
+      this.config = config;
+    }
   }
 
   public static class DataSinkConfigurationImpl implements DataSinkConfiguration {
@@ -45,13 +55,36 @@ public class DataSinkImpl implements DataSink {
     private final HashMap<String, String> values;
 
     @JsonCreator
-    public DataSinkConfigurationImpl(@JsonProperty("values") HashMap<String, String> values) {
-      this.values = values;
+    public DataSinkConfigurationImpl(
+        @Nullable @JsonProperty("values") HashMap<String, String> values) {
+      if (values == null) {
+        this.values = new HashMap<>();
+      } else {
+        this.values = values;
+      }
     }
 
     @Override
     public Map<String, String> values() {
       return ImmutableMap.copyOf(values);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+      if (this == o) {
+        return true;
+      }
+      if (o == null || getClass() != o.getClass()) {
+        return false;
+      }
+      DataSinkConfigurationImpl that = (DataSinkConfigurationImpl) o;
+      return Objects.equals(values, that.values);
+    }
+
+    @Override
+    public int hashCode() {
+
+      return Objects.hash(values);
     }
   }
 
@@ -63,5 +96,24 @@ public class DataSinkImpl implements DataSink {
   @Override
   public DataSinkConfiguration config() {
     return config;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    DataSinkImpl dataSink = (DataSinkImpl) o;
+    return Objects.equals(type, dataSink.type) &&
+        Objects.equals(config, dataSink.config);
+  }
+
+  @Override
+  public int hashCode() {
+
+    return Objects.hash(type, config);
   }
 }

@@ -28,6 +28,7 @@ import de.uniulm.omi.cloudiator.visor.monitoring.Interval;
 import de.uniulm.omi.cloudiator.visor.monitoring.Monitor;
 import de.uniulm.omi.cloudiator.visor.monitoring.MonitoringService;
 import de.uniulm.omi.cloudiator.visor.monitoring.SensorConfigurationBuilder;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import javax.validation.constraints.NotNull;
@@ -47,8 +48,8 @@ public class SensorMonitorDto extends MonitorDto {
 
   public SensorMonitorDto(String uuid, String metricName, String componentId,
       Map<String, String> sensorConfiguration, Map<String, String> monitorContext,
-      String sensorClassName, Interval interval, DataSink dataSink) {
-    super("SensorMonitor", uuid, metricName, componentId, monitorContext, dataSink);
+      String sensorClassName, Interval interval, Collection<DataSink> dataSinks) {
+    super("SensorMonitor", uuid, metricName, componentId, monitorContext, dataSinks);
     this.sensorClassName = sensorClassName;
     this.interval = interval;
     this.sensorConfiguration = sensorConfiguration;
@@ -65,7 +66,7 @@ public class SensorMonitorDto extends MonitorDto {
         .startMonitor(uuid, getComponentId(), getMetricName(), getSensorClassName(),
             getInterval(), getMonitorContext(),
             SensorConfigurationBuilder.newBuilder().addValues(getSensorConfiguration())
-                .build(), getDataSink());
+                .build(), getDataSinks());
   }
 
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2015 University of Ulm
+ * Copyright (c) 2014-2018 University of Ulm
  *
  * See the NOTICE file distributed with this work for additional information
  * regarding copyright ownership.  Licensed under the Apache License, Version 2.0 (the
@@ -18,21 +18,8 @@
 
 package de.uniulm.omi.cloudiator.visor.reporting;
 
-import static java.lang.annotation.ElementType.FIELD;
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.ElementType.PARAMETER;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+public interface QueueFactory<T> {
 
-import com.google.inject.BindingAnnotation;
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
-
-/**
- * Created by daniel on 08.04.15.
- */
-@BindingAnnotation
-@Target({FIELD, PARAMETER, METHOD})
-@Retention(RUNTIME)
-public @interface ExternalReporting {
+  ReportingInterface<T> queueReportingInterface(ReportingInterface<T> reportingInterface);
 
 }

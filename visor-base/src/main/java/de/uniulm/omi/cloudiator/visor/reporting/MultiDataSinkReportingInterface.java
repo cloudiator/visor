@@ -18,36 +18,83 @@
 
 package de.uniulm.omi.cloudiator.visor.reporting;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.RemovalListener;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
+import de.uniulm.omi.cloudiator.visor.monitoring.DataSink;
 import de.uniulm.omi.cloudiator.visor.monitoring.Metric;
 import de.uniulm.omi.cloudiator.visor.monitoring.ReportingInterfaceFactory;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * @// TODO: 11.06.18 implement caching of reporters based on data sink configurations
  * @// TODO: 11.06.18 implement collection report by grouping by configurations
  */
+@Singleton
 public class MultiDataSinkReportingInterface implements ReportingInterface<Metric> {
 
   private final Map<String, ReportingInterfaceFactory<Metric>> factories;
+  private static Cache<DataSink, ReportingInterface<Metric>> cache = CacheBuilder.newBuilder()
+      .expireAfterAccess(10, TimeUnit.MINUTES).removalListener(
+          (RemovalListener<DataSink, ReportingInterface<Metric>>) notification -> {
+            final ReportingInterface<Metric> reportingInterface = notification.getValue();
+            if (reportingInterface instanceof QueuedReportingInterface) {
+              ((QueuedReportingInterface<Metric>) reportingInterface).cancel();
+            }
+          }).build();
+  private final QueueFactory<Metric> queueFactory;
+
+  private ReportingInterface<Metric> getInterface(DataSink dataSink) {
+    try {
+      return cache.get(dataSink, () -> {
+        final ReportingInterface<Metric> original = factories.get(dataSink.type())
+            .of(dataSink.config());
+        final ReportingInterface<Metric> metricReportingInterface = queueFactory
+            .queueReportingInterface(original);
+        return metricReportingInterface;
+      });
+    } catch (ExecutionException e) {
+      throw new IllegalStateException(e);
+    }
+  }
 
   @Inject
   public MultiDataSinkReportingInterface(
-      Map<String, ReportingInterfaceFactory<Metric>> factories) {
+      Map<String, ReportingInterfaceFactory<Metric>> factories,
+      QueueFactory<Metric> queueFactory) {
     this.factories = factories;
+    this.queueFactory = queueFactory;
   }
 
   @Override
   public void report(Metric item) throws ReportingException {
-    factories.get(item.monitor().dataSink().type()).of(item.monitor().dataSink().config())
-        .report(item);
+
+    for (DataSink dataSink : item.monitor().dataSinks()) {
+      try {
+        getInterface(dataSink).report(item);
+      } catch (Exception ignored) {
+        //todo log exception!
+      }
+    }
   }
 
   @Override
   public void report(Collection<Metric> items) throws ReportingException {
+
+    
+
+
     for (Metric item : items) {
       report(item);
     }
   }
+
+
 }

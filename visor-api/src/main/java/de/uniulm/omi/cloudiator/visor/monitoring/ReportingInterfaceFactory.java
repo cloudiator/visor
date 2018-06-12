@@ -25,4 +25,8 @@ public interface ReportingInterfaceFactory<E> {
 
   ReportingInterface<E> of(DataSinkConfiguration dataSinkConfiguration);
 
+  default boolean isCachable() {
+    return true;
+  }
+
 }

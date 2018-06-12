@@ -29,5 +29,5 @@ import java.util.concurrent.BlockingQueue;
 public interface QueueWorkerFactoryInterface<T> {
 
 
-  Schedulable create(BlockingQueue<T> queue, Interval interval);
+  Schedulable create(ReportingInterface<T> reportingInterface, BlockingQueue<T> queue);
 }

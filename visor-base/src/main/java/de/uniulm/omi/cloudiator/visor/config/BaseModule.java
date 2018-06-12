@@ -33,12 +33,11 @@ import de.uniulm.omi.cloudiator.visor.monitoring.MonitoringServiceImpl;
 import de.uniulm.omi.cloudiator.visor.monitoring.SensorFactory;
 import de.uniulm.omi.cloudiator.visor.monitoring.SensorFactoryImpl;
 import de.uniulm.omi.cloudiator.visor.monitoring.ServerRegistryImpl;
-import de.uniulm.omi.cloudiator.visor.reporting.ExternalReporting;
 import de.uniulm.omi.cloudiator.visor.reporting.MultiDataSinkReportingInterface;
-import de.uniulm.omi.cloudiator.visor.reporting.Queue;
+import de.uniulm.omi.cloudiator.visor.reporting.QueueFactory;
+import de.uniulm.omi.cloudiator.visor.reporting.QueueFactoryImpl;
 import de.uniulm.omi.cloudiator.visor.reporting.QueueWorkerFactory;
 import de.uniulm.omi.cloudiator.visor.reporting.QueueWorkerFactoryInterface;
-import de.uniulm.omi.cloudiator.visor.reporting.QueuedReporting;
 import de.uniulm.omi.cloudiator.visor.reporting.ReportingInterface;
 import de.uniulm.omi.cloudiator.visor.server.ServerRegistry;
 
@@ -64,12 +63,12 @@ public class BaseModule extends AbstractModule {
     install(new IpModule());
     bind(ExecutionService.class).to(DefaultScheduledExecutionService.class);
     bind(new TypeLiteral<ReportingInterface<Metric>>() {
-    }).annotatedWith(QueuedReporting.class).to(new TypeLiteral<Queue<Metric>>() {
-    });
-    bind(new TypeLiteral<ReportingInterface<Metric>>() {
-    }).annotatedWith(ExternalReporting.class).to(MultiDataSinkReportingInterface.class);
+    }).to(MultiDataSinkReportingInterface.class);
     bind(new TypeLiteral<QueueWorkerFactoryInterface<Metric>>() {
     }).to(new TypeLiteral<QueueWorkerFactory<Metric>>() {
+    });
+    bind(new TypeLiteral<QueueFactory<Metric>>() {
+    }).to(new TypeLiteral<QueueFactoryImpl<Metric>>() {
     });
     bind(MonitoringService.class).to(MonitoringServiceImpl.class);
     bind(ScheduledExecutionService.class).to(DefaultScheduledExecutionService.class);

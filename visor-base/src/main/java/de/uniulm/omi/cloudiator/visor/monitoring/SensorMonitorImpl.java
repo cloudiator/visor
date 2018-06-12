@@ -41,12 +41,12 @@ public class SensorMonitorImpl implements SensorMonitor {
   private final SensorMonitorWorker sensorMonitorWorker;
   private final Interval interval;
   private final ScheduledExecutionService executionService;
-  private final DataSink dataSink;
+  private final Iterable<DataSink> dataSinks;
 
   public SensorMonitorImpl(String uuid, String metricName, String componentId, Sensor sensor,
       Interval interval, MonitorContext monitorContext,
       ReportingInterface<Metric> metricReportingInterface,
-      ScheduledExecutionService executionService, DataSink dataSink)
+      ScheduledExecutionService executionService, Iterable<DataSink> dataSinks)
       throws InvalidMonitorContextException {
     this.uuid = uuid;
     this.metricName = metricName;
@@ -56,7 +56,7 @@ public class SensorMonitorImpl implements SensorMonitor {
     this.sensorMonitorWorker = new SensorMonitorWorker(this, metricReportingInterface);
     this.interval = interval;
     this.executionService = executionService;
-    this.dataSink = dataSink;
+    this.dataSinks = dataSinks;
   }
 
   @Override
@@ -90,8 +90,8 @@ public class SensorMonitorImpl implements SensorMonitor {
   }
 
   @Override
-  public DataSink dataSink() {
-    return dataSink;
+  public Iterable<DataSink> dataSinks() {
+    return dataSinks;
   }
 
   @Override

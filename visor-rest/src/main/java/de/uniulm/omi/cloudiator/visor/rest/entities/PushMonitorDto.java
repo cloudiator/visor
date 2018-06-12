@@ -23,6 +23,7 @@ import de.uniulm.omi.cloudiator.visor.exceptions.MonitorException;
 import de.uniulm.omi.cloudiator.visor.monitoring.DataSink;
 import de.uniulm.omi.cloudiator.visor.monitoring.Monitor;
 import de.uniulm.omi.cloudiator.visor.monitoring.MonitoringService;
+import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -34,8 +35,8 @@ public class PushMonitorDto extends MonitorDto {
   private Integer port;
 
   public PushMonitorDto(String uuid, String metricName, String componentId,
-      Map<String, String> monitorContext, Integer port, DataSink dataSink) {
-    super("PushMonitor", uuid, metricName, componentId, monitorContext, dataSink);
+      Map<String, String> monitorContext, Integer port, Collection<DataSink> dataSinks) {
+    super("PushMonitor", uuid, metricName, componentId, monitorContext, dataSinks);
     this.port = port;
   }
 
@@ -56,7 +57,7 @@ public class PushMonitorDto extends MonitorDto {
       throws MonitorException {
     return monitoringService
         .startMonitor(uuid, getComponentId(), getMetricName(), getMonitorContext(), getPort(),
-            getDataSink());
+            getDataSinks());
   }
 
   protected MoreObjects.ToStringHelper toStringHelper() {

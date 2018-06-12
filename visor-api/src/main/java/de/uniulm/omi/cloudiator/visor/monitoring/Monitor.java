@@ -36,5 +36,5 @@ public interface Monitor {
 
   MonitorContext monitorContext();
 
-  DataSink dataSink();
+  Iterable<DataSink> dataSinks();
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2015 University of Ulm
+ * Copyright (c) 2014-2018 University of Ulm
  *
  * See the NOTICE file distributed with this work for additional information
  * regarding copyright ownership.  Licensed under the Apache License, Version 2.0 (the
@@ -19,26 +19,23 @@
 package de.uniulm.omi.cloudiator.visor.reporting;
 
 import com.google.inject.Inject;
-import com.google.inject.name.Named;
-import de.uniulm.omi.cloudiator.visor.monitoring.Intervals;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.TimeUnit;
+import de.uniulm.omi.cloudiator.visor.execution.ScheduledExecutionService;
 
-/**
- * Created by daniel on 12.12.14.
- */
-public class QueueWorkerFactory<T> implements QueueWorkerFactoryInterface<T> {
+public class QueueFactoryImpl<T> implements QueueFactory<T> {
 
-  private final int reportingInterval;
+  private final QueueWorkerFactory<T> queueWorkerFactory;
+  private final ScheduledExecutionService scheduledExecutionService;
 
   @Inject
-  public QueueWorkerFactory(@Named("reportingInterval") int reportingInterval) {
-    this.reportingInterval = reportingInterval;
+  QueueFactoryImpl(
+      QueueWorkerFactory<T> queueWorkerFactory, ScheduledExecutionService executionService) {
+    this.queueWorkerFactory = queueWorkerFactory;
+    this.scheduledExecutionService = executionService;
   }
 
   @Override
-  public QueueWorker<T> create(ReportingInterface<T> reportingInterface, BlockingQueue<T> queue) {
-    return new QueueWorker<T>(queue, reportingInterface,
-        Intervals.of(reportingInterval, TimeUnit.SECONDS));
+  public ReportingInterface<T> queueReportingInterface(ReportingInterface<T> reportingInterface) {
+    return new QueuedReportingInterface<>(scheduledExecutionService, reportingInterface,
+        queueWorkerFactory);
   }
 }

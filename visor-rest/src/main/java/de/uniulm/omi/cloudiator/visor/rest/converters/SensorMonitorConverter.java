@@ -18,6 +18,7 @@
 
 package de.uniulm.omi.cloudiator.visor.rest.converters;
 
+import com.google.common.collect.Lists;
 import de.uniulm.omi.cloudiator.visor.monitoring.SensorMonitor;
 import de.uniulm.omi.cloudiator.visor.rest.entities.SensorMonitorDto;
 import de.uniulm.omi.cloudiator.visor.rest.entities.SensorMonitorDtoBuilder;
@@ -36,6 +37,7 @@ public class SensorMonitorConverter implements Function<SensorMonitor, SensorMon
         .interval(monitor.getInterval()).metricName(monitor.metricName())
         .sensorConfiguration(monitor.sensorConfiguration().getConfiguration())
         .monitorContext(monitor.monitorContext().getContext())
-        .sensorClassName(monitor.sensorClass().getName()).dataSink(monitor.dataSink()).build();
+        .sensorClassName(monitor.sensorClass().getName())
+        .dataSinks(Lists.newArrayList(monitor.dataSinks())).build();
   }
 }
