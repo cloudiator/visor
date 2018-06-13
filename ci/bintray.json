@@ -10,7 +10,7 @@
     "gpgSign": false
   },
   "files": [{
-    "includePattern": "target/(visor.*)",
+    "includePattern": "visor-service/target/(visor.*)",
     "uploadPattern": "/$1"
   }],
   "publish": true
