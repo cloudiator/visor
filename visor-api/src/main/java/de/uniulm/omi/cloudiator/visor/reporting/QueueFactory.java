@@ -16,26 +16,10 @@
  * under the License.
  */
 
-package de.uniulm.omi.cloudiator.visor.reporting.jms;
+package de.uniulm.omi.cloudiator.visor.reporting;
 
-import de.uniulm.omi.cloudiator.visor.monitoring.Metric;
-import de.uniulm.omi.cloudiator.visor.reporting.ReportingInterface;
-import de.uniulm.omi.cloudiator.visor.reporting.ReportingModule;
+public interface QueueFactory<T> {
 
-/**
- * Created by daniel on 01.12.16.
- */
-public class JMSReportingModule extends ReportingModule {
+  ReportingInterface<T> queueReportingInterface(ReportingInterface<T> reportingInterface);
 
-  @Override
-  protected void configure() {
-    super.configure();
-    bind(JMSEncoding.class).to(MelodicJsonEncoding.class);
-    bind(TopicSelector.class).to(MetricNameTopicSelector.class);
-  }
-
-  @Override
-  protected Class<? extends ReportingInterface<Metric>> getReportingInterface() {
-    return JMSReporter.class;
-  }
 }

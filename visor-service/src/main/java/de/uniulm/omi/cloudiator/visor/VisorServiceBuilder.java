@@ -26,12 +26,13 @@ import de.uniulm.omi.cloudiator.visor.config.CommandLinePropertiesAccessor;
 import de.uniulm.omi.cloudiator.visor.config.CommandLinePropertiesAccessorImpl;
 import de.uniulm.omi.cloudiator.visor.config.ConfigurationAccess;
 import de.uniulm.omi.cloudiator.visor.config.FileConfigurationAccessor;
-import de.uniulm.omi.cloudiator.visor.exceptions.ConfigurationException;
+import de.uniulm.omi.cloudiator.visor.reporting.MetricReportingModule;
 import de.uniulm.omi.cloudiator.visor.rest.RestServerModule;
 import de.uniulm.omi.cloudiator.visor.telnet.TelnetServiceModule;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import org.reflections.Reflections;
 
 /**
  * Created by daniel on 17.12.14.
@@ -61,14 +62,19 @@ public class VisorServiceBuilder {
     return this;
   }
 
-  private void loadModulesBasedOnConfiguration(ConfigurationAccess configurationAccess) {
-    try {
-      this.modules.add((Module) Class
-          .forName(configurationAccess.getProperties().getProperty("reportingModule"))
-          .newInstance());
-    } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
-      throw new ConfigurationException(e);
-    }
+  private void loadAllReportingModules() {
+
+    Reflections reflections = new Reflections("de.uniulm.omi.cloudiator.visor.reporting");
+    final Set<Class<? extends MetricReportingModule>> reportingModules = reflections
+        .getSubTypesOf(MetricReportingModule.class);
+
+    reportingModules.forEach(aClass -> {
+      try {
+        VisorServiceBuilder.this.modules.add(aClass.newInstance());
+      } catch (InstantiationException | IllegalAccessException e) {
+        throw new IllegalStateException(e);
+      }
+    });
   }
 
   public VisorService build() {
@@ -81,7 +87,7 @@ public class VisorServiceBuilder {
     this.modules.add(new TelnetServiceModule());
     this.modules.add(new RestServerModule());
     this.modules.add(new InitModule());
-    this.loadModulesBasedOnConfiguration(configurationAccess);
+    this.loadAllReportingModules();
     return new VisorService(this.modules);
   }
 

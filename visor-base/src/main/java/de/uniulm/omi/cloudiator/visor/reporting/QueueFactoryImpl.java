@@ -18,25 +18,24 @@
 
 package de.uniulm.omi.cloudiator.visor.reporting;
 
-import java.util.Collection;
-import java.util.Set;
+import com.google.inject.Inject;
+import de.uniulm.omi.cloudiator.visor.execution.ScheduledExecutionService;
 
-public class MultiReportingInterface<T> implements ReportingInterface<T> {
+public class QueueFactoryImpl<T> implements QueueFactory<T> {
 
-  private final Set<ReportingInterface<T>> delegates;
+  private final QueueWorkerFactory<T> queueWorkerFactory;
+  private final ScheduledExecutionService scheduledExecutionService;
 
-  public MultiReportingInterface(
-      Set<ReportingInterface<T>> delegates) {
-    this.delegates = delegates;
+  @Inject
+  QueueFactoryImpl(
+      QueueWorkerFactory<T> queueWorkerFactory, ScheduledExecutionService executionService) {
+    this.queueWorkerFactory = queueWorkerFactory;
+    this.scheduledExecutionService = executionService;
   }
 
   @Override
-  public void report(T item) throws ReportingException {
-
-  }
-
-  @Override
-  public void report(Collection<T> items) throws ReportingException {
-
+  public ReportingInterface<T> queueReportingInterface(ReportingInterface<T> reportingInterface) {
+    return new QueuedReportingInterface<>(scheduledExecutionService, reportingInterface,
+        queueWorkerFactory);
   }
 }

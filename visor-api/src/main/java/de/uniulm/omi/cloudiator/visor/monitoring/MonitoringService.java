@@ -32,10 +32,10 @@ public interface MonitoringService {
 
   Monitor startMonitor(String uuid, String componentId, String metricName, String sensorClassName,
       Interval interval, Map<String, String> monitorContext,
-      SensorConfiguration sensorConfiguration) throws MonitorException;
+      SensorConfiguration sensorConfiguration, Iterable<DataSink> dataSinks) throws MonitorException;
 
   Monitor startMonitor(String uuid, String componentId, String metricName,
-      Map<String, String> monitorContext, @Nullable Integer port) throws MonitorException;
+      Map<String, String> monitorContext, @Nullable Integer port, Iterable<DataSink> dataSinks) throws MonitorException;
 
   Collection<Monitor> getMonitors();
 

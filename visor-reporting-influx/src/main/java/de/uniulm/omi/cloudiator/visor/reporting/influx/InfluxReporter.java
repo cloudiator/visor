@@ -20,8 +20,6 @@ package de.uniulm.omi.cloudiator.visor.reporting.influx;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import com.google.inject.Inject;
-import com.google.inject.name.Named;
 import de.uniulm.omi.cloudiator.visor.monitoring.Metric;
 import de.uniulm.omi.cloudiator.visor.reporting.ReportingException;
 import de.uniulm.omi.cloudiator.visor.reporting.ReportingInterface;
@@ -34,17 +32,14 @@ import org.influxdb.InfluxDB;
 public class InfluxReporter implements ReportingInterface<Metric> {
 
   private final String database;
-  private final MetricToPoint converter;
+  private final MetricToPoint converter = MetricToPoint.getInstance();
   private final InfluxDB influxDB;
 
-  @Inject
-  public InfluxReporter(@Named("influxDatabaseName") String database, MetricToPoint converter,
+  public InfluxReporter(String database,
       InfluxDB influxDB) {
 
     checkNotNull(database, "database is null");
-    checkNotNull(converter, "converter is null");
     this.database = database;
-    this.converter = converter;
     this.influxDB = influxDB;
   }
 

@@ -24,7 +24,6 @@ import de.uniulm.omi.cloudiator.visor.exceptions.MonitorException;
 import de.uniulm.omi.cloudiator.visor.exceptions.SensorCreationException;
 import de.uniulm.omi.cloudiator.visor.exceptions.SensorInitializationException;
 import de.uniulm.omi.cloudiator.visor.execution.ScheduledExecutionService;
-import de.uniulm.omi.cloudiator.visor.reporting.QueuedReporting;
 import de.uniulm.omi.cloudiator.visor.reporting.ReportingInterface;
 import de.uniulm.omi.cloudiator.visor.server.ServerRegistry;
 import java.io.IOException;
@@ -45,7 +44,7 @@ public class MonitorFactoryImpl implements MonitorFactory {
   @Inject
   public MonitorFactoryImpl(ServerRegistry serverRegistry,
       MonitorContextFactory monitorContextFactory, SensorFactory sensorFactory,
-      @QueuedReporting ReportingInterface<Metric> metricReportingInterface,
+      ReportingInterface<Metric> metricReportingInterface,
       ScheduledExecutionService executionService) {
     this.serverRegistry = serverRegistry;
     this.monitorContextFactory = monitorContextFactory;
@@ -57,12 +56,12 @@ public class MonitorFactoryImpl implements MonitorFactory {
   @Override
   public SensorMonitor create(String uuid, String metricName, String componentId,
       Map<String, String> monitorContext, String sensorClassName, Interval interval,
-      SensorConfiguration sensorConfiguration) throws MonitorException {
+      SensorConfiguration sensorConfiguration, Iterable<DataSink> dataSinks) throws MonitorException {
     try {
       final MonitorContext context = monitorContextFactory.create(monitorContext);
       return new SensorMonitorImpl(uuid, metricName, componentId,
           sensorFactory.from(sensorClassName, sensorConfiguration, context), interval,
-          context, metricReportingInterface, executionService);
+          context, metricReportingInterface, executionService, dataSinks);
     } catch (InvalidMonitorContextException | SensorInitializationException | SensorCreationException e) {
       throw new MonitorException("Unable to create monitor due to error", e);
     }
@@ -70,12 +69,13 @@ public class MonitorFactoryImpl implements MonitorFactory {
 
   @Override
   public PushMonitor create(String uuid, String metricName, String componentId,
-      Map<String, String> monitorContext, @Nullable Integer port) throws MonitorException {
+      Map<String, String> monitorContext, @Nullable Integer port, Iterable<DataSink> dataSinks)
+      throws MonitorException {
 
     try {
       MonitorContext context = monitorContextFactory.create(monitorContext);
       return new PushMonitorImpl(serverRegistry.getServer(componentId, port), uuid, metricName,
-          componentId, context);
+          componentId, context, dataSinks);
     } catch (IOException e) {
       throw new MonitorException("Unable to create monitor due to error", e);
     }

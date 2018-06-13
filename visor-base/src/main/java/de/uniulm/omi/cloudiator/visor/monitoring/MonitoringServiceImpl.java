@@ -48,14 +48,14 @@ public class MonitoringServiceImpl implements MonitoringService {
   @Override
   public SensorMonitor startMonitor(String uuid, String componentId, String metricName,
       String sensorClassName, Interval interval, Map<String, String> monitorContext,
-      SensorConfiguration sensorConfiguration) throws MonitorException {
+      SensorConfiguration sensorConfiguration, Iterable<DataSink> dataSinks) throws MonitorException {
 
     checkArgument(!monitorRegistry.containsKey(uuid),
         String.format("A monitor with the given uuid %s is already registered.", uuid));
 
     final SensorMonitor sensorMonitor = this.monitorFactory
         .create(uuid, metricName, componentId, monitorContext, sensorClassName, interval,
-            sensorConfiguration);
+            sensorConfiguration, dataSinks);
 
     this.monitorRegistry.put(uuid, sensorMonitor);
     sensorMonitor.start();
@@ -64,7 +64,8 @@ public class MonitoringServiceImpl implements MonitoringService {
 
   @Override
   public Monitor startMonitor(String uuid, String componentId, String metricName,
-      Map<String, String> monitorContext, @Nullable Integer port) throws MonitorException {
+      Map<String, String> monitorContext, @Nullable Integer port, Iterable<DataSink> dataSinks)
+      throws MonitorException {
 
     checkNotNull(uuid, "uuid is null");
     checkNotNull(componentId, "componentId is null");
@@ -74,7 +75,7 @@ public class MonitoringServiceImpl implements MonitoringService {
         String.format("A monitor with the given uuid %s is already registered.", uuid));
 
     final PushMonitor pushMonitor =
-        monitorFactory.create(uuid, metricName, componentId, monitorContext, port);
+        monitorFactory.create(uuid, metricName, componentId, monitorContext, port, dataSinks);
     monitorRegistry.put(uuid, pushMonitor);
 
     this.monitorRegistry.put(uuid, pushMonitor);

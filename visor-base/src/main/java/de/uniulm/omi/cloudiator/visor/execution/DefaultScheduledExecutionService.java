@@ -47,14 +47,14 @@ public class DefaultScheduledExecutionService implements ScheduledExecutionServi
    */
   private final ScheduledExecutorService scheduledExecutorService;
 
-  private final Map<Schedulable, Future> registeredSchedulables;
+  private final Map<Runnable, Future> registeredRunnables;
 
   @Inject
   public DefaultScheduledExecutionService(@Named("executionThreads") int executionThreads) {
     checkArgument(executionThreads >= 1, "Execution thread must be >= 1");
     LOGGER.debug(String.format("Starting execution service with %s threads", executionThreads));
     scheduledExecutorService = ExtendedScheduledThreadPoolExecutor.create(executionThreads);
-    registeredSchedulables = new HashMap<>();
+    registeredRunnables = new HashMap<>();
   }
 
   @Override
@@ -66,7 +66,7 @@ public class DefaultScheduledExecutionService implements ScheduledExecutionServi
     final ScheduledFuture<?> scheduledFuture = this.scheduledExecutorService
         .scheduleAtFixedRate(schedulable, 0, schedulable.getInterval().getPeriod(),
             schedulable.getInterval().getTimeUnit());
-    this.registeredSchedulables.put(schedulable, scheduledFuture);
+    this.registeredRunnables.put(schedulable, scheduledFuture);
   }
 
   @Override
@@ -83,12 +83,15 @@ public class DefaultScheduledExecutionService implements ScheduledExecutionServi
   }
 
   @Override
-  public void remove(Schedulable schedulable, boolean force) {
-    checkNotNull(schedulable);
-    checkState(this.registeredSchedulables.containsKey(schedulable),
-        schedulable + " was never registered.");
-    this.registeredSchedulables.get(schedulable).cancel(force);
-    this.registeredSchedulables.remove(schedulable);
+  public void remove(Runnable runnable, boolean force) {
+    checkNotNull(runnable);
+    checkState(this.registeredRunnables.containsKey(runnable),
+        runnable + " was never registered.");
+    final Future future = this.registeredRunnables.get(runnable);
+    if (!future.isDone()) {
+      future.cancel(force);
+    }
+    this.registeredRunnables.remove(runnable);
   }
 
   @Override

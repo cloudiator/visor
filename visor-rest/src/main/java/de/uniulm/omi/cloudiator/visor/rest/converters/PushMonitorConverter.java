@@ -18,6 +18,7 @@
 
 package de.uniulm.omi.cloudiator.visor.rest.converters;
 
+import com.google.common.collect.Lists;
 import de.uniulm.omi.cloudiator.visor.monitoring.PushMonitor;
 import de.uniulm.omi.cloudiator.visor.rest.entities.PushMonitorDto;
 import de.uniulm.omi.cloudiator.visor.rest.entities.PushMonitorDtoBuilder;
@@ -34,6 +35,6 @@ public class PushMonitorConverter implements Function<PushMonitor, PushMonitorDt
   public PushMonitorDto apply(PushMonitor monitor) {
     return new PushMonitorDtoBuilder().uuid(monitor.uuid()).componentId(monitor.componentId())
         .metricName(monitor.metricName()).monitorContext(monitor.monitorContext().getContext())
-        .port(monitor.port()).build();
+        .port(monitor.port()).dataSinks(Lists.newArrayList(monitor.dataSinks())).build();
   }
 }

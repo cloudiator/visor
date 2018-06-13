@@ -18,6 +18,8 @@
 
 package de.uniulm.omi.cloudiator.visor.rest.entities;
 
+import de.uniulm.omi.cloudiator.visor.monitoring.DataSink;
+import java.util.Collection;
 import java.util.Map;
 
 public class PushMonitorDtoBuilder {
@@ -27,6 +29,7 @@ public class PushMonitorDtoBuilder {
   private String componentId;
   private Map<String, String> monitorContext;
   private int port;
+  private Collection<DataSink> dataSinks;
 
   public PushMonitorDtoBuilder uuid(String uuid) {
     this.uuid = uuid;
@@ -53,7 +56,12 @@ public class PushMonitorDtoBuilder {
     return this;
   }
 
+  public PushMonitorDtoBuilder dataSinks(Collection<DataSink> dataSinks) {
+    this.dataSinks = dataSinks;
+    return this;
+  }
+
   public PushMonitorDto build() {
-    return new PushMonitorDto(uuid, metricName, componentId, monitorContext, port);
+    return new PushMonitorDto(uuid, metricName, componentId, monitorContext, port, dataSinks);
   }
 }

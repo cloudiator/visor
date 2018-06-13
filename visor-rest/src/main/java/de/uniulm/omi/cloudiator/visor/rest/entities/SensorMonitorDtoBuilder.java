@@ -18,7 +18,9 @@
 
 package de.uniulm.omi.cloudiator.visor.rest.entities;
 
+import de.uniulm.omi.cloudiator.visor.monitoring.DataSink;
 import de.uniulm.omi.cloudiator.visor.monitoring.Interval;
+import java.util.Collection;
 import java.util.Map;
 
 public class SensorMonitorDtoBuilder {
@@ -30,6 +32,7 @@ public class SensorMonitorDtoBuilder {
   private String sensorClassName;
   private Interval interval;
   private Map<String, String> sensorConfiguration;
+  private Collection<DataSink> dataSinks;
 
   public SensorMonitorDtoBuilder uuid(String uuid) {
     this.uuid = uuid;
@@ -66,8 +69,13 @@ public class SensorMonitorDtoBuilder {
     return this;
   }
 
+  public SensorMonitorDtoBuilder dataSinks(Collection<DataSink> dataSinks) {
+    this.dataSinks = dataSinks;
+    return this;
+  }
+
   public SensorMonitorDto build() {
     return new SensorMonitorDto(uuid, metricName, componentId, sensorConfiguration,
-        monitorContext, sensorClassName, interval);
+        monitorContext, sensorClassName, interval, dataSinks);
   }
 }

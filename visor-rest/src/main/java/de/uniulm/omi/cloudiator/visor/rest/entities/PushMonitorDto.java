@@ -20,8 +20,10 @@ package de.uniulm.omi.cloudiator.visor.rest.entities;
 
 import com.google.common.base.MoreObjects;
 import de.uniulm.omi.cloudiator.visor.exceptions.MonitorException;
+import de.uniulm.omi.cloudiator.visor.monitoring.DataSink;
 import de.uniulm.omi.cloudiator.visor.monitoring.Monitor;
 import de.uniulm.omi.cloudiator.visor.monitoring.MonitoringService;
+import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -33,8 +35,8 @@ public class PushMonitorDto extends MonitorDto {
   private Integer port;
 
   public PushMonitorDto(String uuid, String metricName, String componentId,
-      Map<String, String> monitorContext, Integer port) {
-    super("PushMonitor", uuid, metricName, componentId, monitorContext);
+      Map<String, String> monitorContext, Integer port, Collection<DataSink> dataSinks) {
+    super("PushMonitor", uuid, metricName, componentId, monitorContext, dataSinks);
     this.port = port;
   }
 
@@ -54,7 +56,8 @@ public class PushMonitorDto extends MonitorDto {
   public Monitor start(String uuid, MonitoringService monitoringService)
       throws MonitorException {
     return monitoringService
-        .startMonitor(uuid, getComponentId(), getMetricName(), getMonitorContext(), getPort());
+        .startMonitor(uuid, getComponentId(), getMetricName(), getMonitorContext(), getPort(),
+            getDataSinks());
   }
 
   protected MoreObjects.ToStringHelper toStringHelper() {

@@ -18,54 +18,33 @@
 
 package de.uniulm.omi.cloudiator.visor.monitoring;
 
-import com.google.common.collect.ImmutableMap;
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * Created by daniel on 21.01.15.
  */
 public class MetricBuilder {
 
-  private final Map<String, String> tags;
-  private String name;
-  private Object value;
-  private long timestamp;
+  private Measurement<?> measurement;
+  private Monitor monitor;
 
-  MetricBuilder() {
-    tags = new HashMap<>();
+  private MetricBuilder() {
   }
 
   public static MetricBuilder newBuilder() {
     return new MetricBuilder();
   }
 
-  public MetricBuilder name(String name) {
-    this.name = name;
+  public MetricBuilder measurement(Measurement<?> measurement) {
+    this.measurement = measurement;
     return this;
   }
 
-  public MetricBuilder value(Object value) {
-    this.value = value;
-    return this;
-  }
-
-  public MetricBuilder timestamp(long timestamp) {
-    this.timestamp = timestamp;
-    return this;
-  }
-
-  public MetricBuilder addTag(String key, String value) {
-    this.tags.put(key, value);
-    return this;
-  }
-
-  public MetricBuilder addTags(Map<String, String> tags) {
-    this.tags.putAll(tags);
+  public MetricBuilder monitor(Monitor monitor) {
+    this.monitor = monitor;
     return this;
   }
 
   public Metric build() {
-    return new MetricImpl(name, value, timestamp, ImmutableMap.copyOf(this.tags));
+    return new MetricImpl(monitor, measurement);
   }
+
 }

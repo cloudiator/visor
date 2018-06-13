@@ -31,5 +31,7 @@ public interface Metric {
 
   long getTimestamp();
 
+  Monitor monitor();
+
   Map<String, String> getTags();
 }

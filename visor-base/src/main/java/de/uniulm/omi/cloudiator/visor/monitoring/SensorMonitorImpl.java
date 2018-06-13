@@ -41,11 +41,13 @@ public class SensorMonitorImpl implements SensorMonitor {
   private final SensorMonitorWorker sensorMonitorWorker;
   private final Interval interval;
   private final ScheduledExecutionService executionService;
+  private final Iterable<DataSink> dataSinks;
 
   public SensorMonitorImpl(String uuid, String metricName, String componentId, Sensor sensor,
       Interval interval, MonitorContext monitorContext,
       ReportingInterface<Metric> metricReportingInterface,
-      ScheduledExecutionService executionService) throws InvalidMonitorContextException {
+      ScheduledExecutionService executionService, Iterable<DataSink> dataSinks)
+      throws InvalidMonitorContextException {
     this.uuid = uuid;
     this.metricName = metricName;
     this.componentId = componentId;
@@ -54,6 +56,7 @@ public class SensorMonitorImpl implements SensorMonitor {
     this.sensorMonitorWorker = new SensorMonitorWorker(this, metricReportingInterface);
     this.interval = interval;
     this.executionService = executionService;
+    this.dataSinks = dataSinks;
   }
 
   @Override
@@ -84,6 +87,11 @@ public class SensorMonitorImpl implements SensorMonitor {
   @Override
   public MonitorContext monitorContext() {
     return monitorContext;
+  }
+
+  @Override
+  public Iterable<DataSink> dataSinks() {
+    return dataSinks;
   }
 
   @Override
@@ -130,8 +138,7 @@ public class SensorMonitorImpl implements SensorMonitor {
       try {
         LOGGER.debug("Measuring Monitor " + this.monitor);
         for (Measurement<?> measurement : monitor.sensor.getMeasurements()) {
-          final Metric metric = MetricFactory.from(monitor.metricName(), measurement,
-              monitor.monitorContext().getContext(), componentId);
+          final Metric metric = MetricFactory.from(monitor, measurement);
           LOGGER.debug(String
               .format("Reporting metric %s using reporting interface %s.", metric,
                   metricReportingInterface));

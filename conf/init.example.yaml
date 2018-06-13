@@ -8,6 +8,13 @@
     os.arch: "x86_64"
     os.version: "10.12.4"
   sensorClassName: "de.uniulm.omi.cloudiator.visor.sensors.SystemCpuUsageSensor"
+  dataSinks:
+    - type: "cli"
+    - type: "kairos"
+      config:
+        values:
+          kairos.port: 8080
+          kairos.host: "134.60.64.133"
   interval:
     period: 10
     timeUnit: "SECONDS"

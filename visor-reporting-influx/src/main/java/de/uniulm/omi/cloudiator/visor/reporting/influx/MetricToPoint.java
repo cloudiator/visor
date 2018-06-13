@@ -28,6 +28,16 @@ import org.influxdb.dto.Point;
  */
 public class MetricToPoint implements Function<Metric, Point> {
 
+  private static final MetricToPoint INSTANCE = new MetricToPoint();
+
+  private MetricToPoint() {
+
+  }
+
+  public static MetricToPoint getInstance() {
+    return INSTANCE;
+  }
+
   @Override
   public Point apply(Metric metric) {
 
