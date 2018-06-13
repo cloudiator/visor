@@ -38,10 +38,6 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * @// TODO: 11.06.18 implement caching of reporters based on data sink configurations
- * @// TODO: 11.06.18 implement collection report by grouping by configurations
- */
 @Singleton
 public class MultiDataSinkReportingInterface implements ReportingInterface<Metric> {
 
