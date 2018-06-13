@@ -5,8 +5,8 @@
     "subject": "cloudiator"
   },
   "version": {
-    "name": "$TRAVIS_BUILD",
-    "released": "$DATE",
+    "name": "TRAVIS_BUILD",
+    "released": "DATE",
     "gpgSign": false
   },
   "files": [{
