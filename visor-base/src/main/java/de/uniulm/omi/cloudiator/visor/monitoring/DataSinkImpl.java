@@ -52,11 +52,11 @@ public class DataSinkImpl implements DataSink {
 
   public static class DataSinkConfigurationImpl implements DataSinkConfiguration {
 
-    private final HashMap<String, String> values;
+    private final Map<String, String> values;
 
     @JsonCreator
     public DataSinkConfigurationImpl(
-        @Nullable @JsonProperty("values") HashMap<String, String> values) {
+        @Nullable @JsonProperty("values") Map<String, String> values) {
       if (values == null) {
         this.values = new HashMap<>();
       } else {

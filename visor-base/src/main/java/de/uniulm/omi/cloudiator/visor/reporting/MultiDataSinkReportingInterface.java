@@ -27,7 +27,12 @@ import de.uniulm.omi.cloudiator.visor.monitoring.DataSink;
 import de.uniulm.omi.cloudiator.visor.monitoring.Metric;
 import de.uniulm.omi.cloudiator.visor.monitoring.ReportingInterfaceFactory;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
@@ -56,12 +61,14 @@ public class MultiDataSinkReportingInterface implements ReportingInterface<Metri
 
   private ReportingInterface<Metric> getInterface(DataSink dataSink) {
     try {
-      return cache.get(dataSink, () -> {
-        final ReportingInterface<Metric> original = factories.get(dataSink.type())
-            .of(dataSink.config());
-        final ReportingInterface<Metric> metricReportingInterface = queueFactory
-            .queueReportingInterface(original);
-        return metricReportingInterface;
+      return cache.get(dataSink, new Callable<ReportingInterface<Metric>>() {
+        @Override
+        public ReportingInterface<Metric> call() throws Exception {
+          final ReportingInterface<Metric> original = factories.get(dataSink.type())
+              .of(dataSink.config());
+          return queueFactory
+              .queueReportingInterface(original);
+        }
       });
     } catch (ExecutionException e) {
       throw new IllegalStateException(e);
@@ -93,9 +100,27 @@ public class MultiDataSinkReportingInterface implements ReportingInterface<Metri
   @Override
   public void report(Collection<Metric> items) throws ReportingException {
 
-    for (Metric item : items) {
-      report(item);
+    final Map<DataSink, List<Metric>> metricPartition = partitionMetrics(items);
+
+    for (Entry<DataSink, List<Metric>> entry : metricPartition.entrySet()) {
+      getInterface(entry.getKey()).report(entry.getValue());
     }
+  }
+
+  private Map<DataSink, List<Metric>> partitionMetrics(Collection<Metric> metrics) {
+
+    Map<DataSink, List<Metric>> map = new HashMap<>();
+
+    for (Metric metric : metrics) {
+      for (DataSink dataSink : metric.monitor().dataSinks()) {
+        if (!map.containsKey(dataSink)) {
+          map.put(dataSink, new LinkedList<>());
+        }
+        final List<Metric> metricList = map.get(dataSink);
+        metricList.add(metric);
+      }
+    }
+    return map;
   }
 
 
