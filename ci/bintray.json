@@ -37,7 +37,7 @@
   "files":
   [
     {
-      "includePattern": "target/visor.*",
+      "includePattern": "target/(visor.*)",
       "uploadPattern": "/$1"}
   ],
   "publish": true

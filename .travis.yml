@@ -2,8 +2,8 @@ sudo: false
 jdk:
 - oraclejdk8
 language: java
-install: mvn install -U -DskipTests=true
-script: mvn org.jacoco:jacoco-maven-plugin:prepare-agent install -Dmaven.javadoc.skip=true
+install: travis_wait mvn -q install -U -DskipTests=true
+script: travis_wait mvn -q org.jacoco:jacoco-maven-plugin:prepare-agent install -Dmaven.javadoc.skip=true
   sonar:sonar
 after_success:
 - ci/deploy_snapshot.sh
