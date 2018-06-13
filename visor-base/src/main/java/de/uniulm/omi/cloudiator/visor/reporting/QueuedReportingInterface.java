@@ -18,6 +18,7 @@
 
 package de.uniulm.omi.cloudiator.visor.reporting;
 
+import de.uniulm.omi.cloudiator.visor.execution.Schedulable;
 import de.uniulm.omi.cloudiator.visor.execution.ScheduledExecutionService;
 import java.util.Collection;
 import java.util.concurrent.BlockingQueue;
@@ -41,7 +42,7 @@ public class QueuedReportingInterface<T> implements ReportingInterface<T> {
 
   private final ScheduledExecutionService scheduledExecutionService;
 
-  private final QueueWorker<T> queueWorker;
+  private final Runnable queueWorker;
 
 
   public QueuedReportingInterface(ScheduledExecutionService executionService,
@@ -49,7 +50,12 @@ public class QueuedReportingInterface<T> implements ReportingInterface<T> {
     this.queueDelegate = new LinkedBlockingQueue<>();
     this.scheduledExecutionService = executionService;
     this.queueWorker = queueWorkerFactory.create(reportingInterface, queueDelegate);
-    executionService.schedule(queueWorker);
+
+    if (queueWorker instanceof Schedulable) {
+      executionService.schedule((Schedulable) queueWorker);
+    } else {
+      executionService.execute(queueWorker);
+    }
   }
 
   @Override

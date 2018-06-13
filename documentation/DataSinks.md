@@ -26,7 +26,11 @@ Prints the metrics to the stdout.
 
 ## JMS
 
-todo
+Configuration Option | Description
+---- | ------------
+jms.broker | The connection URL for the JMS Broker.
+jms.topic.selector | The class name of the Topic Selector implementation to use (selects the JMS topic to report a metric).
+jms.message.format | The class name of the message format to use.
 
 ## JSON TCP
 

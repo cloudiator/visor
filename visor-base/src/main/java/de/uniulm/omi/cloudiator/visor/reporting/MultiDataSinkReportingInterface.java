@@ -27,11 +27,11 @@ import de.uniulm.omi.cloudiator.visor.monitoring.DataSink;
 import de.uniulm.omi.cloudiator.visor.monitoring.Metric;
 import de.uniulm.omi.cloudiator.visor.monitoring.ReportingInterfaceFactory;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @// TODO: 11.06.18 implement caching of reporters based on data sink configurations
@@ -39,6 +39,9 @@ import java.util.stream.Collectors;
  */
 @Singleton
 public class MultiDataSinkReportingInterface implements ReportingInterface<Metric> {
+
+  private static final Logger LOGGER = LoggerFactory
+      .getLogger(MultiDataSinkReportingInterface.class);
 
   private final Map<String, ReportingInterfaceFactory<Metric>> factories;
   private static Cache<DataSink, ReportingInterface<Metric>> cache = CacheBuilder.newBuilder()
@@ -80,16 +83,15 @@ public class MultiDataSinkReportingInterface implements ReportingInterface<Metri
       try {
         getInterface(dataSink).report(item);
       } catch (Exception ignored) {
-        //todo log exception!
+        LOGGER.warn(String
+            .format("Exception while reporting metric %s to data sink %s. Ignoring.", item,
+                dataSink), ignored);
       }
     }
   }
 
   @Override
   public void report(Collection<Metric> items) throws ReportingException {
-
-    
-
 
     for (Metric item : items) {
       report(item);

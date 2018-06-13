@@ -19,8 +19,6 @@
 package de.uniulm.omi.cloudiator.visor.reporting;
 
 
-import de.uniulm.omi.cloudiator.visor.execution.Schedulable;
-import de.uniulm.omi.cloudiator.visor.monitoring.Interval;
 import java.util.concurrent.BlockingQueue;
 
 /**
@@ -29,5 +27,5 @@ import java.util.concurrent.BlockingQueue;
 public interface QueueWorkerFactoryInterface<T> {
 
 
-  Schedulable create(ReportingInterface<T> reportingInterface, BlockingQueue<T> queue);
+  Runnable create(ReportingInterface<T> reportingInterface, BlockingQueue<T> queue);
 }

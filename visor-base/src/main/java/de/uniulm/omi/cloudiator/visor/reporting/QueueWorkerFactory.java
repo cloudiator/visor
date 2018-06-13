@@ -18,8 +18,10 @@
 
 package de.uniulm.omi.cloudiator.visor.reporting;
 
+
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+import de.uniulm.omi.cloudiator.visor.exceptions.ConfigurationException;
 import de.uniulm.omi.cloudiator.visor.monitoring.Intervals;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -33,12 +35,21 @@ public class QueueWorkerFactory<T> implements QueueWorkerFactoryInterface<T> {
 
   @Inject
   public QueueWorkerFactory(@Named("reportingInterval") int reportingInterval) {
+    if (reportingInterval < 0) {
+      throw new ConfigurationException("Reporting interval is less than zero");
+    }
+
     this.reportingInterval = reportingInterval;
   }
 
   @Override
-  public QueueWorker<T> create(ReportingInterface<T> reportingInterface, BlockingQueue<T> queue) {
-    return new QueueWorker<T>(queue, reportingInterface,
-        Intervals.of(reportingInterval, TimeUnit.SECONDS));
+  public Runnable create(ReportingInterface<T> reportingInterface, BlockingQueue<T> queue) {
+
+    if (reportingInterval == 0) {
+      return new BlockingQueueWorker<>(queue, reportingInterface);
+    } else {
+      return new SchedulableQueueWorker<T>(queue, reportingInterface,
+          Intervals.of(reportingInterval, TimeUnit.SECONDS));
+    }
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2015 University of Ulm
+ * Copyright (c) 2014-2018 University of Ulm
  *
  * See the NOTICE file distributed with this work for additional information
  * regarding copyright ownership.  Licensed under the Apache License, Version 2.0 (the
@@ -18,47 +18,42 @@
 
 package de.uniulm.omi.cloudiator.visor.reporting;
 
-import de.uniulm.omi.cloudiator.visor.execution.Schedulable;
-import de.uniulm.omi.cloudiator.visor.monitoring.Interval;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Generic implementation of a queue worker.
- */
-public class QueueWorker<T> implements Schedulable {
+public class BlockingQueueWorker<T> implements Runnable {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(QueueWorker.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(BlockingQueueWorker.class);
   private final BlockingQueue<T> queue;
   private final ReportingInterface<T> reportingInterface;
-  private final Interval interval;
 
-  public QueueWorker(BlockingQueue<T> queue, ReportingInterface<T> reportingInterface,
-      Interval interval) {
+  public BlockingQueueWorker(BlockingQueue<T> queue, ReportingInterface<T> reportingInterface) {
     this.queue = queue;
     this.reportingInterface = reportingInterface;
-    this.interval = interval;
   }
 
   @Override
   public void run() {
-    List<T> tList = new ArrayList<>();
-    this.queue.drainTo(tList);
-    try {
-      LOGGER.info("Reporting " + tList.size() + " items.");
-      this.reportingInterface.report(tList);
-    } catch (ReportingException e) {
-      LOGGER.error("Could not report metrics, throwing them away.", e);
-    } catch (Exception e) {
-      LOGGER.error("Unexpected exception during metric reporting.", e);
+    while (!Thread.currentThread().isInterrupted()) {
+      try {
+        List<T> elements = new ArrayList<>();
+        final T take = queue.take();
+        elements.add(take);
+        queue.drainTo(elements);
+        reportingInterface.report(queue);
+      } catch (InterruptedException e) {
+        LOGGER.info(String.format("%s got interrupted. Stopping execution.", this));
+        Thread.currentThread().interrupt();
+      } catch (ReportingException e) {
+        LOGGER.error("Could not report metrics, throwing them away.", e);
+      } catch (Exception e) {
+        LOGGER.error(String
+            .format("Unexpected exception %s occurred in %s. Catching to allow further execution.",
+                e.getMessage(), this), e);
+      }
     }
-  }
-
-  @Override
-  public Interval getInterval() {
-    return this.interval;
   }
 }
