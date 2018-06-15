@@ -14,7 +14,7 @@
       config:
         values:
           kairos.port: 8080
-          kairos.host: "134.60.64.133"
+          kairos.host: "localhost"
   interval:
     period: 10
     timeUnit: "SECONDS"
