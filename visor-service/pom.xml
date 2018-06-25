@@ -91,7 +91,6 @@
               <descriptorRefs>
                 <descriptorRef>jar-with-dependencies</descriptorRef>
               </descriptorRefs>
-              <finalName>visor</finalName>
               <appendAssemblyId>false</appendAssemblyId>
               <archive>
                 <manifest>
@@ -110,7 +109,6 @@
               <descriptors>
                 <descriptor>src/assembly/dep.xml</descriptor>
               </descriptors>
-              <finalName>visor</finalName>
               <appendAssemblyId>false</appendAssemblyId>
             </configuration>
           </execution>

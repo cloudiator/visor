@@ -5,13 +5,25 @@
     "subject": "cloudiator"
   },
   "version": {
-    "name": "TRAVIS_BUILD",
+    "name": "VERSION",
     "released": "DATE",
-    "gpgSign": false
+    "gpgSign": false,
+    "attributes": [
+      {
+        "name": "travis_build",
+        "values": ["TRAVIS_BUILD"],
+        "type": "string"
+      }
+    ]
   },
-  "files": [{
-    "includePattern": "visor-service/target/(visor.*)",
-    "uploadPattern": "/$1"
-  }],
+  "files": [
+    {
+      "includePattern": "visor-service/target/(visor.*)",
+      "uploadPattern": "/$1",
+      "matrixParams": {
+        "override": 1
+      }
+    }
+  ],
   "publish": true
 }
