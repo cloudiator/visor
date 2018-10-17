@@ -18,6 +18,8 @@
 
 package de.uniulm.omi.cloudiator.visor.reporting;
 
+import static com.google.common.base.Preconditions.checkState;
+
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.RemovalListener;
@@ -57,15 +59,19 @@ public class MultiDataSinkReportingInterface implements ReportingInterface<Metri
 
   private ReportingInterface<Metric> getInterface(DataSink dataSink) {
     try {
-      return cache.get(dataSink, new Callable<ReportingInterface<Metric>>() {
-        @Override
-        public ReportingInterface<Metric> call() throws Exception {
-          final ReportingInterface<Metric> original = factories.get(dataSink.type())
-              .of(dataSink.config());
-          return queueFactory
-              .queueReportingInterface(original);
-        }
-      });
+      final ReportingInterface<Metric> metricReportingInterface = cache
+          .get(dataSink, new Callable<ReportingInterface<Metric>>() {
+            @Override
+            public ReportingInterface<Metric> call() throws Exception {
+              final ReportingInterface<Metric> original = factories.get(dataSink.type())
+                  .of(dataSink.config());
+              return queueFactory
+                  .queueReportingInterface(original);
+            }
+          });
+      checkState(metricReportingInterface != null,
+          String.format("Could not find reporting interface for the data sink %s.", dataSink));
+      return metricReportingInterface;
     } catch (ExecutionException e) {
       throw new IllegalStateException(e);
     }

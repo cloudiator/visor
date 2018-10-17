@@ -65,6 +65,7 @@ public class DataSinkImpl implements DataSink {
     }
 
     @Override
+    @JsonProperty("values")
     public Map<String, String> values() {
       return ImmutableMap.copyOf(values);
     }
@@ -89,11 +90,13 @@ public class DataSinkImpl implements DataSink {
   }
 
   @Override
+  @JsonProperty("type")
   public String type() {
     return type;
   }
 
   @Override
+  @JsonProperty("config")
   public DataSinkConfiguration config() {
     return config;
   }
