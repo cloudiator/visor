@@ -32,6 +32,8 @@ import javax.jms.JMSException;
  */
 public class JMSMetricReportingModule extends MetricReportingModule {
 
+  private static final String IDENTIFIER = "JMS";
+
   @Override
   protected void configure() {
     super.configure();
@@ -102,6 +104,6 @@ public class JMSMetricReportingModule extends MetricReportingModule {
 
   @Override
   protected String identifier() {
-    return "jms";
+    return IDENTIFIER;
   }
 }

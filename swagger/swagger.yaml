@@ -106,6 +106,7 @@ definitions:
     properties:
       type:
         type: string
+        enum: ['KAIROS','INFLUX','CLI','JMS']
       config:
         $ref: '#/definitions/DataSinkConfiguration'
 

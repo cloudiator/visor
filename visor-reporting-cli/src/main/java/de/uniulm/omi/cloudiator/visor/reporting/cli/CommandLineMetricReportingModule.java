@@ -30,6 +30,7 @@ import de.uniulm.omi.cloudiator.visor.reporting.ReportingInterface;
  */
 public class CommandLineMetricReportingModule extends MetricReportingModule {
 
+  private static final String IDENTIFIER = "CLI";
   private static final CommandLineReporterFactory FACTORY = new CommandLineReporterFactory();
 
   private static class CommandLineReporterFactory implements ReportingInterfaceFactory<Metric> {
@@ -49,6 +50,6 @@ public class CommandLineMetricReportingModule extends MetricReportingModule {
 
   @Override
   protected String identifier() {
-    return "cli";
+    return IDENTIFIER;
   }
 }

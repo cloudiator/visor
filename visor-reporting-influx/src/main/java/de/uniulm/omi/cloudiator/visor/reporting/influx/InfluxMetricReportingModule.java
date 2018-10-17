@@ -34,6 +34,7 @@ import org.influxdb.InfluxDBFactory;
 public class InfluxMetricReportingModule extends MetricReportingModule {
 
   private static final InfluxReportingInterfaceFactory INSTANCE = new InfluxReportingInterfaceFactory();
+  private static final String IDENTIFIER = "INFLUX";
 
   private static class InfluxReportingInterfaceFactory implements
       ReportingInterfaceFactory<Metric> {
@@ -87,6 +88,6 @@ public class InfluxMetricReportingModule extends MetricReportingModule {
 
   @Override
   protected String identifier() {
-    return "influx";
+    return IDENTIFIER;
   }
 }

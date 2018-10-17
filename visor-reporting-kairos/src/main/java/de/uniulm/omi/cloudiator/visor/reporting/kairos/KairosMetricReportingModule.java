@@ -32,6 +32,8 @@ import de.uniulm.omi.cloudiator.visor.reporting.ReportingInterface;
  */
 public class KairosMetricReportingModule extends MetricReportingModule {
 
+  private static final String IDENTIFIER = "KAIROS";
+
   private static class KairosFactory implements ReportingInterfaceFactory<Metric> {
 
     private static final KairosFactory INSTANCE = new KairosFactory();
@@ -68,6 +70,6 @@ public class KairosMetricReportingModule extends MetricReportingModule {
 
   @Override
   protected String identifier() {
-    return "kairos";
+    return IDENTIFIER;
   }
 }
