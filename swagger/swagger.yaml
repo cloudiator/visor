@@ -55,6 +55,11 @@ definitions:
         description: "Context of the monitor. Multiple key - value pairs depicting the environment of the monitor."
         additionalProperties:
           type: string
+      dataSinks:
+        type: array
+        items:
+          $ref: '#/definitions/DataSink'
+
 
   PushMonitor:
     description: "A monitoring providing a telnet endpoint where applications can advertise metrics."
@@ -95,6 +100,24 @@ definitions:
       timeUnit:
         type: string
         enum: ['NANOSECONDS','MICROSECONDS','MILLISECONDS','SECONDS','MINUTES','HOURS','DAYS']
+
+  DataSink:
+    type: object
+    properties:
+      type:
+        type: string
+      config:
+        $ref: '#/definitions/DataSinkConfiguration'
+
+
+  DataSinkConfiguration:
+    type: object
+    properties:
+      values:
+        type: object
+        additionalProperties:
+          type: string
+
 
 paths:
   /monitors:
