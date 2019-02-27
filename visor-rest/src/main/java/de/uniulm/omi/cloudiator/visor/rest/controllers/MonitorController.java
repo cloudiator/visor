@@ -107,14 +107,14 @@ public class MonitorController {
   public MonitorDto postMonitor(MonitorDto monitor) {
 
     //generate a random uuid for the monitor
-    // if (monitor.uuid.equal("0")){
     final UUID uuid = UUID.randomUUID();
-    /*
-    }else{
-    LOGGER.error("Could not create monitor, UUID is set");
-    throw new BadRequestException("UUID of new Monitor was set");
+    if (monitor.getUuid().equals("0")) {
+      monitor.setUuid(uuid.toString());
+    } else {
+      LOGGER.error("Could not create monitor, UUID is set");
+      throw new BadRequestException("UUID of new Monitor was set");
     }
-    */
+
     return this.putMonitor(uuid.toString(), monitor);
 
   }
