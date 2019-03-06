@@ -59,6 +59,9 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/DataSink'
+      uuid:
+        type: string
+        description: "UUID set by Visor"
 
 
   PushMonitor:
