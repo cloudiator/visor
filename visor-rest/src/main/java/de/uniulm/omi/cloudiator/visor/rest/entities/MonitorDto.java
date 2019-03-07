@@ -45,7 +45,7 @@ public abstract class MonitorDto {
 
   @JsonProperty("type")
   private String type;
-  @JsonIgnore
+  //@JsonIgnore
   private String uuid;
   @NotNull
   private String metricName;
@@ -106,7 +106,7 @@ public abstract class MonitorDto {
     return uuid;
   }
 
-  @JsonIgnore
+  //@JsonIgnore
   public void setUuid(String uuid) {
     this.uuid = uuid;
   }
