@@ -108,7 +108,7 @@ public class MonitorController {
 
     //generate a random uuid for the monitor
     final UUID uuid = UUID.randomUUID();
-    if (monitor.getUuid().equals("0")) {
+    if (monitor.getUuid().isEmpty()) {
       monitor.setUuid(uuid.toString());
     } else {
       LOGGER.error("Could not create monitor, UUID is set");
