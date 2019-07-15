@@ -18,7 +18,7 @@ test:
 deploy:
   stage: deploy
   script:
-    - mvn -q install
+    - mvn -q install -Dmaven.javadoc.skip=true -DskipTests=true
   only:
     - master
   artifacts:
