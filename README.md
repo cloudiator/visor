@@ -36,3 +36,6 @@ A default configuration file can be found in the conf directory.
 ## Documentation
 [See Documentation for more details.](documentation/README.md)
 
+## Download
+The latest version can be downloaded [here](https://gitlab.com/cloudiator/visor/-/jobs/artifacts/master/raw/visor-service/target/visor-service-0.3.0-SNAPSHOT.jar?job=deploy)
+
