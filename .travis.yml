@@ -1,6 +1,7 @@
 sudo: false
 jdk:
 - oraclejdk8
+dist: trusty
 language: java
 install: travis_wait mvn -q install -U -DskipTests=true
 script: travis_wait mvn -q org.jacoco:jacoco-maven-plugin:prepare-agent install -Dmaven.javadoc.skip=true
@@ -24,11 +25,3 @@ env:
 notifications:
   slack:
     secure: jGgxEjer9zHBD1me0KWEbGRwmAFE0WjNyOXGAHf3uw9XUbjTetZ+1oAk2tr4+/ULWbrtgesWjv3FAO7RWce4RP0LkCQY/eLrUDCit86tjR5A09yIL4xsUzB7qEClz9AixD5KurBnuDzHwJsi4JRDw8F3AdQQ7WyNQokJknCaOcjGOcnq97Wf04RNPMZTLJ9+z+6YGz7Bj+YB6DduBW2eaDyadKB0J3dAT1vwqqOesm7mxmB9+RtgpGIC/eSbe+FEZoc+z1xzfDc5UTT/nNT5dOcAA7e/BaCnKbW0iLIpN6sMu9QsSpabrW6rS7WHv46PO4mZBmn2kdTapj2a+z7a5YRmAD7rnTgap2dSQN03OKLhMDBnFwsjXPPJWiW1B4JjVLM4lZxuDJUnNsUoxwdYU3VjlDAoCkRhNQAsbZxnouD1kbt8TwLuumCcHlY7CixOKdGawWMT2nmCckTlmKM0V3dpEPrl2/ZsScCpABM7owgt3rmlGLbwmLDWYcDBZH2ymdKVo+nY+YPxsxsiXI8jq7bQoUDbA+meXJC3PV6UJRqGuMcJhnzCgJK9mQOwZOXYpQaljIatXzRIysv2xU+RS8lZmRdiPVSaTgx3N9N8ZvTBkXVEC5ZpWDhdrFm5WGSAVT096nDMjqDW/c1EL7Jiu1EBQWgjQr4/SB87snK7jaI=
-before_deploy: ci/bintray.sh
-deploy:
-  provider: bintray
-  file: ci/bintray.json
-  user: dbaur
-  skip_cleanup: true
-  key:
-    secure: BYYBCJ5ZgLAovHS/zay+DOS4QmXEHdcKJQVUPq3H5hMdQ+SitGmZBVm9Jgj4ygBGoec2ZXTaGoeCrlqD4Zbk6/9GW6DzSNd82rHKYu4q0ttKqF839y15BveIaTV3OAuU7SFL+LMfvGVl9hXaoqj8MtA/cKwAn9BXOrPpA9mrUYuP4W6rQJD+187HVA5HxPguVNOGU9f60A2AlKFs1+CWzyCyRkudimAre3Z6WhBBgh4RsHEGgymKkFAoGmoZ8TIloXFh7rxjr9hRgWMVJdSdCvraJtUaDuOEGeAUOwssQBm2Q3WyKHTuBtW1w8cg1nqg5/wDSJxzmyzlMJtUUtIFRPkl/ujc7UHg4bePB78ZjgI0RrB7CkXtfzd4g3nUFRe2hJJvrgUc2ERtKekazoRonDwTWPfTZjOSyQ7eMiCm3La+r2P3LMz3Wp6JctlAImF53vBBy0e5BTcxv2NNB3v90OpkDEdPXD6mMSefqF7njpRk8MKwhlMrU92RmzigMANvXWMZVHlE/9CNi8akeUnU/JHe02lIQ9wP0qzpu5QykgJQo0XkmcTVGpZ5/Hv+j72XUoyQIQgX552L+lPAIX7JaAx9L4/iElHFjEGNLAsVYnDiAFRcoiKV/ehQivi+2V5k8s0gH7raT64PQRAV99zO7HhDEe34Wg6vgnY3cGbkKHw=

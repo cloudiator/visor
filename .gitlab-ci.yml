@@ -1,0 +1,27 @@
+image: maven:latest
+
+cache:
+  paths:
+    - .m2/repository/
+    - target/
+
+build:
+  stage: build
+  script:
+    - mvn -q compile
+
+test:
+  stage: test
+  script:
+    - mvn -q test
+
+deploy:
+  stage: deploy
+  script:
+    - mvn -q install -Dmaven.javadoc.skip=true -DskipTests=true
+  only:
+    - master
+  artifacts:
+    paths:
+      - visor-service/target/visor-service-0.3.0-SNAPSHOT.jar
+
