@@ -20,6 +20,7 @@ package de.uniulm.omi.cloudiator.visor.rest.controllers;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import com.google.common.base.Strings;
 import de.uniulm.omi.cloudiator.visor.exceptions.MonitorException;
 import de.uniulm.omi.cloudiator.visor.monitoring.Monitor;
 import de.uniulm.omi.cloudiator.visor.monitoring.MonitoringService;
@@ -40,6 +41,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -108,7 +110,8 @@ public class MonitorController {
 
     //generate a random uuid for the monitor
     final UUID uuid = UUID.randomUUID();
-    if (monitor.getUuid().isEmpty()) {
+
+    if (Strings.isNullOrEmpty(monitor.getUuid())) {
       monitor.setUuid(uuid.toString());
     } else {
       LOGGER.error("Could not create monitor, UUID is set");
@@ -122,19 +125,22 @@ public class MonitorController {
   @DELETE
   @Produces(MediaType.APPLICATION_JSON)
   @Path("/{uuid}")
-  public void deleteMonitor(@PathParam("uuid") String uuid) {
+  public Response deleteMonitor(@PathParam("uuid") String uuid) {
     if (!monitoringService.isMonitoring(uuid)) {
       throw new BadRequestException();
     }
     this.monitoringService.stopMonitor(uuid);
+
+    return Response.noContent().build();
   }
 
   @DELETE
   @Produces(MediaType.APPLICATION_JSON)
-  public void deleteAllMonitors() {
+  public Response deleteAllMonitors() {
     for (Monitor monitor : this.monitoringService.getMonitors()) {
       this.monitoringService.stopMonitor(monitor.uuid());
     }
+    return Response.noContent().build();
   }
 
 }

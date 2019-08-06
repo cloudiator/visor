@@ -21,6 +21,7 @@ package de.uniulm.omi.cloudiator.visor.monitoring;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import de.uniulm.omi.cloudiator.visor.exceptions.MonitorException;
@@ -87,7 +88,7 @@ public class MonitoringServiceImpl implements MonitoringService {
 
   @Override
   public Collection<Monitor> getMonitors() {
-    return this.monitorRegistry.values();
+    return ImmutableList.copyOf(monitorRegistry.values());
   }
 
   @Override
