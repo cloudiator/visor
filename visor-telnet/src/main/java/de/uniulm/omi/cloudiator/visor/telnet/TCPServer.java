@@ -150,7 +150,7 @@ public class TCPServer implements Server {
           workers.add(tcpSocketWorker);
           executionService.execute(tcpSocketWorker);
         } catch (IOException e) {
-          LOGGER.error("Exception occurred while accepting the socket.", e);
+          LOGGER.warn("Exception occurred while accepting the socket.", e);
         }
       }
     }
