@@ -1,6 +1,6 @@
 ﻿[![Build Status](https://travis-ci.org/cloudiator/visor.svg?branch=master)](https://travis-ci.org/cloudiator/visor)
 
-# Visor - a simple monitoring agent for the cloudiator toolchain.
+# Visor - a simple monitoring agent for the cloudiator toolchain. 
 ***
 ## Description
 
