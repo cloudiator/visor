@@ -127,7 +127,7 @@ public class MonitorController {
   @Path("/{uuid}")
   public Response deleteMonitor(@PathParam("uuid") String uuid) {
     if (!monitoringService.isMonitoring(uuid)) {
-      throw new BadRequestException();
+      throw new NotFoundException(uuid);
     }
     this.monitoringService.stopMonitor(uuid);
 
