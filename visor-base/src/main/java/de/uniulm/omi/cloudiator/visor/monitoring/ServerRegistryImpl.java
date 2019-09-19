@@ -52,7 +52,8 @@ public class ServerRegistryImpl implements ServerRegistry {
   }
 
   @Override
-  public Server getServer(String componentId, @Nullable Integer port) throws IOException {
+  public synchronized Server getServer(String componentId, @Nullable Integer port)
+      throws IOException {
     if (!servers.containsKey(componentId)) {
       Server server;
       if (port == null) {
@@ -67,7 +68,7 @@ public class ServerRegistryImpl implements ServerRegistry {
   }
 
   @Override
-  public void unregister(Server server) {
+  public synchronized void unregister(Server server) {
     this.servers.inverse().remove(server);
   }
 }
