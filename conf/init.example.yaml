@@ -19,3 +19,8 @@
     period: 10
     timeUnit: "SECONDS"
   sensorConfiguration: {}
+- metricName: "push"
+  componentId: "1"
+  "type": "PushMonitor"
+  dataSinks:
+    - type: "cli"
